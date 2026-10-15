@@ -4,8 +4,7 @@ const OPTIONS = {
   q2: { en:['Appearance or body','Character or personality','Lifestyle or habits','Everything I consider necessary','I would change nothing','I would let them decide what to change','Other'], ru:['Внешность или тело','Характер или личность','Образ жизни или привычки','Всё, что посчитал бы нужным','Ничего не стал бы менять','Предоставил бы ему самому решать, что менять','Другое'] },
   q3: { en:['Respect their wishes','Try to reach an agreement','Do what I wanted anyway','It would depend on the situation','Other'], ru:['Уважал бы его желания','Попытался бы договориться','Всё равно поступил бы по-своему','Решение зависело бы от ситуации','Другое'] },
   q4: { en:['Leave the person as they are','Help them and improve their life','Change them according to my own ideas','Use them for their own interests','Let the person decide their own fate','Not sure','Other'], ru:['Оставить человека как есть','Помочь ему и улучшить его жизнь','Изменить его в соответствии со своими представлениями','Использовать его в собственных интересах','Предоставить ему возможность самому решать свою судьбу','Затрудняюсь ответить','Другое'] },
-  gender: { en:['Man','Woman','Another identity','Prefer not to say'], ru:['Мужчина','Женщина','Другая идентичность','Предпочитаю не отвечать'] },
-  orientation: { en:['Heterosexual','Homosexual','Bisexual','Another orientation','Prefer not to say'], ru:['Гетеросексуальная','Гомосексуальная','Бисексуальная','Другая ориентация','Предпочитаю не отвечать'] }
+  gender: { en:['Man','Woman','Another identity','Prefer not to say'], ru:['Мужчина','Женщина','Другая идентичность','Предпочитаю не отвечать'] }
 };
 const json = (data,status=200)=>new Response(JSON.stringify(data),{status,headers:CORS_HEADERS});
 async function sha256(text){const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text));return [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,'0')).join('');}
@@ -30,7 +29,6 @@ async function submit(request,env){
   let body;try{body=await request.json();}catch{return json({ok:false,error:'invalid_json'},400);}
   if(!body||!['en','ru'].includes(body.language)||!validText(body.freeAnswer,5000)||!validChoice(body.q2,OPTIONS.q2.en.length)||!validChoice(body.q3,OPTIONS.q3.en.length)||!validChoice(body.q4,OPTIONS.q4.en.length))return json({ok:false,error:'invalid_response'},400);
   if(body.gender!==null&&body.gender!==undefined&&!validChoice(body.gender,OPTIONS.gender.en.length))return json({ok:false,error:'invalid_gender'},400);
-  if(body.orientation!==null&&body.orientation!==undefined&&!validChoice(body.orientation,OPTIONS.orientation.en.length))return json({ok:false,error:'invalid_orientation'},400);
   if(typeof body.turnstileToken!=='string'||body.turnstileToken.length>2048)return json({ok:false,error:'captcha_required'},400);
   const ip=request.headers.get('CF-Connecting-IP')||'';
   let captchaOK=false;try{captchaOK=await verifyTurnstile(body.turnstileToken,ip,env.TURNSTILE_SECRET_KEY);}catch{}
@@ -38,8 +36,7 @@ async function submit(request,env){
   let allowed=false;try{allowed=await rateLimit(request,env);}catch{return json({ok:false,error:'rate_limit_unavailable'},503);}
   if(!allowed)return json({ok:false,error:'rate_limited'},429);
   try{
-    await env.DB.prepare(`INSERT INTO responses (language, free_answer, q2, q3, q4, gender, orientation, created_at)
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?)`).bind(body.language,body.freeAnswer.trim(),body.q2,body.q3,body.q4,body.gender??null,body.orientation??null,new Date().toISOString()).run();
+    await env.DB.prepare(`undefined`).bind(body.language,body.freeAnswer.trim(),body.q2,body.q3,body.q4,body.gender??null,new Date().toISOString()).run();
     return json({ok:true});
   }catch{return json({ok:false,error:'save_failed'},500);}
 }
