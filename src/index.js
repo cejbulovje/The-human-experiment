@@ -36,7 +36,7 @@ async function submit(request,env){
   let allowed=false;try{allowed=await rateLimit(request,env);}catch{return json({ok:false,error:'rate_limit_unavailable'},503);}
   if(!allowed)return json({ok:false,error:'rate_limited'},429);
   try{
-    await env.DB.prepare(`undefined`).bind(body.language,body.freeAnswer.trim(),body.q2,body.q3,body.q4,body.gender??null,new Date().toISOString()).run();
+    await env.DB.prepare('INSERT INTO responses (language, free_answer, q2, q3, q4, gender, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)').bind(body.language,body.freeAnswer.trim(),body.q2,body.q3,body.q4,body.gender??null,new Date().toISOString()).run();
     return json({ok:true});
   }catch{return json({ok:false,error:'save_failed'},500);}
 }
