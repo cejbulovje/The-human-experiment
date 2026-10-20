@@ -2,11 +2,6 @@
 -- Do not run after db/schema.sql or migrations 0002-0004 have already been applied.
 -- Rebuild responses to widen the language CHECK while preserving existing survey rows.
 -- rate_limits is intentionally left untouched.
--- Keep the table rebuild and dependent-object creation atomic: on any error,
--- SQLite rolls back rather than leaving responses dropped or partially migrated.
-
-BEGIN TRANSACTION;
-
 CREATE TABLE responses_new (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   language TEXT NOT NULL CHECK (language IN ('en', 'ru', 'es', 'pt', 'zh', 'de', 'ja', 'fr', 'ar')),
@@ -61,4 +56,3 @@ CREATE TABLE IF NOT EXISTS topic_suggestions (
   UNIQUE(response_id, voter_hash)
 );
 
-COMMIT;
