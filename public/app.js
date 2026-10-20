@@ -820,7 +820,7 @@ form.addEventListener('submit',async event=>{
     const response=await fetch('/api/submit',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
     let result; try { result=await response.json(); } catch { throw new Error('server'); }
     if(!response.ok||!result.ok) throw new Error(result.error||'submit_failed');
-    status.textContent=t.success;status.className='form-status success';if(postSubmitShare)postSubmitShare.hidden=false;form.reset();syncSignatureField();turnstileToken='';
+    status.textContent=t.success;status.className='form-status success';if(postSubmitShare)postSubmitShare.hidden=false;form.reset();syncSignatureField();for(const name of ['q2','q3','q4']){const root=document.getElementById(name+'-options');const wrap=root.querySelector('.other-answer-wrap');const input=root.querySelector('.other-answer-input');wrap.hidden=true;input.required=false;}turnstileToken='';
     if(window.turnstile) window.turnstile.reset(); charCount.textContent='0 / 5000';
   }catch(error){status.textContent=error instanceof TypeError?t.network:t.failure;status.className='form-status error';turnstileToken='';if(window.turnstile)window.turnstile.reset();}
   finally{submitButton.disabled=turnstileWidget.dataset.sitekey.includes('REPLACE_WITH');submitButton.textContent=t.submit;}
