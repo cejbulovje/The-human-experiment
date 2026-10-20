@@ -23,15 +23,22 @@ async function rateLimit(request,env){
   return Number(result?.count||0)<=3;
 }
 function validText(value,max){return typeof value==='string'&&value.trim().length>0&&value.trim().length<=max;}
+export function parseOtherAnswers(body){
+  if(!body||typeof body!=='object')return null;
+  const q2Other=typeof body.q2Other==='string'?body.q2Other.trim():'';
+  const q3Other=typeof body.q3Other==='string'?body.q3Other.trim():'';
+  const q4Other=typeof body.q4Other==='string'?body.q4Other.trim():'';
+  if(q2Other.length>500||q3Other.length>500||q4Other.length>500||(body.q2===6&&!validText(q2Other,500))||(body.q3===4&&!validText(q3Other,500))||(body.q4===6&&!validText(q4Other,500))||(body.q2!==6&&q2Other)||(body.q3!==4&&q3Other)||(body.q4!==6&&q4Other))return null;
+  return {q2Other:q2Other||null,q3Other:q3Other||null,q4Other:q4Other||null};
+}
 async function submit(request,env){
   if(!env.DB||!env.TURNSTILE_SECRET_KEY||!env.RATE_LIMIT_SALT)return json({ok:false,error:'not_configured'},503);
   const length=Number(request.headers.get('content-length')||0);if(length>12000)return json({ok:false,error:'too_large'},413);
   let body;try{body=await request.json();}catch{return json({ok:false,error:'invalid_json'},400);}
   if(!body||!['en','ru','es','pt','zh','de','ja','fr','ar'].includes(body.language)||!validText(body.freeAnswer,5000)||!validChoice(body.q2,OPTIONS.q2.en.length)||!validChoice(body.q3,OPTIONS.q3.en.length)||!validChoice(body.q4,OPTIONS.q4.en.length))return json({ok:false,error:'invalid_response'},400);
-  const q2Other=typeof body.q2Other==='string'?body.q2Other.trim():'';
-  const q3Other=typeof body.q3Other==='string'?body.q3Other.trim():'';
-  const q4Other=typeof body.q4Other==='string'?body.q4Other.trim():'';
-  if(q2Other.length>500||q3Other.length>500||q4Other.length>500||(body.q2===6&&!validText(q2Other,500))||(body.q3===4&&!validText(q3Other,500))||(body.q4===6&&!validText(q4Other,500))||(body.q2!==6&&q2Other)||(body.q3!==4&&q3Other)||(body.q4!==6&&q4Other))return json({ok:false,error:'invalid_other_answer'},400);
+  const otherAnswers=parseOtherAnswers(body);
+  if(!otherAnswers)return json({ok:false,error:'invalid_other_answer'},400);
+  const {q2Other,q3Other,q4Other}=otherAnswers;
   if(body.authorConfirmed!==true)return json({ok:false,error:'author_confirmation_required'},400);
   const signature=typeof body.signature==='string'?body.signature.trim():'';
   if(signature.length>60)return json({ok:false,error:'invalid_signature'},400);
@@ -45,7 +52,7 @@ async function submit(request,env){
   try{
     const publicId=crypto.randomUUID();
     const topic=classifyTopic(body.freeAnswer);
-    await env.DB.prepare('INSERT INTO responses (language, free_answer, q2, q3, q4, q2_other, q3_other, q4_other, gender, created_at, public_id, is_public, topic, signature) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)').bind(body.language,body.freeAnswer.trim(),body.q2,body.q3,body.q4,q2Other||null,q3Other||null,q4Other||null,body.gender??null,new Date().toISOString(),publicId,topic,signature||null).run();
+    await env.DB.prepare('INSERT INTO responses (language, free_answer, q2, q3, q4, q2_other, q3_other, q4_other, gender, created_at, public_id, is_public, topic, signature) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)').bind(body.language,body.freeAnswer.trim(),body.q2,body.q3,body.q4,q2Other,q3Other,q4Other,body.gender??null,new Date().toISOString(),publicId,topic,signature||null).run();
     return json({ok:true});
   }catch{return json({ok:false,error:'save_failed'},500);}
 }
