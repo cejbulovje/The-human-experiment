@@ -28,6 +28,10 @@ async function submit(request,env){
   const length=Number(request.headers.get('content-length')||0);if(length>12000)return json({ok:false,error:'too_large'},413);
   let body;try{body=await request.json();}catch{return json({ok:false,error:'invalid_json'},400);}
   if(!body||!['en','ru','es','pt','zh','de','ja','fr','ar'].includes(body.language)||!validText(body.freeAnswer,5000)||!validChoice(body.q2,OPTIONS.q2.en.length)||!validChoice(body.q3,OPTIONS.q3.en.length)||!validChoice(body.q4,OPTIONS.q4.en.length))return json({ok:false,error:'invalid_response'},400);
+  const q2Other=typeof body.q2Other==='string'?body.q2Other.trim():'';
+  const q3Other=typeof body.q3Other==='string'?body.q3Other.trim():'';
+  const q4Other=typeof body.q4Other==='string'?body.q4Other.trim():'';
+  if(q2Other.length>500||q3Other.length>500||q4Other.length>500||(body.q2===6&&!validText(q2Other,500))||(body.q3===4&&!validText(q3Other,500))||(body.q4===6&&!validText(q4Other,500))||(body.q2!==6&&q2Other)||(body.q3!==4&&q3Other)||(body.q4!==6&&q4Other))return json({ok:false,error:'invalid_other_answer'},400);
   if(body.authorConfirmed!==true)return json({ok:false,error:'author_confirmation_required'},400);
   const signature=typeof body.signature==='string'?body.signature.trim():'';
   if(signature.length>60)return json({ok:false,error:'invalid_signature'},400);
@@ -41,7 +45,7 @@ async function submit(request,env){
   try{
     const publicId=crypto.randomUUID();
     const topic=classifyTopic(body.freeAnswer);
-    await env.DB.prepare('INSERT INTO responses (language, free_answer, q2, q3, q4, gender, created_at, public_id, is_public, topic, signature) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)').bind(body.language,body.freeAnswer.trim(),body.q2,body.q3,body.q4,body.gender??null,new Date().toISOString(),publicId,topic,signature||null).run();
+    await env.DB.prepare('INSERT INTO responses (language, free_answer, q2, q3, q4, q2_other, q3_other, q4_other, gender, created_at, public_id, is_public, topic, signature) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)').bind(body.language,body.freeAnswer.trim(),body.q2,body.q3,body.q4,q2Other||null,q3Other||null,q4Other||null,body.gender??null,new Date().toISOString(),publicId,topic,signature||null).run();
     return json({ok:true});
   }catch{return json({ok:false,error:'save_failed'},500);}
 }
@@ -87,12 +91,12 @@ async function publicResponses(request,env){
   else if(sort==='popular')order='reaction_count DESC, r.created_at DESC';
   else if(sort==='unusual')order='topic_frequency ASC, length(r.free_answer) DESC, r.created_at DESC';
   const count=await env.DB.prepare(`SELECT COUNT(*) AS total FROM responses r WHERE ${where}`).bind(...binds).first();
-  const rows=await env.DB.prepare(`SELECT r.id, r.public_id, r.free_answer, r.language, r.topic, r.created_at, r.q2, r.q3, r.q4, r.signature,
+  const rows=await env.DB.prepare(`SELECT r.id, r.public_id, r.free_answer, r.language, r.topic, r.created_at, r.q2, r.q3, r.q4, r.q2_other, r.q3_other, r.q4_other, r.signature,
     (SELECT COUNT(*) FROM response_reactions rr WHERE rr.response_id=r.id AND rr.reaction='interesting') AS reaction_count,
     (SELECT COUNT(*) FROM responses r2 WHERE r2.is_public=1 AND r2.topic=r.topic) AS topic_frequency
     FROM responses r WHERE ${where} ORDER BY ${order} LIMIT ? OFFSET ?`).bind(...binds,limit,offset).all();
   const topics={character:'Character & habits',appearance:'Appearance',freedom:'Freedom & boundaries',life:'Life & wellbeing',relationships:'Relationships',other:'Other'};
-  const items=(rows.results||[]).map(row=>({id:row.public_id||`legacy-${row.id}`,answer:row.free_answer,signature:row.signature||null,language:row.language,topic:row.topic||'other',topicLabel:topics[row.topic]||topics.other,date:row.created_at,publicCode:String(row.public_id||row.id).slice(0,8).toUpperCase(),reactionCount:Number(row.reaction_count||0),context:{q2:`${OPTIONS.q2.en[row.q2]||''} / ${OPTIONS.q2.ru[row.q2]||''}`,q3:`${OPTIONS.q3.en[row.q3]||''} / ${OPTIONS.q3.ru[row.q3]||''}`,q4:`${OPTIONS.q4.en[row.q4]||''} / ${OPTIONS.q4.ru[row.q4]||''}`}}));
+  const items=(rows.results||[]).map(row=>({id:row.public_id||`legacy-${row.id}`,answer:row.free_answer,signature:row.signature||null,language:row.language,topic:row.topic||'other',topicLabel:topics[row.topic]||topics.other,date:row.created_at,publicCode:String(row.public_id||row.id).slice(0,8).toUpperCase(),reactionCount:Number(row.reaction_count||0),context:{q2:`${OPTIONS.q2.en[row.q2]||''} / ${OPTIONS.q2.ru[row.q2]||''}`,q3:`${OPTIONS.q3.en[row.q3]||''} / ${OPTIONS.q3.ru[row.q3]||''}`,q4:`${OPTIONS.q4.en[row.q4]||''} / ${OPTIONS.q4.ru[row.q4]||''}`,q2Other:row.q2_other||'',q3Other:row.q3_other||'',q4Other:row.q4_other||'}}));
   return json({items,total:Number(count?.total||0),limit,offset,hasMore:offset+items.length<Number(count?.total||0)});
 }
 async function suggestTopic(request,env){
