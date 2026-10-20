@@ -13,5 +13,13 @@
       "database_name": "the-human-experiment",
       "database_id": "5449b8be-9438-42b9-975d-e153fdb4b04f"
     }
-  ]
+  ],
+  "previews": {
+    "d1_databases": [
+      {
+        "binding": "DB",
+        "database_id": "f78a205b-e856-464e-81a6-d753f8d69b14"
+      }
+    ]
+  }
 }
