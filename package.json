@@ -9,7 +9,11 @@
     "db:init:local": "wrangler d1 execute the-human-experiment --local --file=./db/schema.sql",
     "db:init:remote": "wrangler d1 execute the-human-experiment --remote --file=./db/schema.sql",
     "db:migrate:local": "wrangler d1 execute the-human-experiment --local --file=./db/migrations/0002_public_responses.sql",
-    "db:migrate:remote": "wrangler d1 execute the-human-experiment --remote --file=./db/migrations/0002_public_responses.sql"
+    "db:migrate:remote": "wrangler d1 execute the-human-experiment --remote --file=./db/migrations/0002_public_responses.sql",
+    "db:migrate:local:signature": "wrangler d1 execute the-human-experiment --local --file=./db/migrations/0003_optional_signature.sql",
+    "db:migrate:remote:signature": "wrangler d1 execute the-human-experiment --remote --file=./db/migrations/0003_optional_signature.sql",
+    "db:migrate:local:other-answers": "wrangler d1 execute the-human-experiment --local --file=./db/migrations/0004_other_answers.sql",
+    "db:migrate:remote:other-answers": "wrangler d1 execute the-human-experiment --remote --file=./db/migrations/0004_other_answers.sql"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"
