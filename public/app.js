@@ -13,6 +13,8 @@ const translations = {
     "answer-placeholder": "I would…",
     "private-note": "Your written answer will be published anonymously on the public results page. Do not include personal or identifying information.",
     "single-choice": "Choose one answer.",
+    "other-placeholder": "Please specify your answer…",
+    "other-help": "Your own answer (up to 500 characters)",
     "q2": "If you could change this person, what would you change first?",
     "q3": "If this person's wishes conflicted with yours, what would you do?",
     "q4": "What do you think most people would want to do in this situation?",
@@ -684,6 +686,7 @@ const translations = {
   }
 };
 for (const language of Object.values(translations)) {
+  for (const key of ['other-placeholder','other-help']) { if (!language[key]) language[key] = translations.en[key]; }
   for (const key of ['signature-title','signature-help','signature-anonymous','signature-signed','signature-label','signature-placeholder','signature-note','author-title','author-help','author-confirm','author-required','signature-required','privacy']) {
     if (!language[key]) language[key] = translations.en[key];
   }
@@ -714,6 +717,7 @@ if (!turnstileWidget.dataset.sitekey || turnstileWidget.dataset.sitekey.includes
 function renderOptions(id, values, name, optional=false) {
   const root = document.getElementById(id);
   const previous = root.querySelector('input:checked')?.value;
+  const previousOther = root.querySelector('.other-answer-input')?.value || '';
   root.replaceChildren();
   values.forEach((value,index) => {
     const label = document.createElement('label'); label.className='option';
@@ -722,6 +726,17 @@ function renderOptions(id, values, name, optional=false) {
     const span = document.createElement('span'); span.textContent=value;
     label.append(input,span); root.append(label);
   });
+  if (['q2','q3','q4'].includes(name)) {
+    const wrap=document.createElement('div'); wrap.className='other-answer-wrap'; wrap.hidden=true;
+    const label=document.createElement('label'); label.className='other-answer-label';
+    const words=translations[activeLanguage]||translations.en; label.textContent=words['other-help'];
+    const input=document.createElement('input'); input.type='text'; input.className='other-answer-input'; input.name=name+'Other'; input.maxLength=500; input.placeholder=words['other-placeholder']; input.autocomplete='off';
+    input.value=previousOther; input.required=false;
+    label.append(input); wrap.append(label); root.append(wrap);
+    const sync=()=>{const selected=root.querySelector('input[name="'+name+'"]:checked'); const show=Boolean(selected && Number(selected.value)===values.length-1); wrap.hidden=!show; input.required=show;};
+    root.querySelectorAll('input[name="'+name+'"]').forEach(radio=>radio.addEventListener('change',sync));
+    sync();
+  }
 }
 function renderLanguage(lang) {
   const t = translations[lang] || translations.en;
@@ -799,7 +814,7 @@ form.addEventListener('submit',async event=>{
   const signature=signatureMode==='signed'?signatureInput.value.trim():'';
   if(!authorConfirmed.checked){status.textContent=t['author-required'];status.className='form-status error';return;}
   if(signatureMode==='signed'&&!signature){status.textContent=t['signature-required'];status.className='form-status error';signatureInput.focus();return;}
-  const payload={language:lang,freeAnswer:answer.value.trim(),q2:selected('q2'),q3:selected('q3'),q4:selected('q4'),gender:selected('gender'),signature,authorConfirmed:authorConfirmed.checked,turnstileToken};
+  const payload={language:lang,freeAnswer:answer.value.trim(),q2:selected('q2'),q3:selected('q3'),q4:selected('q4'),q2Other:form.querySelector('[name="q2Other"]')?.value.trim()||'',q3Other:form.querySelector('[name="q3Other"]')?.value.trim()||'',q4Other:form.querySelector('[name="q4Other"]')?.value.trim()||'',gender:selected('gender'),signature,authorConfirmed:authorConfirmed.checked,turnstileToken};
   submitButton.disabled=true; submitButton.textContent=t.sending;
   try{
     const response=await fetch('/api/submit',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
