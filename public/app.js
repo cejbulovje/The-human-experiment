@@ -1,62 +1,812 @@
 const translations = {
-  en: {
-    eyebrow:'AN OPEN THOUGHT EXPERIMENT',title:"What would you do if you could decide another person's fate?",intro1:'Imagine another person voluntarily entrusted you with the right to decide what their future would be.',intro2:'Before you is a person with their own appearance, character, beliefs, and desires. You can leave everything as it is, try to get to know them and understand what they want, change individual traits, or completely shape their personality according to your own vision.',prompt:'What would you do?',q1:'Tell us what you would do',q1help:'Answer in your own words. There are no expected answers.', 'answer-label':'Your answer','answer-placeholder':'I would…','private-note':'Your written answer will not be displayed publicly automatically.','single-choice':'Choose one answer.',q2:'If you could change this person, what would you change first?',q3:"If this person's wishes conflicted with yours, what would you do?",q4:'What do you think most people would want to do in this situation?',optional:'Optional questions about you',gender:'What is your gender?', 'captcha-note':'Complete the anti-bot check to submit your response.',submit:'Submit my answer',privacy:'Please do not include names, contact details, or other information that could identify you or someone else. Your answer is stored for analysis; written answers are not published automatically.','results-eyebrow':'THE COLLECTIVE PICTURE','results-title':'What will people choose?','results-copy':'Aggregate results will open after the first 100 valid responses.','view-results':'View results','privacy-link':'Privacy',
-    q2Options:['Appearance or body','Character or personality','Lifestyle or habits','Everything I consider necessary','I would change nothing','I would let them decide what to change','Other'],q3Options:['Respect their wishes','Try to reach an agreement','Do what I wanted anyway','It would depend on the situation','Other'],q4Options:['Leave the person as they are','Help them and improve their life','Change them according to their own ideas','Use them for their own interests','Let the person decide their own fate','Not sure','Other'],genderOptions:['Man','Woman','Another identity','Prefer not to say'],required:'Please answer the three multiple-choice questions.',captchaMissing:'Please complete the anti-bot check.',sending:'Submitting…',success:'Thank you. Your response has been recorded.',failure:'We could not submit your response. Please try again in a moment.',network:'A network error occurred. Please try again.',
+  "en": {
+    "eyebrow": "AN OPEN WORLDWIDE THOUGHT EXPERIMENT",
+    "title": "For the first time, we will decide one person’s fate together. What will happen?",
+    "goal-cta-copy": "This is more than a survey. Explore the long-term goal behind the experiment.",
+    "goal-cta-link": "Explore the long-term goal",
+    "intro1": "Imagine humanity receiving the opportunity not only to change one person’s life, but also to become part of it.",
+    "intro2": "Imagine people around the world being able to express their views on what the life of a specific person should become. Millions of perspectives, wishes, and ideas about what is right, what is possible, and what might be worth changing.",
+    "prompt": "Your voice is part of this choice. What decision will you make?",
+    "q1": "Tell us what you would do",
+    "q1help": "Answer in your own words. There are no expected answers.",
+    "answer-label": "Your answer",
+    "answer-placeholder": "I would…",
+    "private-note": "Your written answer will be published anonymously on the public results page. Do not include personal or identifying information.",
+    "single-choice": "Choose one answer.",
+    "q2": "If you could change this person, what would you change first?",
+    "q3": "If this person's wishes conflicted with yours, what would you do?",
+    "q4": "What do you think most people would want to do in this situation?",
+    "optional": "Optional questions about you",
+    "gender": "What is your gender?",
+    "captcha-note": "Complete the anti-bot check to submit your response.",
+    "submit": "Submit my answer",
+    "privacy": "Your written answer will be published anonymously on the public results page so other participants can read it. Do not include names, contact details, or other identifying information.",
+    "results-eyebrow": "THE COLLECTIVE PICTURE",
+    "results-title": "What will people choose?",
+    "results-copy": "Individual answers are available from the start. Aggregate statistics will open after the first 100 valid responses.",
+    "view-results": "View results",
+    "privacy-link": "Privacy",
+    "goal-link": "Goal of the experiment",
+    "share-button": "Share the experiment",
+    "share-copied": "Link copied. Share it with others!",
+    "share-failed": "Could not share automatically. Please copy the site address.",
+    "share-text": "THE HUMAN EXPERIMENT — An open worldwide thought experiment",
+    "signature-title": "How should your answer be signed?",
+    "signature-help": "Anonymous is selected by default. If you add a signature, it will be shown publicly with your answer.",
+    "signature-anonymous": "Anonymous",
+    "signature-signed": "Add a name or pseudonym",
+    "signature-label": "Name or pseudonym",
+    "signature-placeholder": "Enter a name or pseudonym",
+    "signature-note": "This is a public display name, not a verified identity. Do not use another person’s name without their permission.",
+    "author-title": "Before you submit",
+    "author-help": "Your answer should express your own view.",
+    "author-confirm": "I confirm that this answer expresses my own opinion and understand that it will be published publicly. I may discuss other people or imagine what they might want, but I will not present guesses about their wishes as their confirmed views.",
+    "author-required": "Please confirm that your answer expresses your own opinion.",
+    "signature-required": "Enter a name or pseudonym, or select anonymous.",
+    "privacy": "Your answer will be published publicly. Do not include contact details or personal information about other people. If you want a signature, enter your own name or pseudonym in the separate signature field.",
+    "q2Options": [
+      "Appearance or body",
+      "Character or personality",
+      "Lifestyle or habits",
+      "Everything I consider necessary",
+      "I would change nothing",
+      "I would let them decide what to change",
+      "Other"
+    ],
+    "q3Options": [
+      "Respect their wishes",
+      "Try to reach an agreement",
+      "Do what I wanted anyway",
+      "It would depend on the situation",
+      "Other"
+    ],
+    "q4Options": [
+      "Leave the person as they are",
+      "Help them and improve their life",
+      "Change them according to my own ideas",
+      "Use them for their own interests",
+      "Let the person decide their own fate",
+      "Not sure",
+      "Other"
+    ],
+    "genderOptions": [
+      "Man",
+      "Woman",
+      "Another identity",
+      "Prefer not to say"
+    ],
+    "required": "Please answer the three multiple-choice questions.",
+    "captchaMissing": "Please complete the anti-bot check.",
+    "sending": "Submitting…",
+    "success": "Thank you. Your response has been recorded.",
+    "failure": "We could not submit your response. Please try again in a moment.",
+    "network": "A network error occurred. Please try again.",
+    "intro3": "And you can influence this choice, too. What would you change about this person? Their appearance, character, habits, way of life—or nothing at all? Would you try to shape them according to your own ideal? Help them become who they want to be? Or suggest something no one has thought of before?",
+    "intro4": "Everyone will have their own opinion. But when millions of people can speak, something unexpected may emerge: something we do not yet know about ourselves, human desires, and what we can achieve together.",
+    "intro5": "Perhaps this decision could mean far more than the fate of one person. What happens if humanity sees, for the first time, what it truly wants when millions of individual choices form one shared picture? Can we reach agreement? What will the majority choose? Could the collective choice be something none of us could have predicted? No one knows the answer in advance. That is the point of the experiment."
   },
-  ru: {
-    eyebrow:'ОТКРЫТЫЙ МЫСЛЕННЫЙ ЭКСПЕРИМЕНТ',title:'Что бы ты сделал, если бы мог решать судьбу другого человека?',intro1:'Представь, что другой человек добровольно доверил тебе право решать, каким будет его будущее.',intro2:'Перед тобой — человек со своей внешностью, характером, убеждениями и желаниями. Ты можешь оставить всё как есть, попытаться узнать его и понять, чего он хочет сам, изменить отдельные черты или полностью сформировать его личность по своему представлению.',prompt:'Что бы ты сделал?',q1:'Расскажи, что бы ты сделал',q1help:'Ответь своими словами. Здесь нет ожидаемых ответов.','answer-label':'Твой ответ','answer-placeholder':'Я бы…','private-note':'Твой письменный ответ не будет автоматически опубликован.','single-choice':'Выбери один вариант.',q2:'Если бы ты мог изменить этого человека, что бы ты изменил в первую очередь?',q3:'Если бы желания этого человека противоречили твоим, как бы ты поступил?',q4:'Как ты думаешь, чего захотело бы большинство людей в такой ситуации?',optional:'Необязательные вопросы о тебе',gender:'Какой у тебя пол?','captcha-note':'Пройди проверку, чтобы отправить ответ.',submit:'Отправить ответ',privacy:'Не указывай имена, контакты и другие сведения, по которым можно узнать тебя или другого человека. Ответ сохраняется для анализа; письменные ответы не публикуются автоматически.','results-eyebrow':'ОБЩАЯ КАРТИНА','results-title':'Что выберут люди?','results-copy':'Общая статистика откроется после первых 100 действительных ответов.','view-results':'Посмотреть результаты','privacy-link':'Конфиденциальность',
-    q2Options:['Внешность или тело','Характер или личность','Образ жизни или привычки','Всё, что посчитал бы нужным','Ничего не стал бы менять','Предоставил бы ему самому решать, что менять','Другое'],q3Options:['Уважал бы его желания','Попытался бы договориться','Всё равно поступил бы по-своему','Решение зависело бы от ситуации','Другое'],q4Options:['Оставить человека как есть','Помочь ему и улучшить его жизнь','Изменить его в соответствии со своими представлениями','Использовать его в собственных интересах','Предоставить ему возможность самому решать свою судьбу','Затрудняюсь ответить','Другое'],genderOptions:['Мужчина','Женщина','Другая идентичность','Предпочитаю не отвечать'],required:'Ответь на три вопроса с вариантами.',captchaMissing:'Пройди проверку на ботов.',sending:'Отправка…',success:'Спасибо. Твой ответ сохранён.',failure:'Не удалось отправить ответ. Попробуй ещё раз.',network:'Ошибка соединения. Попробуй ещё раз.'
+  "ru": {
+    "eyebrow": "ОТКРЫТЫЙ ВСЕМИРНЫЙ МЫСЛЕННЫЙ ЭКСПЕРИМЕНТ",
+    "title": "Мы впервые решим судьбу одного человека вместе. Что из этого получится?",
+    "goal-cta-copy": "Это больше, чем опрос. Узнай, к какой долгосрочной цели стремится эксперимент.",
+    "goal-cta-link": "Узнать долгосрочную цель",
+    "intro1": "Представь, что человечество получает возможность не просто изменить жизнь одного человека, но и самому стать частью его жизни.",
+    "intro2": "Представь, что люди со всего мира получают возможность высказать своё мнение о том, какой должна стать жизнь конкретного человека. Миллионы взглядов, желаний и представлений о том, что правильно, что возможно и что вообще стоит изменить.",
+    "prompt": "Твой голос — часть этого выбора. Какое решение примешь ты?",
+    "q1": "Расскажи, что бы ты сделал",
+    "q1help": "Ответь своими словами. Здесь нет ожидаемых ответов.",
+    "answer-label": "Твой ответ",
+    "answer-placeholder": "Я бы…",
+    "private-note": "Твой ответ будет анонимно опубликован на странице результатов, чтобы другие участники могли его прочитать. Не указывай личные данные.",
+    "single-choice": "Выбери один вариант.",
+    "q2": "Если бы ты мог изменить этого человека, что бы ты изменил в первую очередь?",
+    "q3": "Если бы желания этого человека противоречили твоим, как бы ты поступил?",
+    "q4": "Как ты думаешь, чего захотело бы большинство людей в такой ситуации?",
+    "optional": "Необязательные вопросы о тебе",
+    "gender": "Какой у тебя пол?",
+    "captcha-note": "Пройди проверку, чтобы отправить ответ.",
+    "submit": "Отправить ответ",
+    "privacy": "Твой письменный ответ будет анонимно опубликован на странице результатов, чтобы другие участники могли его прочитать. Не указывай имена, контакты и другие сведения, по которым можно определить личность.",
+    "results-eyebrow": "ОБЩАЯ КАРТИНА",
+    "results-title": "Что выберут люди?",
+    "results-copy": "Отдельные ответы доступны с самого начала. Общая статистика откроется после первых 100 действительных ответов.",
+    "view-results": "Посмотреть результаты",
+    "privacy-link": "Конфиденциальность",
+    "goal-link": "Цель эксперимента",
+    "share-button": "Поделиться экспериментом",
+    "share-copied": "Ссылка скопирована. Поделись ею с другими!",
+    "share-failed": "Не удалось поделиться автоматически. Скопируй адрес сайта вручную.",
+    "share-text": "THE HUMAN EXPERIMENT — Открытый всемирный мысленный эксперимент",
+    "signature-title": "Как подписать твой ответ?",
+    "signature-help": "По умолчанию выбран анонимный ответ. Если добавишь подпись, она будет опубликована вместе с ответом.",
+    "signature-anonymous": "Анонимно",
+    "signature-signed": "Указать имя или псевдоним",
+    "signature-label": "Имя или псевдоним",
+    "signature-placeholder": "Введи имя или псевдоним",
+    "signature-note": "Это публичная подпись, а не подтверждённая личность. Не используй имя другого человека без его разрешения.",
+    "author-title": "Перед отправкой",
+    "author-help": "Ответ должен выражать твою собственную позицию.",
+    "author-confirm": "Подтверждаю, что ответ выражает моё собственное мнение и что я понимаю: он будет опубликован публично. Я могу рассуждать о других людях и представлять, чего они могли бы хотеть, но не буду выдавать предположения об их желаниях за подтверждённое мнение этих людей.",
+    "author-required": "Подтверди, что ответ выражает твоё собственное мнение.",
+    "signature-required": "Укажи имя или псевдоним либо выбери анонимный ответ.",
+    "privacy": "Твой ответ будет опубликован публично. Не указывай контактные данные или личную информацию о других людях. Если хочешь подписать ответ, укажи своё имя или псевдоним в отдельном поле.",
+    "q2Options": [
+      "Внешность или тело",
+      "Характер или личность",
+      "Образ жизни или привычки",
+      "Всё, что посчитал бы нужным",
+      "Ничего не стал бы менять",
+      "Предоставил бы ему самому решать, что менять",
+      "Другое"
+    ],
+    "q3Options": [
+      "Уважал бы его желания",
+      "Попытался бы договориться",
+      "Всё равно поступил бы по-своему",
+      "Решение зависело бы от ситуации",
+      "Другое"
+    ],
+    "q4Options": [
+      "Оставить человека как есть",
+      "Помочь ему и улучшить его жизнь",
+      "Изменить его в соответствии со своими представлениями",
+      "Использовать его в собственных интересах",
+      "Предоставить ему возможность самому решать свою судьбу",
+      "Затрудняюсь ответить",
+      "Другое"
+    ],
+    "genderOptions": [
+      "Мужчина",
+      "Женщина",
+      "Другая идентичность",
+      "Предпочитаю не отвечать"
+    ],
+    "required": "Ответь на три вопроса с вариантами.",
+    "captchaMissing": "Пройди проверку на ботов.",
+    "sending": "Отправка…",
+    "success": "Спасибо. Твой ответ сохранён.",
+    "failure": "Не удалось отправить ответ. Попробуй ещё раз.",
+    "network": "Ошибка соединения. Попробуй ещё раз.",
+    "intro3": "И ты тоже можешь повлиять на этот выбор. Что бы ты изменил в этом человеке? Его внешность, характер, привычки, образ жизни — или вообще ничего? Попытался бы воплотить в нём собственные представления об идеале? Помог бы ему стать тем, кем он сам хочет быть? Или предложил бы нечто, о чём никто прежде не задумывался?",
+    "intro4": "У каждого будет своё мнение. Но когда миллионы людей получат возможность высказаться, может открыться нечто совершенно неожиданное: то, чего мы ещё не знаем о самих себе, о человеческих желаниях и о том, к чему способны прийти вместе.",
+    "intro5": "Возможно, перед нами решение, значение которого выходит далеко за пределы судьбы одного человека. Что произойдёт, если человечество впервые увидит, чего оно действительно хочет, когда миллионы индивидуальных решений начнут складываться в одну общую картину? Сможем ли мы договориться? Что выберет большинство? И окажется ли коллективный выбор таким, каким его не смог бы предсказать никто из нас? Никто заранее не знает ответа. В этом и заключается смысл эксперимента."
+  },
+  "es": {
+    "eyebrow": "UN EXPERIMENTO MENTAL ABIERTO Y MUNDIAL",
+    "title": "¿Qué harías si pudieras decidir el destino de otra persona?",
+    "goal-cta-copy": "Esto es más que una encuesta. Descubre el objetivo a largo plazo del experimento.",
+    "goal-cta-link": "Conocer el objetivo a largo plazo",
+    "intro1": "Imagina que el destino de una persona concreta se convierte en el tema de un experimento mundial. Personas de distintos países, culturas y perspectivas pueden expresar su opinión sobre en quién debería convertirse esa persona y cómo debería ser su vida.",
+    "intro2": "Imagina que otra persona te ha confiado voluntariamente el derecho a influir en su futuro.",
+    "prompt": "¿Qué decisión tomarías?",
+    "q1": "Cuéntanos qué harías",
+    "q1help": "Responde con tus propias palabras. No hay respuestas esperadas.",
+    "answer-label": "Tu respuesta",
+    "answer-placeholder": "Yo…",
+    "private-note": "Tu respuesta se publicará de forma anónima en la página de resultados. No incluyas datos personales ni información que permita identificarte.",
+    "single-choice": "Elige una respuesta.",
+    "q2": "Si pudieras cambiar a esta persona, ¿qué cambiarías primero?",
+    "q3": "Si sus deseos entraran en conflicto con los tuyos, ¿qué harías?",
+    "q4": "¿Qué crees que querría hacer la mayoría en esta situación?",
+    "optional": "Preguntas opcionales sobre ti",
+    "gender": "¿Cuál es tu género?",
+    "captcha-note": "Completa la verificación ant bots para enviar tu respuesta.",
+    "submit": "Enviar mi respuesta",
+    "privacy": "Tu respuesta se publicará de forma anónima en la página pública de resultados para que otras personas puedan leerla. No incluyas datos personales ni información que permita identificarte.",
+    "results-eyebrow": "LA VISIÓN COLECTIVA",
+    "results-title": "¿Qué elegirá la gente?",
+    "results-copy": "Los resultados agregados estarán disponibles tras las primeras 100 respuestas válidas.",
+    "view-results": "Ver resultados",
+    "privacy-link": "Privacidad",
+    "goal-link": "Objetivo del experimento",
+    "share-button": "Compartir el experimento",
+    "share-copied": "Enlace copiado. ¡Compártelo con otras personas!",
+    "share-failed": "No se pudo compartir automáticamente. Copia la dirección del sitio.",
+    "share-text": "THE HUMAN EXPERIMENT — Un experimento mental mundial abierto",
+    "q2Options": [
+      "Apariencia o cuerpo",
+      "Carácter o personalidad",
+      "Estilo de vida o hábitos",
+      "Todo lo que considere necesario",
+      "No cambiaría nada",
+      "Dejaría que decidiera qué cambiar",
+      "Otro"
+    ],
+    "q3Options": [
+      "Respetar sus deseos",
+      "Intentar llegar a un acuerdo",
+      "Haría lo que quisiera de todos modos",
+      "Dependería de la situación",
+      "Otro"
+    ],
+    "q4Options": [
+      "Dejar a la persona como está",
+      "Ayudarla y mejorar su vida",
+      "Cambiarla según mis ideas",
+      "Usarla para mis propios intereses",
+      "Dejar que decida su destino",
+      "No estoy seguro",
+      "Otro"
+    ],
+    "genderOptions": [
+      "Hombre",
+      "Mujer",
+      "Otra identidad",
+      "Prefiero no decirlo"
+    ],
+    "required": "Responde las tres preguntas de opción múltiple.",
+    "captchaMissing": "Completa la verificación ant bots.",
+    "sending": "Enviando…",
+    "success": "Gracias. Tu respuesta se ha guardado.",
+    "failure": "No se pudo enviar tu respuesta. Inténtalo de nuevo.",
+    "network": "Se produjo un error de conexión. Inténtalo de nuevo.",
+    "intro3": "Ante ti hay una persona con su propia apariencia, carácter, creencias y deseos. Puedes dejarlo todo como está, intentar comprender lo que quiere para sí misma, cambiar algunos rasgos o replantear por completo en quién se convertirá.",
+    "intro4": "Cada participante responde por su cuenta. Nadie sabe a qué decisión llegarán los demás. A medida que se acumulen las respuestas, puede formarse una opinión colectiva de personas de todo el mundo. Quizá la mayoría quiera tener en cuenta los deseos de esa persona. Quizá la decisión colectiva sea distinta de lo que esperaba cada participante.",
+    "intro5": "Tu respuesta es solo una entre muchas. Pero ¿qué ocurrirá si millones de personas empiezan a decidir el destino de una sola persona? ¿Podrán ponerse de acuerdo? ¿Y qué decidirá la mayoría?"
+  },
+  "pt": {
+    "eyebrow": "UM EXPERIMENTO MENTAL ABERTO E MUNDIAL",
+    "title": "O que farias se pudesses decidir o destino de outra pessoa?",
+    "goal-cta-copy": "Isto é mais do que um inquérito. Descobre o objetivo a longo prazo da experiência.",
+    "goal-cta-link": "Conhecer o objetivo a longo prazo",
+    "intro1": "Imagina que o destino de uma pessoa concreta se torna o tema de uma experiência mundial. Pessoas de diferentes países, culturas e perspetivas podem expressar a sua opinião sobre em quem essa pessoa deveria tornar-se e como deveria ser a sua vida.",
+    "intro2": "Imagina que outra pessoa te confiou voluntariamente o direito de influenciar o seu futuro.",
+    "prompt": "Que decisão tomarias?",
+    "q1": "Conte-nos o que você faria",
+    "q1help": "Responda com suas próprias palavras. Não há respostas esperadas.",
+    "answer-label": "Sua resposta",
+    "answer-placeholder": "Eu…",
+    "private-note": "Sua resposta será publicada anonimamente na página de resultados. Não inclua dados pessoais ou informações que possam identificar você.",
+    "single-choice": "Escolha uma resposta.",
+    "q2": "Se pudesse mudar essa pessoa, o que mudaria primeiro?",
+    "q3": "Se os desejos dela entrassem em conflito com os seus, o que faria?",
+    "q4": "O que você acha que a maioria das pessoas faria nessa situação?",
+    "optional": "Perguntas opcionais sobre você",
+    "gender": "Qual é o seu gênero?",
+    "captcha-note": "Conclua a verificação ant robôs para enviar sua resposta.",
+    "submit": "Enviar minha resposta",
+    "privacy": "Sua resposta será publicada anonimamente na página pública de resultados para que outras pessoas possam lê-la. Não inclua dados pessoais nem informações que possam identificar você.",
+    "results-eyebrow": "A VISÃO COLETIVA",
+    "results-title": "O que as pessoas vão escolher?",
+    "results-copy": "Os resultados agregados serão abertos após as primeiras 100 respostas válidas.",
+    "view-results": "Ver resultados",
+    "privacy-link": "Privacidade",
+    "goal-link": "Objetivo do experimento",
+    "share-button": "Partilhar a experiência",
+    "share-copied": "Ligação copiada. Partilha-a com outras pessoas!",
+    "share-failed": "Não foi possível partilhar automaticamente. Copia o endereço do site.",
+    "share-text": "THE HUMAN EXPERIMENT — Uma experiência mental mundial aberta",
+    "q2Options": [
+      "Aparência ou corpo",
+      "Caráter ou personalidade",
+      "Estilo de vida ou hábitos",
+      "Tudo o que eu considerar necessário",
+      "Não mudaria nada",
+      "Deixaria a pessoa decidir o que mudar",
+      "Outro"
+    ],
+    "q3Options": [
+      "Respeitar os desejos dela",
+      "Tentar chegar a um acordo",
+      "Faria o que eu quisesse mesmo assim",
+      "Dependeria da situação",
+      "Outro"
+    ],
+    "q4Options": [
+      "Deixar a pessoa como está",
+      "Ajudá-la e melhorar sua vida",
+      "Mudá-la conforme minhas ideias",
+      "Usá-la em meu próprio interesse",
+      "Deixar a pessoa decidir seu destino",
+      "Não tenho certeza",
+      "Outro"
+    ],
+    "genderOptions": [
+      "Homem",
+      "Mulher",
+      "Outra identidade",
+      "Prefiro não dizer"
+    ],
+    "required": "Responda às três perguntas de múltipla escolha.",
+    "captchaMissing": "Conclua a verificação ant robôs.",
+    "sending": "Enviando…",
+    "success": "Obrigado. Sua resposta foi registrada.",
+    "failure": "Não foi possível enviar sua resposta. Tente novamente.",
+    "network": "Ocorreu um erro de conexão. Tente novamente.",
+    "intro3": "À tua frente está uma pessoa com a sua aparência, personalidade, convicções e desejos. Podes deixar tudo como está, tentar compreender o que ela própria quer, mudar alguns traços ou repensar por completo em quem ela se tornará.",
+    "intro4": "Cada participante responde de forma independente. Ninguém sabe a que decisão chegarão os outros. À medida que as respostas se acumulam, poderá formar-se uma opinião coletiva de pessoas de todo o mundo. Talvez a maioria queira ter em conta os desejos da própria pessoa. Talvez a escolha coletiva seja diferente do que cada participante esperava.",
+    "intro5": "A tua resposta é apenas uma entre muitas. Mas o que acontecerá se milhões de pessoas começarem a decidir o destino de uma só pessoa? Conseguirão chegar a acordo? E o que decidirá a maioria?"
+  },
+  "zh": {
+    "eyebrow": "开放的全球思想实验",
+    "title": "如果你可以决定另一个人的命运，你会怎么做？",
+    "goal-cta-copy": "这不仅是一项调查。了解这项实验的长期目标。",
+    "goal-cta-link": "了解长期目标",
+    "intro1": "想象一下，一个具体的人的命运成为一项全球实验的主题。来自不同国家、文化背景和持有不同观点的人，都可以表达自己的看法：这个人应该成为怎样的人，他的生活应该是什么样子。",
+    "intro2": "想象另一个人自愿将影响自己未来的权利交给了你。",
+    "prompt": "你会作出什么选择？",
+    "q1": "说说你会怎么做",
+    "q1help": "请用自己的话回答，没有标准答案。",
+    "answer-label": "你的回答",
+    "answer-placeholder": "我会……",
+    "private-note": "你的回答将以匿名方式发布在结果页面。请勿填写个人或可识别身份的信息。",
+    "single-choice": "请选择一个答案。",
+    "q2": "如果你可以改变这个人，你会先改变什么？",
+    "q3": "如果这个人的愿望与你的愿望冲突，你会怎么做？",
+    "q4": "你认为大多数人在这种情况下会怎么做？",
+    "optional": "关于你的可选问题",
+    "gender": "你的性别是？",
+    "captcha-note": "请完成反机器人验证后提交。",
+    "submit": "提交回答",
+    "privacy": "你的回答将以匿名方式发布在公开结果页面，供其他参与者阅读。请勿填写个人信息或可识别身份的内容。",
+    "results-eyebrow": "集体画像",
+    "results-title": "人们会如何选择？",
+    "results-copy": "有效回答达到100份后将开放汇总结果。",
+    "view-results": "查看结果",
+    "privacy-link": "隐私",
+    "goal-link": "实验目标",
+    "share-button": "分享这项实验",
+    "share-copied": "链接已复制。分享给其他人吧！",
+    "share-failed": "无法自动分享，请手动复制网站地址。",
+    "share-text": "THE HUMAN EXPERIMENT — 一项开放的全球思想实验",
+    "q2Options": [
+      "外貌或身体",
+      "性格或个性",
+      "生活方式或习惯",
+      "我认为有必要改变的一切",
+      "什么也不改变",
+      "让对方决定改变什么",
+      "其他"
+    ],
+    "q3Options": [
+      "尊重对方的意愿",
+      "尝试达成共识",
+      "仍然按自己的想法做",
+      "视情况而定",
+      "其他"
+    ],
+    "q4Options": [
+      "保持原样",
+      "帮助对方并改善其生活",
+      "按照自己的想法改变对方",
+      "为了自己的利益利用对方",
+      "让对方决定自己的命运",
+      "不确定",
+      "其他"
+    ],
+    "genderOptions": [
+      "男性",
+      "女性",
+      "其他身份",
+      "不愿透露"
+    ],
+    "required": "请回答三个选择题。",
+    "captchaMissing": "请完成反机器人验证。",
+    "sending": "正在提交…",
+    "success": "谢谢，回答已记录。",
+    "failure": "无法提交回答，请稍后重试。",
+    "network": "网络错误，请重试。",
+    "intro3": "你面前是一个有着自己外貌、性格、信念和愿望的人。你可以保持现状，尝试了解他真正想要什么，改变某些特征，或重新思考他最终会成为怎样的人。",
+    "intro4": "每位参与者独立作答，没有人知道其他人会作出什么选择。随着回答不断增加，来自世界各地的共同意见可能逐渐形成。多数人也许会希望考虑这个人自己的愿望；最终的集体选择也可能与任何一位参与者的预期不同。",
+    "intro5": "你的回答只是众多回答中的一个。但如果数百万人开始决定一个人的命运，会发生什么？他们能达成共识吗？多数人最终会作出什么决定？"
+  },
+  "de": {
+    "eyebrow": "EIN OFFENES WELTWEITES GEDANKENEXPERIMENT",
+    "title": "Was würdest du tun, wenn du über das Schicksal eines anderen Menschen entscheiden könntest?",
+    "goal-cta-copy": "Dies ist mehr als eine Umfrage. Erfahre mehr über das langfristige Ziel des Experiments.",
+    "goal-cta-link": "Langfristiges Ziel entdecken",
+    "intro1": "Stell dir vor, das Schicksal eines konkreten Menschen wird zum Gegenstand eines weltweiten Experiments. Menschen aus verschiedenen Ländern, Kulturen und mit unterschiedlichen Ansichten können ihre Meinung dazu äußern, zu welchem Menschen diese Person werden und wie ihr Leben aussehen sollte.",
+    "intro2": "Stell dir vor, ein anderer Mensch hat dir freiwillig das Recht anvertraut, seine Zukunft zu beeinflussen.",
+    "prompt": "Wie würdest du entscheiden?",
+    "q1": "Erzähl uns, was du tun würdest",
+    "q1help": "Antworte in deinen eigenen Worten. Es gibt keine erwarteten Antworten.",
+    "answer-label": "Deine Antwort",
+    "answer-placeholder": "Ich würde…",
+    "private-note": "Deine Antwort wird anonym auf der Ergebnisseite veröffentlicht. Bitte gib keine persönlichen oder identifizierenden Angaben an.",
+    "single-choice": "Wähle eine Antwort.",
+    "q2": "Wenn du diese Person ändern könntest, was würdest du zuerst ändern?",
+    "q3": "Was würdest du tun, wenn die Wünsche dieser Person deinen widersprechen?",
+    "q4": "Was würden deiner Meinung nach die meisten Menschen in dieser Situation tun?",
+    "optional": "Optionale Fragen über dich",
+    "gender": "Welches Geschlecht hast du?",
+    "captcha-note": "Schließe die Bot-Prüfung ab, um deine Antwort zu senden.",
+    "submit": "Antwort senden",
+    "privacy": "Deine Antwort wird anonym auf der öffentlichen Ergebnisseite veröffentlicht, damit andere sie lesen können. Gib keine persönlichen oder identifizierenden Angaben an.",
+    "results-eyebrow": "DAS KOLLEKTIVE BILD",
+    "results-title": "Was werden Menschen wählen?",
+    "results-copy": "Zusammengefasste Ergebnisse werden nach den ersten 100 gültigen Antworten veröffentlicht.",
+    "view-results": "Ergebnisse ansehen",
+    "privacy-link": "Datenschutz",
+    "goal-link": "Ziel des Experiments",
+    "share-button": "Experiment teilen",
+    "share-copied": "Link kopiert. Teile ihn mit anderen!",
+    "share-failed": "Automatisches Teilen nicht möglich. Bitte kopiere die Website-Adresse.",
+    "share-text": "THE HUMAN EXPERIMENT — Ein offenes weltweites Gedankenexperiment",
+    "q2Options": [
+      "Aussehen oder Körper",
+      "Charakter oder Persönlichkeit",
+      "Lebensstil oder Gewohnheiten",
+      "Alles, was ich für nötig halte",
+      "Ich würde nichts ändern",
+      "Ich würde die Person selbst entscheiden lassen",
+      "Sonstiges"
+    ],
+    "q3Options": [
+      "Ihre Wünsche respektieren",
+      "Eine Einigung suchen",
+      "Trotzdem tun, was ich will",
+      "Es kommt auf die Situation an",
+      "Sonstiges"
+    ],
+    "q4Options": [
+      "Die Person so lassen, wie sie ist",
+      "Ihr helfen und ihr Leben verbessern",
+      "Sie nach meinen Vorstellungen ändern",
+      "Sie für eigene Interessen nutzen",
+      "Die Person über ihr Schicksal entscheiden lassen",
+      "Unsicher",
+      "Sonstiges"
+    ],
+    "genderOptions": [
+      "Mann",
+      "Frau",
+      "Andere Identität",
+      "Keine Angabe"
+    ],
+    "required": "Bitte beantworte die drei Multiple-Choice-Fragen.",
+    "captchaMissing": "Bitte schließe die Bot-Prüfung ab.",
+    "sending": "Wird gesendet…",
+    "success": "Danke. Deine Antwort wurde gespeichert.",
+    "failure": "Deine Antwort konnte nicht gesendet werden. Bitte versuche es erneut.",
+    "network": "Netzwerkfehler. Bitte versuche es erneut.",
+    "intro3": "Vor dir steht ein Mensch mit seinem Aussehen, Charakter, seinen Überzeugungen und Wünschen. Du kannst alles lassen, wie es ist, versuchen zu verstehen, was diese Person selbst möchte, einzelne Eigenschaften verändern oder völlig neu überdenken, zu welchem Menschen sie werden soll.",
+    "intro4": "Jeder Teilnehmer antwortet unabhängig. Niemand weiß, zu welcher Entscheidung die anderen kommen. Mit zunehmender Zahl der Antworten kann sich eine gemeinsame Meinung von Menschen aus aller Welt herausbilden. Vielleicht möchte die Mehrheit die Wünsche der betreffenden Person berücksichtigen. Vielleicht fällt die gemeinsame Entscheidung ganz anders aus, als einzelne Teilnehmer erwarten.",
+    "intro5": "Deine Antwort ist nur eine von vielen. Doch was geschieht, wenn Millionen Menschen beginnen, über das Schicksal eines einzigen Menschen zu entscheiden? Können sie sich einigen? Und wofür wird sich die Mehrheit entscheiden?"
+  },
+  "ja": {
+    "eyebrow": "世界に開かれた思考実験",
+    "title": "もし他人の運命を決められるとしたら、あなたはどうしますか？",
+    "goal-cta-copy": "これは単なるアンケートではありません。この実験が目指す長期的な目標をご覧ください。",
+    "goal-cta-link": "長期的な目標を見る",
+    "intro1": "ある特定の人の運命が、世界規模の実験のテーマになると想像してください。国や文化、考え方の異なる人々が、その人がどんな人になり、どのような人生を送るべきかについて意見を述べます。",
+    "intro2": "その人が、自分の未来に影響を与える権利をあなたに自発的に託したと想像してください。",
+    "prompt": "あなたなら、どんな決断をしますか？",
+    "q1": "あなたならどうするか教えてください",
+    "q1help": "自分の言葉で答えてください。正解はありません。",
+    "answer-label": "あなたの回答",
+    "answer-placeholder": "私は…",
+    "private-note": "回答は結果ページに匿名で公開されます。個人情報や本人を特定できる情報は入力しないでください。",
+    "single-choice": "1つ選んでください。",
+    "q2": "この人を変えられるなら、最初に何を変えますか？",
+    "q3": "この人の望みがあなたの望みと対立したら、どうしますか？",
+    "q4": "この状況で大多数の人は何を望むと思いますか？",
+    "optional": "あなたについての任意の質問",
+    "gender": "あなたの性別は？",
+    "captcha-note": "回答を送信するにはボット確認を完了してください。",
+    "submit": "回答を送信",
+    "privacy": "回答は公開結果ページに匿名で掲載され、他の参加者が読めるようになります。個人情報や本人を特定できる情報は入力しないでください。",
+    "results-eyebrow": "集合的な姿",
+    "results-title": "人々は何を選ぶでしょうか？",
+    "results-copy": "有効な回答が100件に達すると集計結果が公開されます。",
+    "view-results": "結果を見る",
+    "privacy-link": "プライバシー",
+    "goal-link": "実験の目的",
+    "share-button": "実験をシェア",
+    "share-copied": "リンクをコピーしました。ぜひ共有してください！",
+    "share-failed": "自動共有できませんでした。サイトのアドレスをコピーしてください。",
+    "share-text": "THE HUMAN EXPERIMENT — 世界に開かれた思考実験",
+    "q2Options": [
+      "外見や身体",
+      "性格や人格",
+      "生活様式や習慣",
+      "必要だと思うすべて",
+      "何も変えない",
+      "何を変えるか本人に決めてもらう",
+      "その他"
+    ],
+    "q3Options": [
+      "本人の希望を尊重する",
+      "合意を目指す",
+      "それでも自分の望むとおりにする",
+      "状況による",
+      "その他"
+    ],
+    "q4Options": [
+      "そのままにする",
+      "助けて生活を改善する",
+      "自分の考えに合わせて変える",
+      "自分の利益のために利用する",
+      "本人に運命を決めてもらう",
+      "わからない",
+      "その他"
+    ],
+    "genderOptions": [
+      "男性",
+      "女性",
+      "その他",
+      "回答しない"
+    ],
+    "required": "3つの選択式質問に回答してください。",
+    "captchaMissing": "ボット確認を完了してください。",
+    "sending": "送信中…",
+    "success": "ありがとうございます。回答を記録しました。",
+    "failure": "回答を送信できませんでした。もう一度お試しください。",
+    "network": "ネットワークエラーが発生しました。もう一度お試しください。",
+    "intro3": "目の前には、外見、性格、信念、願いを持つ一人の人がいます。何も変えないことも、その人自身の望みを理解しようとすることも、一部の特徴を変えることも、どんな人になるのかを根本から考え直すこともできます。",
+    "intro4": "参加者はそれぞれ独立して回答します。他の人がどんな結論に至るかは分かりません。回答が増えるにつれ、世界中の人々の共通した意見が形づくられるかもしれません。多数の人が本人の希望を尊重したいと考えるかもしれませんし、集団の選択が個々の参加者の予想と異なるかもしれません。",
+    "intro5": "あなたの回答は、数多くの回答の一つにすぎません。しかし、何百万人もの人々が一人の運命を決め始めたら、何が起こるでしょうか。意見を一致させられるでしょうか。そして、多数派はどんな決定をするのでしょうか。"
+  },
+  "fr": {
+    "eyebrow": "UNE EXPÉRIENCE DE PENSÉE MONDIALE ET OUVERTE",
+    "title": "Que ferais-tu si tu pouvais décider du destin d’une autre personne ?",
+    "goal-cta-copy": "C’est plus qu’un sondage. Découvre l’objectif à long terme de cette expérience.",
+    "goal-cta-link": "Découvrir l’objectif à long terme",
+    "intro1": "Imagine que le destin d’une personne précise devienne le sujet d’une expérience mondiale. Des personnes de pays, de cultures et d’horizons différents peuvent donner leur avis sur la personne qu’elle devrait devenir et sur la vie qu’elle devrait mener.",
+    "intro2": "Imagine qu’une autre personne t’ait volontairement confié le droit d’influencer son avenir.",
+    "prompt": "Quelle décision prendrais-tu ?",
+    "q1": "Dites-nous ce que vous feriez",
+    "q1help": "Répondez avec vos propres mots. Il n’y a pas de réponse attendue.",
+    "answer-label": "Votre réponse",
+    "answer-placeholder": "Je…",
+    "private-note": "Votre réponse sera publiée anonymement sur la page des résultats. N’incluez aucune donnée personnelle ou permettant de vous identifier.",
+    "single-choice": "Choisissez une réponse.",
+    "q2": "Si vous pouviez changer cette personne, que changeriez-vous en premier ?",
+    "q3": "Que feriez-vous si les souhaits de cette personne entraient en conflit avec les vôtres ?",
+    "q4": "Que voudrait faire la plupart des gens dans cette situation, selon vous ?",
+    "optional": "Questions facultatives à votre sujet",
+    "gender": "Quel est votre genre ?",
+    "captcha-note": "Effectuez la vérification anti-robot pour envoyer votre réponse.",
+    "submit": "Envoyer ma réponse",
+    "privacy": "Votre réponse sera publiée anonymement sur la page publique des résultats afin que les autres participants puissent la lire. N’incluez aucune donnée personnelle ou permettant de vous identifier.",
+    "results-eyebrow": "LE PORTRAIT COLLECTIF",
+    "results-title": "Que choisiront les gens ?",
+    "results-copy": "Les résultats agrégés seront disponibles après les 100 premières réponses valides.",
+    "view-results": "Voir les résultats",
+    "privacy-link": "Confidentialité",
+    "goal-link": "Objectif de l’expérience",
+    "share-button": "Partager l’expérience",
+    "share-copied": "Lien copié. Partagez-le avec d’autres personnes !",
+    "share-failed": "Partage automatique impossible. Copiez l’adresse du site.",
+    "share-text": "THE HUMAN EXPERIMENT — Une expérience de pensée mondiale ouverte",
+    "q2Options": [
+      "Apparence ou corps",
+      "Caractère ou personnalité",
+      "Mode de vie ou habitudes",
+      "Tout ce que je juge nécessaire",
+      "Je ne changerais rien",
+      "Je le laisserais décider quoi changer",
+      "Autre"
+    ],
+    "q3Options": [
+      "Respecter ses souhaits",
+      "Essayer de trouver un accord",
+      "Faire quand même ce que je veux",
+      "Cela dépendrait de la situation",
+      "Autre"
+    ],
+    "q4Options": [
+      "Laisser la personne telle quelle",
+      "L’aider et améliorer sa vie",
+      "La changer selon mes idées",
+      "L’utiliser à mes propres fins",
+      "La laisser décider de son destin",
+      "Je ne sais pas",
+      "Autre"
+    ],
+    "genderOptions": [
+      "Homme",
+      "Femme",
+      "Autre identité",
+      "Je préfère ne pas répondre"
+    ],
+    "required": "Veuillez répondre aux trois questions à choix multiples.",
+    "captchaMissing": "Veuillez effectuer la vérification anti-robot.",
+    "sending": "Envoi…",
+    "success": "Merci. Votre réponse a été enregistrée.",
+    "failure": "Impossible d’envoyer votre réponse. Veuillez réessayer.",
+    "network": "Une erreur réseau est survenue. Veuillez réessayer.",
+    "intro3": "Devant toi se trouve une personne avec son apparence, son caractère, ses convictions et ses désirs. Tu peux tout laisser tel quel, essayer de comprendre ce qu’elle souhaite elle-même, modifier certains traits ou repenser entièrement la personne qu’elle deviendra.",
+    "intro4": "Chaque participant répond indépendamment. Personne ne sait quelle décision les autres prendront. À mesure que les réponses s’accumulent, une opinion commune venue du monde entier peut se dessiner. La majorité voudra peut-être tenir compte des souhaits de cette personne. Le choix collectif pourrait aussi être très différent de ce que chaque participant imaginait.",
+    "intro5": "Ta réponse n’est qu’une parmi beaucoup d’autres. Mais que se passera-t-il si des millions de personnes commencent à décider du destin d’une seule personne ? Pourront-elles s’accorder ? Et quelle décision la majorité prendra-t-elle ?"
+  },
+  "ar": {
+    "eyebrow": "تجربة فكرية عالمية مفتوحة",
+    "title": "ماذا ستفعل لو استطعت أن تقرر مصير شخص آخر؟",
+    "goal-cta-copy": "هذه أكثر من مجرد استطلاع. تعرّف على الهدف طويل المدى وراء هذه التجربة.",
+    "goal-cta-link": "اكتشف الهدف طويل المدى",
+    "intro1": "تخيّل أن مصير شخص محدد أصبح موضوع تجربة عالمية. يستطيع أشخاص من بلدان وثقافات وخلفيات مختلفة التعبير عن آرائهم بشأن الشخص الذي يمكن أن يصبحه هذا الإنسان، والحياة التي ينبغي أن يعيشها.",
+    "intro2": "تخيّل أن شخصًا آخر منحك طوعًا حق التأثير في مستقبله.",
+    "prompt": "ما القرار الذي ستتخذه؟",
+    "q1": "أخبرنا ماذا ستفعل",
+    "q1help": "أجب بكلماتك الخاصة. لا توجد إجابات متوقعة.",
+    "answer-label": "إجابتك",
+    "answer-placeholder": "سأ…",
+    "private-note": "ستُنشر إجابتك بشكل مجهول في صفحة النتائج. يُرجى عدم تضمين بيانات شخصية أو معلومات تكشف هويتك.",
+    "single-choice": "اختر إجابة واحدة.",
+    "q2": "إذا استطعت تغيير هذا الشخص، فما أول شيء ستغيّره؟",
+    "q3": "إذا تعارضت رغبات هذا الشخص مع رغباتك، فماذا ستفعل؟",
+    "q4": "ما الذي تعتقد أن معظم الناس سيرغبون في فعله في هذا الموقف؟",
+    "optional": "أسئلة اختيارية عنك",
+    "gender": "ما جنسك؟",
+    "captcha-note": "أكمل اختبار مكافحة الروبوتات لإرسال إجابتك.",
+    "submit": "إرسال إجابتي",
+    "privacy": "ستُنشر إجابتك بشكل مجهول في صفحة النتائج العامة ليتمكن المشاركون الآخرون من قراءتها. يُرجى عدم تضمين بيانات شخصية أو معلومات تكشف الهوية.",
+    "results-eyebrow": "الصورة الجماعية",
+    "results-title": "ماذا سيختار الناس؟",
+    "results-copy": "ستُتاح النتائج المجمّعة بعد أول 100 إجابة صالحة.",
+    "view-results": "عرض النتائج",
+    "privacy-link": "الخصوصية",
+    "goal-link": "هدف التجربة",
+    "share-button": "مشاركة التجربة",
+    "share-copied": "تم نسخ الرابط. شاركه مع الآخرين!",
+    "share-failed": "تعذّرت المشاركة تلقائيًا. يُرجى نسخ عنوان الموقع يدويًا.",
+    "share-text": "THE HUMAN EXPERIMENT — تجربة فكرية عالمية مفتوحة",
+    "q2Options": [
+      "المظهر أو الجسد",
+      "الشخصية أو الطباع",
+      "نمط الحياة أو العادات",
+      "كل ما أراه ضروريًا",
+      "لن أغيّر شيئًا",
+      "أترك له قرار ما يريد تغييره",
+      "أخرى"
+    ],
+    "q3Options": [
+      "احترام رغباته",
+      "محاولة التوصل إلى اتفاق",
+      "فعل ما أريده على أي حال",
+      "يعتمد على الموقف",
+      "أخرى"
+    ],
+    "q4Options": [
+      "ترك الشخص كما هو",
+      "مساعدته وتحسين حياته",
+      "تغييره وفق أفكاري",
+      "استغلاله لمصالحي",
+      "ترك الشخص يقرر مصيره",
+      "لست متأكدًا",
+      "أخرى"
+    ],
+    "genderOptions": [
+      "رجل",
+      "امرأة",
+      "هوية أخرى",
+      "أفضل عدم الإجابة"
+    ],
+    "required": "يرجى الإجابة عن أسئلة الاختيار الثلاثة.",
+    "captchaMissing": "يرجى إكمال اختبار مكافحة الروبوتات.",
+    "sending": "جارٍ الإرسال…",
+    "success": "شكرًا لك. تم تسجيل إجابتك.",
+    "failure": "تعذّر إرسال إجابتك. حاول مرة أخرى.",
+    "network": "حدث خطأ في الشبكة. حاول مرة أخرى.",
+    "intro3": "أمامك إنسان له مظهره وشخصيته ومعتقداته ورغباته. يمكنك ترك كل شيء كما هو، أو محاولة فهم ما يريده لنفسه، أو تغيير بعض صفاته، أو إعادة التفكير بالكامل في الشخص الذي سيصبحه.",
+    "intro4": "يجيب كل مشارك بصورة مستقلة، ولا يعرف أحد القرار الذي سيتوصل إليه الآخرون. ومع تراكم الإجابات، قد تتشكل رؤية مشتركة لأشخاص من أنحاء العالم. ربما ترغب الأغلبية في مراعاة رغبات هذا الشخص نفسه، وربما يكون الاختيار الجماعي مختلفًا عما توقعه المشاركون.",
+    "intro5": "إجابتك واحدة من إجابات كثيرة. لكن ماذا سيحدث إذا بدأ ملايين الأشخاص في تقرير مصير شخص واحد؟ هل سيتمكنون من الاتفاق؟ وما القرار الذي ستتخذه الأغلبية؟"
   }
 };
+for (const language of Object.values(translations)) {
+  for (const key of ['signature-title','signature-help','signature-anonymous','signature-signed','signature-label','signature-placeholder','signature-note','author-title','author-help','author-confirm','author-required','signature-required','privacy']) {
+    if (!language[key]) language[key] = translations.en[key];
+  }
+}
 let turnstileToken = '';
 window.onTurnstileSuccess = token => { turnstileToken = token; };
 window.onTurnstileExpired = () => { turnstileToken = ''; };
 const form = document.querySelector('#survey-form');
 const languageSelect = document.querySelector('#language');
 const answer = document.querySelector('#free-answer');
+const signatureField = document.querySelector('#signature-field');
+const signatureInput = document.querySelector('#signature-name');
+const authorConfirmed = document.querySelector('#author-confirmed');
 const charCount = document.querySelector('#char-count');
 const status = document.querySelector('#form-status');
+const postSubmitShare = document.querySelector('#post-submit-share');
+const footerShare = document.querySelector('#footer-share');
+const shareFeedback = document.querySelector('#share-feedback');
 const submitButton = document.querySelector('#submit-button');
 const turnstileWidget = document.querySelector('#turnstile-widget');
 const setupWarning = document.querySelector('#setup-warning');
+const LANGS = Object.keys(translations);
+let activeLanguage = 'en';
 if (!turnstileWidget.dataset.sitekey || turnstileWidget.dataset.sitekey.includes('REPLACE_WITH')) {
   setupWarning.hidden = false;
   submitButton.disabled = true;
 }
 function renderOptions(id, values, name, optional=false) {
-  const root = document.getElementById(id); root.replaceChildren();
+  const root = document.getElementById(id);
+  const previous = root.querySelector('input:checked')?.value;
+  root.replaceChildren();
   values.forEach((value,index) => {
     const label = document.createElement('label'); label.className='option';
     const input = document.createElement('input'); input.type='radio'; input.name=name; input.value=String(index); input.required=!optional;
+    if (previous === String(index)) input.checked = true;
     const span = document.createElement('span'); span.textContent=value;
     label.append(input,span); root.append(label);
   });
 }
 function renderLanguage(lang) {
-  const t=translations[lang]||translations.en; document.documentElement.lang=lang;
-  document.querySelectorAll('[data-i18n]').forEach(el=>{const key=el.dataset.i18n;if(t[key])el.textContent=t[key];});
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(el=>{const key=el.dataset.i18nPlaceholder;if(t[key])el.placeholder=t[key];});
+  const t = translations[lang] || translations.en;
+  activeLanguage = translations[lang] ? lang : 'en';
+  document.documentElement.lang = activeLanguage;
+  document.documentElement.dir = activeLanguage === 'ar' ? 'rtl' : 'ltr';
+  document.body.classList.toggle('rtl-language', activeLanguage === 'ar');
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key=el.dataset.i18n;
+    if (Object.prototype.hasOwnProperty.call(t,key)) el.textContent=t[key];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    const key=el.dataset.i18nPlaceholder;
+    if (Object.prototype.hasOwnProperty.call(t,key)) el.placeholder=t[key];
+  });
+  const wordmark=document.querySelector('.wordmark');
+  if(wordmark) wordmark.setAttribute('aria-label', activeLanguage==='ar' ? 'الصفحة الرئيسية لتجربة الإنسان' : ({ru:'Главная — The Human Experiment',es:'Inicio — The Human Experiment',pt:'Início — The Human Experiment',zh:'The Human Experiment 首页',de:'The Human Experiment Startseite',ja:'The Human Experiment ホーム',fr:'Accueil — The Human Experiment'}[activeLanguage] || 'The Human Experiment home'));
+  languageSelect.setAttribute('aria-label', ({ru:'Язык',es:'Idioma',pt:'Idioma',zh:'语言',de:'Sprache',ja:'言語',fr:'Langue',ar:'اللغة'}[activeLanguage] || 'Language'));
   renderOptions('q2-options',t.q2Options,'q2'); renderOptions('q3-options',t.q3Options,'q3'); renderOptions('q4-options',t.q4Options,'q4');
   renderOptions('gender-options',t.genderOptions,'gender',true);
   if(charCount) charCount.textContent=`${answer.value.length} / 5000`;
+  languageSelect.value=activeLanguage;
+  document.querySelectorAll('[data-i18n-share]').forEach(el => { el.textContent = t['share-button'] || translations.en['share-button']; });
+  try { localStorage.setItem('human-experiment-language',activeLanguage); } catch {}
 }
-languageSelect.addEventListener('change',()=>renderLanguage(languageSelect.value));
+async function shareExperiment() {
+  const t = translations[activeLanguage] || translations.en;
+  const url = `${window.location.origin}/`;
+  const shareData = { title: 'THE HUMAN EXPERIMENT', text: t['share-text'], url };
+  if (navigator.share) {
+    try {
+      await navigator.share(shareData);
+      if (shareFeedback) shareFeedback.textContent = '';
+      return;
+    } catch (error) {
+      if (error && error.name === 'AbortError') return;
+    }
+  }
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      await navigator.clipboard.writeText(url);
+    } else {
+      const temp = document.createElement('textarea');
+      temp.value = url; temp.setAttribute('readonly', '');
+      temp.style.position = 'fixed'; temp.style.opacity = '0';
+      document.body.append(temp); temp.select();
+      const copied = document.execCommand('copy'); temp.remove();
+      if (!copied) throw new Error('clipboard_unavailable');
+    }
+    if (shareFeedback) shareFeedback.textContent = t['share-copied'];
+  } catch {
+    if (shareFeedback) shareFeedback.textContent = `${t['share-failed']} ${url}`;
+  }
+}
+[postSubmitShare, footerShare].forEach(button => button?.addEventListener('click', shareExperiment));
+languageSelect.addEventListener('change', () => renderLanguage(languageSelect.value));
+function syncSignatureField() {
+  const signed = form.querySelector('input[name="signatureMode"]:checked')?.value === 'signed';
+  signatureField.hidden = !signed;
+  signatureInput.required = signed;
+}
+form.querySelectorAll('input[name="signatureMode"]').forEach(input => input.addEventListener('change', syncSignatureField));
+syncSignatureField();
 answer.addEventListener('input',()=>{charCount.textContent=`${answer.value.length} / 5000`;});
-renderLanguage('en');
+let savedLanguage='en';
+try { const saved=localStorage.getItem('human-experiment-language'); if (saved && translations[saved]) savedLanguage=saved; } catch {}
+renderLanguage(savedLanguage);
 form.addEventListener('submit',async event=>{
-  event.preventDefault(); const lang=languageSelect.value; const t=translations[lang];
+  event.preventDefault(); const lang=activeLanguage; const t=translations[lang];
   status.className='form-status'; status.textContent='';
   if(!form.reportValidity()){status.textContent=t.required;status.className='form-status error';return;}
   if(!turnstileToken){status.textContent=t.captchaMissing;status.className='form-status error';return;}
   const selected=name=>{const input=form.querySelector(`input[name="${name}"]:checked`);return input?Number(input.value):null;};
-  const payload={language:lang,freeAnswer:answer.value.trim(),q2:selected('q2'),q3:selected('q3'),q4:selected('q4'),gender:selected('gender'),turnstileToken};
+  const signatureMode=form.querySelector('input[name="signatureMode"]:checked')?.value || 'anonymous';
+  const signature=signatureMode==='signed'?signatureInput.value.trim():'';
+  if(!authorConfirmed.checked){status.textContent=t['author-required'];status.className='form-status error';return;}
+  if(signatureMode==='signed'&&!signature){status.textContent=t['signature-required'];status.className='form-status error';signatureInput.focus();return;}
+  const payload={language:lang,freeAnswer:answer.value.trim(),q2:selected('q2'),q3:selected('q3'),q4:selected('q4'),gender:selected('gender'),signature,authorConfirmed:authorConfirmed.checked,turnstileToken};
   submitButton.disabled=true; submitButton.textContent=t.sending;
   try{
     const response=await fetch('/api/submit',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
-    const result=await response.json();
+    let result; try { result=await response.json(); } catch { throw new Error('server'); }
     if(!response.ok||!result.ok) throw new Error(result.error||'submit_failed');
-    status.textContent=t.success;status.className='form-status success';form.reset();turnstileToken='';
+    status.textContent=t.success;status.className='form-status success';if(postSubmitShare)postSubmitShare.hidden=false;form.reset();syncSignatureField();turnstileToken='';
     if(window.turnstile) window.turnstile.reset(); charCount.textContent='0 / 5000';
-  }catch(error){status.textContent=error.message==='network'?t.network:t.failure;status.className='form-status error';turnstileToken='';if(window.turnstile)window.turnstile.reset();}
+  }catch(error){status.textContent=error instanceof TypeError?t.network:t.failure;status.className='form-status error';turnstileToken='';if(window.turnstile)window.turnstile.reset();}
   finally{submitButton.disabled=turnstileWidget.dataset.sitekey.includes('REPLACE_WITH');submitButton.textContent=t.submit;}
 });

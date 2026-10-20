@@ -27,7 +27,10 @@ async function submit(request,env){
   if(!env.DB||!env.TURNSTILE_SECRET_KEY||!env.RATE_LIMIT_SALT)return json({ok:false,error:'not_configured'},503);
   const length=Number(request.headers.get('content-length')||0);if(length>12000)return json({ok:false,error:'too_large'},413);
   let body;try{body=await request.json();}catch{return json({ok:false,error:'invalid_json'},400);}
-  if(!body||!['en','ru'].includes(body.language)||!validText(body.freeAnswer,5000)||!validChoice(body.q2,OPTIONS.q2.en.length)||!validChoice(body.q3,OPTIONS.q3.en.length)||!validChoice(body.q4,OPTIONS.q4.en.length))return json({ok:false,error:'invalid_response'},400);
+  if(!body||!['en','ru','es','pt','zh','de','ja','fr','ar'].includes(body.language)||!validText(body.freeAnswer,5000)||!validChoice(body.q2,OPTIONS.q2.en.length)||!validChoice(body.q3,OPTIONS.q3.en.length)||!validChoice(body.q4,OPTIONS.q4.en.length))return json({ok:false,error:'invalid_response'},400);
+  if(body.authorConfirmed!==true)return json({ok:false,error:'author_confirmation_required'},400);
+  const signature=typeof body.signature==='string'?body.signature.trim():'';
+  if(signature.length>60)return json({ok:false,error:'invalid_signature'},400);
   if(body.gender!==null&&body.gender!==undefined&&!validChoice(body.gender,OPTIONS.gender.en.length))return json({ok:false,error:'invalid_gender'},400);
   if(typeof body.turnstileToken!=='string'||body.turnstileToken.length>2048)return json({ok:false,error:'captcha_required'},400);
   const ip=request.headers.get('CF-Connecting-IP')||'';
@@ -36,9 +39,23 @@ async function submit(request,env){
   let allowed=false;try{allowed=await rateLimit(request,env);}catch{return json({ok:false,error:'rate_limit_unavailable'},503);}
   if(!allowed)return json({ok:false,error:'rate_limited'},429);
   try{
-    await env.DB.prepare('INSERT INTO responses (language, free_answer, q2, q3, q4, gender, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)').bind(body.language,body.freeAnswer.trim(),body.q2,body.q3,body.q4,body.gender??null,new Date().toISOString()).run();
+    const publicId=crypto.randomUUID();
+    const topic=classifyTopic(body.freeAnswer);
+    await env.DB.prepare('INSERT INTO responses (language, free_answer, q2, q3, q4, gender, created_at, public_id, is_public, topic, signature) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)').bind(body.language,body.freeAnswer.trim(),body.q2,body.q3,body.q4,body.gender??null,new Date().toISOString(),publicId,topic,signature||null).run();
     return json({ok:true});
   }catch{return json({ok:false,error:'save_failed'},500);}
+}
+function classifyTopic(text){
+  const value=String(text||'').toLowerCase();
+  const groups=[
+    ['character',/характер|личност|character|personality|temperament|привычк|habit|поведени|behavio/],
+    ['appearance',/внешност|тел[оа]|красот|appearance|body|beauty|look/],
+    ['freedom',/свобод|границ|соглас|выбор|freedom|boundary|consent|choice/],
+    ['life',/жизн|счаст|здоров|деньг|работ|life|happ|health|money|work/],
+    ['relationships',/любов|отношени|семь|друз|love|relationship|family|friend/],
+    ['other',/.*/]
+  ];
+  return (groups.find(([key,re])=>re.test(value))||['other'])[0];
 }
 async function results(env){
   if(!env.DB)return json({error:'not_configured'},503);
@@ -49,17 +66,73 @@ async function results(env){
     const rows=await env.DB.prepare(`SELECT ${column} AS choice, COUNT(*) AS count FROM responses WHERE ${column} IS NOT NULL GROUP BY ${column}`).all();
     const counts=new Map((rows.results||[]).map(row=>[Number(row.choice),Number(row.count)]));
     const en=OPTIONS[question].en;const ru=OPTIONS[question].ru;
-    return en.map((label,index)=>({label:`${label} / ${ru[index]}`,count:counts.get(index)||0})).filter(item=>item.count>0);
+    const items=en.map((label,index)=>({label:`${label} / ${ru[index]}`,count:counts.get(index)||0})).filter(item=>item.count>0);
+    return {items,answered:items.reduce((sum,item)=>sum+item.count,0)};
   };
   const [q2,q3,q4]=await Promise.all([getCounts('q2','q2'),getCounts('q3','q3'),getCounts('q4','q4')]);
-  return json({unlocked:true,total,updatedAt:totalRow?.updated_at||new Date().toISOString(),q2,q3,q4});
+  return json({unlocked:true,total,updatedAt:totalRow?.updated_at||new Date().toISOString(),q2:q2.items,q3:q3.items,q4:q4.items,answered:{q2:q2.answered,q3:q3.answered,q4:q4.answered}});
 }
+async function publicResponses(request,env){
+  if(!env.DB)return json({error:'not_configured'},503);
+  const url=new URL(request.url);const limit=Math.max(1,Math.min(24,Number(url.searchParams.get('limit')||12)));const offset=Math.max(0,Number(url.searchParams.get('offset')||0));
+  const search=(url.searchParams.get('q')||'').trim().slice(0,160);const topic=(url.searchParams.get('topic')||'').trim();const from=(url.searchParams.get('from')||'').slice(0,10);const to=(url.searchParams.get('to')||'').slice(0,10);const sort=url.searchParams.get('sort')||'newest';
+  const clauses=['r.is_public=1'];const binds=[];
+  if(search){clauses.push('r.free_answer LIKE ?');binds.push(`%${search.replace(/[\\%_]/g,'')}%`);}
+  if(topic&&['character','appearance','freedom','life','relationships','other'].includes(topic)){clauses.push('r.topic=?');binds.push(topic);}
+  if(/^\d{4}-\d{2}-\d{2}$/.test(from)){clauses.push('substr(r.created_at,1,10)>=?');binds.push(from);}
+  if(/^\d{4}-\d{2}-\d{2}$/.test(to)){clauses.push('substr(r.created_at,1,10)<=?');binds.push(to);}
+  const where=clauses.join(' AND ');
+  let order='r.created_at DESC';
+  if(sort==='random')order='RANDOM()';
+  else if(sort==='popular')order='reaction_count DESC, r.created_at DESC';
+  else if(sort==='unusual')order='topic_frequency ASC, length(r.free_answer) DESC, r.created_at DESC';
+  const count=await env.DB.prepare(`SELECT COUNT(*) AS total FROM responses r WHERE ${where}`).bind(...binds).first();
+  const rows=await env.DB.prepare(`SELECT r.id, r.public_id, r.free_answer, r.language, r.topic, r.created_at, r.q2, r.q3, r.q4, r.signature,
+    (SELECT COUNT(*) FROM response_reactions rr WHERE rr.response_id=r.id AND rr.reaction='interesting') AS reaction_count,
+    (SELECT COUNT(*) FROM responses r2 WHERE r2.is_public=1 AND r2.topic=r.topic) AS topic_frequency
+    FROM responses r WHERE ${where} ORDER BY ${order} LIMIT ? OFFSET ?`).bind(...binds,limit,offset).all();
+  const topics={character:'Character & habits',appearance:'Appearance',freedom:'Freedom & boundaries',life:'Life & wellbeing',relationships:'Relationships',other:'Other'};
+  const items=(rows.results||[]).map(row=>({id:row.public_id||`legacy-${row.id}`,answer:row.free_answer,signature:row.signature||null,language:row.language,topic:row.topic||'other',topicLabel:topics[row.topic]||topics.other,date:row.created_at,publicCode:String(row.public_id||row.id).slice(0,8).toUpperCase(),reactionCount:Number(row.reaction_count||0),context:{q2:`${OPTIONS.q2.en[row.q2]||''} / ${OPTIONS.q2.ru[row.q2]||''}`,q3:`${OPTIONS.q3.en[row.q3]||''} / ${OPTIONS.q3.ru[row.q3]||''}`,q4:`${OPTIONS.q4.en[row.q4]||''} / ${OPTIONS.q4.ru[row.q4]||''}`}}));
+  return json({items,total:Number(count?.total||0),limit,offset,hasMore:offset+items.length<Number(count?.total||0)});
+}
+async function suggestTopic(request,env){
+  if(!env.DB||!env.RATE_LIMIT_SALT)return json({error:'not_configured'},503);
+  let body;try{body=await request.json();}catch{return json({error:'invalid_json'},400);}
+  const allowed=['character','appearance','freedom','life','relationships','other'];
+  if(typeof body?.id!=='string'||body.id.length>80||!allowed.includes(body.topic)||typeof body.voterToken!=='string'||body.voterToken.length<16||body.voterToken.length>128)return json({error:'invalid_suggestion'},400);
+  const row=await env.DB.prepare('SELECT id FROM responses WHERE public_id=? AND is_public=1').bind(body.id).first();if(!row)return json({error:'not_found'},404);
+  const voterHash=await sha256(`${env.RATE_LIMIT_SALT}:${body.voterToken}`);
+  try{await env.DB.prepare('INSERT INTO topic_suggestions (response_id,suggested_topic,voter_hash,created_at) VALUES (?, ?, ?, ?)').bind(row.id,body.topic,voterHash,new Date().toISOString()).run();}
+  catch{return json({error:'already_suggested'},409);}
+  return json({ok:true});
+}
+async function react(request,env){
+  if(!env.DB||!env.RATE_LIMIT_SALT)return json({error:'not_configured'},503);
+  let body;try{body=await request.json();}catch{return json({error:'invalid_json'},400);}
+  if(typeof body?.id!=='string'||body.id.length>80||body.reaction!=='interesting'||typeof body.voterToken!=='string'||body.voterToken.length<16||body.voterToken.length>128)return json({error:'invalid_reaction'},400);
+  const row=await env.DB.prepare('SELECT id FROM responses WHERE public_id=? AND is_public=1').bind(body.id).first();if(!row)return json({error:'not_found'},404);
+  const voterHash=await sha256(`${env.RATE_LIMIT_SALT}:${body.voterToken}`);
+  try{await env.DB.prepare('INSERT INTO response_reactions (response_id,reaction,voter_hash,created_at) VALUES (?, ?, ?, ?)').bind(row.id,body.reaction,voterHash,new Date().toISOString()).run();}
+  catch{return json({error:'already_reacted'},409);}
+  const result=await env.DB.prepare("SELECT COUNT(*) AS count FROM response_reactions WHERE response_id=? AND reaction='interesting'").bind(row.id).first();
+  return json({ok:true,count:Number(result?.count||0)});
+}
+
 export default {
   async fetch(request,env){
     const url=new URL(request.url);
     if(url.pathname==='/api/submit'&&request.method==='POST')return submit(request,env);
     if(url.pathname==='/api/results'&&request.method==='GET'){
       try{return await results(env);}catch{return json({error:'results_unavailable'},503);}
+    }
+    if(url.pathname==='/api/public-responses'&&request.method==='GET'){
+      try{return await publicResponses(request,env);}catch{return json({error:'responses_unavailable'},503);}
+    }
+    if(url.pathname==='/api/reaction'&&request.method==='POST'){
+      try{return await react(request,env);}catch{return json({error:'reaction_unavailable'},503);}
+    }
+    if(url.pathname==='/api/topic-suggestion'&&request.method==='POST'){
+      try{return await suggestTopic(request,env);}catch{return json({error:'topic_suggestion_unavailable'},503);}
     }
     if(url.pathname.startsWith('/api/'))return json({error:'not_found'},404);
     return env.ASSETS.fetch(request);
