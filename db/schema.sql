@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS responses (
   q4_other TEXT CHECK (q4_other IS NULL OR length(q4_other) <= 500),
   gender INTEGER NULL CHECK (gender BETWEEN 0 AND 3),
   orientation INTEGER NULL CHECK (orientation BETWEEN 0 AND 4),
+  signature TEXT CHECK (signature IS NULL OR length(signature) <= 60),
   created_at TEXT NOT NULL,
   public_id TEXT,
   is_public INTEGER NOT NULL DEFAULT 0,
