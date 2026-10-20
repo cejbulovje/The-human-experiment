@@ -103,7 +103,25 @@ async function publicResponses(request,env){
     (SELECT COUNT(*) FROM responses r2 WHERE r2.is_public=1 AND r2.topic=r.topic) AS topic_frequency
     FROM responses r WHERE ${where} ORDER BY ${order} LIMIT ? OFFSET ?`).bind(...binds,limit,offset).all();
   const topics={character:'Character & habits',appearance:'Appearance',freedom:'Freedom & boundaries',life:'Life & wellbeing',relationships:'Relationships',other:'Other'};
-  const items=(rows.results||[]).map(row=>({id:row.public_id||`legacy-${row.id}`,answer:row.free_answer,signature:row.signature||null,language:row.language,topic:row.topic||'other',topicLabel:topics[row.topic]||topics.other,date:row.created_at,publicCode:String(row.public_id||row.id).slice(0,8).toUpperCase(),reactionCount:Number(row.reaction_count||0),context:{q2:`${OPTIONS.q2.en[row.q2]||''} / ${OPTIONS.q2.ru[row.q2]||''}`,q3:`${OPTIONS.q3.en[row.q3]||''} / ${OPTIONS.q3.ru[row.q3]||''}`,q4:`${OPTIONS.q4.en[row.q4]||''} / ${OPTIONS.q4.ru[row.q4]||''}`,q2Other:row.q2_other||'',q3Other:row.q3_other||'',q4Other:row.q4_other||'}}));
+  const items = (rows.results || []).map((row) => ({
+    id: row.public_id || `legacy-${row.id}`,
+    answer: row.free_answer,
+    signature: row.signature || null,
+    language: row.language,
+    topic: row.topic || 'other',
+    topicLabel: topics[row.topic] || topics.other,
+    date: row.created_at,
+    publicCode: String(row.public_id || row.id).slice(0, 8).toUpperCase(),
+    reactionCount: Number(row.reaction_count || 0),
+    context: {
+      q2: `${OPTIONS.q2.en[row.q2] || ''} / ${OPTIONS.q2.ru[row.q2] || ''}`,
+      q3: `${OPTIONS.q3.en[row.q3] || ''} / ${OPTIONS.q3.ru[row.q3] || ''}`,
+      q4: `${OPTIONS.q4.en[row.q4] || ''} / ${OPTIONS.q4.ru[row.q4] || ''}`,
+      q2Other: row.q2_other || '',
+      q3Other: row.q3_other || '',
+      q4Other: row.q4_other || ''
+    }
+  }));
   return json({items,total:Number(count?.total||0),limit,offset,hasMore:offset+items.length<Number(count?.total||0)});
 }
 async function suggestTopic(request,env){
