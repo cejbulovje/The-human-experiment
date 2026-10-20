@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "the-human-experiment-test-migration",
+  "compatibility_date": "2026-10-14",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "the-human-experiment-test",
+      "database_id": "f78a205b-e856-464e-81a6-d753f8d69b14"
+    }
+  ]
+}
