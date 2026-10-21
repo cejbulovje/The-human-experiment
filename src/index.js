@@ -131,9 +131,6 @@ async function suggestTopic(request,env){
   const allowed=['character','appearance','freedom','life','relationships','other'];
   if(typeof body?.id!=='string'||body.id.length>80||!allowed.includes(body.topic)||typeof body.voterToken!=='string'||body.voterToken.length<16||body.voterToken.length>128)return json({error:'invalid_suggestion'},400);
   let allowed=false;try{allowed=await rateLimit(request,env,'topic-suggestion',30);}catch{return json({error:'rate_limit_unavailable'},503);}
-  if(!allowed)return json({error:'rate_limited'},429);
-  let allowed=false;try{allowed=await rateLimit(request,env,'reaction',60);}catch{return json({error:'rate_limit_unavailable'},503);}
-  if(!allowed)return json({error:'rate_limited'},429);
   const row=await env.DB.prepare('SELECT id FROM responses WHERE public_id=? AND is_public=1').bind(body.id).first();if(!row)return json({error:'not_found'},404);
   const voterHash=await sha256(`${env.RATE_LIMIT_SALT}:${body.voterToken}`);
   try{await env.DB.prepare('INSERT INTO topic_suggestions (response_id,suggested_topic,voter_hash,created_at) VALUES (?, ?, ?, ?)').bind(row.id,body.topic,voterHash,new Date().toISOString()).run();}
@@ -145,6 +142,8 @@ async function react(request,env){
   if(Number(request.headers.get('content-length')||0)>2048)return json({error:'too_large'},413);
   let body;try{body=await request.json();}catch{return json({error:'invalid_json'},400);}
   if(typeof body?.id!=='string'||body.id.length>80||body.reaction!=='interesting'||typeof body.voterToken!=='string'||body.voterToken.length<16||body.voterToken.length>128)return json({error:'invalid_reaction'},400);
+  let allowed=false;try{allowed=await rateLimit(request,env,'reaction',60);}catch{return json({error:'rate_limit_unavailable'},503);}
+  if(!allowed)return json({error:'rate_limited'},429);
   const row=await env.DB.prepare('SELECT id FROM responses WHERE public_id=? AND is_public=1').bind(body.id).first();if(!row)return json({error:'not_found'},404);
   const voterHash=await sha256(`${env.RATE_LIMIT_SALT}:${body.voterToken}`);
   try{await env.DB.prepare('INSERT INTO response_reactions (response_id,reaction,voter_hash,created_at) VALUES (?, ?, ?, ?)').bind(row.id,body.reaction,voterHash,new Date().toISOString()).run();}
