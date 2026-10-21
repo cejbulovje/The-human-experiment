@@ -30,9 +30,13 @@
   document.querySelectorAll('[data-contact-email]').forEach(link => {
     link.addEventListener('click', event => {
       event.preventDefault();
+      link.removeAttribute('data-menu');
+      link.removeAttribute('href');
       link.textContent = 'mankindexperiment@gmail.com';
       link.setAttribute('aria-label', 'mankindexperiment@gmail.com');
       link.title = 'mankindexperiment@gmail.com';
+      link.style.cursor = 'text';
+      link.style.userSelect = 'text';
     });
   });
   document.querySelectorAll('[data-site-share]').forEach(button => {
