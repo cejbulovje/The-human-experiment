@@ -777,14 +777,14 @@ let turnstileToken = '';
 window.onTurnstileSuccess = token => { turnstileToken = token; };
 window.onTurnstileExpired = () => { turnstileToken = ''; };
 const supportThanks = {
-  en: ["If you’d like to help the experiment grow", "Support options are coming soon."],
-  ru: ["Хочешь помочь развитию эксперимента?", "Варианты поддержки появятся скоро."],
-  es: ["¿Quieres ayudar a que el experimento crezca?", "Pronto habrá opciones para apoyar el proyecto."],
-  pt: ["Quer ajudar o experimento a crescer?", "Em breve haverá opções para apoiar o projeto."],
-  zh: ["想帮助这个实验继续发展吗？", "支持方式即将推出。"],
-  de: ["Möchtest du das Experiment unterstützen?", "Unterstützungsmöglichkeiten folgen in Kürze."],
-  ja: ["この実験の発展を応援しませんか？", "支援方法は近日公開予定です。"],
-  fr: ["Envie d’aider l’expérience à se développer ?", "Les options de soutien arrivent bientôt."],
+  en: ["If you’d like to help the experiment grow", "Support options are coming soon.", "Support the project"],
+  ru: ["Хочешь помочь развитию эксперимента?", "Варианты поддержки появятся скоро.", "Поддержать проект"],
+  es: ["¿Quieres ayudar a que el experimento crezca?", "Pronto habrá opciones para apoyar el proyecto.", "Apoyar el proyecto"],
+  pt: ["Quer ajudar o experimento a crescer?", "Em breve haverá opções para apoiar o projeto.", "Apoiar o projeto"],
+  zh: ["想帮助这个实验继续发展吗？", "支持方式即将推出。", "支持项目"],
+  de: ["Möchtest du das Experiment unterstützen?", "Unterstützungsmöglichkeiten folgen in Kürze.", "Projekt unterstützen"],
+  ja: ["この実験の発展を応援しませんか？", "支援方法は近日公開予定です。", "プロジェクトを支援"],
+  fr: ["Envie d’aider l’expérience à se développer ?", "Les options de soutien arrivent bientôt.", "Soutenir le projet"],
   ar: ["هل ترغب في المساعدة على تطوير التجربة؟", "ستتوفر خيارات الدعم قريبًا."]
 };
 const form = document.querySelector('#survey-form');
@@ -852,8 +852,10 @@ function renderLanguage(lang) {
   const supportText = supportThanks[activeLanguage] || supportThanks.en;
   const supportTitle = document.querySelector('#support-thanks-title');
   const supportCopy = document.querySelector('#support-thanks-copy');
+  const supportLink = document.querySelector('#support-thanks-link');
   if (supportTitle) supportTitle.textContent = supportText[0];
   if (supportCopy) supportCopy.textContent = supportText[1];
+  if (supportLink) supportLink.textContent = supportText[2] || supportThanks.en[2];
   const introCopy = document.querySelector('#localized-intro-copy');
   if (introCopy) introCopy.innerHTML = localizedIntroCopy[activeLanguage] || localizedIntroCopy.en;
   document.querySelectorAll('[data-i18n]').forEach(el => {
