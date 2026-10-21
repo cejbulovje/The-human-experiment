@@ -34,7 +34,8 @@ function makeEnv() {
       ('a-1', '11111111-1111-4111-8111-111111111111', 'I would improve freedom', 'en', 'freedom', '2026-10-01T10:00:00.000Z', 1, 1, 1, 1),
       ('a-2', '11111111-1111-4111-8111-111111111111', 'I would improve relationships', 'en', 'relationships', '2026-10-02T10:00:00.000Z', 1, 1, 1, 1),
       ('b-1', '22222222-2222-4222-8222-222222222222', 'I would change appearance', 'en', 'appearance', '2026-10-03T10:00:00.000Z', 1, 1, 1, 1),
-      ('private-1', '11111111-1111-4111-8111-111111111111', 'private hidden freedom', 'en', 'freedom', '2026-10-04T10:00:00.000Z', 1, 1, 1, 0);
+      ('private-1', '11111111-1111-4111-8111-111111111111', 'private hidden freedom', 'en', 'freedom', '2026-10-04T10:00:00.000Z', 1, 1, 1, 0),
+      (NULL, NULL, 'Legacy public response', 'en', 'life', '2026-10-05T10:00:00.000Z', 1, 1, 1, 1);
   `);
   const DB = {
     prepare(sql) {
@@ -112,6 +113,16 @@ test('direct links cannot expose a private response', async () => {
     const result = await get('/api/public-responses?id=private-1&limit=1', env);
     assert.deepEqual(result.items, []);
     assert.equal(result.total, 0);
+  } finally { close(); }
+});
+
+test('legacy direct links resolve public responses without a public ID', async () => {
+  const { env, close } = makeEnv();
+  try {
+    const result = await get('/api/public-responses?id=legacy-5&limit=1', env);
+    assert.equal(result.total, 1);
+    assert.equal(result.items[0].id, 'legacy-5');
+    assert.equal(result.items[0].answer, 'Legacy public response');
   } finally { close(); }
 });
 
