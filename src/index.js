@@ -112,7 +112,7 @@ async function publicResponses(request,env){
   else if(sort==='popular')order='reaction_count DESC, r.created_at DESC';
   else if(sort==='unusual')order='topic_frequency ASC, length(r.free_answer) DESC, r.created_at DESC';
   const count=await env.DB.prepare(`SELECT COUNT(*) AS total FROM responses r WHERE ${where}`).bind(...binds).first();
-  const rows=await env.DB.prepare(`SELECT r.id, r.public_id, r.free_answer, r.language, r.topic, r.created_at, r.q2, r.q3, r.q4, r.q2_other, r.q3_other, r.q4_other, r.signature,
+  const rows=await env.DB.prepare(`SELECT r.id, r.public_id, r.free_answer, r.language, r.topic, r.created_at, r.q2, r.q3, r.q4, r.q2_other, r.q3_other, r.q4_other, r.gender, r.signature,
     (SELECT COUNT(*) FROM response_reactions rr WHERE rr.response_id=r.id AND rr.reaction='interesting') AS reaction_count,
     (SELECT COUNT(*) FROM responses r2 WHERE r2.is_public=1 AND r2.topic=r.topic) AS topic_frequency
     FROM responses r WHERE ${where} ORDER BY ${order} LIMIT ? OFFSET ?`).bind(...binds,limit,offset).all();
@@ -121,6 +121,7 @@ async function publicResponses(request,env){
     id: row.public_id || `legacy-${row.id}`,
     answer: row.free_answer,
     signature: row.signature || null,
+    gender: row.gender === null || row.gender === undefined ? null : Number(row.gender),
     language: row.language,
     topic: row.topic || 'other',
     topicLabel: topics[row.topic] || topics.other,
