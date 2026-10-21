@@ -79,7 +79,8 @@ else:
 print(json.dumps({'preserved_response_id': row[0], 'rate_limits_preserved': True,
                   'new_tables_created': True, 'language_checks_passed': True}))
 `;
-  const result = spawnSync('python3', ['-c', python], {
+  const pythonExecutable = process.platform === 'win32' ? 'python' : 'python3';
+  const result = spawnSync(pythonExecutable, ['-c', python], {
     input: JSON.stringify({ migration }),
     encoding: 'utf8'
   });
