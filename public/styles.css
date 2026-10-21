@@ -299,3 +299,15 @@
   background:var(--accent-2)!important;
 }
 .footer-links .footer-contact-copy{white-space:nowrap}
+
+.post-submit-support{
+  margin-top:16px;
+  padding:16px 18px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:var(--card);
+}
+.post-submit-support p{margin:0 0 7px;color:var(--muted);font-size:.9rem}
+.post-submit-support p:first-child{color:var(--ink);font-weight:750}
+.post-submit-support a{display:inline-block;margin-top:4px;color:var(--accent);font-weight:750;text-decoration:none}
+.post-submit-support a:hover{text-decoration:underline}
