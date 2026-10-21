@@ -86,6 +86,15 @@ test('malformed UUID-shaped participant filter returns no responses', async () =
   } finally { close(); }
 });
 
+test('participant filter accepts uppercase UUIDs', async () => {
+  const { env, close } = makeEnv();
+  try {
+    const result = await get('/api/public-responses?participant=11111111-1111-4111-8111-111111111111'.toUpperCase().replace('HTTPS://EXAMPLE.TEST', ''), env);
+    assert.equal(result.total, 2);
+    assert.deepEqual(result.items.map(item => item.id), ['a-2', 'a-1']);
+  } finally { close(); }
+});
+
 test('invalid participant filter returns no responses instead of the full catalog', async () => {
   const { env, close } = makeEnv();
   try {
