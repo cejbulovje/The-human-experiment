@@ -900,7 +900,7 @@ answer.addEventListener('input',()=>{charCount.textContent=`${answer.value.lengt
 let savedLanguage='en';
 try { const saved=localStorage.getItem('human-experiment-language'); if (saved && translations[saved]) savedLanguage=saved; } catch {}
 renderLanguage(savedLanguage);
-function getParticipantId(){try{let id=localStorage.getItem('human-experiment-participant-id');if(!/^[0-9a-f-]{36}$/i.test(id||'')){id=crypto.randomUUID();localStorage.setItem('human-experiment-participant-id',id);}return id;}catch{return crypto.randomUUID();}}
+function getParticipantId(){try{let id=localStorage.getItem('human-experiment-participant-id');if(!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id||'')){id=crypto.randomUUID();localStorage.setItem('human-experiment-participant-id',id);}return id;}catch{return crypto.randomUUID();}}
 form.addEventListener('submit',async event=>{
   event.preventDefault(); const lang=activeLanguage; const t=translations[lang];
   status.className='form-status'; status.textContent='';
