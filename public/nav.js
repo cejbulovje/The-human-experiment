@@ -62,6 +62,9 @@
     document.addEventListener('click', event => { if (!details.contains(event.target)) details.open = false; });
     details.querySelectorAll('a').forEach(link => link.addEventListener('click', () => { details.open = false; }));
   });
-  applyLabels();
+  // Page-specific scripts restore the saved language after this deferred script runs.
+  // Refresh menu labels at DOMContentLoaded so they match that restored language.
+  if (document.readyState === 'complete') applyLabels();
+  else document.addEventListener('DOMContentLoaded', applyLabels, { once: true });
   document.querySelectorAll('#language, #page-language').forEach(picker => picker.addEventListener('change', applyLabels));
 })();
