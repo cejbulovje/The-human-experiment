@@ -31,10 +31,10 @@ function makeEnv() {
     INSERT INTO responses
       (public_id, participant_id, free_answer, language, topic, created_at, q2, q3, q4, is_public)
     VALUES
-      ('a-1', '11111111-1111-4111-8111-111111111111', 'I would improve freedom', 'en', 'freedom', '2026-10-01T10:00:00.000Z', 1, 1, 1, 1),
-      ('a-2', '11111111-1111-4111-8111-111111111111', 'I would improve relationships', 'en', 'relationships', '2026-10-02T10:00:00.000Z', 1, 1, 1, 1),
+      ('a-1', 'abcdefab-cdef-4abc-8def-abcdefabcdef', 'I would improve freedom', 'en', 'freedom', '2026-10-01T10:00:00.000Z', 1, 1, 1, 1),
+      ('a-2', 'abcdefab-cdef-4abc-8def-abcdefabcdef', 'I would improve relationships', 'en', 'relationships', '2026-10-02T10:00:00.000Z', 1, 1, 1, 1),
       ('b-1', '22222222-2222-4222-8222-222222222222', 'I would change appearance', 'en', 'appearance', '2026-10-03T10:00:00.000Z', 1, 1, 1, 1),
-      ('private-1', '11111111-1111-4111-8111-111111111111', 'private hidden freedom', 'en', 'freedom', '2026-10-04T10:00:00.000Z', 1, 1, 1, 0),
+      ('private-1', 'abcdefab-cdef-4abc-8def-abcdefabcdef', 'private hidden freedom', 'en', 'freedom', '2026-10-04T10:00:00.000Z', 1, 1, 1, 0),
       (NULL, NULL, 'Legacy public response', 'en', 'life', '2026-10-05T10:00:00.000Z', 1, 1, 1, 1);
   `);
   const DB = {
@@ -70,10 +70,10 @@ test('public response search combines text, topic and date filters before pagina
 test('participant filter returns only that participant’s public responses', async () => {
   const { env, close } = makeEnv();
   try {
-    const result = await get('/api/public-responses?participant=11111111-1111-4111-8111-111111111111&limit=30', env);
+    const result = await get('/api/public-responses?participant=abcdefab-cdef-4abc-8def-abcdefabcdef&limit=30', env);
     assert.equal(result.total, 2);
     assert.deepEqual(result.items.map(item => item.id), ['a-2', 'a-1']);
-    assert.ok(result.items.every(item => item.participantId === '11111111-1111-4111-8111-111111111111'));
+    assert.ok(result.items.every(item => item.participantId === 'abcdefab-cdef-4abc-8def-abcdefabcdef'));
   } finally { close(); }
 });
 
@@ -89,7 +89,7 @@ test('malformed UUID-shaped participant filter returns no responses', async () =
 test('participant filter accepts uppercase UUIDs', async () => {
   const { env, close } = makeEnv();
   try {
-    const result = await get('/api/public-responses?participant=11111111-1111-4111-8111-111111111111'.toUpperCase().replace('HTTPS://EXAMPLE.TEST', ''), env);
+    const result = await get('/api/public-responses?participant=ABCDEFAB-CDEF-4ABC-8DEF-ABCDEFABCDEF', env);
     assert.equal(result.total, 2);
     assert.deepEqual(result.items.map(item => item.id), ['a-2', 'a-1']);
   } finally { close(); }
