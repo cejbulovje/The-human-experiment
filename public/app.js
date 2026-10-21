@@ -44,6 +44,7 @@ const translations = {
     "author-confirm": "I confirm that this answer expresses my own opinion and understand that it will be published publicly. I may discuss other people or imagine what they might want, but I will not present guesses about their wishes as their confirmed views.",
     "author-required": "Please confirm that your answer expresses your own opinion.",
     "signature-required": "Enter a name or pseudonym, or select anonymous.",
+    "privacy": "Your answer will be published publicly. Do not include contact details or personal information about other people. If you want a signature, enter your own name or pseudonym in the separate signature field.",
     "q2Options": [
       "Appearance or body",
       "Character or personality",
@@ -128,6 +129,7 @@ const translations = {
     "author-confirm": "Подтверждаю, что ответ выражает моё собственное мнение и что я понимаю: он будет опубликован публично. Я могу рассуждать о других людях и представлять, чего они могли бы хотеть, но не буду выдавать предположения об их желаниях за подтверждённое мнение этих людей.",
     "author-required": "Подтверди, что ответ выражает твоё собственное мнение.",
     "signature-required": "Укажи имя или псевдоним либо выбери анонимный ответ.",
+    "privacy": "Твой ответ будет опубликован публично. Не указывай контактные данные или личную информацию о других людях. Если хочешь подписать ответ, укажи своё имя или псевдоним в отдельном поле.",
     "q2Options": [
       "Внешность или тело",
       "Характер или личность",
@@ -252,6 +254,7 @@ const translations = {
     "author-confirm": "Confirmo que esta respuesta expresa mi propia opinión y entiendo que se publicará públicamente. Puedo hablar de otras personas o imaginar lo que podrían querer, pero no presentaré mis suposiciones sobre sus deseos como opiniones confirmadas por ellas.",
     "author-required": "Confirma que tu respuesta expresa tu propia opinión.",
     "signature-required": "Escribe un nombre o seudónimo, o selecciona el anonimato."
+    "privacy": "Tu respuesta se publicará públicamente. No incluyas datos de contacto ni información personal de otras personas. Si quieres firmarla, escribe tu nombre o seudónimo en el campo correspondiente.",
   },
   "pt": {
     "eyebrow": "UM EXPERIMENTO MENTAL ABERTO E MUNDIAL",
@@ -336,6 +339,7 @@ const translations = {
     "author-confirm": "Confirmo que esta resposta expressa minha própria opinião e entendo que será publicada publicamente. Posso falar sobre outras pessoas ou imaginar o que elas poderiam querer, mas não apresentarei suposições sobre seus desejos como opiniões confirmadas por elas.",
     "author-required": "Confirme que sua resposta expressa sua própria opinião.",
     "signature-required": "Digite um nome ou pseudônimo ou selecione o anonimato."
+    "privacy": "Sua resposta será publicada publicamente. Não inclua dados de contato nem informações pessoais de outras pessoas. Se quiser assinar, informe seu nome ou pseudônimo no campo separado.",
   },
   "zh": {
     "eyebrow": "开放的全球思想实验",
@@ -420,6 +424,7 @@ const translations = {
     "author-confirm": "我确认此回答表达我自己的观点，并理解它将被公开发布。我可以讨论他人或推测他们可能想要什么，但不会把对他们意愿的猜测说成他们已确认的观点。",
     "author-required": "请确认回答表达的是你自己的观点。",
     "signature-required": "请输入姓名或化名，或选择匿名。"
+    "privacy": "你的回答将公开发布。请勿填写联系方式或他人的个人信息。如果你想署名，请在单独的署名栏中填写自己的姓名或化名。",
   },
   "de": {
     "eyebrow": "EIN OFFENES WELTWEITES GEDANKENEXPERIMENT",
@@ -504,6 +509,7 @@ const translations = {
     "author-confirm": "Ich bestätige, dass diese Antwort meine eigene Meinung ausdrückt, und verstehe, dass sie öffentlich veröffentlicht wird. Ich darf über andere Menschen sprechen oder vermuten, was sie möchten könnten, werde solche Vermutungen aber nicht als bestätigte Ansichten dieser Personen darstellen.",
     "author-required": "Bestätige, dass deine Antwort deine eigene Meinung ausdrückt.",
     "signature-required": "Gib einen Namen oder ein Pseudonym ein oder wähle anonym."
+    "privacy": "Deine Antwort wird öffentlich veröffentlicht. Gib keine Kontaktdaten oder persönlichen Informationen über andere Personen an. Wenn du sie signieren möchtest, gib deinen Namen oder ein Pseudonym im separaten Signaturfeld ein.",
   },
   "ja": {
     "eyebrow": "世界に開かれた思考実験",
@@ -588,6 +594,7 @@ const translations = {
     "author-confirm": "この回答が自分自身の意見を表していること、また公開されることを理解したうえで確認します。他人について述べたり、その人が何を望むか想像したりしても、その推測を本人が確認した意見として示しません。",
     "author-required": "回答があなた自身の意見であることを確認してください。",
     "signature-required": "名前または仮名を入力するか、匿名を選択してください。"
+    "privacy": "回答は公開されます。連絡先や他人の個人情報を含めないでください。署名する場合は、別の署名欄に自分の名前または仮名を入力してください。",
   },
   "fr": {
     "eyebrow": "UNE EXPÉRIENCE DE PENSÉE MONDIALE ET OUVERTE",
@@ -672,6 +679,7 @@ const translations = {
     "author-confirm": "Je confirme que cette réponse exprime ma propre opinion et je comprends qu’elle sera publiée publiquement. Je peux parler d’autres personnes ou imaginer ce qu’elles pourraient souhaiter, mais je ne présenterai pas mes suppositions comme leurs opinions confirmées.",
     "author-required": "Veuillez confirmer que votre réponse exprime votre propre opinion.",
     "signature-required": "Saisissez un nom ou un pseudonyme, ou choisissez l’anonymat."
+    "privacy": "Votre réponse sera publiée publiquement. N’incluez pas de coordonnées ni d’informations personnelles sur d’autres personnes. Pour signer votre réponse, saisissez votre nom ou pseudonyme dans le champ prévu à cet effet.",
   },
   "ar": {
     "eyebrow": "تجربة فكرية عالمية مفتوحة",
@@ -756,6 +764,7 @@ const translations = {
     "author-confirm": "أؤكد أن هذه الإجابة تعبّر عن رأيي الشخصي وأفهم أنها ستُنشر علنًا. يمكنني مناقشة أشخاص آخرين أو تخيّل ما قد يرغبون فيه، لكنني لن أقدّم تخميناتي بشأن رغباتهم على أنها آراء مؤكدة منهم.",
     "author-required": "يرجى تأكيد أن إجابتك تعبّر عن رأيك الشخصي.",
     "signature-required": "أدخل اسمًا أو اسمًا مستعارًا، أو اختر عدم إظهار الاسم."
+    "privacy": "ستُنشر إجابتك علنًا. لا تُدرج معلومات الاتصال أو معلومات شخصية عن أشخاص آخرين. إذا أردت توقيع إجابتك، فأدخل اسمك أو اسمًا مستعارًا في الحقل المخصص.",
   }
 };
 for (const language of Object.values(translations)) {
