@@ -107,3 +107,18 @@
 .goal-page h2{line-height:1.25;letter-spacing:-.025em;margin-bottom:18px}
 .goal-page .goal-note{line-height:1.8}
 @media(max-width:600px){.goal-page .goal-copy{line-height:1.8}.goal-page .goal-copy p{margin-bottom:1em}}
+
+/* Centered site header with compact navigation */
+.topbar-centered{position:relative;min-height:82px}
+.topbar-centered .header-brand-centered{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:9px;white-space:nowrap;text-decoration:none}
+.topbar-centered .header-brand-centered .brand-mark{width:34px;height:34px;object-fit:contain}
+.topbar-centered .header-controls{margin-left:auto;display:flex;align-items:center;gap:12px;min-width:0}
+.site-menu{position:relative;z-index:20;flex:0 0 auto}
+.site-menu-details{position:relative}
+.site-menu-trigger{list-style:none;cursor:pointer;display:grid;place-items:center;width:40px;height:40px;border:1px solid var(--line);border-radius:12px;background:var(--card);font-size:1.05rem;color:var(--ink)}
+.site-menu-trigger::-webkit-details-marker{display:none}
+.site-menu-panel{position:absolute;left:0;top:calc(100% + 9px);width:min(250px,calc(100vw - 36px));padding:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 32px #20221f18;display:grid;gap:2px}
+.site-menu-panel a,.site-menu-panel button{display:block;width:100%;padding:10px 12px;border:0;border-radius:8px;background:transparent;color:var(--ink);font:inherit;font-size:.9rem;text-align:left;text-decoration:none;cursor:pointer}
+.site-menu-panel a:hover,.site-menu-panel button:hover{background:var(--accent-2)}
+[dir="rtl"] .site-menu-panel a,[dir="rtl"] .site-menu-panel button{text-align:right}
+@media(max-width:600px){.topbar-centered{padding:14px 16px;gap:8px;min-height:72px}.topbar-centered .header-brand-centered{gap:5px;max-width:calc(100% - 112px)}.topbar-centered .header-brand-centered .brand-mark{width:27px;height:27px}.topbar-centered .wordmark{font-size:.62rem;letter-spacing:.08em}.topbar-centered .header-controls{gap:4px}.topbar-centered .header-controls .text-link{display:none}.topbar-centered .header-controls select{max-width:92px;padding:7px 6px;font-size:.75rem}.site-menu-trigger{width:36px;height:36px}}
