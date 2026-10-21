@@ -44,8 +44,8 @@
           helper.remove();
           if (!copied) throw new Error('copy_failed');
         }
-        button.textContent = 'Copied: ' + email;
-        button.setAttribute('aria-live', 'polite');
+        button.setAttribute('aria-label', translations[language()].contact + ': ' + email + ' — copied');
+        button.setAttribute('title', 'Email copied');
       } catch {
         button.textContent = email;
         button.title = 'Select and copy this email address';
