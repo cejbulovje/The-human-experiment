@@ -7,6 +7,21 @@ const OPTIONS = {
   gender: { en:['Man','Woman','Another identity','Prefer not to say'], ru:['Мужчина','Женщина','Другая идентичность','Предпочитаю не отвечать'] }
 };
 const json = (data,status=200)=>new Response(JSON.stringify(data),{status,headers:CORS_HEADERS});
+async function readJsonLimited(request,maxBytes){
+  if(!request.body)return {error:'invalid_json'};
+  const reader=request.body.getReader();const chunks=[];let size=0;
+  try{
+    while(true){
+      const {done,value}=await reader.read();if(done)break;
+      size+=value.byteLength;
+      if(size>maxBytes){await reader.cancel();return {error:'too_large'};}
+      chunks.push(value);
+    }
+  }catch{return {error:'invalid_json'};}
+  const bytes=new Uint8Array(size);let offset=0;
+  for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.byteLength;}
+  try{return {body:JSON.parse(new TextDecoder().decode(bytes))};}catch{return {error:'invalid_json'};}
+}
 async function sha256(text){const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text));return [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,'0')).join('');}
 function validChoice(value,max){return Number.isInteger(value)&&value>=0&&value<max;}
 async function verifyTurnstile(token,ip,secret){const body=new URLSearchParams({secret,response:token});if(ip)body.set('remoteip',ip);const result=await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify',{method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},body:body.toString()});if(!result.ok)return false;const data=await result.json();return data.success===true;}
@@ -33,8 +48,7 @@ export function parseOtherAnswers(body){
 }
 async function submit(request,env){
   if(!env.DB||!env.TURNSTILE_SECRET_KEY||!env.RATE_LIMIT_SALT)return json({ok:false,error:'not_configured'},503);
-  const length=Number(request.headers.get('content-length')||0);if(length>12000)return json({ok:false,error:'too_large'},413);
-  let body;try{body=await request.json();}catch{return json({ok:false,error:'invalid_json'},400);}
+  const parsed=await readJsonLimited(request,12000);if(parsed.error)return json({ok:false,error:parsed.error},parsed.error==='too_large'?413:400);const body=parsed.body;
   if(!body||!['en','ru','es','pt','zh','de','ja','fr','ar'].includes(body.language)||!validText(body.freeAnswer,5000)||!validChoice(body.q2,OPTIONS.q2.en.length)||!validChoice(body.q3,OPTIONS.q3.en.length)||!validChoice(body.q4,OPTIONS.q4.en.length))return json({ok:false,error:'invalid_response'},400);
   const otherAnswers=parseOtherAnswers(body);
   if(!otherAnswers)return json({ok:false,error:'invalid_other_answer'},400);
@@ -126,8 +140,7 @@ async function publicResponses(request,env){
 }
 async function suggestTopic(request,env){
   if(!env.DB||!env.RATE_LIMIT_SALT)return json({error:'not_configured'},503);
-  if(Number(request.headers.get('content-length')||0)>2048)return json({error:'too_large'},413);
-  let body;try{body=await request.json();}catch{return json({error:'invalid_json'},400);}
+  const parsed=await readJsonLimited(request,2048);if(parsed.error)return json({error:parsed.error},parsed.error==='too_large'?413:400);const body=parsed.body;
   const allowedTopics=['character','appearance','freedom','life','relationships','other'];
   if(typeof body?.id!=='string'||body.id.length>80||!allowedTopics.includes(body.topic)||typeof body.voterToken!=='string'||body.voterToken.length<16||body.voterToken.length>128)return json({error:'invalid_suggestion'},400);
   let allowed=false;try{allowed=await rateLimit(request,env,'topic-suggestion',30);}catch{return json({error:'rate_limit_unavailable'},503);}
@@ -140,8 +153,7 @@ async function suggestTopic(request,env){
 }
 async function react(request,env){
   if(!env.DB||!env.RATE_LIMIT_SALT)return json({error:'not_configured'},503);
-  if(Number(request.headers.get('content-length')||0)>2048)return json({error:'too_large'},413);
-  let body;try{body=await request.json();}catch{return json({error:'invalid_json'},400);}
+  const parsed=await readJsonLimited(request,2048);if(parsed.error)return json({error:parsed.error},parsed.error==='too_large'?413:400);const body=parsed.body;
   if(typeof body?.id!=='string'||body.id.length>80||body.reaction!=='interesting'||typeof body.voterToken!=='string'||body.voterToken.length<16||body.voterToken.length>128)return json({error:'invalid_reaction'},400);
   let allowed=false;try{allowed=await rateLimit(request,env,'reaction',60);}catch{return json({error:'rate_limit_unavailable'},503);}
   if(!allowed)return json({error:'rate_limited'},429);
