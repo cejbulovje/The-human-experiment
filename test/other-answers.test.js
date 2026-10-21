@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { parseOtherAnswers } from '../src/index.js';
+import { parseOtherAnswers, readJsonLimited } from '../src/index.js';
 
 const base = { q2: 0, q3: 0, q4: 0 };
 
@@ -43,4 +43,28 @@ test('enforces the 500-character limit and rejects whitespace-only details', () 
 test('rejects missing or non-object request bodies', () => {
   assert.equal(parseOtherAnswers(null), null);
   assert.equal(parseOtherAnswers('not an object'), null);
+});
+
+test('bounded JSON parser accepts valid JSON without Content-Length', async () => {
+  const request = new Request('https://example.test/api', {
+    method: 'POST',
+    body: JSON.stringify({ answer: 'hello' })
+  });
+  assert.deepEqual(await readJsonLimited(request, 100), { body: { answer: 'hello' } });
+});
+
+test('bounded JSON parser rejects oversized streamed bodies', async () => {
+  const request = new Request('https://example.test/api', {
+    method: 'POST',
+    body: JSON.stringify({ answer: 'x'.repeat(100) })
+  });
+  assert.deepEqual(await readJsonLimited(request, 20), { error: 'too_large' });
+});
+
+test('bounded JSON parser rejects malformed JSON', async () => {
+  const request = new Request('https://example.test/api', {
+    method: 'POST',
+    body: '{not-json'
+  });
+  assert.deepEqual(await readJsonLimited(request, 100), { error: 'invalid_json' });
 });
