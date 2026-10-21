@@ -104,6 +104,26 @@ test('invalid participant filter returns no responses instead of the full catalo
   } finally { close(); }
 });
 
+test('invalid topic filter returns no responses instead of the full catalog', async () => {
+  const { env, close } = makeEnv();
+  try {
+    const result = await get('/api/public-responses?topic=unknown-topic&limit=30', env);
+    assert.equal(result.total, 0);
+    assert.deepEqual(result.items, []);
+  } finally { close(); }
+});
+
+test('invalid calendar dates return no responses instead of ignoring the filter', async () => {
+  const { env, close } = makeEnv();
+  try {
+    for (const query of ['from=2026-99-99', 'to=2026-02-30', 'from=not-a-date']) {
+      const result = await get('/api/public-responses?' + query + '&limit=30', env);
+      assert.equal(result.total, 0, query);
+      assert.deepEqual(result.items, [], query);
+    }
+  } finally { close(); }
+});
+
 test('sort oldest orders responses ascending by creation date', async () => {
   const { env, close } = makeEnv();
   try {
