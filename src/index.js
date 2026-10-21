@@ -10,9 +10,9 @@ const json = (data,status=200)=>new Response(JSON.stringify(data),{status,header
 async function sha256(text){const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(text));return [...new Uint8Array(digest)].map(b=>b.toString(16).padStart(2,'0')).join('');}
 function validChoice(value,max){return Number.isInteger(value)&&value>=0&&value<max;}
 async function verifyTurnstile(token,ip,secret){const body=new URLSearchParams({secret,response:token});if(ip)body.set('remoteip',ip);const result=await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify',{method:'POST',headers:{'content-type':'application/x-www-form-urlencoded'},body:body.toString()});if(!result.ok)return false;const data=await result.json();return data.success===true;}
-async function rateLimit(request,env){
+async function rateLimit(request,env,scope='submit',maxRequests=3){
   const ip=request.headers.get('CF-Connecting-IP')||'unknown';
-  const ipHash=await sha256(`${env.RATE_LIMIT_SALT}:${ip}`);const now=Math.floor(Date.now()/1000);const cutoff=now-3600;
+  const ipHash=await sha256(`${env.RATE_LIMIT_SALT}:${scope}:${ip}`);const now=Math.floor(Date.now()/1000);const cutoff=now-3600;
   const result=await env.DB.prepare(`INSERT INTO rate_limits (ip_hash, window_start, count) VALUES (?, ?, 1)
     ON CONFLICT(ip_hash) DO UPDATE SET
       count = CASE WHEN rate_limits.window_start <= ? THEN 1 ELSE rate_limits.count + 1 END,
@@ -20,7 +20,7 @@ async function rateLimit(request,env){
     RETURNING count`).bind(ipHash,now,cutoff,cutoff,now).first();
   // Expire old pseudonymous rate-limit keys so they are not retained indefinitely.
   await env.DB.prepare('DELETE FROM rate_limits WHERE window_start < ?').bind(now-86400).run();
-  return Number(result?.count||0)<=3;
+  return Number(result?.count||0)<=maxRequests;
 }
 function validText(value,max){return typeof value==='string'&&value.trim().length>0&&value.trim().length<=max;}
 export function parseOtherAnswers(body){
@@ -126,9 +126,14 @@ async function publicResponses(request,env){
 }
 async function suggestTopic(request,env){
   if(!env.DB||!env.RATE_LIMIT_SALT)return json({error:'not_configured'},503);
+  if(Number(request.headers.get('content-length')||0)>2048)return json({error:'too_large'},413);
   let body;try{body=await request.json();}catch{return json({error:'invalid_json'},400);}
   const allowed=['character','appearance','freedom','life','relationships','other'];
   if(typeof body?.id!=='string'||body.id.length>80||!allowed.includes(body.topic)||typeof body.voterToken!=='string'||body.voterToken.length<16||body.voterToken.length>128)return json({error:'invalid_suggestion'},400);
+  let allowed=false;try{allowed=await rateLimit(request,env,'topic-suggestion',30);}catch{return json({error:'rate_limit_unavailable'},503);}
+  if(!allowed)return json({error:'rate_limited'},429);
+  let allowed=false;try{allowed=await rateLimit(request,env,'reaction',60);}catch{return json({error:'rate_limit_unavailable'},503);}
+  if(!allowed)return json({error:'rate_limited'},429);
   const row=await env.DB.prepare('SELECT id FROM responses WHERE public_id=? AND is_public=1').bind(body.id).first();if(!row)return json({error:'not_found'},404);
   const voterHash=await sha256(`${env.RATE_LIMIT_SALT}:${body.voterToken}`);
   try{await env.DB.prepare('INSERT INTO topic_suggestions (response_id,suggested_topic,voter_hash,created_at) VALUES (?, ?, ?, ?)').bind(row.id,body.topic,voterHash,new Date().toISOString()).run();}
@@ -137,6 +142,7 @@ async function suggestTopic(request,env){
 }
 async function react(request,env){
   if(!env.DB||!env.RATE_LIMIT_SALT)return json({error:'not_configured'},503);
+  if(Number(request.headers.get('content-length')||0)>2048)return json({error:'too_large'},413);
   let body;try{body=await request.json();}catch{return json({error:'invalid_json'},400);}
   if(typeof body?.id!=='string'||body.id.length>80||body.reaction!=='interesting'||typeof body.voterToken!=='string'||body.voterToken.length<16||body.voterToken.length>128)return json({error:'invalid_reaction'},400);
   const row=await env.DB.prepare('SELECT id FROM responses WHERE public_id=? AND is_public=1').bind(body.id).first();if(!row)return json({error:'not_found'},404);
