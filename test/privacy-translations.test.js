@@ -8,8 +8,10 @@ const locales = ['en', 'ru', 'es', 'pt', 'zh', 'de', 'ja', 'fr', 'ar'];
 
 test('privacy policy discloses participant grouping in every supported locale', () => {
   for (const locale of locales) {
-    const line = script.split('\\n').find(entry => entry.startsWith(locale + ':{'));
-    assert.ok(line, 'missing locale: ' + locale);
+    const start = script.indexOf(locale + ':{');
+    assert.notEqual(start, -1, 'missing locale: ' + locale);
+    const end = script.indexOf('\n', start);
+    const line = script.slice(start, end === -1 ? undefined : end);
     assert.match(line, /participantTitle:/, locale + ' missing participant section title');
     assert.match(line, /participant:/, locale + ' missing participant disclosure');
   }
