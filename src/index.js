@@ -1,4 +1,4 @@
-const CORS_HEADERS = { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff' };
+const CORS_HEADERS = { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff', 'x-frame-options': 'DENY', 'referrer-policy': 'strict-origin-when-cross-origin', 'permissions-policy': 'camera=(), microphone=(), geolocation=()' };
 const THRESHOLD = 100;
 const OPTIONS = {
   q2: { en:['Appearance or body','Character or personality','Lifestyle or habits','Everything I consider necessary','I would change nothing','I would let them decide what to change','Other'], ru:['Внешность или тело','Характер или личность','Образ жизни или привычки','Всё, что посчитал бы нужным','Ничего не стал бы менять','Предоставил бы ему самому решать, что менять','Другое'] },
