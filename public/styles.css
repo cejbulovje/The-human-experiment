@@ -111,7 +111,7 @@
 /* Centered site header with compact navigation */
 .topbar-centered{position:relative;min-height:82px}
 .topbar-centered .header-brand-centered{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:9px;white-space:nowrap;text-decoration:none}
-.topbar-centered .header-brand-centered .brand-mark{width:51px;height:51px;object-fit:contain}
+.topbar-centered .header-brand-centered .brand-mark{width:68px;height:68px;object-fit:contain}
 .topbar-centered .header-controls{margin-left:auto;display:flex;align-items:center;gap:12px;min-width:0}
 .site-menu{position:relative;z-index:20;flex:0 0 auto}
 .site-menu-details{position:relative}
@@ -121,6 +121,6 @@
 .site-menu-panel a,.site-menu-panel button{display:block;width:100%;padding:10px 12px;border:0;border-radius:8px;background:transparent;color:var(--ink);font:inherit;font-size:.9rem;text-align:left;text-decoration:none;cursor:pointer}
 .site-menu-panel a:hover,.site-menu-panel button:hover{background:var(--accent-2)}
 [dir="rtl"] .site-menu-panel a,[dir="rtl"] .site-menu-panel button{text-align:right}
-@media(max-width:600px){.topbar-centered{padding:14px 16px;gap:8px;min-height:72px}.topbar-centered .header-brand-centered{gap:5px;max-width:calc(100% - 112px)}.topbar-centered .header-brand-centered .brand-mark{width:40.5px;height:40.5px}.topbar-centered .wordmark{font-size:.93rem;letter-spacing:.08em}.topbar-centered .header-controls{gap:4px}.topbar-centered .header-controls .text-link{display:none}.topbar-centered .header-controls select{max-width:92px;padding:7px 6px;font-size:.75rem}.site-menu-trigger{width:36px;height:36px}}
+@media(max-width:600px){.topbar-centered{padding:14px 16px;gap:8px;min-height:72px}.topbar-centered .header-brand-centered{gap:5px;max-width:calc(100% - 112px)}.topbar-centered .header-brand-centered .brand-mark{width:54px;height:54px}.topbar-centered .wordmark{font-size:1.125rem;letter-spacing:.08em}.topbar-centered .header-controls{gap:4px}.topbar-centered .header-controls .text-link{display:none}.topbar-centered .header-controls select{max-width:92px;padding:7px 6px;font-size:.75rem}.site-menu-trigger{width:36px;height:36px}}
 
-.topbar-centered .header-brand-centered .wordmark{font-size:1.2rem}
+.topbar-centered .header-brand-centered .wordmark{font-size:1.5rem;letter-spacing:.12em}
