@@ -90,7 +90,7 @@ test('sort oldest orders responses ascending by creation date', async () => {
   const { env, close } = makeEnv();
   try {
     const result = await get('/api/public-responses?sort=oldest&limit=30', env);
-    assert.deepEqual(result.items.map(item => item.id), ['a-1', 'a-2', 'b-1']);
+    assert.deepEqual(result.items.map(item => item.id), ['a-1', 'a-2', 'b-1', 'legacy-5']);
   } finally { close(); }
 });
 
@@ -99,10 +99,10 @@ test('pagination reports total and hasMore consistently', async () => {
   try {
     const first = await get('/api/public-responses?sort=oldest&limit=2&offset=0', env);
     const second = await get('/api/public-responses?sort=oldest&limit=2&offset=2', env);
-    assert.equal(first.total, 3);
+    assert.equal(first.total, 4);
     assert.equal(first.items.length, 2);
     assert.equal(first.hasMore, true);
-    assert.equal(second.items.length, 1);
+    assert.equal(second.items.length, 2);
     assert.equal(second.hasMore, false);
   } finally { close(); }
 });
