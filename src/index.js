@@ -85,7 +85,7 @@ async function results(env){
 }
 async function publicResponses(request,env){
   if(!env.DB)return json({error:'not_configured'},503);
-  const url=new URL(request.url);const limit=Math.max(1,Math.min(24,Number(url.searchParams.get('limit')||12)));const offset=Math.max(0,Number(url.searchParams.get('offset')||0));
+  const url=new URL(request.url);const rawLimit=url.searchParams.get('limit');const parsedLimit=rawLimit===null||rawLimit===''?12:Number(rawLimit);const limit=Number.isSafeInteger(parsedLimit)?Math.max(1,Math.min(24,parsedLimit)):12;const rawOffset=url.searchParams.get('offset');const parsedOffset=rawOffset===null||rawOffset===''?0:Number(rawOffset);const offset=Number.isSafeInteger(parsedOffset)?Math.max(0,Math.min(1000000,parsedOffset)):0;
   const search=(url.searchParams.get('q')||'').trim().slice(0,160);const topic=(url.searchParams.get('topic')||'').trim();const from=(url.searchParams.get('from')||'').slice(0,10);const to=(url.searchParams.get('to')||'').slice(0,10);const sort=url.searchParams.get('sort')||'newest';
   const clauses=['r.is_public=1'];const binds=[];
   if(search){clauses.push('r.free_answer LIKE ?');binds.push(`%${search.replace(/[\\%_]/g,'')}%`);}
