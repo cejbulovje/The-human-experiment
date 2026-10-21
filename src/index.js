@@ -110,7 +110,8 @@ async function publicResponses(request,env){
   if(/^\d{4}-\d{2}-\d{2}$/.test(to)){clauses.push('substr(r.created_at,1,10)<=?');binds.push(to);}
   const where=clauses.join(' AND ');
   let order='r.created_at DESC';
-  if(sort==='random')order='RANDOM()';
+  if(sort==='oldest')order='r.created_at ASC';
+  else if(sort==='random')order='RANDOM()';
   else if(sort==='popular')order='reaction_count DESC, r.created_at DESC';
   else if(sort==='unusual')order='topic_frequency ASC, length(r.free_answer) DESC, r.created_at DESC';
   const count=await env.DB.prepare(`SELECT COUNT(*) AS total FROM responses r WHERE ${where}`).bind(...binds).first();
