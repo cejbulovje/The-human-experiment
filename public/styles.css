@@ -95,3 +95,14 @@
 .other-answer-label{display:grid;gap:7px;font-size:.84rem;font-weight:700;color:var(--muted)}
 .other-answer-input{width:100%;min-height:44px;border:1px solid #c9cbc2;border-radius:10px;padding:10px 12px;background:#fff;color:var(--ink);font:inherit;font-size:.94rem}
 .other-answer-input:focus-visible{outline:3px solid #92b9a1;outline-offset:2}
+
+
+/* Goal page: clear paragraph rhythm and selective emphasis */
+.goal-page .goal-copy{max-width:720px;font-size:1rem;line-height:1.85;color:var(--ink)}
+.goal-page .goal-copy p{max-width:none;margin:0 0 1.15em}
+.goal-page .goal-copy p:last-child{margin-bottom:0}
+.goal-page .goal-copy strong{font-weight:800;color:var(--accent)}
+.goal-page .lead{line-height:1.75;margin-bottom:30px}
+.goal-page h2{line-height:1.25;letter-spacing:-.025em;margin-bottom:18px}
+.goal-page .goal-note{line-height:1.8}
+@media(max-width:600px){.goal-page .goal-copy{line-height:1.8}.goal-page .goal-copy p{margin-bottom:1em}}
