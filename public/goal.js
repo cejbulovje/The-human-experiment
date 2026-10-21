@@ -40,7 +40,7 @@ function applyGoalLanguage(){
     if(!value)return;
     if(['explore','next','principles'].includes(el.dataset.t)){
       el.replaceChildren();
-      value.split(/\\n\\s*\\n/).filter(part=>part.trim()).forEach((part,index)=>{
+      value.split(/\n\s*\n/).filter(part=>part.trim()).forEach((part,index)=>{
         const p=document.createElement('p');
         if(el.dataset.t==='explore' && [1,4,7,8].includes(index)){
           const strong=document.createElement('strong');
