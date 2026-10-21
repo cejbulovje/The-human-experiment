@@ -70,11 +70,11 @@ function classifyTopic(text){
 }
 async function results(env){
   if(!env.DB)return json({error:'not_configured'},503);
-  const totalRow=await env.DB.prepare('SELECT COUNT(*) AS total, MAX(created_at) AS updated_at FROM responses').first();
+  const totalRow=await env.DB.prepare('SELECT COUNT(*) AS total, MAX(created_at) AS updated_at FROM responses WHERE is_public=1').first();
   const total=Number(totalRow?.total||0);
   if(total<THRESHOLD)return json({unlocked:false,total,threshold:THRESHOLD});
   const getCounts=async(column,question)=>{
-    const rows=await env.DB.prepare(`SELECT ${column} AS choice, COUNT(*) AS count FROM responses WHERE ${column} IS NOT NULL GROUP BY ${column}`).all();
+    const rows=await env.DB.prepare(`SELECT ${column} AS choice, COUNT(*) AS count FROM responses WHERE is_public=1 AND ${column} IS NOT NULL GROUP BY ${column}`).all();
     const counts=new Map((rows.results||[]).map(row=>[Number(row.choice),Number(row.count)]));
     const en=OPTIONS[question].en;const ru=OPTIONS[question].ru;
     const items=en.map((label,index)=>({label:`${label} / ${ru[index]}`,count:counts.get(index)||0})).filter(item=>item.count>0);
