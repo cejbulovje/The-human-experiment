@@ -27,6 +27,14 @@
       trigger.setAttribute('title', t.menu);
     }
   };
+  document.querySelectorAll('[data-contact-email]').forEach(link => {
+    link.addEventListener('click', event => {
+      event.preventDefault();
+      link.textContent = 'mankindexperiment@gmail.com';
+      link.setAttribute('aria-label', 'mankindexperiment@gmail.com');
+      link.title = 'mankindexperiment@gmail.com';
+    });
+  });
   document.querySelectorAll('[data-site-share]').forEach(button => {
     button.addEventListener('click', async () => {
       const t = translations[language()];
