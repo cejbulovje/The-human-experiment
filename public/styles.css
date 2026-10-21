@@ -175,3 +175,8 @@
   .topbar-centered .header-brand-centered .brand-mark{width:30px;height:30px;flex-basis:30px}
   .topbar-centered .header-brand-centered .wordmark{font-size:.64rem;letter-spacing:.02em}
 }
+
+/* Keep every project section visible as its own footer row. */
+.footer{flex-direction:column;align-items:flex-start;justify-content:flex-start;gap:12px}
+.footer-links{width:100%;display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.footer-links a,.footer-links button{display:block;max-width:100%;text-align:left}
