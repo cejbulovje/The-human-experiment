@@ -55,6 +55,7 @@ async function submit(request,env){
   const {q2Other,q3Other,q4Other}=otherAnswers;
   if(body.authorConfirmed!==true)return json({ok:false,error:'author_confirmation_required'},400);
   const signature=typeof body.signature==='string'?body.signature.trim():'';
+  const participantId=typeof body.participantId==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(body.participantId)?body.participantId:null;
   if(signature.length>60)return json({ok:false,error:'invalid_signature'},400);
   if(body.gender!==null&&body.gender!==undefined&&!validChoice(body.gender,OPTIONS.gender.en.length))return json({ok:false,error:'invalid_gender'},400);
   if(typeof body.turnstileToken!=='string'||body.turnstileToken.length>2048)return json({ok:false,error:'captcha_required'},400);
@@ -66,7 +67,7 @@ async function submit(request,env){
   try{
     const publicId=crypto.randomUUID();
     const topic=classifyTopic(body.freeAnswer);
-    await env.DB.prepare('INSERT INTO responses (language, free_answer, q2, q3, q4, q2_other, q3_other, q4_other, gender, created_at, public_id, is_public, topic, signature) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)').bind(body.language,body.freeAnswer.trim(),body.q2,body.q3,body.q4,q2Other,q3Other,q4Other,body.gender??null,new Date().toISOString(),publicId,topic,signature||null).run();
+    await env.DB.prepare('INSERT INTO responses (language, free_answer, q2, q3, q4, q2_other, q3_other, q4_other, gender, created_at, public_id, is_public, topic, signature, participant_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?)').bind(body.language,body.freeAnswer.trim(),body.q2,body.q3,body.q4,q2Other,q3Other,q4Other,body.gender??null,new Date().toISOString(),publicId,topic,signature||null,participantId).run();
     return json({ok:true});
   }catch{return json({ok:false,error:'save_failed'},500);}
 }
@@ -104,6 +105,8 @@ async function publicResponses(request,env){
   const search=(url.searchParams.get('q')||'').trim().slice(0,160);const topic=(url.searchParams.get('topic')||'').trim();const from=(url.searchParams.get('from')||'').slice(0,10);const to=(url.searchParams.get('to')||'').slice(0,10);const sort=url.searchParams.get('sort')||'newest';
   const clauses=['r.is_public=1'];const binds=[];
   if(requestedId){if(/^legacy-\d+$/.test(requestedId)){clauses.push('(r.public_id=? OR (r.public_id IS NULL AND r.id=?))');const legacyId=Number(requestedId.slice(7));binds.push(requestedId,legacyId);}else{clauses.push('r.public_id=?');binds.push(requestedId);}}
+  const requestedParticipant=(url.searchParams.get('participant')||'').trim().slice(0,36);
+  if(/^[0-9a-f-]{36}$/i.test(requestedParticipant)){clauses.push('r.participant_id=?');binds.push(requestedParticipant);}
   if(search){clauses.push('r.free_answer LIKE ?');binds.push(`%${search.replace(/[\\%_]/g,'')}%`);}
   if(topic&&['character','appearance','freedom','life','relationships','other'].includes(topic)){clauses.push('r.topic=?');binds.push(topic);}
   if(/^\d{4}-\d{2}-\d{2}$/.test(from)){clauses.push('substr(r.created_at,1,10)>=?');binds.push(from);}
@@ -115,7 +118,7 @@ async function publicResponses(request,env){
   else if(sort==='popular')order='reaction_count DESC, r.created_at DESC';
   else if(sort==='unusual')order='topic_frequency ASC, length(r.free_answer) DESC, r.created_at DESC';
   const count=await env.DB.prepare(`SELECT COUNT(*) AS total FROM responses r WHERE ${where}`).bind(...binds).first();
-  const rows=await env.DB.prepare(`SELECT r.id, r.public_id, r.free_answer, r.language, r.topic, r.created_at, r.q2, r.q3, r.q4, r.q2_other, r.q3_other, r.q4_other, r.gender, r.signature,
+  const rows=await env.DB.prepare(`SELECT r.id, r.public_id, r.participant_id, r.free_answer, r.language, r.topic, r.created_at, r.q2, r.q3, r.q4, r.q2_other, r.q3_other, r.q4_other, r.gender, r.signature,
     (SELECT COUNT(*) FROM response_reactions rr WHERE rr.response_id=r.id AND rr.reaction='interesting') AS reaction_count,
     (SELECT COUNT(*) FROM responses r2 WHERE r2.is_public=1 AND r2.topic=r.topic) AS topic_frequency
     FROM responses r WHERE ${where} ORDER BY ${order} LIMIT ? OFFSET ?`).bind(...binds,limit,offset).all();
@@ -124,6 +127,7 @@ async function publicResponses(request,env){
     id: row.public_id || `legacy-${row.id}`,
     answer: row.free_answer,
     signature: row.signature || null,
+    participantId: row.participant_id || null,
     gender: row.gender === null || row.gender === undefined ? null : Number(row.gender),
     language: row.language,
     topic: row.topic || 'other',
