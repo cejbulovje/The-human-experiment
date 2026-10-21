@@ -106,6 +106,15 @@ test('pagination reports total and hasMore consistently', async () => {
   } finally { close(); }
 });
 
+test('direct links cannot expose a private response', async () => {
+  const { env, close } = makeEnv();
+  try {
+    const result = await get('/api/public-responses?id=private-1&limit=1', env);
+    assert.deepEqual(result.items, []);
+    assert.equal(result.total, 0);
+  } finally { close(); }
+});
+
 test('nonexistent direct-link ID returns an empty result', async () => {
   const { env, close } = makeEnv();
   try {
