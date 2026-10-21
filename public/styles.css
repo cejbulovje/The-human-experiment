@@ -247,3 +247,21 @@
   .footer-brand{flex:0 0 100%}
   .footer-links .footer-contact-copy{flex-basis:100%;width:100%;justify-content:center}
 }
+
+/* Contact copy control should look exactly like a plain footer link. */
+.footer-links .footer-contact-copy{
+  appearance:none;
+  -webkit-appearance:none;
+  border:0 !important;
+  outline-offset:3px;
+  border-radius:0 !important;
+  background:none !important;
+  box-shadow:none !important;
+  padding:0 !important;
+  margin:0;
+  color:var(--muted) !important;
+  font:inherit !important;
+  line-height:inherit;
+  text-decoration:none;
+}
+.footer-links .footer-contact-copy:hover{text-decoration:underline}
