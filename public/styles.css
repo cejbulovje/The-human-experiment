@@ -123,4 +123,55 @@
 [dir="rtl"] .site-menu-panel a,[dir="rtl"] .site-menu-panel button{text-align:right}
 @media(max-width:600px){.topbar-centered{padding:14px 16px;gap:8px;min-height:72px}.topbar-centered .header-brand-centered{gap:5px;max-width:calc(100% - 112px)}.topbar-centered .header-brand-centered .brand-mark{width:54px;height:54px}.topbar-centered .wordmark{font-size:1.125rem;letter-spacing:.08em}.topbar-centered .header-controls{gap:4px}.topbar-centered .header-controls .text-link{display:none}.topbar-centered .header-controls select{max-width:92px;padding:7px 6px;font-size:.75rem}.site-menu-trigger{width:36px;height:36px}}
 
-.topbar-centered .header-brand-centered .wordmark{font-size:1.5rem;letter-spacing:.12em}
+/* Centered header identity: explicit sizing overrides the shared legacy brand rules. */
+.topbar-centered{isolation:isolate}
+.topbar-centered .header-brand-centered{
+  left:50%;
+  max-width:calc(100% - 124px);
+  gap:12px;
+}
+.topbar-centered .header-brand-centered .brand-mark{
+  display:block;
+  width:78px;
+  height:78px;
+  flex:0 0 78px;
+  object-fit:contain;
+}
+.topbar-centered .header-brand-centered .wordmark{
+  display:block;
+  font-size:1.8rem;
+  line-height:1.05;
+  letter-spacing:.1em;
+  font-weight:800;
+}
+@media(max-width:900px){
+  .topbar-centered .header-brand-centered{gap:9px;max-width:calc(100% - 110px)}
+  .topbar-centered .header-brand-centered .brand-mark{width:64px;height:64px;flex-basis:64px}
+  .topbar-centered .header-brand-centered .wordmark{font-size:clamp(1.05rem,2.6vw,1.45rem);letter-spacing:.07em}
+}
+@media(max-width:600px){
+  .topbar-centered{min-height:78px;padding:10px 12px;gap:7px}
+  .topbar-centered .header-brand-centered{
+    max-width:calc(100% - 88px);
+    gap:5px;
+    white-space:normal;
+  }
+  .topbar-centered .header-brand-centered .brand-mark{
+    width:42px;
+    height:42px;
+    flex:0 0 42px;
+  }
+  .topbar-centered .header-brand-centered .wordmark{
+    font-size:clamp(.72rem,3.1vw,.95rem);
+    line-height:1.05;
+    letter-spacing:.045em;
+  }
+  .topbar-centered .header-controls{gap:3px}
+  .topbar-centered .header-controls select{max-width:82px;padding:6px 4px;font-size:.7rem}
+  .site-menu-trigger{width:34px;height:34px}
+}
+@media(max-width:370px){
+  .topbar-centered .header-brand-centered{max-width:calc(100% - 78px);gap:4px}
+  .topbar-centered .header-brand-centered .brand-mark{width:34px;height:34px;flex-basis:34px}
+  .topbar-centered .header-brand-centered .wordmark{font-size:.68rem;letter-spacing:.025em}
+}
