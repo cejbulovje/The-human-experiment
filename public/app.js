@@ -900,6 +900,7 @@ answer.addEventListener('input',()=>{charCount.textContent=`${answer.value.lengt
 let savedLanguage='en';
 try { const saved=localStorage.getItem('human-experiment-language'); if (saved && translations[saved]) savedLanguage=saved; } catch {}
 renderLanguage(savedLanguage);
+function getParticipantId(){try{let id=localStorage.getItem('human-experiment-participant-id');if(!/^[0-9a-f-]{36}$/i.test(id||'')){id=crypto.randomUUID();localStorage.setItem('human-experiment-participant-id',id);}return id;}catch{return crypto.randomUUID();}}
 form.addEventListener('submit',async event=>{
   event.preventDefault(); const lang=activeLanguage; const t=translations[lang];
   status.className='form-status'; status.textContent='';
@@ -910,7 +911,7 @@ form.addEventListener('submit',async event=>{
   const signature=signatureMode==='signed'?signatureInput.value.trim():'';
   if(!authorConfirmed.checked){status.textContent=t['author-required'];status.className='form-status error';return;}
   if(signatureMode==='signed'&&!signature){status.textContent=t['signature-required'];status.className='form-status error';signatureInput.focus();return;}
-  const payload={language:lang,freeAnswer:answer.value.trim(),q2:selected('q2'),q3:selected('q3'),q4:selected('q4'),q2Other:form.querySelector('[name="q2Other"]')?.value.trim()||'',q3Other:form.querySelector('[name="q3Other"]')?.value.trim()||'',q4Other:form.querySelector('[name="q4Other"]')?.value.trim()||'',gender:selected('gender'),signature,authorConfirmed:authorConfirmed.checked,turnstileToken};
+  const payload={language:lang,participantId:getParticipantId(),freeAnswer:answer.value.trim(),q2:selected('q2'),q3:selected('q3'),q4:selected('q4'),q2Other:form.querySelector('[name="q2Other"]')?.value.trim()||'',q3Other:form.querySelector('[name="q3Other"]')?.value.trim()||'',q4Other:form.querySelector('[name="q4Other"]')?.value.trim()||'',gender:selected('gender'),signature,authorConfirmed:authorConfirmed.checked,turnstileToken};
   submitButton.disabled=true; submitButton.textContent=t.sending;
   try{
     const response=await fetch('/api/submit',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
