@@ -776,6 +776,17 @@ for (const language of Object.values(translations)) {
 let turnstileToken = '';
 window.onTurnstileSuccess = token => { turnstileToken = token; };
 window.onTurnstileExpired = () => { turnstileToken = ''; };
+const supportThanks = {
+  en: ["If you’d like to help the experiment grow", "Support options are coming soon."],
+  ru: ["Хочешь помочь развитию эксперимента?", "Варианты поддержки появятся скоро."],
+  es: ["¿Quieres ayudar a que el experimento crezca?", "Pronto habrá opciones para apoyar el proyecto."],
+  pt: ["Quer ajudar o experimento a crescer?", "Em breve haverá opções para apoiar o projeto."],
+  zh: ["想帮助这个实验继续发展吗？", "支持方式即将推出。"],
+  de: ["Möchtest du das Experiment unterstützen?", "Unterstützungsmöglichkeiten folgen in Kürze."],
+  ja: ["この実験の発展を応援しませんか？", "支援方法は近日公開予定です。"],
+  fr: ["Envie d’aider l’expérience à se développer ?", "Les options de soutien arrivent bientôt."],
+  ar: ["هل ترغب في المساعدة على تطوير التجربة؟", "ستتوفر خيارات الدعم قريبًا."]
+};
 const form = document.querySelector('#survey-form');
 const languageSelect = document.querySelector('#language');
 const answer = document.querySelector('#free-answer');
@@ -838,6 +849,11 @@ function renderLanguage(lang) {
   document.documentElement.lang = activeLanguage;
   document.documentElement.dir = activeLanguage === 'ar' ? 'rtl' : 'ltr';
   document.body.classList.toggle('rtl-language', activeLanguage === 'ar');
+  const supportText = supportThanks[activeLanguage] || supportThanks.en;
+  const supportTitle = document.querySelector('#support-thanks-title');
+  const supportCopy = document.querySelector('#support-thanks-copy');
+  if (supportTitle) supportTitle.textContent = supportText[0];
+  if (supportCopy) supportCopy.textContent = supportText[1];
   const introCopy = document.querySelector('#localized-intro-copy');
   if (introCopy) introCopy.innerHTML = localizedIntroCopy[activeLanguage] || localizedIntroCopy.en;
   document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -917,7 +933,7 @@ form.addEventListener('submit',async event=>{
     const response=await fetch('/api/submit',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
     let result; try { result=await response.json(); } catch { throw new Error('server'); }
     if(!response.ok||!result.ok) throw new Error(result.error||'submit_failed');
-    status.textContent=t.success;status.className='form-status success';if(postSubmitShare)postSubmitShare.hidden=false;form.reset();syncSignatureField();for(const name of ['q2','q3','q4']){const root=document.getElementById(name+'-options');const wrap=root.querySelector('.other-answer-wrap');const input=root.querySelector('.other-answer-input');wrap.hidden=true;input.required=false;}turnstileToken='';
+    status.textContent=t.success;status.className='form-status success';if(postSubmitShare)postSubmitShare.hidden=false;const supportPanel=document.querySelector('#post-submit-support');if(supportPanel)supportPanel.hidden=false;form.reset();syncSignatureField();for(const name of ['q2','q3','q4']){const root=document.getElementById(name+'-options');const wrap=root.querySelector('.other-answer-wrap');const input=root.querySelector('.other-answer-input');wrap.hidden=true;input.required=false;}turnstileToken='';
     if(window.turnstile) window.turnstile.reset(); charCount.textContent='0 / 5000';
   }catch(error){status.textContent=error instanceof TypeError?t.network:t.failure;status.className='form-status error';turnstileToken='';if(window.turnstile)window.turnstile.reset();}
   finally{submitButton.disabled=turnstileWidget.dataset.sitekey.includes('REPLACE_WITH');submitButton.textContent=t.submit;}
