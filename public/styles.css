@@ -265,3 +265,21 @@
   text-decoration:none;
 }
 .footer-links .footer-contact-copy:hover{text-decoration:underline}
+
+/* Keep the share action highlighted and visibly separated from plain links. */
+.footer-links .footer-share.share-button{
+  display:inline-block;
+  border:1px solid var(--line) !important;
+  border-radius:999px !important;
+  background:var(--card) !important;
+  color:var(--accent) !important;
+  font:inherit;
+  font-weight:750;
+  padding:7px 12px !important;
+  text-decoration:none;
+}
+.footer-links .footer-share.share-button:hover{
+  border-color:var(--accent) !important;
+  background:var(--accent-2) !important;
+}
+.footer-contact-copy span + span{margin-left:0.3em}
