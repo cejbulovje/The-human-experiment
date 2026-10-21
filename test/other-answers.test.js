@@ -80,3 +80,17 @@ test('API responses include baseline security headers and disable caching', asyn
   assert.equal(response.headers.get('referrer-policy'), 'strict-origin-when-cross-origin');
   assert.equal(response.headers.get('permissions-policy'), 'camera=(), microphone=(), geolocation=()');
 });
+
+test('static assets receive browser security headers while preserving content type', async () => {
+  const response = await worker.fetch(new Request('https://example.test/'), {
+    ASSETS: { fetch: async () => new Response('<h1>hello</h1>', { headers: { 'content-type': 'text/html; charset=utf-8' } }) }
+  });
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get('content-type'), 'text/html; charset=utf-8');
+  assert.equal(response.headers.get('x-content-type-options'), 'nosniff');
+  assert.equal(response.headers.get('x-frame-options'), 'DENY');
+  assert.equal(response.headers.get('referrer-policy'), 'strict-origin-when-cross-origin');
+  assert.equal(response.headers.get('permissions-policy'), 'camera=(), microphone=(), geolocation=()');
+  assert.equal(response.headers.get('content-security-policy'), "frame-ancestors 'none'");
+  assert.equal(await response.text(), '<h1>hello</h1>');
+});
