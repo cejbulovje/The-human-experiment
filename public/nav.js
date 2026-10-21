@@ -27,16 +27,29 @@
       trigger.setAttribute('title', t.menu);
     }
   };
-  document.querySelectorAll('[data-contact-email]').forEach(link => {
-    link.addEventListener('click', event => {
-      event.preventDefault();
-      link.removeAttribute('data-menu');
-      link.removeAttribute('href');
-      link.textContent = 'mankindexperiment@gmail.com';
-      link.setAttribute('aria-label', 'mankindexperiment@gmail.com');
-      link.title = 'mankindexperiment@gmail.com';
-      link.style.cursor = 'text';
-      link.style.userSelect = 'text';
+  document.querySelectorAll('[data-contact-copy]').forEach(button => {
+    button.addEventListener('click', async () => {
+      const email = 'mankindexperiment@gmail.com';
+      try {
+        if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(email);
+        else {
+          const helper = document.createElement('textarea');
+          helper.value = email;
+          helper.setAttribute('readonly', '');
+          helper.style.position = 'fixed';
+          helper.style.opacity = '0';
+          document.body.append(helper);
+          helper.select();
+          const copied = document.execCommand('copy');
+          helper.remove();
+          if (!copied) throw new Error('copy_failed');
+        }
+        button.textContent = 'Copied: ' + email;
+        button.setAttribute('aria-live', 'polite');
+      } catch {
+        button.textContent = email;
+        button.title = 'Select and copy this email address';
+      }
     });
   });
   document.querySelectorAll('[data-site-share]').forEach(button => {
