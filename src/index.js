@@ -7,7 +7,7 @@ const OPTIONS = {
   gender: { en:['Man','Woman','Another identity','Prefer not to say'], ru:['Мужчина','Женщина','Другая идентичность','Предпочитаю не отвечать'] }
 };
 const json = (data,status=200)=>new Response(JSON.stringify(data),{status,headers:CORS_HEADERS});
-async function readJsonLimited(request,maxBytes){
+export async function readJsonLimited(request,maxBytes){
   if(!request.body)return {error:'invalid_json'};
   const reader=request.body.getReader();const chunks=[];let size=0;
   try{
