@@ -44,5 +44,4 @@ let searchTimer;function resetSearch(){clearTimeout(searchTimer);searchTimer=set
     requestAnimationFrame(()=>document.getElementById(`answer-${CSS.escape(item.id)}`)?.scrollIntoView({behavior:'smooth',block:'start'}));
   }catch{}
 }
-applyLanguage();loadStats();loadLinkedAnswer().finally(()=>loadAnswers(true));});
-applyLanguage();loadStats();loadAnswers(true);
+applyLanguage();loadStats();loadLinkedAnswer().finally(()=>loadAnswers(true));
