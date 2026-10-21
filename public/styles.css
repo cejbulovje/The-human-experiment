@@ -189,3 +189,16 @@
 .footer-brand .wordmark{font-size:.68rem;letter-spacing:.08em;white-space:nowrap}
 .footer-links{justify-content:flex-end;align-items:center}
 @media(max-width:600px){.footer{align-items:flex-start;gap:12px}.footer-brand .brand-mark{width:22px;height:22px;flex-basis:22px}.footer-links{justify-content:flex-start}}
+
+/* Footer: brand and navigation share the top line; contact is centered below. */
+.footer{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;column-gap:28px;row-gap:12px}
+.footer-links{display:contents}
+.footer-links a,.footer-links button{justify-self:start}
+.footer-links .share-feedback{display:none}
+.footer-links .footer-contact-copy{grid-column:1/-1;justify-self:center;text-align:center;cursor:pointer}
+@media(max-width:600px){
+  .footer{grid-template-columns:minmax(0,1fr);row-gap:12px}
+  .footer-brand{grid-column:1;justify-self:start}
+  .footer-links a,.footer-links button{justify-self:start}
+  .footer-links .footer-contact-copy{grid-column:1;justify-self:center;width:100%;text-align:center}
+}
