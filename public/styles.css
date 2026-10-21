@@ -73,6 +73,7 @@
 .answer-meta{justify-content:flex-start;padding-top:12px;border-top:1px solid var(--line)}
 .topic-tag{font-size:.76rem;font-weight:750;color:var(--accent);background:var(--accent-2);padding:5px 9px;border-radius:999px}
 .answer-actions{justify-content:flex-start;margin-top:16px}
+#all-participants[hidden]{display:none}
 .reaction-button,.subtle-button,.show-more-button{border:1px solid var(--line);border-radius:999px;background:transparent;color:var(--accent);font:inherit;font-size:.82rem;font-weight:750;padding:9px 13px;cursor:pointer}
 .reaction-button:hover,.subtle-button:hover,.show-more-button:hover{border-color:var(--accent);background:var(--accent-2)}
 .reaction-button:disabled,.show-more-button:disabled{opacity:.55;cursor:wait}
