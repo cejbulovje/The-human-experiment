@@ -104,6 +104,16 @@ test('invalid participant filter returns no responses instead of the full catalo
   } finally { close(); }
 });
 
+test('search treats SQL wildcard characters as literal text', async () => {
+  const { env, close } = makeEnv();
+  try {
+    const percent = await get('/api/public-responses?q=%25&limit=30', env);
+    assert.equal(percent.total, 0);
+    const underscore = await get('/api/public-responses?q=_&limit=30', env);
+    assert.equal(underscore.total, 0);
+  } finally { close(); }
+});
+
 test('invalid topic filter returns no responses instead of the full catalog', async () => {
   const { env, close } = makeEnv();
   try {
