@@ -283,3 +283,19 @@
   background:var(--accent-2) !important;
 }
 .footer-contact-copy span + span{margin-left:0.3em}
+
+/* Final footer overrides: preserve the highlighted share pill and visible contact spacing. */
+.footer-links .footer-share.share-button{
+  border:1px solid var(--line)!important;
+  border-radius:999px!important;
+  background:var(--card)!important;
+  color:var(--accent)!important;
+  padding:7px 12px!important;
+  font-weight:750!important;
+  text-decoration:none!important;
+}
+.footer-links .footer-share.share-button:hover{
+  border-color:var(--accent)!important;
+  background:var(--accent-2)!important;
+}
+.footer-links .footer-contact-copy{white-space:nowrap}
