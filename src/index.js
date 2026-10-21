@@ -107,7 +107,7 @@ async function publicResponses(request,env){
   if(requestedId){if(/^legacy-\d+$/.test(requestedId)){clauses.push('(r.public_id=? OR (r.public_id IS NULL AND r.id=?))');const legacyId=Number(requestedId.slice(7));binds.push(requestedId,legacyId);}else{clauses.push('r.public_id=?');binds.push(requestedId);}}
   const participantParam=url.searchParams.get('participant');const requestedParticipant=(participantParam||'').trim();
   if(participantParam!==null){if(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(requestedParticipant)){clauses.push('r.participant_id=?');binds.push(requestedParticipant.toLowerCase());}else{clauses.push('1=0');}}
-  if(search){clauses.push('r.free_answer LIKE ? ESCAPE char(92)');binds.push(`%${search.replace(/[\\%_]/g,'\\\\if(search){clauses.push('r.free_answer LIKE ?');binds.push(`%${search.replace(/[\\%_]/g,'')}%`);}')}%`);}
+  if(search){clauses.push('r.free_answer LIKE ? ESCAPE char(92)');binds.push(`%${search.replace(/[\\%_]/g,match=>'\\'+match)}%`);}
   const allowedTopics=['character','appearance','freedom','life','relationships','other'];
   if(topic){if(allowedTopics.includes(topic)){clauses.push('r.topic=?');binds.push(topic);}else{clauses.push('1=0');}}
   const validDate=value=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const date=new Date(value+'T00:00:00.000Z');return !Number.isNaN(date.getTime())&&date.toISOString().slice(0,10)===value;};
