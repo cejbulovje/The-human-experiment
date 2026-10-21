@@ -132,9 +132,9 @@
 }
 .topbar-centered .header-brand-centered .brand-mark{
   display:block;
-  width:43px;
-  height:43px;
-  flex:0 0 43px;
+  width:45px;
+  height:45px;
+  flex:0 0 45px;
   object-fit:contain;
 }
 .topbar-centered .header-brand-centered .wordmark{
