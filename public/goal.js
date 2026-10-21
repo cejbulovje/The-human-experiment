@@ -35,7 +35,26 @@ function applyGoalLanguage(){
   const t=GOAL_TEXT[lang];
   document.documentElement.lang=lang;
   document.documentElement.dir=lang==='ar'?'rtl':'ltr';
-  document.querySelectorAll('[data-t]').forEach(el=>{const value=t[el.dataset.t];if(value)el.textContent=value;});
+  document.querySelectorAll('[data-t]').forEach(el=>{
+    const value=t[el.dataset.t];
+    if(!value)return;
+    if(['explore','next','principles'].includes(el.dataset.t)){
+      el.replaceChildren();
+      value.split(/\\n\\s*\\n/).filter(part=>part.trim()).forEach((part,index)=>{
+        const p=document.createElement('p');
+        if(el.dataset.t==='explore' && [1,4,7,8].includes(index)){
+          const strong=document.createElement('strong');
+          strong.textContent=part;
+          p.append(strong);
+        }else{
+          p.textContent=part;
+        }
+        el.append(p);
+      });
+    }else{
+      el.textContent=value;
+    }
+  });
   if(languageSelect) languageSelect.value=lang;
   document.title=`${t.titleTag} — THE HUMAN EXPERIMENT`;
 }
