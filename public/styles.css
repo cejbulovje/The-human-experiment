@@ -190,15 +190,14 @@
 .footer-links{justify-content:flex-end;align-items:center}
 @media(max-width:600px){.footer{align-items:flex-start;gap:12px}.footer-brand .brand-mark{width:22px;height:22px;flex-basis:22px}.footer-links{justify-content:flex-start}}
 
-/* Footer: brand and navigation share the top line; contact is centered below. */
-.footer{display:grid;grid-template-columns:auto minmax(0,1fr);align-items:center;column-gap:28px;row-gap:12px}
+/* Footer: logo and navigation flow together; contact is centered on its own line. */
+.footer{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px 22px}
 .footer-links{display:contents}
-.footer-links a,.footer-links button{justify-self:start}
+.footer-links a,.footer-links button{display:inline-block;max-width:100%;text-align:left}
 .footer-links .share-feedback{display:none}
-.footer-links .footer-contact-copy{grid-column:1/-1;justify-self:center;text-align:center;cursor:pointer}
+.footer-links .footer-contact-copy{flex:0 0 100%;width:100%;justify-self:auto;text-align:center;cursor:pointer}
 @media(max-width:600px){
-  .footer{grid-template-columns:minmax(0,1fr);row-gap:12px}
-  .footer-brand{grid-column:1;justify-self:start}
-  .footer-links a,.footer-links button{justify-self:start}
-  .footer-links .footer-contact-copy{grid-column:1;justify-self:center;width:100%;text-align:center}
+  .footer{flex-direction:row;align-items:center;justify-content:center;gap:10px 14px}
+  .footer-brand{margin-right:4px}
+  .footer-links .footer-contact-copy{flex-basis:100%;width:100%;text-align:center}
 }
