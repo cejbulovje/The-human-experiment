@@ -182,6 +182,13 @@ export default {
       try{return await suggestTopic(request,env);}catch{return json({error:'topic_suggestion_unavailable'},503);}
     }
     if(url.pathname.startsWith('/api/'))return json({error:'not_found'},404);
-    return env.ASSETS.fetch(request);
+    const assetResponse=await env.ASSETS.fetch(request);
+    const headers=new Headers(assetResponse.headers);
+    headers.set('x-content-type-options','nosniff');
+    headers.set('x-frame-options','DENY');
+    headers.set('referrer-policy','strict-origin-when-cross-origin');
+    headers.set('permissions-policy','camera=(), microphone=(), geolocation=()');
+    headers.set('content-security-policy', "frame-ancestors 'none'");
+    return new Response(assetResponse.body,{status:assetResponse.status,statusText:assetResponse.statusText,headers});
   }
 };
