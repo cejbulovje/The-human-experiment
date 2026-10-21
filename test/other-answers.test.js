@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { parseOtherAnswers, readJsonLimited } from '../src/index.js';
+import worker, { parseOtherAnswers, readJsonLimited } from '../src/index.js';
 
 const base = { q2: 0, q3: 0, q4: 0 };
 
@@ -67,4 +67,16 @@ test('bounded JSON parser rejects malformed JSON', async () => {
     body: '{not-json'
   });
   assert.deepEqual(await readJsonLimited(request, 100), { error: 'invalid_json' });
+});
+
+test('API responses include baseline security headers and disable caching', async () => {
+  const response = await worker.fetch(new Request('https://example.test/api/unknown'), {
+    ASSETS: { fetch: async () => new Response('asset') }
+  });
+  assert.equal(response.status, 404);
+  assert.equal(response.headers.get('cache-control'), 'no-store');
+  assert.equal(response.headers.get('x-content-type-options'), 'nosniff');
+  assert.equal(response.headers.get('x-frame-options'), 'DENY');
+  assert.equal(response.headers.get('referrer-policy'), 'strict-origin-when-cross-origin');
+  assert.equal(response.headers.get('permissions-policy'), 'camera=(), microphone=(), geolocation=()');
 });
