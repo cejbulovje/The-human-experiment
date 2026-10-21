@@ -4,6 +4,12 @@ import { readFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 
 const migration = readFileSync(new URL('../db/migrations/0006_participant_id.sql', import.meta.url), 'utf8');
+const schema = readFileSync(new URL('../db/schema.sql', import.meta.url), 'utf8');
+
+test('fresh schema includes the participant ID column and index', () => {
+  assert.match(schema, /participant_id TEXT/);
+  assert.match(schema, /idx_responses_participant_public/);
+});
 
 test('participant ID migration preserves existing responses and adds an indexed nullable column', () => {
   const db = new DatabaseSync(':memory:');
