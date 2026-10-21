@@ -131,6 +131,7 @@ async function suggestTopic(request,env){
   const allowedTopics=['character','appearance','freedom','life','relationships','other'];
   if(typeof body?.id!=='string'||body.id.length>80||!allowedTopics.includes(body.topic)||typeof body.voterToken!=='string'||body.voterToken.length<16||body.voterToken.length>128)return json({error:'invalid_suggestion'},400);
   let allowed=false;try{allowed=await rateLimit(request,env,'topic-suggestion',30);}catch{return json({error:'rate_limit_unavailable'},503);}
+  if(!allowed)return json({error:'rate_limited'},429);
   const row=await env.DB.prepare('SELECT id FROM responses WHERE public_id=? AND is_public=1').bind(body.id).first();if(!row)return json({error:'not_found'},404);
   const voterHash=await sha256(`${env.RATE_LIMIT_SALT}:${body.voterToken}`);
   try{await env.DB.prepare('INSERT INTO topic_suggestions (response_id,suggested_topic,voter_hash,created_at) VALUES (?, ?, ?, ?)').bind(row.id,body.topic,voterHash,new Date().toISOString()).run();}
