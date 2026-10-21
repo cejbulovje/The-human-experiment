@@ -13,14 +13,21 @@
   <script src="/app.js" defer></script>
 </head>
 <body>
-  <header class="topbar">
-    <a class="brand-lockup" href="/" aria-label="The Human Experiment home"><img src="/logo-human-crowd.webp" alt="" class="brand-mark"><span class="wordmark">THE HUMAN EXPERIMENT</span></a>
-    <label class="language-picker"><span class="sr-only">Language</span>
-      <select id="language" aria-label="Language">
+  <header class="topbar topbar-centered"><nav class="site-menu" aria-label="Site menu">
+      <details class="site-menu-details">
+        <summary class="site-menu-trigger" data-menu-label>☰</summary>
+        <div class="site-menu-panel">
+          <a href="/goal.html" data-menu="goal">Goal of the experiment</a>
+          <a href="/privacy.html" data-menu="privacy">Privacy</a>
+          <button type="button" data-site-share data-menu="share">Share the experiment</button>
+          <a href="/" data-menu="survey">Survey</a>
+          <a href="mailto:mankindexperiment@gmail.com" data-menu="contact">Contact</a>
+          <a href="mailto:mankindexperiment@gmail.com?subject=Support%20THE%20HUMAN%20EXPERIMENT" data-menu="support">Support the project</a>
+        </div>
+      </details>
+    </nav><a class="brand-lockup header-brand-centered" href="/" aria-label="THE HUMAN EXPERIMENT home"><img src="/logo-human-crowd.webp" alt="" class="brand-mark"><span class="wordmark">THE HUMAN EXPERIMENT</span></a><div class="header-controls"><select id="language" aria-label="Language">
         <option value="en">English</option><option value="ru">Русский</option><option value="es">Español</option><option value="pt">Português</option><option value="zh">中文</option><option value="de">Deutsch</option><option value="ja">日本語</option><option value="fr">Français</option><option value="ar">العربية</option>
-      </select>
-    </label>
-  </header>
+      </select></div></header>
   <main class="shell">
     <section class="intro">
       <p class="eyebrow" data-i18n="eyebrow">AN OPEN WORLDWIDE THOUGHT EXPERIMENT</p>
