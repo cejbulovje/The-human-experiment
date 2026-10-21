@@ -826,6 +826,11 @@ function renderLanguage(lang) {
   document.documentElement.lang = activeLanguage;
   document.documentElement.dir = activeLanguage === 'ar' ? 'rtl' : 'ltr';
   document.body.classList.toggle('rtl-language', activeLanguage === 'ar');
+  const russianIntro = document.querySelector('.intro-copy-ru');
+  const originalIntro = document.querySelectorAll('.intro-original-copy');
+  const useRussianIntro = activeLanguage === 'ru';
+  if (russianIntro) russianIntro.hidden = !useRussianIntro;
+  originalIntro.forEach(el => { el.hidden = useRussianIntro; });
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key=el.dataset.i18n;
     if (Object.prototype.hasOwnProperty.call(t,key)) el.textContent=t[key];
