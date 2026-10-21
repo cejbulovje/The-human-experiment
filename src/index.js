@@ -108,9 +108,11 @@ async function publicResponses(request,env){
   const participantParam=url.searchParams.get('participant');const requestedParticipant=(participantParam||'').trim();
   if(participantParam!==null){if(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(requestedParticipant)){clauses.push('r.participant_id=?');binds.push(requestedParticipant.toLowerCase());}else{clauses.push('1=0');}}
   if(search){clauses.push('r.free_answer LIKE ?');binds.push(`%${search.replace(/[\\%_]/g,'')}%`);}
-  if(topic&&['character','appearance','freedom','life','relationships','other'].includes(topic)){clauses.push('r.topic=?');binds.push(topic);}
-  if(/^\d{4}-\d{2}-\d{2}$/.test(from)){clauses.push('substr(r.created_at,1,10)>=?');binds.push(from);}
-  if(/^\d{4}-\d{2}-\d{2}$/.test(to)){clauses.push('substr(r.created_at,1,10)<=?');binds.push(to);}
+  const allowedTopics=['character','appearance','freedom','life','relationships','other'];
+  if(topic){if(allowedTopics.includes(topic)){clauses.push('r.topic=?');binds.push(topic);}else{clauses.push('1=0');}}
+  const validDate=value=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const date=new Date(value+'T00:00:00.000Z');return !Number.isNaN(date.getTime())&&date.toISOString().slice(0,10)===value;};
+  if(url.searchParams.has('from')){if(validDate(from)){clauses.push('substr(r.created_at,1,10)>=?');binds.push(from);}else{clauses.push('1=0');}}
+  if(url.searchParams.has('to')){if(validDate(to)){clauses.push('substr(r.created_at,1,10)<=?');binds.push(to);}else{clauses.push('1=0');}}
   const where=clauses.join(' AND ');
   let order='r.created_at DESC';
   if(sort==='oldest')order='r.created_at ASC';
