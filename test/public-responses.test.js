@@ -76,6 +76,15 @@ test('participant filter returns only that participant’s public responses', as
   } finally { close(); }
 });
 
+test('invalid participant filter returns no responses instead of the full catalog', async () => {
+  const { env, close } = makeEnv();
+  try {
+    const result = await get('/api/public-responses?participant=not-a-valid-id&limit=30', env);
+    assert.equal(result.total, 0);
+    assert.deepEqual(result.items, []);
+  } finally { close(); }
+});
+
 test('sort oldest orders responses ascending by creation date', async () => {
   const { env, close } = makeEnv();
   try {
