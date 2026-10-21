@@ -141,6 +141,7 @@ test('legacy direct links resolve public responses without a public ID', async (
     assert.equal(result.total, 1);
     assert.equal(result.items[0].id, 'legacy-5');
     assert.equal(result.items[0].answer, 'Legacy public response');
+    assert.equal(result.items[0].participantId, null);
   } finally { close(); }
 });
 
