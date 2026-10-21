@@ -103,7 +103,7 @@ async function publicResponses(request,env){
   const requestedId=(url.searchParams.get('id')||'').trim().slice(0,100);
   const search=(url.searchParams.get('q')||'').trim().slice(0,160);const topic=(url.searchParams.get('topic')||'').trim();const from=(url.searchParams.get('from')||'').slice(0,10);const to=(url.searchParams.get('to')||'').slice(0,10);const sort=url.searchParams.get('sort')||'newest';
   const clauses=['r.is_public=1'];const binds=[];
-  if(requestedId){if(/^legacy-\\d+$/.test(requestedId)){clauses.push('(r.public_id=? OR (r.public_id IS NULL AND r.id=?))');const legacyId=Number(requestedId.slice(7));binds.push(requestedId,legacyId);}else{clauses.push('r.public_id=?');binds.push(requestedId);}}
+  if(requestedId){if(/^legacy-\d+$/.test(requestedId)){clauses.push('(r.public_id=? OR (r.public_id IS NULL AND r.id=?))');const legacyId=Number(requestedId.slice(7));binds.push(requestedId,legacyId);}else{clauses.push('r.public_id=?');binds.push(requestedId);}}
   if(search){clauses.push('r.free_answer LIKE ?');binds.push(`%${search.replace(/[\\%_]/g,'')}%`);}
   if(topic&&['character','appearance','freedom','life','relationships','other'].includes(topic)){clauses.push('r.topic=?');binds.push(topic);}
   if(/^\d{4}-\d{2}-\d{2}$/.test(from)){clauses.push('substr(r.created_at,1,10)>=?');binds.push(from);}
