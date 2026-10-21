@@ -244,7 +244,19 @@ const translations = {
     "network": "Se produjo un error de conexión. Inténtalo de nuevo.",
     "intro3": "Ante ti hay una persona con su propia apariencia, carácter, creencias y deseos. Puedes dejarlo todo como está, intentar comprender lo que quiere para sí misma, cambiar algunos rasgos o replantear por completo en quién se convertirá.",
     "intro4": "Cada participante responde por su cuenta. Nadie sabe a qué decisión llegarán los demás. A medida que se acumulen las respuestas, puede formarse una opinión colectiva de personas de todo el mundo. Quizá la mayoría quiera tener en cuenta los deseos de esa persona. Quizá la decisión colectiva sea distinta de lo que esperaba cada participante.",
-    "intro5": "Tu respuesta es solo una entre muchas. Pero ¿qué ocurrirá si millones de personas empiezan a decidir el destino de una sola persona? ¿Podrán ponerse de acuerdo? ¿Y qué decidirá la mayoría?"
+    "intro5": "Tu respuesta es solo una entre muchas. Pero ¿qué ocurrirá si millones de personas empiezan a decidir el destino de una sola persona? ¿Podrán ponerse de acuerdo? ¿Y qué decidirá la mayoría?",
+    "signature-title": "¿Cómo quieres firmar tu respuesta?",
+    "signature-help": "El anonimato está seleccionado por defecto. Si añades una firma, se mostrará públicamente junto a tu respuesta.",
+    "signature-anonymous": "Anónimo",
+    "signature-signed": "Añadir nombre o seudónimo",
+    "signature-label": "Nombre o seudónimo",
+    "signature-placeholder": "Escribe un nombre o seudónimo",
+    "signature-note": "Este nombre será público y no se verificará tu identidad. No uses el nombre de otra persona sin su permiso.",
+    "author-title": "Antes de enviar",
+    "author-help": "Tu respuesta debe expresar tu propia opinión.",
+    "author-confirm": "Confirmo que esta respuesta expresa mi propia opinión y entiendo que se publicará públicamente. Puedo hablar de otras personas o imaginar lo que podrían querer, pero no presentaré mis suposiciones sobre sus deseos como opiniones confirmadas por ellas.",
+    "author-required": "Confirma que tu respuesta expresa tu propia opinión.",
+    "signature-required": "Escribe un nombre o seudónimo, o selecciona el anonimato."
   },
   "pt": {
     "eyebrow": "UM EXPERIMENTO MENTAL ABERTO E MUNDIAL",
@@ -317,7 +329,19 @@ const translations = {
     "network": "Ocorreu um erro de conexão. Tente novamente.",
     "intro3": "À tua frente está uma pessoa com a sua aparência, personalidade, convicções e desejos. Podes deixar tudo como está, tentar compreender o que ela própria quer, mudar alguns traços ou repensar por completo em quem ela se tornará.",
     "intro4": "Cada participante responde de forma independente. Ninguém sabe a que decisão chegarão os outros. À medida que as respostas se acumulam, poderá formar-se uma opinião coletiva de pessoas de todo o mundo. Talvez a maioria queira ter em conta os desejos da própria pessoa. Talvez a escolha coletiva seja diferente do que cada participante esperava.",
-    "intro5": "A tua resposta é apenas uma entre muitas. Mas o que acontecerá se milhões de pessoas começarem a decidir o destino de uma só pessoa? Conseguirão chegar a acordo? E o que decidirá a maioria?"
+    "intro5": "A tua resposta é apenas uma entre muitas. Mas o que acontecerá se milhões de pessoas começarem a decidir o destino de uma só pessoa? Conseguirão chegar a acordo? E o que decidirá a maioria?",
+    "signature-title": "Como você quer assinar sua resposta?",
+    "signature-help": "O anonimato está selecionado por padrão. Se adicionar uma assinatura, ela será exibida publicamente junto à sua resposta.",
+    "signature-anonymous": "Anônimo",
+    "signature-signed": "Adicionar nome ou pseudônimo",
+    "signature-label": "Nome ou pseudônimo",
+    "signature-placeholder": "Digite um nome ou pseudônimo",
+    "signature-note": "Este nome será público e sua identidade não será verificada. Não use o nome de outra pessoa sem permissão.",
+    "author-title": "Antes de enviar",
+    "author-help": "Sua resposta deve expressar sua própria opinião.",
+    "author-confirm": "Confirmo que esta resposta expressa minha própria opinião e entendo que será publicada publicamente. Posso falar sobre outras pessoas ou imaginar o que elas poderiam querer, mas não apresentarei suposições sobre seus desejos como opiniões confirmadas por elas.",
+    "author-required": "Confirme que sua resposta expressa sua própria opinião.",
+    "signature-required": "Digite um nome ou pseudônimo ou selecione o anonimato."
   },
   "zh": {
     "eyebrow": "开放的全球思想实验",
@@ -390,7 +414,19 @@ const translations = {
     "network": "网络错误，请重试。",
     "intro3": "你面前是一个有着自己外貌、性格、信念和愿望的人。你可以保持现状，尝试了解他真正想要什么，改变某些特征，或重新思考他最终会成为怎样的人。",
     "intro4": "每位参与者独立作答，没有人知道其他人会作出什么选择。随着回答不断增加，来自世界各地的共同意见可能逐渐形成。多数人也许会希望考虑这个人自己的愿望；最终的集体选择也可能与任何一位参与者的预期不同。",
-    "intro5": "你的回答只是众多回答中的一个。但如果数百万人开始决定一个人的命运，会发生什么？他们能达成共识吗？多数人最终会作出什么决定？"
+    "intro5": "你的回答只是众多回答中的一个。但如果数百万人开始决定一个人的命运，会发生什么？他们能达成共识吗？多数人最终会作出什么决定？",
+    "signature-title": "你希望如何署名？",
+    "signature-help": "默认选择匿名。如果添加署名，该名称将与回答一起公开显示。",
+    "signature-anonymous": "匿名",
+    "signature-signed": "添加姓名或化名",
+    "signature-label": "姓名或化名",
+    "signature-placeholder": "输入姓名或化名",
+    "signature-note": "此名称会公开显示，但不会核实身份。未经他人允许，请勿使用他人的姓名。",
+    "author-title": "提交前确认",
+    "author-help": "回答应表达你自己的观点。",
+    "author-confirm": "我确认此回答表达我自己的观点，并理解它将被公开发布。我可以讨论他人或推测他们可能想要什么，但不会把对他们意愿的猜测说成他们已确认的观点。",
+    "author-required": "请确认回答表达的是你自己的观点。",
+    "signature-required": "请输入姓名或化名，或选择匿名。"
   },
   "de": {
     "eyebrow": "EIN OFFENES WELTWEITES GEDANKENEXPERIMENT",
@@ -463,7 +499,19 @@ const translations = {
     "network": "Netzwerkfehler. Bitte versuche es erneut.",
     "intro3": "Vor dir steht ein Mensch mit seinem Aussehen, Charakter, seinen Überzeugungen und Wünschen. Du kannst alles lassen, wie es ist, versuchen zu verstehen, was diese Person selbst möchte, einzelne Eigenschaften verändern oder völlig neu überdenken, zu welchem Menschen sie werden soll.",
     "intro4": "Jeder Teilnehmer antwortet unabhängig. Niemand weiß, zu welcher Entscheidung die anderen kommen. Mit zunehmender Zahl der Antworten kann sich eine gemeinsame Meinung von Menschen aus aller Welt herausbilden. Vielleicht möchte die Mehrheit die Wünsche der betreffenden Person berücksichtigen. Vielleicht fällt die gemeinsame Entscheidung ganz anders aus, als einzelne Teilnehmer erwarten.",
-    "intro5": "Deine Antwort ist nur eine von vielen. Doch was geschieht, wenn Millionen Menschen beginnen, über das Schicksal eines einzigen Menschen zu entscheiden? Können sie sich einigen? Und wofür wird sich die Mehrheit entscheiden?"
+    "intro5": "Deine Antwort ist nur eine von vielen. Doch was geschieht, wenn Millionen Menschen beginnen, über das Schicksal eines einzigen Menschen zu entscheiden? Können sie sich einigen? Und wofür wird sich die Mehrheit entscheiden?",
+    "signature-title": "Wie soll deine Antwort gekennzeichnet werden?",
+    "signature-help": "Standardmäßig ist anonym ausgewählt. Wenn du eine Signatur hinzufügst, wird sie zusammen mit deiner Antwort öffentlich angezeigt.",
+    "signature-anonymous": "Anonym",
+    "signature-signed": "Namen oder Pseudonym hinzufügen",
+    "signature-label": "Name oder Pseudonym",
+    "signature-placeholder": "Name oder Pseudonym eingeben",
+    "signature-note": "Dieser Anzeigename ist öffentlich; deine Identität wird nicht überprüft. Verwende den Namen einer anderen Person nicht ohne deren Erlaubnis.",
+    "author-title": "Vor dem Absenden",
+    "author-help": "Deine Antwort soll deine eigene Meinung ausdrücken.",
+    "author-confirm": "Ich bestätige, dass diese Antwort meine eigene Meinung ausdrückt, und verstehe, dass sie öffentlich veröffentlicht wird. Ich darf über andere Menschen sprechen oder vermuten, was sie möchten könnten, werde solche Vermutungen aber nicht als bestätigte Ansichten dieser Personen darstellen.",
+    "author-required": "Bestätige, dass deine Antwort deine eigene Meinung ausdrückt.",
+    "signature-required": "Gib einen Namen oder ein Pseudonym ein oder wähle anonym."
   },
   "ja": {
     "eyebrow": "世界に開かれた思考実験",
@@ -536,7 +584,19 @@ const translations = {
     "network": "ネットワークエラーが発生しました。もう一度お試しください。",
     "intro3": "目の前には、外見、性格、信念、願いを持つ一人の人がいます。何も変えないことも、その人自身の望みを理解しようとすることも、一部の特徴を変えることも、どんな人になるのかを根本から考え直すこともできます。",
     "intro4": "参加者はそれぞれ独立して回答します。他の人がどんな結論に至るかは分かりません。回答が増えるにつれ、世界中の人々の共通した意見が形づくられるかもしれません。多数の人が本人の希望を尊重したいと考えるかもしれませんし、集団の選択が個々の参加者の予想と異なるかもしれません。",
-    "intro5": "あなたの回答は、数多くの回答の一つにすぎません。しかし、何百万人もの人々が一人の運命を決め始めたら、何が起こるでしょうか。意見を一致させられるでしょうか。そして、多数派はどんな決定をするのでしょうか。"
+    "intro5": "あなたの回答は、数多くの回答の一つにすぎません。しかし、何百万人もの人々が一人の運命を決め始めたら、何が起こるでしょうか。意見を一致させられるでしょうか。そして、多数派はどんな決定をするのでしょうか。",
+    "signature-title": "回答をどのように署名しますか？",
+    "signature-help": "初期設定では匿名が選択されています。署名を追加すると、回答とともに公開表示されます。",
+    "signature-anonymous": "匿名",
+    "signature-signed": "名前または仮名を追加",
+    "signature-label": "名前または仮名",
+    "signature-placeholder": "名前または仮名を入力",
+    "signature-note": "この表示名は公開されますが、本人確認は行われません。許可なく他人の名前を使用しないでください。",
+    "author-title": "送信前の確認",
+    "author-help": "回答にはあなた自身の意見を記してください。",
+    "author-confirm": "この回答が自分自身の意見を表していること、また公開されることを理解したうえで確認します。他人について述べたり、その人が何を望むか想像したりしても、その推測を本人が確認した意見として示しません。",
+    "author-required": "回答があなた自身の意見であることを確認してください。",
+    "signature-required": "名前または仮名を入力するか、匿名を選択してください。"
   },
   "fr": {
     "eyebrow": "UNE EXPÉRIENCE DE PENSÉE MONDIALE ET OUVERTE",
@@ -609,7 +669,19 @@ const translations = {
     "network": "Une erreur réseau est survenue. Veuillez réessayer.",
     "intro3": "Devant toi se trouve une personne avec son apparence, son caractère, ses convictions et ses désirs. Tu peux tout laisser tel quel, essayer de comprendre ce qu’elle souhaite elle-même, modifier certains traits ou repenser entièrement la personne qu’elle deviendra.",
     "intro4": "Chaque participant répond indépendamment. Personne ne sait quelle décision les autres prendront. À mesure que les réponses s’accumulent, une opinion commune venue du monde entier peut se dessiner. La majorité voudra peut-être tenir compte des souhaits de cette personne. Le choix collectif pourrait aussi être très différent de ce que chaque participant imaginait.",
-    "intro5": "Ta réponse n’est qu’une parmi beaucoup d’autres. Mais que se passera-t-il si des millions de personnes commencent à décider du destin d’une seule personne ? Pourront-elles s’accorder ? Et quelle décision la majorité prendra-t-elle ?"
+    "intro5": "Ta réponse n’est qu’une parmi beaucoup d’autres. Mais que se passera-t-il si des millions de personnes commencent à décider du destin d’une seule personne ? Pourront-elles s’accorder ? Et quelle décision la majorité prendra-t-elle ?",
+    "signature-title": "Comment souhaitez-vous signer votre réponse ?",
+    "signature-help": "L’anonymat est sélectionné par défaut. Si vous ajoutez une signature, elle sera affichée publiquement avec votre réponse.",
+    "signature-anonymous": "Anonyme",
+    "signature-signed": "Ajouter un nom ou un pseudonyme",
+    "signature-label": "Nom ou pseudonyme",
+    "signature-placeholder": "Saisissez un nom ou un pseudonyme",
+    "signature-note": "Ce nom d’affichage sera public, mais votre identité ne sera pas vérifiée. N’utilisez pas le nom d’une autre personne sans son autorisation.",
+    "author-title": "Avant l’envoi",
+    "author-help": "Votre réponse doit exprimer votre propre opinion.",
+    "author-confirm": "Je confirme que cette réponse exprime ma propre opinion et je comprends qu’elle sera publiée publiquement. Je peux parler d’autres personnes ou imaginer ce qu’elles pourraient souhaiter, mais je ne présenterai pas mes suppositions comme leurs opinions confirmées.",
+    "author-required": "Veuillez confirmer que votre réponse exprime votre propre opinion.",
+    "signature-required": "Saisissez un nom ou un pseudonyme, ou choisissez l’anonymat."
   },
   "ar": {
     "eyebrow": "تجربة فكرية عالمية مفتوحة",
@@ -682,7 +754,19 @@ const translations = {
     "network": "حدث خطأ في الشبكة. حاول مرة أخرى.",
     "intro3": "أمامك إنسان له مظهره وشخصيته ومعتقداته ورغباته. يمكنك ترك كل شيء كما هو، أو محاولة فهم ما يريده لنفسه، أو تغيير بعض صفاته، أو إعادة التفكير بالكامل في الشخص الذي سيصبحه.",
     "intro4": "يجيب كل مشارك بصورة مستقلة، ولا يعرف أحد القرار الذي سيتوصل إليه الآخرون. ومع تراكم الإجابات، قد تتشكل رؤية مشتركة لأشخاص من أنحاء العالم. ربما ترغب الأغلبية في مراعاة رغبات هذا الشخص نفسه، وربما يكون الاختيار الجماعي مختلفًا عما توقعه المشاركون.",
-    "intro5": "إجابتك واحدة من إجابات كثيرة. لكن ماذا سيحدث إذا بدأ ملايين الأشخاص في تقرير مصير شخص واحد؟ هل سيتمكنون من الاتفاق؟ وما القرار الذي ستتخذه الأغلبية؟"
+    "intro5": "إجابتك واحدة من إجابات كثيرة. لكن ماذا سيحدث إذا بدأ ملايين الأشخاص في تقرير مصير شخص واحد؟ هل سيتمكنون من الاتفاق؟ وما القرار الذي ستتخذه الأغلبية؟",
+    "signature-title": "كيف تريد توقيع إجابتك؟",
+    "signature-help": "الخيار الافتراضي هو عدم إظهار الاسم. إذا أضفت توقيعًا، فسيظهر علنًا بجانب إجابتك.",
+    "signature-anonymous": "مجهول",
+    "signature-signed": "إضافة اسم أو اسم مستعار",
+    "signature-label": "الاسم أو الاسم المستعار",
+    "signature-placeholder": "أدخل اسمًا أو اسمًا مستعارًا",
+    "signature-note": "سيظهر هذا الاسم علنًا، لكن لن يتم التحقق من الهوية. لا تستخدم اسم شخص آخر دون إذنه.",
+    "author-title": "قبل الإرسال",
+    "author-help": "ينبغي أن تعبّر إجابتك عن رأيك الشخصي.",
+    "author-confirm": "أؤكد أن هذه الإجابة تعبّر عن رأيي الشخصي وأفهم أنها ستُنشر علنًا. يمكنني مناقشة أشخاص آخرين أو تخيّل ما قد يرغبون فيه، لكنني لن أقدّم تخميناتي بشأن رغباتهم على أنها آراء مؤكدة منهم.",
+    "author-required": "يرجى تأكيد أن إجابتك تعبّر عن رأيك الشخصي.",
+    "signature-required": "أدخل اسمًا أو اسمًا مستعارًا، أو اختر عدم إظهار الاسم."
   }
 };
 for (const language of Object.values(translations)) {
