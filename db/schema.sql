@@ -32,3 +32,14 @@ CREATE TABLE IF NOT EXISTS response_reactions (response_id INTEGER NOT NULL REFE
 CREATE INDEX IF NOT EXISTS idx_response_reactions_response ON response_reactions(response_id, reaction);
 
 CREATE TABLE IF NOT EXISTS topic_suggestions (id INTEGER PRIMARY KEY AUTOINCREMENT, response_id INTEGER NOT NULL REFERENCES responses(id) ON DELETE CASCADE, suggested_topic TEXT NOT NULL CHECK (suggested_topic IN ('character','appearance','freedom','life','relationships','other')), voter_hash TEXT NOT NULL, created_at TEXT NOT NULL, UNIQUE(response_id, voter_hash));
+
+CREATE TABLE IF NOT EXISTS ai_daily_visitors (
+  day TEXT NOT NULL,
+  ip_hash TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  PRIMARY KEY (day, ip_hash)
+);
+CREATE TABLE IF NOT EXISTS ai_daily_usage (
+  day TEXT PRIMARY KEY,
+  requests INTEGER NOT NULL DEFAULT 0 CHECK (requests BETWEEN 0 AND 100)
+);
