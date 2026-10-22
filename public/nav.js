@@ -29,6 +29,7 @@
   };
   document.querySelectorAll('[data-contact-copy]').forEach(button => {
     const email = 'mankindexperiment@gmail.com';
+    const inMenu = Boolean(button.closest('.site-menu-panel'));
     let revealed = false;
     let status = button.parentElement.querySelector('.contact-copy-status');
     if (!status) {
@@ -42,9 +43,26 @@
       status.style.color = 'var(--accent)';
       button.insertAdjacentElement('afterend', status);
     }
-    button.textContent = 'Contact';
+    if (inMenu) button.textContent = 'Contact';
+    const copyEmail = async () => {
+      if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(email);
+      else {
+        const helper = document.createElement('textarea');
+        helper.value = email;
+        helper.setAttribute('readonly', '');
+        helper.style.position = 'fixed';
+        helper.style.opacity = '0';
+        document.body.append(helper);
+        helper.select();
+        const copied = document.execCommand('copy');
+        helper.remove();
+        if (!copied) throw new Error('copy_failed');
+      }
+      status.textContent = 'Email copied!';
+      button.title = 'Email copied!';
+    };
     button.addEventListener('click', async () => {
-      if (!revealed) {
+      if (inMenu && !revealed) {
         revealed = true;
         button.textContent = email;
         button.setAttribute('aria-label', 'Copy email address ' + email);
@@ -52,21 +70,7 @@
         return;
       }
       try {
-        if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(email);
-        else {
-          const helper = document.createElement('textarea');
-          helper.value = email;
-          helper.setAttribute('readonly', '');
-          helper.style.position = 'fixed';
-          helper.style.opacity = '0';
-          document.body.append(helper);
-          helper.select();
-          const copied = document.execCommand('copy');
-          helper.remove();
-          if (!copied) throw new Error('copy_failed');
-        }
-        status.textContent = 'Email copied!';
-        button.title = 'Email copied!';
+        await copyEmail();
       } catch {
         status.textContent = 'Could not copy. Select the email address and copy it.';
         button.title = 'Select and copy this email address';
