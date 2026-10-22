@@ -37,27 +37,7 @@
         <p class="method-note" data-t="method">These are voluntary online responses, not a representative sample of the world's population. Percentages are calculated among answers submitted for each question.</p>
       </div>
     </section>
-    <section class="open-data-section" aria-labelledby="open-data-title">
-      <div class="section-heading"><div><p class="eyebrow">OPEN DATA</p><h2 id="open-data-title">Explore the data independently</h2><p class="section-intro">Download public survey data and analyze it in your own tools. Private submissions are excluded.</p></div></div>
-      <div class="open-data-card">
-        <p>Use the files in ChatGPT, Gemini, Claude, spreadsheets, or your own analysis tools. The exports include public answers and their survey context, but omit participant signatures and identifiers.</p>
-        <div class="open-data-actions">
-          <button id="download-open-data" class="submit-button" type="button">Download data</button>
-          <a class="subtle-button open-data-api-link" href="/api/results" target="_blank" rel="noopener">View statistics JSON</a>
-          <a class="subtle-button open-data-api-link" href="/api/open-data?limit=30&amp;offset=0" target="_blank" rel="noopener">View public data API</a>
-        </div>
-        <p id="open-data-status" class="open-data-status" role="status" aria-live="polite"></p>
-        <div class="open-data-instructions">
-          <h3>Explore with AI</h3>
-          <ol>
-            <li>Download the CSV file above.</li>
-            <li>Open ChatGPT, Gemini, or Claude and attach the file.</li>
-            <li>Ask it to summarize patterns, compare viewpoints, test hypotheses, or explain limitations. Ask it to distinguish observed data from interpretation.</li>
-          </ol>
-          <p class="method-note">These are voluntary online responses, not a representative sample of the world's population. Public answers may contain sensitive information written by participants; review the file before sharing it further.</p>
-        </div>
-      </div>
-    </section>
+
     <section class="public-answers-section" aria-labelledby="answers-title">
       <div class="section-heading"><div><p class="eyebrow" data-t="voicesEyebrow">VOICES OF PARTICIPANTS</p><h2 id="answers-title" data-t="answersTitle">What do other people think?</h2><p class="section-intro" data-t="answersLead">Read written answers from participants around the world.</p></div><span id="answer-total" class="answer-total">—</span></div>
       <div class="answer-tools">
@@ -72,6 +52,27 @@
       <div id="answers-status" class="status-panel" role="status" aria-live="polite" data-t="answersLoading">Loading answers…</div>
       <div id="answer-list" class="answer-list"></div>
       <button id="show-more" class="show-more-button" type="button" hidden data-t="showMore">Show more</button>
+    </section>
+    <section class="open-data-section" aria-labelledby="open-data-title">
+      <div class="section-heading"><div><p class="eyebrow" data-open-data="eyebrow">OPEN DATA</p><h2 id="open-data-title" data-open-data="title">Explore the data independently</h2><p class="section-intro" data-open-data="intro">Download public survey data and analyze it in your own tools. Private submissions are excluded.</p></div></div>
+      <div class="open-data-card">
+        <p data-open-data="description">Use the files in ChatGPT, Gemini, Claude, spreadsheets, or your own analysis tools. The exports include public answers and their survey context, but omit participant signatures and identifiers.</p>
+        <div class="open-data-actions">
+          <button id="download-open-data" class="submit-button" type="button" data-open-data="download">Download data</button>
+          <a class="subtle-button open-data-api-link" href="/api/results" target="_blank" rel="noopener" data-open-data="statsApi">View statistics JSON</a>
+          <a class="subtle-button open-data-api-link" href="/api/open-data?limit=30&amp;offset=0" target="_blank" rel="noopener" data-open-data="dataApi">View public data API</a>
+        </div>
+        <p id="open-data-status" class="open-data-status" role="status" aria-live="polite"></p>
+        <div class="open-data-instructions">
+          <h3 data-open-data="aiTitle">Explore with AI</h3>
+          <ol>
+            <li data-open-data="step1">Download the CSV file above.</li>
+            <li data-open-data="step2">Open ChatGPT, Gemini, or Claude and attach the file.</li>
+            <li data-open-data="step3">Ask it to summarize patterns, compare viewpoints, test hypotheses, or explain limitations. Ask it to distinguish observed data from interpretation.</li>
+          </ol>
+          <p class="method-note" data-open-data="caution">These are voluntary online responses, not a representative sample of the world's population. Public answers may contain sensitive information written by participants; review the file before sharing it further.</p>
+        </div>
+      </div>
     </section>
   </main>
   <footer class="footer"><a class="brand-lockup footer-brand" href="/" aria-label="THE HUMAN EXPERIMENT home"><img src="/logo-human-crowd.webp" alt="" class="brand-mark"><span class="wordmark">THE HUMAN EXPERIMENT</span></a><nav class="footer-links" aria-label="Project links"><a href="/goal.html" data-menu="goal">Goal of the experiment</a><a href="/privacy.html" data-menu="privacy">Privacy</a><a href="/results.html" data-menu="results">Results</a><button class="footer-share share-button" type="button" data-site-share data-menu="share">Share the experiment</button><a href="mailto:mankindexperiment@gmail.com?subject=Support%20THE%20HUMAN%20EXPERIMENT" data-menu="support">Support the project</a><button type="button" class="footer-contact-copy" data-contact-copy><span data-menu="contact">Contact</span>:&nbsp;<span>mankindexperiment@gmail.com</span></button></nav></footer>
