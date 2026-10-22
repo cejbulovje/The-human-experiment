@@ -210,6 +210,7 @@ async function aiAnalysis(request,env){
   const ipHash=await sha256(`${env.RATE_LIMIT_SALT}:ai-daily:${ip}`);
   const day=new Date().toISOString().slice(0,10);
   try{
+    await env.DB.prepare("CREATE TABLE IF NOT EXISTS ai_analysis_memory (id INTEGER PRIMARY KEY CHECK (id = 1), last_response_id INTEGER NOT NULL DEFAULT 0, summary TEXT NOT NULL DEFAULT '', response_count INTEGER NOT NULL DEFAULT 0, updated_at TEXT NOT NULL)").run();
     const already=await env.DB.prepare('SELECT 1 AS used FROM ai_daily_visitors WHERE day=? AND ip_hash=?').bind(day,ipHash).first();
     if(already)return json({error:'visitor_limit'},429);
     const memory=await env.DB.prepare('SELECT last_response_id,summary,response_count FROM ai_analysis_memory WHERE id=1').first();
