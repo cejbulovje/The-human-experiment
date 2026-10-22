@@ -1,0 +1,10 @@
+CREATE TABLE IF NOT EXISTS public_results_snapshot (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  published_threshold INTEGER NOT NULL DEFAULT 0,
+  total INTEGER NOT NULL DEFAULT 0,
+  updated_at TEXT NOT NULL,
+  q2 TEXT NOT NULL DEFAULT '[]',
+  q3 TEXT NOT NULL DEFAULT '[]',
+  q4 TEXT NOT NULL DEFAULT '[]',
+  answered TEXT NOT NULL DEFAULT '{}'
+);
