@@ -101,7 +101,7 @@ async function exportOpenData(format){
     }else{
       const keys=['answer','language','topic','submittedDate','q2','q3','q4','q2Other','q3Other','q4Other'];
       const rows=[keys.join(','),...items.map(item=>keys.map(key=>csvCell(item[key])).join(','))];
-      downloadTextFile(filename+'.csv','\\uFEFF'+rows.join('\\r\\n'),'text/csv;charset=utf-8');
+      downloadTextFile(filename+'.csv','\uFEFF'+rows.join('\r\n'),'text/csv;charset=utf-8');
     }
     status.textContent=(lang==='ru'?'Готово: экспортировано публичных ответов — ':'Done: public responses exported — ')+items.length+'.';
   }catch{
