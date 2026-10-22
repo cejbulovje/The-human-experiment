@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
+import { runAIWithLease } from '../src/index.js';
 
 const migration = readFileSync(
   new URL('../db/migrations/0008_ai_analysis_memory.sql', import.meta.url),
@@ -61,6 +62,80 @@ test('expired lease can be claimed and previous owner cannot renew it', () => {
       RETURNING token
     `).get('2026-10-22T12:20:00.000Z', 'old-owner', now);
     assert.equal(staleRenewal, undefined);
+    assert.equal(db.prepare('SELECT token FROM ai_analysis_lock WHERE id=1').get().token, 'new-owner');
+  } finally {
+    db.close();
+  }
+});
+
+test('AI lease is renewed while a model call is still pending', async () => {
+  const db = new DatabaseSync(':memory:');
+  const renewals = [];
+  db.exec(migration);
+  db.prepare('INSERT INTO ai_analysis_lock (id, token, expires_at) VALUES (1, ?, ?)').run(
+    'active-owner', '2999-01-01T00:00:00.000Z'
+  );
+  const DB = {
+    prepare(sql) {
+      let values = [];
+      return {
+        bind(...args) { values = args; return this; },
+        first() {
+          const result = db.prepare(sql).get(...values);
+          if (sql.startsWith('UPDATE ai_analysis_lock SET expires_at=')) renewals.push(result);
+          return result;
+        }
+      };
+    }
+  };
+  const AI = {
+    async run() {
+      await new Promise(resolve => setTimeout(resolve, 35));
+      return { response: 'analysis complete' };
+    }
+  };
+  try {
+    const result = await runAIWithLease({ DB, AI }, 'active-owner', [{ role: 'user', content: 'test' }], 20, 5);
+    assert.equal(result.response, 'analysis complete');
+    assert.ok(renewals.length >= 2, 'lease should be renewed repeatedly while AI is pending');
+    assert.ok(renewals.every(Boolean), 'each lease renewal should retain ownership');
+  } finally {
+    db.close();
+  }
+});
+
+test('AI result is rejected if the lease is lost while the model call is pending', async () => {
+  const db = new DatabaseSync(':memory:');
+  db.exec(migration);
+  db.prepare('INSERT INTO ai_analysis_lock (id, token, expires_at) VALUES (1, ?, ?)').run(
+    'active-owner', '2999-01-01T00:00:00.000Z'
+  );
+  let renewalCount = 0;
+  const DB = {
+    prepare(sql) {
+      let values = [];
+      return {
+        bind(...args) { values = args; return this; },
+        first() {
+          if (sql.startsWith('UPDATE ai_analysis_lock SET expires_at=')) {
+            renewalCount++;
+            db.prepare('UPDATE ai_analysis_lock SET token=?, expires_at=? WHERE id=1').run(
+              'new-owner', '2999-01-01T00:00:00.000Z'
+            );
+            return undefined;
+          }
+          return db.prepare(sql).get(...values);
+        }
+      };
+    }
+  };
+  const AI = { async run() { await new Promise(resolve => setTimeout(resolve, 25)); return { response: 'stale result' }; } };
+  try {
+    await assert.rejects(
+      runAIWithLease({ DB, AI }, 'active-owner', [{ role: 'user', content: 'test' }], 20, 5),
+      /analysis_lock_lost_during_ai_call/
+    );
+    assert.equal(renewalCount, 1);
     assert.equal(db.prepare('SELECT token FROM ai_analysis_lock WHERE id=1').get().token, 'new-owner');
   } finally {
     db.close();
