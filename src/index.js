@@ -83,20 +83,46 @@ function classifyTopic(text){
   ];
   return (groups.find(([key,re])=>re.test(value))||['other'])[0];
 }
+export function resultThresholdsThrough(maximum=1_000_000_000_000){
+  const thresholds=[100,500];
+  for(let power=1000;power<=maximum;power*=10){
+    thresholds.push(power,power*2,power*5);
+  }
+  return thresholds.filter((value,index,array)=>value<=maximum&&array.indexOf(value)===index).sort((a,b)=>a-b);
+}
+export function highestReachedResultsThreshold(total,publishedThreshold=0){
+  return resultThresholdsThrough(Math.max(total,1)).filter(value=>value<=total&&value>publishedThreshold).at(-1)||publishedThreshold;
+}
+export function nextResultsThreshold(publishedThreshold=0){
+  return resultThresholdsThrough(Math.max(publishedThreshold*10,1000)).find(value=>value>publishedThreshold)||publishedThreshold*10;
+}
 async function results(env){
   if(!env.DB)return json({error:'not_configured'},503);
-  const totalRow=await env.DB.prepare('SELECT COUNT(*) AS total, MAX(created_at) AS updated_at FROM responses WHERE is_public=1').first();
+  const totalRow=await env.DB.prepare('SELECT COUNT(*) AS total FROM responses WHERE is_public=1').first();
   const total=Number(totalRow?.total||0);
-  if(total<THRESHOLD)return json({unlocked:false,total,threshold:THRESHOLD});
-  const getCounts=async(column,question)=>{
-    const rows=await env.DB.prepare(`SELECT ${column} AS choice, COUNT(*) AS count FROM responses WHERE is_public=1 AND ${column} IS NOT NULL GROUP BY ${column}`).all();
-    const counts=new Map((rows.results||[]).map(row=>[Number(row.choice),Number(row.count)]));
-    const en=OPTIONS[question].en;const ru=OPTIONS[question].ru;
-    const items=en.map((label,index)=>({label:`${label} / ${ru[index]}`,count:counts.get(index)||0})).filter(item=>item.count>0);
-    return {items,answered:items.reduce((sum,item)=>sum+item.count,0)};
-  };
-  const [q2,q3,q4]=await Promise.all([getCounts('q2','q2'),getCounts('q3','q3'),getCounts('q4','q4')]);
-  return json({unlocked:true,total,updatedAt:totalRow?.updated_at||new Date().toISOString(),q2:q2.items,q3:q3.items,q4:q4.items,answered:{q2:q2.answered,q3:q3.answered,q4:q4.answered}});
+  if(total<THRESHOLD)return json({unlocked:false,total,threshold:THRESHOLD,remaining:THRESHOLD-total,teaser:true});
+  let snapshot=await env.DB.prepare('SELECT published_threshold,total,updated_at,q2,q3,q4,answered FROM public_results_snapshot WHERE id=1').first();
+  const publishedThreshold=Number(snapshot?.published_threshold||0);
+  const reached=highestReachedResultsThreshold(total,publishedThreshold);
+  if(reached>publishedThreshold){
+    const getCounts=async(column,question)=>{
+      const rows=await env.DB.prepare(`SELECT ${column} AS choice, COUNT(*) AS count FROM responses WHERE is_public=1 AND ${column} IS NOT NULL GROUP BY ${column}`).all();
+      const counts=new Map((rows.results||[]).map(row=>[Number(row.choice),Number(row.count)]));
+      const en=OPTIONS[question].en;const ru=OPTIONS[question].ru;
+      const items=en.map((label,index)=>({label:`${label} / ${ru[index]}`,count:counts.get(index)||0})).filter(item=>item.count>0);
+      return {items,answered:items.reduce((sum,item)=>sum+item.count,0)};
+    };
+    const [q2,q3,q4]=await Promise.all([getCounts('q2','q2'),getCounts('q3','q3'),getCounts('q4','q4')]);
+    const updatedAt=new Date().toISOString();
+    await env.DB.prepare(`INSERT INTO public_results_snapshot (id,published_threshold,total,updated_at,q2,q3,q4,answered)
+      VALUES (1,?,?,?,?,?,?,?)
+      ON CONFLICT(id) DO UPDATE SET published_threshold=excluded.published_threshold,total=excluded.total,updated_at=excluded.updated_at,q2=excluded.q2,q3=excluded.q3,q4=excluded.q4,answered=excluded.answered
+      WHERE excluded.published_threshold>public_results_snapshot.published_threshold`).bind(reached,total,updatedAt,JSON.stringify(q2.items),JSON.stringify(q3.items),JSON.stringify(q4.items),JSON.stringify({q2:q2.answered,q3:q3.answered,q4:q4.answered})).run();
+    snapshot=await env.DB.prepare('SELECT published_threshold,total,updated_at,q2,q3,q4,answered FROM public_results_snapshot WHERE id=1').first();
+  }
+  if(!snapshot||Number(snapshot.published_threshold)<THRESHOLD)return json({unlocked:false,total,threshold:THRESHOLD,remaining:THRESHOLD-total,teaser:true});
+  const threshold=Number(snapshot.published_threshold);
+  return json({unlocked:true,total:Number(snapshot.total),liveTotal:total,publishedThreshold:threshold,nextThreshold:nextResultsThreshold(threshold),updatedAt:snapshot.updated_at,q2:JSON.parse(snapshot.q2),q3:JSON.parse(snapshot.q3),q4:JSON.parse(snapshot.q4),answered:JSON.parse(snapshot.answered)});
 }
 async function publicResponses(request,env){
   if(!env.DB)return json({error:'not_configured'},503);
