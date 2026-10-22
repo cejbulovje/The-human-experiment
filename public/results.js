@@ -86,31 +86,24 @@ function downloadTextFile(filename,text,mime){
   setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 function csvCell(value){return '"'+String(value??'').replace(/"/g,'""')+'"';}
-async function exportOpenData(format){
-  const button=$('#download-open-data-'+format);
+async function exportOpenData(){
+  const button=$('#download-open-data');
   const status=$('#open-data-status');
   const original=button.textContent;
   button.disabled=true;
-  $('#download-open-data-'+(format==='csv'?'json':'csv')).disabled=true;
   status.textContent=lang==='ru'?'Загружаем публичные ответы…':'Loading public responses…';
   try{
     const items=await fetchOpenData();
     const filename='the-human-experiment-public-data-'+new Date().toISOString().slice(0,10);
-    if(format==='json'){
-      downloadTextFile(filename+'.json',JSON.stringify({exportedAt:new Date().toISOString(),count:items.length,privacyNote:'Public responses only. Participant identifiers, signatures, and exact timestamps are omitted.',items},null,2),'application/json;charset=utf-8');
-    }else{
-      const keys=['answer','language','topic','submittedDate','q2','q3','q4','q2Other','q3Other','q4Other'];
-      const rows=[keys.join(','),...items.map(item=>keys.map(key=>csvCell(item[key])).join(','))];
-      downloadTextFile(filename+'.csv','\uFEFF'+rows.join('\r\n'),'text/csv;charset=utf-8');
-    }
+    const keys=['answer','language','topic','submittedDate','q2','q3','q4','q2Other','q3Other','q4Other'];
+    const rows=[keys.join(','),...items.map(item=>keys.map(key=>csvCell(item[key])).join(','))];
+    downloadTextFile(filename+'.csv','\\uFEFF'+rows.join('\\r\\n'),'text/csv;charset=utf-8');
     status.textContent=(lang==='ru'?'Готово: экспортировано публичных ответов — ':'Done: public responses exported — ')+items.length+'.';
   }catch{
     status.textContent=lang==='ru'?'Не удалось загрузить данные. Попробуйте позже.':'Could not load the data. Please try again later.';
   }finally{
     button.disabled=false;
-    $('#download-open-data-'+(format==='csv'?'json':'csv')).disabled=false;
     button.textContent=original;
   }
 }
-$('#download-open-data-csv').addEventListener('click',()=>exportOpenData('csv'));
-$('#download-open-data-json').addEventListener('click',()=>exportOpenData('json'));
+$('#download-open-data').addEventListener('click',exportOpenData);
