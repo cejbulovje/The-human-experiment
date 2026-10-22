@@ -55,63 +55,6 @@ let searchTimer;function resetSearch(){clearTimeout(searchTimer);searchTimer=set
 }
 restoreFiltersFromUrl();applyLanguage();syncParticipantMode();loadStats();loadAnswers(true).then(()=>loadLinkedAnswer());
 
-// Open-data exports contain only records already marked public. Identifiers,
-// signatures, participant links, reactions, and exact timestamps are deliberately omitted.
-async function fetchOpenData(){
-  const items=[];let offset=0;const pageSize=30;
-  while(true){
-    const response=await fetch(`/api/open-data?limit=${pageSize}&offset=${offset}&sort=newest`);
-    if(!response.ok)throw new Error('Could not load public data');
-    const data=await response.json();
-    const batch=Array.isArray(data.items)?data.items:[];
-    items.push(...batch.map(item=>({
-      answer:String(item.answer||''),
-      language:String(item.language||''),
-      topic:String(item.topic||''),
-      submittedDate:String(item.date||'').slice(0,10),
-      q2:String(item.context?.q2||''),
-      q3:String(item.context?.q3||''),
-      q4:String(item.context?.q4||''),
-      q2Other:String(item.context?.q2Other||''),
-      q3Other:String(item.context?.q3Other||''),
-      q4Other:String(item.context?.q4Other||'')
-    })));
-    offset+=batch.length;
-    if(!data.hasMore||batch.length===0)break;
-    if(offset>=1000000)throw new Error('Export limit reached');
-  }
-  return items;
-}
-function downloadTextFile(filename,text,mime){
-  const blob=new Blob([text],{type:mime});
-  const url=URL.createObjectURL(blob);
-  const link=document.createElement('a');link.href=url;link.download=filename;
-  document.body.append(link);link.click();link.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),1000);
-}
-function csvCell(value){return '"'+String(value??'').replace(/"/g,'""')+'"';}
-async function exportOpenData(){
-  const button=$('#download-open-data');
-  const status=$('#open-data-status');
-  const original=button.textContent;
-  button.disabled=true;
-  status.textContent=(OPEN_DATA_UI[lang]||OPEN_DATA_UI.en).loading;
-  try{
-    const items=await fetchOpenData();
-    const filename='the-human-experiment-public-data-'+new Date().toISOString().slice(0,10);
-    const keys=['answer','signature','language','topic','submittedDate','q2','q3','q4','q2Other','q3Other','q4Other'];
-    const rows=[keys.join(','),...items.map(item=>keys.map(key=>csvCell(item[key])).join(','))];
-    downloadTextFile(filename+'.csv','\\uFEFF'+rows.join('\\r\\n'),'text/csv;charset=utf-8');
-    status.textContent=(OPEN_DATA_UI[lang]||OPEN_DATA_UI.en).done+items.length+'.';
-  }catch{
-    status.textContent=(OPEN_DATA_UI[lang]||OPEN_DATA_UI.en).error;
-  }finally{
-    button.disabled=false;
-    button.textContent=original;
-  }
-}
-$('#download-open-data').addEventListener('click',exportOpenData);
-
 const aiForm=$('#ai-analysis-form');
 aiForm.addEventListener('submit',async event=>{
   event.preventDefault();
@@ -122,7 +65,7 @@ aiForm.addEventListener('submit',async event=>{
   try{
     const response=await fetch('/api/ai-analysis',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({question})});
     const data=await response.json();
-    if(!response.ok){status.textContent=data.error==='visitor_limit'?words.visitorLimit:data.error==='daily_limit'?words.dailyLimit:words.failed;return;}
+    if(!response.ok){status.textContent=data.error==='visitor_limit'?words.visitorLimit:(['daily_limit','analysis_busy'].includes(data.error)?words.dailyLimit:words.failed);return;}
     answer.textContent=data.answer;answer.hidden=false;status.textContent=words.initialStatus;
   }catch{status.textContent=words.failed;}finally{button.disabled=false;}
 });
