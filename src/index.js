@@ -154,6 +154,7 @@ async function openData(request,env){
   const data=await response.json();
   data.items=(data.items||[]).map(item=>({
     answer:String(item.answer||''),
+    signature:String(item.signature||''),
     language:String(item.language||''),
     topic:String(item.topic||'other'),
     date:String(item.date||'').slice(0,10),
