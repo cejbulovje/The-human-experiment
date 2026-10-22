@@ -239,7 +239,8 @@ export default {
   async fetch(request,env){
     const url=new URL(request.url);
     if(url.pathname==='/api/submit'&&request.method==='POST')return submit(request,env);
-    if(url.pathname==='/api/ai-chat'&&request.method==='POST')return aiChat(request,env);\n    if(url.pathname==='/api/results'&&request.method==='GET'){
+    if(url.pathname==='/api/ai-chat'&&request.method==='POST')return aiChat(request,env);
+    if(url.pathname==='/api/results'&&request.method==='GET'){
       try{return await results(env);}catch{return json({error:'results_unavailable'},503);}
     }
     if(url.pathname==='/api/public-responses'&&request.method==='GET'){
