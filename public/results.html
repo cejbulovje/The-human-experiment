@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f6f4ef">
   <title>Results — THE HUMAN EXPERIMENT</title>
   <link rel="icon" type="image/png" href="/favicon.png"><link rel="shortcut icon" href="/favicon.ico">
-  <link rel="stylesheet" href="/styles.css"><script src="/nav.js" defer></script><script src="/results.js" defer></script>
+  <link rel="stylesheet" href="/styles.css"><script src="/nav.js" defer></script><script src="/results.js" defer></script><script src="/ai-chat.js" defer></script>
 </head>
 <body>
   <header class="topbar topbar-centered"><nav class="site-menu" aria-label="Site menu">
@@ -37,6 +37,7 @@
         <p class="method-note" data-t="method">These are voluntary online responses, not a representative sample of the world's population. Percentages are calculated among answers submitted for each question.</p>
       </div>
     </section>
+    <section class="ai-explorer-section" aria-labelledby="ai-explorer-title"><div class="section-heading"><div><p class="eyebrow">ASK THE EXPERIMENT</p><h2 id="ai-explorer-title">Explore the results with AI</h2><p class="section-intro">Ask questions about survey results, explore themes in public answers, or discuss the experiment.</p></div></div><div class="ai-explorer-card"><div class="ai-prompt-list"><button type="button" class="ai-prompt-button" data-ai-prompt="What are the main findings in the survey results?">What are the main findings?</button><button type="button" class="ai-prompt-button" data-ai-prompt="What different viewpoints appear in the participants’ written answers?">What different viewpoints appear?</button><button type="button" class="ai-prompt-button" data-ai-prompt="What are the limits of what we can conclude from this survey?">What can we conclude?</button></div><div id="ai-chat-messages" class="ai-chat-messages" role="log" aria-live="polite"></div><form id="ai-chat-form" class="ai-chat-form"><label class="sr-only" for="ai-chat-question">Ask the AI guide</label><textarea id="ai-chat-question" rows="2" maxlength="1200" placeholder="Ask about the results or discuss the experiment…" required></textarea><button id="ai-chat-send" class="submit-button" type="submit">Ask AI</button></form><p id="ai-chat-status" class="ai-chat-status" role="status" aria-live="polite"></p><p class="method-note">AI explanations may be imperfect. The assistant distinguishes survey data from interpretation and general discussion.</p></div></section>
     <section class="public-answers-section" aria-labelledby="answers-title">
       <div class="section-heading"><div><p class="eyebrow" data-t="voicesEyebrow">VOICES OF PARTICIPANTS</p><h2 id="answers-title" data-t="answersTitle">What do other people think?</h2><p class="section-intro" data-t="answersLead">Read written answers from participants around the world.</p></div><span id="answer-total" class="answer-total">—</span></div>
       <div class="answer-tools">
