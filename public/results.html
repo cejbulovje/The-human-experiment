@@ -53,25 +53,12 @@
       <div id="answer-list" class="answer-list"></div>
       <button id="show-more" class="show-more-button" type="button" hidden data-t="showMore">Show more</button>
     </section>
-    <section class="open-data-section" aria-labelledby="open-data-title">
-      <div class="section-heading"><div><p class="eyebrow" data-open-data="eyebrow">OPEN DATA</p><h2 id="open-data-title" data-open-data="title">Explore the data independently</h2><p class="section-intro" data-open-data="intro">Download all submitted survey answers and analyze them in your own tools. Participants can optionally add a signature.</p></div></div>
+    <section class="ai-analysis-section" aria-labelledby="ai-analysis-title">
+      <div class="section-heading"><div><p class="eyebrow" data-ai="eyebrow">AI INSIGHTS</p><h2 id="ai-analysis-title" data-ai="title">Explore the results with AI</h2><p class="section-intro" data-ai="description">AI can help identify patterns in participants’ answers from around the world. For now, AI analysis is limited while the project is in its early stages.</p></div></div>
       <div class="open-data-card">
-        <p data-open-data="description">Use the file in ChatGPT, Gemini, Claude, spreadsheets, or other analysis tools. It includes published answers, optional signatures, and survey context; technical identifiers are omitted.</p>
-        <div class="open-data-actions">
-          <button id="download-open-data" class="submit-button" type="button" data-open-data="download">Download data</button>
-          <a class="subtle-button open-data-api-link" href="/api/results" target="_blank" rel="noopener" data-open-data="statsApi">View statistics JSON</a>
-          <a class="subtle-button open-data-api-link" href="/api/open-data?limit=30&amp;offset=0" target="_blank" rel="noopener" data-open-data="dataApi">View public answers API</a>
-        </div>
-        <p id="open-data-status" class="open-data-status" role="status" aria-live="polite"></p>
-        <div class="open-data-instructions">
-          <h3 data-open-data="aiTitle">Explore with AI</h3>
-          <ol>
-            <li data-open-data="step1">Download the CSV file above.</li>
-            <li data-open-data="step2">Open ChatGPT, Gemini, or Claude and attach the file.</li>
-            <li data-open-data="step3">Ask it to summarize patterns, compare viewpoints, test hypotheses, or explain limitations. Ask it to distinguish observed data from interpretation.</li>
-          </ol>
-          <p class="method-note" data-open-data="caution">These are voluntary online responses, not a representative sample of the world's population. Answers are public, so participants should avoid including sensitive information they do not want others to see.</p>
-        </div>
+        <p data-ai="expansion">As the project grows, we hope to expand the depth and capabilities of AI-powered analysis.</p>
+        <p class="method-note" data-ai="support">Want to help us expand the research? You can support the project with a voluntary donation. Support may help fund future analysis capacity; it does not guarantee expanded access.</p>
+        <a class="subtle-button" href="mailto:mankindexperiment@gmail.com?subject=Support%20THE%20HUMAN%20EXPERIMENT" data-ai="donate">Support the experiment</a>
       </div>
     </section>
   </main>
