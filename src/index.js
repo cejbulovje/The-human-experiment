@@ -68,6 +68,8 @@ async function submit(request,env){
     const publicId=crypto.randomUUID();
     const topic=classifyTopic(body.freeAnswer);
     await env.DB.prepare('INSERT INTO responses (language, free_answer, q2, q3, q4, q2_other, q3_other, q4_other, gender, created_at, public_id, is_public, topic, signature, participant_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ?)').bind(body.language,body.freeAnswer.trim(),body.q2,body.q3,body.q4,q2Other,q3Other,q4Other,body.gender??null,new Date().toISOString(),publicId,topic,signature||null,participantId).run();
+    // Publish a new snapshot immediately when a milestone is crossed; a snapshot failure must not invalidate a saved response.
+    try{await results(env);}catch{}
     return json({ok:true});
   }catch{return json({ok:false,error:'save_failed'},500);}
 }
