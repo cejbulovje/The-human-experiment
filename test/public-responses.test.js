@@ -184,3 +184,28 @@ test('nonexistent direct-link ID returns an empty result', async () => {
     assert.equal(result.hasMore, false);
   } finally { close(); }
 });
+
+
+test('empty public response catalog returns a successful empty payload', async () => {
+  const { env, close } = makeEnv();
+  try {
+    // The helper's database is intentionally seeded; filter to an impossible ID
+    // to exercise the same successful empty-payload contract without changing the schema.
+    const result = await get('/api/public-responses?id=empty-catalog-check&limit=12', env);
+    assert.equal(result.total, 0);
+    assert.deepEqual(result.items, []);
+    assert.equal(result.hasMore, false);
+    assert.equal(result.limit, 12);
+    assert.equal(result.offset, 0);
+  } finally { close(); }
+});
+
+test('public catalog never returns private rows in list results', async () => {
+  const { env, close } = makeEnv();
+  try {
+    const result = await get('/api/public-responses?limit=30', env);
+    assert.equal(result.total, 4);
+    assert.ok(result.items.every(item => item.id !== 'private-1'));
+    assert.ok(result.items.every(item => !item.answer.includes('private hidden')));
+  } finally { close(); }
+});
