@@ -21,5 +21,8 @@
         "database_id": "f78a205b-e856-464e-81a6-d753f8d69b14"
       }
     ]
+  },
+  "ai": {
+    "binding": "AI"
   }
 }
