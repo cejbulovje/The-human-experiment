@@ -148,6 +148,26 @@ async function publicResponses(request,env){
   }));
   return json({items,total:Number(count?.total||0),limit,offset,hasMore:offset+items.length<Number(count?.total||0)});
 }
+async function openData(request,env){
+  const response=await publicResponses(request,env);
+  if(!response.ok)return response;
+  const data=await response.json();
+  data.items=(data.items||[]).map(item=>({
+    answer:String(item.answer||''),
+    language:String(item.language||''),
+    topic:String(item.topic||'other'),
+    date:String(item.date||'').slice(0,10),
+    context:{
+      q2:String(item.context?.q2||''),
+      q3:String(item.context?.q3||''),
+      q4:String(item.context?.q4||''),
+      q2Other:String(item.context?.q2Other||''),
+      q3Other:String(item.context?.q3Other||''),
+      q4Other:String(item.context?.q4Other||'')
+    }
+  }));
+  return json(data);
+}
 async function suggestTopic(request,env){
   if(!env.DB||!env.RATE_LIMIT_SALT)return json({error:'not_configured'},503);
   const parsed=await readJsonLimited(request,2048);if(parsed.error)return json({error:parsed.error},parsed.error==='too_large'?413:400);const body=parsed.body;
@@ -181,6 +201,9 @@ export default {
     if(url.pathname==='/api/submit'&&request.method==='POST')return submit(request,env);
     if(url.pathname==='/api/results'&&request.method==='GET'){
       try{return await results(env);}catch{return json({error:'results_unavailable'},503);}
+    }
+    if(url.pathname==='/api/open-data'&&request.method==='GET'){
+      try{return await openData(request,env);}catch{return json({error:'open_data_unavailable'},503);}
     }
     if(url.pathname==='/api/public-responses'&&request.method==='GET'){
       try{return await publicResponses(request,env);}catch{return json({error:'responses_unavailable'},503);}
