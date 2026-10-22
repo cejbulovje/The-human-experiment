@@ -50,3 +50,67 @@ let searchTimer;function resetSearch(){clearTimeout(searchTimer);searchTimer=set
   }catch{}
 }
 restoreFiltersFromUrl();applyLanguage();syncParticipantMode();loadStats();loadAnswers(true).then(()=>loadLinkedAnswer());
+
+// Open-data exports contain only records already marked public. Identifiers,
+// signatures, participant links, reactions, and exact timestamps are deliberately omitted.
+async function fetchOpenData(){
+  const items=[];let offset=0;const pageSize=30;
+  while(true){
+    const response=await fetch(`/api/public-responses?limit=${pageSize}&offset=${offset}&sort=newest`);
+    if(!response.ok)throw new Error('Could not load public data');
+    const data=await response.json();
+    const batch=Array.isArray(data.items)?data.items:[];
+    items.push(...batch.map(item=>({
+      answer:String(item.answer||''),
+      language:String(item.language||''),
+      topic:String(item.topic||''),
+      submittedDate:String(item.date||'').slice(0,10),
+      q2:String(item.context?.q2||''),
+      q3:String(item.context?.q3||''),
+      q4:String(item.context?.q4||''),
+      q2Other:String(item.context?.q2Other||''),
+      q3Other:String(item.context?.q3Other||''),
+      q4Other:String(item.context?.q4Other||'')
+    })));
+    offset+=batch.length;
+    if(!data.hasMore||batch.length===0)break;
+    if(offset>=1000000)throw new Error('Export limit reached');
+  }
+  return items;
+}
+function downloadTextFile(filename,text,mime){
+  const blob=new Blob([text],{type:mime});
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement('a');link.href=url;link.download=filename;
+  document.body.append(link);link.click();link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+function csvCell(value){return '"'+String(value??'').replace(/"/g,'""')+'"';}
+async function exportOpenData(format){
+  const button=$('#download-open-data-'+format);
+  const status=$('#open-data-status');
+  const original=button.textContent;
+  button.disabled=true;
+  $('#download-open-data-'+(format==='csv'?'json':'csv')).disabled=true;
+  status.textContent=lang==='ru'?'Загружаем публичные ответы…':'Loading public responses…';
+  try{
+    const items=await fetchOpenData();
+    const filename='the-human-experiment-public-data-'+new Date().toISOString().slice(0,10);
+    if(format==='json'){
+      downloadTextFile(filename+'.json',JSON.stringify({exportedAt:new Date().toISOString(),count:items.length,privacyNote:'Public responses only. Participant identifiers, signatures, and exact timestamps are omitted.',items},null,2),'application/json;charset=utf-8');
+    }else{
+      const keys=['answer','language','topic','submittedDate','q2','q3','q4','q2Other','q3Other','q4Other'];
+      const rows=[keys.join(','),...items.map(item=>keys.map(key=>csvCell(item[key])).join(','))];
+      downloadTextFile(filename+'.csv','\\uFEFF'+rows.join('\\r\\n'),'text/csv;charset=utf-8');
+    }
+    status.textContent=(lang==='ru'?'Готово: экспортировано публичных ответов — ':'Done: public responses exported — ')+items.length+'.';
+  }catch{
+    status.textContent=lang==='ru'?'Не удалось загрузить данные. Попробуйте позже.':'Could not load the data. Please try again later.';
+  }finally{
+    button.disabled=false;
+    $('#download-open-data-'+(format==='csv'?'json':'csv')).disabled=false;
+    button.textContent=original;
+  }
+}
+$('#download-open-data-csv').addEventListener('click',()=>exportOpenData('csv'));
+$('#download-open-data-json').addEventListener('click',()=>exportOpenData('json'));
