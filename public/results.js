@@ -56,7 +56,7 @@ restoreFiltersFromUrl();applyLanguage();syncParticipantMode();loadStats();loadAn
 async function fetchOpenData(){
   const items=[];let offset=0;const pageSize=30;
   while(true){
-    const response=await fetch(`/api/public-responses?limit=${pageSize}&offset=${offset}&sort=newest`);
+    const response=await fetch(`/api/open-data?limit=${pageSize}&offset=${offset}&sort=newest`);
     if(!response.ok)throw new Error('Could not load public data');
     const data=await response.json();
     const batch=Array.isArray(data.items)?data.items:[];
