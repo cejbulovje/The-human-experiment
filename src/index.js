@@ -175,10 +175,6 @@ async function react(request,env){
   return json({ok:true,count:Number(result?.count||0)});
 }
 
-export default {
-  async fetch(request,env){
-    const url=new URL(request.url);
-    if(url.pathname==='/api/submit'&&request.method==='POST')return submit(request,env);
 export async function runAIWithLease(env,lockToken,messages,maxTokens,heartbeatIntervalMs=60000){
   let stopped=false;
   let leaseError=null;
@@ -207,6 +203,10 @@ export async function runAIWithLease(env,lockToken,messages,maxTokens,heartbeatI
   }
 }
 
+export default {
+  async fetch(request,env){
+    const url=new URL(request.url);
+    if(url.pathname==='/api/submit'&&request.method==='POST')return submit(request,env);
 async function aiAnalysis(request,env){
   if(!env.DB||!env.AI||!env.RATE_LIMIT_SALT)return json({error:'ai_unavailable'},503);
   const parsed=await readJsonLimited(request,2048);
