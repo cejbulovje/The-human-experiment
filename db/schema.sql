@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS responses (
   q4 INTEGER NOT NULL CHECK (q4 BETWEEN 0 AND 6),
   gender INTEGER NULL CHECK (gender BETWEEN 0 AND 3),
   orientation INTEGER NULL CHECK (orientation BETWEEN 0 AND 4),
-  created_at TEXT NOT NULL
+  created_at TEXT NOT NULL,
+  participant_id TEXT
 );
 CREATE INDEX IF NOT EXISTS idx_responses_created_at ON responses(created_at);
 CREATE INDEX IF NOT EXISTS idx_responses_language ON responses(language);
@@ -16,3 +17,6 @@ CREATE TABLE IF NOT EXISTS rate_limits (
   window_start INTEGER NOT NULL,
   count INTEGER NOT NULL
 );
+
+CREATE INDEX IF NOT EXISTS idx_responses_participant_public ON responses(participant_id, created_at);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_responses_participant_id_unique ON responses(participant_id) WHERE participant_id IS NOT NULL;

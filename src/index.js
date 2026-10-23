@@ -35,10 +35,20 @@ async function submit(request,env){
   if(!captchaOK)return json({ok:false,error:'captcha_failed'},400);
   let allowed=false;try{allowed=await rateLimit(request,env);}catch{return json({ok:false,error:'rate_limit_unavailable'},503);}
   if(!allowed)return json({ok:false,error:'rate_limited'},429);
+  const participantId=typeof body.participantId==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(body.participantId)?body.participantId:null;
+  if(participantId){
+    try{
+      const prior=await env.DB.prepare('SELECT 1 AS submitted FROM responses WHERE participant_id=? LIMIT 1').bind(participantId).first();
+      if(prior)return json({ok:false,error:'already_submitted'},409);
+    }catch{return json({ok:false,error:'submission_check_unavailable'},503);}
+  }
   try{
-    await env.DB.prepare('INSERT INTO responses (language, free_answer, q2, q3, q4, gender, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)').bind(body.language,body.freeAnswer.trim(),body.q2,body.q3,body.q4,body.gender??null,new Date().toISOString()).run();
+    await env.DB.prepare('INSERT INTO responses (language, free_answer, q2, q3, q4, gender, created_at, participant_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)').bind(body.language,body.freeAnswer.trim(),body.q2,body.q3,body.q4,body.gender??null,new Date().toISOString(),participantId).run();
     return json({ok:true});
-  }catch{return json({ok:false,error:'save_failed'},500);}
+  }catch(error){
+    if(participantId&&/UNIQUE constraint failed: responses\.participant_id/i.test(String(error?.message||error)))return json({ok:false,error:'already_submitted'},409);
+    return json({ok:false,error:'save_failed'},500);
+  }
 }
 async function results(env){
   if(!env.DB)return json({error:'not_configured'},503);
