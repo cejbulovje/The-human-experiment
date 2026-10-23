@@ -338,3 +338,9 @@
 .preferences-cta p:not(.eyebrow){max-width:640px;color:var(--muted);margin:0 0 12px}
 .preferences-cta .text-link{display:inline-flex;align-items:center;gap:6px}
 @media(max-width:600px){.results-teaser{align-items:flex-start;flex-direction:column;gap:14px;padding:18px}.results-teaser .text-link{white-space:normal}.preferences-cta{margin-top:26px;padding-top:18px}}
+
+
+/* Make the survey the unmistakable primary action above secondary destinations. */
+.primary-survey-cta{display:inline-flex;align-items:center;justify-content:center;margin:2px 0 8px;padding:13px 20px;border-radius:999px;background:var(--accent);color:#fff;font-weight:800;text-decoration:none}
+.primary-survey-cta:hover{background:#193b2c}
+.primary-survey-cta:focus-visible{outline:3px solid #92b9a1;outline-offset:3px}
