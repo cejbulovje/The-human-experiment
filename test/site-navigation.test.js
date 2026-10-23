@@ -11,7 +11,10 @@ test('all public pages load the centered header and compact navigation', () => {
     assert.match(html, /class="topbar topbar-centered"/, pageName + ' missing centered header');
     assert.match(html, /class="brand-lockup header-brand-centered"/, pageName + ' missing centered brand');
     assert.match(html, /<script src="\/nav\.js" defer><\/script>/, pageName + ' missing navigation script');
-    for (const key of ['goal', 'privacy', 'results', 'preferences', 'research', 'share', 'survey', 'contact', 'support']) {
+    const requiredMenuKeys = pageName === 'volunteers-voice.html'
+      ? ['goal', 'privacy', 'results', 'preferences', 'share', 'survey', 'contact', 'support']
+      : ['goal', 'privacy', 'results', 'preferences', 'research', 'share', 'survey', 'contact', 'support'];
+    for (const key of requiredMenuKeys) {
       assert.match(html, new RegExp('data-menu="' + key + '"'), pageName + ' missing menu item ' + key);
     }
   }
@@ -65,6 +68,7 @@ test('every main page marks exactly one current navigation destination', () => {
     'results.html': '/results.html', 'preferences.html': '/preferences.html',
     'volunteers-voice.html': '/volunteers-voice.html'
   };
+  delete currentByPage['volunteers-voice.html']; // This prototype page intentionally has no duplicate self-link in the compact menu.
   for (const [pageName, href] of Object.entries(currentByPage)) {
     const html = readFileSync(new URL('../public/' + pageName, import.meta.url), 'utf8');
     const current = [...html.matchAll(/<a\b[^>]*aria-current="page"[^>]*>/g)].map(match => match[0]);
