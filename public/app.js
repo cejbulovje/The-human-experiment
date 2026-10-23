@@ -871,7 +871,7 @@ const status = document.querySelector('#form-status');
 const responseDeleteButton=document.querySelector('#delete-response-button');
 const responseDeleteStatus=document.querySelector('#delete-response-status');
 let responseDeletionToken='';
-function savedResponseDeletionToken(){try{return localStorage.getItem('human-experiment-response-deletion-token')||'';}catch{return responseDeletionToken;}}
+function savedResponseDeletionToken(){try{return localStorage.getItem('human-experiment-response-deletion-token')||responseDeletionToken||'';}catch{return responseDeletionToken;}}
 function showResponseDeleteControl(){if(responseDeleteButton)responseDeleteButton.hidden=!savedResponseDeletionToken();}
 function responseDeleteText(key){return (RESPONSE_DELETE_UI[activeLanguage]||RESPONSE_DELETE_UI.en)[key];}
 showResponseDeleteControl();
