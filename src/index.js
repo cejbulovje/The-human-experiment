@@ -56,7 +56,7 @@ async function submit(request,env){
   if(body.authorConfirmed!==true)return json({ok:false,error:'author_confirmation_required'},400);
   const signature=typeof body.signature==='string'?body.signature.trim():'';
   const feedbackEmail=typeof body.feedbackEmail==='string'?body.feedbackEmail.trim():'';
-  if(feedbackEmail.length>254||(feedbackEmail&&!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(feedbackEmail)))return json({ok:false,error:'invalid_feedback_email'},400);
+  if(feedbackEmail.length>254||(feedbackEmail&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(feedbackEmail)))return json({ok:false,error:'invalid_feedback_email'},400);
   const participantId=typeof body.participantId==='string'&&/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(body.participantId)?body.participantId:null;
   if(signature.length>60)return json({ok:false,error:'invalid_signature'},400);
   if(participantId){
