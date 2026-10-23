@@ -20,10 +20,11 @@ test('all public pages load the centered header and compact navigation', () => {
 test('homepage prioritizes the survey, then results, and keeps hypothetical preferences secondary', () => {
   const html = readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
   const prompt = html.indexOf('class="prompt"');
+  const primary = html.indexOf('class="primary-survey-cta"');
   const results = html.indexOf('class="results-teaser"');
   const survey = html.indexOf('<form id="survey-form"');
   const preferences = html.indexOf('class="preferences-cta"');
-  assert.ok(prompt >= 0 && prompt < results && results < survey && survey < preferences);
+  assert.ok(prompt >= 0 && prompt < primary && primary < results && results < survey && survey < preferences);
   assert.match(html, /What if the decision were about you\?/);
   assert.match(html, /This is not a volunteer application/);
   assert.doesNotMatch(html, /goal-cta-copy/);
