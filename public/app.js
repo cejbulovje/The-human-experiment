@@ -846,6 +846,17 @@ const supportThanks = {
   fr: ["Envie d’aider l’expérience à se développer ?", "Les options de soutien arrivent bientôt.", "Soutenir le projet"],
   ar: ["هل ترغب في المساعدة على تطوير التجربة؟", "ستتوفر خيارات الدعم قريبًا."]
 };
+const RESPONSE_DELETE_UI={
+  en:{button:'Delete my published answer',confirm:'Permanently delete your published answer and its separately stored email opt-in? This cannot be undone.',working:'Deleting…',success:'Deletion request completed. If the token matched a response, its data was removed.',error:'Could not complete deletion. Please try again later.',busy:'AI analysis is running. Please try again in a few minutes.',missing:'No deletion token is saved in this browser.'},
+  ru:{button:'Удалить мой опубликованный ответ',confirm:'Безвозвратно удалить опубликованный ответ и отдельно сохранённый email для итогов? Это действие нельзя отменить.',working:'Удаление…',success:'Запрос выполнен. Если токен соответствовал ответу, связанные данные удалены.',error:'Не удалось выполнить удаление. Попробуй позже.',busy:'Сейчас выполняется анализ ИИ. Повтори попытку через несколько минут.',missing:'В этом браузере не найден сохранённый токен удаления.'},
+  es:{button:'Eliminar mi respuesta publicada',confirm:'¿Eliminar permanentemente tu respuesta publicada y el correo guardado por separado? No se puede deshacer.',working:'Eliminando…',success:'Solicitud completada. Si el token coincidía, se eliminaron los datos asociados.',error:'No se pudo completar la eliminación. Inténtalo más tarde.',busy:'El análisis de IA está en curso. Inténtalo en unos minutos.',missing:'No hay ningún token de eliminación guardado en este navegador.'},
+  pt:{button:'Excluir minha resposta publicada',confirm:'Excluir permanentemente sua resposta publicada e o e-mail armazenado separadamente? Isso não pode ser desfeito.',working:'Excluindo…',success:'Solicitação concluída. Se o token corresponder, os dados associados foram removidos.',error:'Não foi possível concluir a exclusão. Tente novamente mais tarde.',busy:'A análise de IA está em andamento. Tente novamente em alguns minutos.',missing:'Não há token de exclusão salvo neste navegador.'},
+  zh:{button:'删除我公开发布的回答',confirm:'永久删除公开回答及单独保存的邮箱？此操作无法撤销。',working:'正在删除…',success:'请求已完成。如果令牌匹配，相关数据已删除。',error:'无法完成删除，请稍后重试。',busy:'AI 分析正在运行，请几分钟后重试。',missing:'此浏览器中没有保存删除令牌。'},
+  de:{button:'Meine veröffentlichte Antwort löschen',confirm:'Deine veröffentlichte Antwort und die separat gespeicherte E-Mail dauerhaft löschen? Dies kann nicht rückgängig gemacht werden.',working:'Wird gelöscht…',success:'Anfrage abgeschlossen. Bei passendem Token wurden die zugehörigen Daten entfernt.',error:'Löschen fehlgeschlagen. Bitte später erneut versuchen.',busy:'Die KI-Analyse läuft. Bitte versuche es in einigen Minuten erneut.',missing:'In diesem Browser ist kein Lösch-Token gespeichert.'},
+  ja:{button:'公開した回答を削除',confirm:'公開した回答と別途保存されたメールアドレスを完全に削除しますか？元に戻せません。',working:'削除中…',success:'リクエストが完了しました。トークンが一致した場合、関連データを削除しました。',error:'削除できませんでした。後でもう一度お試しください。',busy:'AI分析中です。数分後に再試行してください。',missing:'このブラウザーに削除トークンが保存されていません。'},
+  fr:{button:'Supprimer ma réponse publiée',confirm:'Supprimer définitivement votre réponse publiée et l’adresse e-mail conservée séparément ? Cette action est irréversible.',working:'Suppression…',success:'Demande terminée. Si le jeton correspondait, les données associées ont été supprimées.',error:'Suppression impossible. Réessayez plus tard.',busy:'Une analyse IA est en cours. Réessayez dans quelques minutes.',missing:'Aucun jeton de suppression n’est enregistré dans ce navigateur.'},
+  ar:{button:'حذف إجابتي المنشورة',confirm:'هل تريد حذف إجابتك المنشورة والبريد الإلكتروني المحفوظ بشكل منفصل نهائيًا؟ لا يمكن التراجع عن ذلك.',working:'جارٍ الحذف…',success:'اكتمل الطلب. إذا تطابق الرمز، فقد حُذفت البيانات المرتبطة.',error:'تعذر إكمال الحذف. حاول مرة أخرى لاحقًا.',busy:'تحليل الذكاء الاصطناعي جارٍ. حاول بعد بضع دقائق.',missing:'لا يوجد رمز حذف محفوظ في هذا المتصفح.'}
+};
 const form = document.querySelector('#survey-form');
 const languageSelect = document.querySelector('#language');
 const answer = document.querySelector('#free-answer');
@@ -857,6 +868,28 @@ const feedbackEmailInput = document.querySelector('#feedback-email');
 const authorConfirmed = document.querySelector('#author-confirmed');
 const charCount = document.querySelector('#char-count');
 const status = document.querySelector('#form-status');
+const responseDeleteButton=document.querySelector('#delete-response-button');
+const responseDeleteStatus=document.querySelector('#delete-response-status');
+let responseDeletionToken='';
+function savedResponseDeletionToken(){try{return localStorage.getItem('human-experiment-response-deletion-token')||'';}catch{return responseDeletionToken;}}
+function showResponseDeleteControl(){if(responseDeleteButton)responseDeleteButton.hidden=!savedResponseDeletionToken();}
+function responseDeleteText(key){return (RESPONSE_DELETE_UI[activeLanguage]||RESPONSE_DELETE_UI.en)[key];}
+showResponseDeleteControl();
+responseDeleteButton?.addEventListener('click',async()=>{
+  const token=savedResponseDeletionToken();
+  if(!token){responseDeleteStatus.textContent=responseDeleteText('missing');return;}
+  if(!window.confirm(responseDeleteText('confirm')))return;
+  responseDeleteButton.disabled=true;responseDeleteButton.textContent=responseDeleteText('working');responseDeleteStatus.textContent='';
+  try{
+    const response=await fetch('/api/response/delete',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({deletionToken:token})});
+    const result=await response.json();
+    if(!response.ok||!result.ok){responseDeleteStatus.textContent=result.error==='analysis_busy'?responseDeleteText('busy'):responseDeleteText('error');return;}
+    responseDeletionToken='';
+    try{localStorage.removeItem('human-experiment-response-deletion-token');}catch{}
+    responseDeleteStatus.textContent=responseDeleteText('success');responseDeleteButton.hidden=true;
+  }catch{responseDeleteStatus.textContent=responseDeleteText('error');}
+  finally{responseDeleteButton.disabled=false;responseDeleteButton.textContent=responseDeleteText('button');}
+});
 const postSubmitShare = document.querySelector('#post-submit-share');
 const footerShare = document.querySelector('#footer-share');
 const shareFeedback = document.querySelector('#share-feedback');
@@ -1004,6 +1037,7 @@ form.addEventListener('submit',async event=>{
     const response=await fetch('/api/submit',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
     let result; try { result=await response.json(); } catch { throw new Error('server'); }
     if(!response.ok||!result.ok) { if(result.error==='already_submitted'){status.textContent=t['already-submitted'];status.className='form-status error';throw new Error('already_submitted');} throw new Error(result.error||'submit_failed'); }
+    if(typeof result.deletionToken==='string'){responseDeletionToken=result.deletionToken;try{localStorage.setItem('human-experiment-response-deletion-token',responseDeletionToken);}catch{}showResponseDeleteControl();}
     status.textContent=t.success;status.className='form-status success';if(postSubmitShare)postSubmitShare.hidden=false;const supportPanel=document.querySelector('#post-submit-support');if(supportPanel)supportPanel.hidden=false;form.reset();syncSignatureField();syncFeedbackEmailField();for(const name of ['q2','q3','q4']){const root=document.getElementById(name+'-options');const wrap=root.querySelector('.other-answer-wrap');const input=root.querySelector('.other-answer-input');wrap.hidden=true;input.required=false;}turnstileToken='';
     if(window.turnstile) window.turnstile.reset(); charCount.textContent='0 / 5000';
   }catch(error){if(error.message==='already_submitted'){turnstileToken='';if(window.turnstile)window.turnstile.reset();return;}status.textContent=error instanceof TypeError?t.network:t.failure;status.className='form-status error';turnstileToken='';if(window.turnstile)window.turnstile.reset();}
