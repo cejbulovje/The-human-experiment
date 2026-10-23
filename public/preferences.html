@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Прототип формы гипотетических предпочтений — The Human Experiment.">
+  <meta name="theme-color" content="#f6f4ef">
+  <title>Гипотетические предпочтения — THE HUMAN EXPERIMENT</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/nav.js" defer></script>
+  <style>
+    .prototype-tag{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border:1px solid #c9cbc2;border-radius:999px;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
+    .preference-card{max-width:850px;margin:28px auto;padding:clamp(20px,4vw,40px);background:#fff;border:1px solid var(--line,#deded6);border-radius:22px}
+    .preference-question{padding:22px 0;border-bottom:1px solid #e7e6df}
+    .preference-question:last-of-type{border-bottom:0}
+    .preference-question h2{font-size:1.12rem;margin:0 0 7px}
+    .preference-question>p{color:var(--muted,#64675f);margin:0 0 15px}
+    .preference-options{display:grid;gap:10px}
+    .preference-option{display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border:1px solid #d8d9d1;border-radius:12px;cursor:pointer}
+    .preference-option:has(input:checked){border-color:var(--ink,#242820);background:#f6f4ef}
+    .preference-option input{margin-top:4px;accent-color:#252a22}
+    .preference-card textarea{width:100%;padding:13px 15px;border:1px solid #c9cbc2;border-radius:12px;background:#fff;color:var(--ink);font:inherit;resize:vertical}
+    .preference-card button{border:0;border-radius:999px;padding:13px 20px;background:var(--ink,#242820);color:#fff;font:inherit;cursor:pointer}
+    .preference-card button.secondary{background:transparent;color:var(--ink,#242820);border:1px solid #bfc1b8}
+    .privacy-hint{font-size:.9rem;color:var(--muted,#64675f)}
+    .prototype-result{margin-top:22px;padding:20px;border:1px solid #c9cbc2;border-radius:16px;background:#f6f4ef}
+    .prototype-result[hidden]{display:none}
+    .action-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+    .status-note{padding:14px 16px;background:#f6f4ef;border-left:3px solid #777d6d;border-radius:8px}
+  </style>
+</head>
+<body>
+  <header class="topbar topbar-centered">
+    <nav class="site-menu" aria-label="Меню сайта">
+      <details class="site-menu-details">
+        <summary class="site-menu-trigger" data-menu-label>☰</summary>
+        <div class="site-menu-panel">
+          <a href="/goal.html">Цель эксперимента</a>
+          <a href="/privacy.html">Конфиденциальность</a>
+          <a href="/results.html">Результаты</a>
+          <a href="/">Основной опрос</a>
+          <a href="/preferences.html" aria-current="page">Гипотетические предпочтения</a>
+        </div>
+      </details>
+    </nav>
+    <a class="brand-lockup header-brand-centered" href="/" aria-label="THE HUMAN EXPERIMENT — главная"><img src="/logo-human-crowd.webp" alt="" class="brand-mark"><span class="wordmark">THE HUMAN EXPERIMENT</span></a>
+    <div class="header-controls"><a class="text-link" href="/results.html">Результаты ↗</a></div>
+  </header>
+
+  <main class="shell">
+    <section class="intro">
+      <p class="eyebrow">ГОЛОС ЧЕЛОВЕКА</p>
+      <h1>Если бы решение принимали о вашей жизни — чего хотели бы вы?</h1>
+      <p class="lead">Это отдельный гипотетический ответ для исследования. Он помогает понять, чего люди хотели бы для себя, если бы кто-то другой получил власть принимать решения об их судьбе.</p>
+      <p class="prototype-tag">Тестовая версия · данные не отправляются</p>
+    </section>
+
+    <form id="preferences-form" class="preference-card">
+      <div class="status-note"><strong>Важно:</strong> этот ответ сам по себе не является заявкой добровольца. Он не регистрирует вас в базе добровольцев и не связывает ваш ответ с реальным сценарием.</div>
+
+      <section class="preference-question">
+        <h2>1. Что было бы для вас главным приоритетом?</h2>
+        <p>Выберите один вариант, наиболее близкий вашей позиции.</p>
+        <div class="preference-options">
+          <label class="preference-option"><input type="radio" name="priority" value="autonomy" required><span><strong>Свобода и самостоятельность</strong><br>Сохранить возможность самому принимать решения.</span></label>
+          <label class="preference-option"><input type="radio" name="priority" value="wellbeing"><span><strong>Благополучие и безопасность</strong><br>Снизить страдания и повысить качество жизни.</span></label>
+          <label class="preference-option"><input type="radio" name="priority" value="trust"><span><strong>Доверие и ответственность</strong><br>Дать другим возможность помочь, но с понятными границами.</span></label>
+          <label class="preference-option"><input type="radio" name="priority" value="context"><span><strong>Зависит от обстоятельств</strong><br>Без конкретной ситуации нельзя выбрать один принцип.</span></label>
+        </div>
+      </section>
+
+      <section class="preference-question">
+        <h2>2. Что особенно важно было бы сохранить?</h2>
+        <p>Можно выбрать несколько пунктов.</p>
+        <div class="preference-options">
+          <label class="preference-option"><input type="checkbox" name="preserve" value="autonomy"><span>Право самостоятельно принимать решения</span></label>
+          <label class="preference-option"><input type="checkbox" name="preserve" value="body"><span>Контроль над собственным телом</span></label>
+          <label class="preference-option"><input type="checkbox" name="preserve" value="identity"><span>Личность и чувство собственной идентичности</span></label>
+          <label class="preference-option"><input type="checkbox" name="preserve" value="safety"><span>Безопасность и физическое благополучие</span></label>
+          <label class="preference-option"><input type="checkbox" name="preserve" value="voice"><span>Возможность быть услышанным</span></label>
+        </div>
+      </section>
+
+      <section class="preference-question">
+        <h2>3. Как следовало бы учитывать ваши желания?</h2>
+        <div class="preference-options">
+          <label class="preference-option"><input type="radio" name="wishes" value="ask" required><span>Сначала спросить меня и выслушать ответ.</span></label>
+          <label class="preference-option"><input type="radio" name="wishes" value="limits"><span>Действовать только в заранее обозначенных пределах.</span></label>
+          <label class="preference-option"><input type="radio" name="wishes" value="decide"><span>Оставить окончательное решение тому, кто получил власть.</span></label>
+          <label class="preference-option"><input type="radio" name="wishes" value="consent"><span>Получать моё согласие на существенные изменения.</span></label>
+        </div>
+      </section>
+
+      <section class="preference-question">
+        <h2>4. Как следовало бы поступать с изменениями тела?</h2>
+        <div class="preference-options">
+          <label class="preference-option"><input type="radio" name="body" value="consent" required><span>Допускать их только с моего согласия.</span></label>
+          <label class="preference-option"><input type="radio" name="body" value="discuss"><span>Сначала обсуждать последствия и возможные альтернативы.</span></label>
+          <label class="preference-option"><input type="radio" name="body" value="unimportant"><span>Для меня это не главный вопрос по сравнению с другими приоритетами.</span></label>
+          <label class="preference-option"><input type="radio" name="body" value="context"><span>Это зависит от конкретного изменения и обстоятельств.</span></label>
+        </div>
+      </section>
+
+      <section class="preference-question">
+        <h2>5. Хотите добавить пояснение?</h2>
+        <p>Не указывайте имя, адрес, контакты или другие сведения, по которым можно установить вашу личность.</p>
+        <textarea name="comment" rows="4" maxlength="1500" placeholder="Необязательно"></textarea>
+      </section>
+
+      <section class="preference-question">
+        <h2>6. Как можно использовать ваш ответ в рамках исследования?</h2>
+        <div class="preference-options">
+          <label class="preference-option"><input type="radio" name="use" value="aggregate" required><span>Только в общей анонимной статистике.</span></label>
+          <label class="preference-option"><input type="radio" name="use" value="comparison"><span>В анонимном сравнительном анализе с решениями участников опроса.</span></label>
+          <label class="preference-option"><input type="radio" name="use" value="private"><span>Не включать мой ответ в публичные сравнения.</span></label>
+        </div>
+      </section>
+
+      <p class="privacy-hint">Демо-режим: при нажатии кнопки ответ останется в этом окне и никуда не отправится. Реальная публикация или обработка данных потребует отдельного согласованного механизма и ясных правил конфиденциальности.</p>
+      <div class="action-row">
+        <button type="submit">Посмотреть сводку ответа</button>
+        <button type="button" class="secondary" id="reset-form">Очистить форму</button>
+      </div>
+
+      <section id="prototype-result" class="prototype-result" aria-live="polite" hidden>
+        <h2>Ваш гипотетический ответ</h2>
+        <p id="result-summary"></p>
+        <p><strong>Статус:</strong> гипотетический ответ, не заявка добровольца.</p>
+        <p>Ничего не отправлено и не сохранено. В настоящей версии решение стать добровольцем должно приниматься отдельно — через самостоятельную заявку с отдельным согласием.</p>
+        <div class="action-row"><button type="button" class="secondary" id="edit-response">Вернуться к ответу</button><a class="text-link" href="/results.html">Перейти к результатам ↗</a></div>
+      </section>
+    </form>
+  </main>
+
+  <script>
+    const form = document.getElementById('preferences-form');
+    const result = document.getElementById('prototype-result');
+    const summary = document.getElementById('result-summary');
+    const labels = {
+      priority: { autonomy:'Свобода и самостоятельность', wellbeing:'Благополучие и безопасность', trust:'Доверие и ответственность', context:'Зависит от обстоятельств' },
+      preserve: { autonomy:'Самостоятельность', body:'Контроль над телом', identity:'Личность и идентичность', safety:'Безопасность и благополучие', voice:'Быть услышанным' },
+      wishes: { ask:'Сначала спросить меня', limits:'Действовать в обозначенных пределах', decide:'Оставить решение другому', consent:'Получать согласие на существенные изменения' },
+      body: { consent:'Изменения тела только с согласия', discuss:'Сначала обсуждать последствия', unimportant:'Это не главный приоритет', context:'Зависит от обстоятельств' },
+      use: { aggregate:'Общая анонимная статистика', comparison:'Анонимный сравнительный анализ', private:'Без публичного сравнительного анализа' }
+    };
+    function selected(name) {
+      return [...form.querySelectorAll('[name="' + name + '"]:checked')].map(el => el.value);
+    }
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      if (!form.reportValidity()) return;
+      const lines = [];
+      for (const key of ['priority','preserve','wishes','body','use']) {
+        const values = selected(key).map(value => labels[key][value] || value);
+        lines.push('<strong>' + ({priority:'Приоритет',preserve:'Что сохранить',wishes:'Учет желаний',body:'Изменения тела',use:'Использование ответа'}[key]) + ':</strong> ' + values.join(', '));
+      }
+      const comment = form.elements.comment.value.trim();
+      if (comment) lines.push('<strong>Пояснение:</strong> ' + comment.replace(/[&<>"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[char])));
+      summary.innerHTML = lines.join('<br><br>');
+      result.hidden = false;
+      result.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+    document.getElementById('reset-form').addEventListener('click', () => {
+      form.reset();
+      result.hidden = true;
+    });
+    document.getElementById('edit-response').addEventListener('click', () => {
+      result.hidden = true;
+      form.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  </script>
+</body>
+</html>
