@@ -130,7 +130,7 @@ async function results(env){
   let snapshot=await env.DB.prepare('SELECT published_threshold,total,updated_at,q2,q3,q4,answered FROM public_results_snapshot WHERE id=1').first();
   const publishedThreshold=Number(snapshot?.published_threshold||0);
   const reached=highestReachedResultsThreshold(total,publishedThreshold);
-  if(reached>publishedThreshold){
+  if(reached>publishedThreshold||Number(snapshot?.total||0)!==total){
     const getCounts=async(column,question)=>{
       const rows=await env.DB.prepare(`SELECT ${column} AS choice, COUNT(*) AS count FROM responses WHERE is_public=1 AND ${column} IS NOT NULL GROUP BY ${column}`).all();
       const counts=new Map((rows.results||[]).map(row=>[Number(row.choice),Number(row.count)]));
@@ -318,9 +318,9 @@ async function deleteResponse(request,env){
           env.DB.prepare('DELETE FROM responses WHERE id=? AND delete_token_hash=?').bind(row.id,tokenHash),
           env.DB.prepare("INSERT INTO ai_analysis_memory (id,last_response_id,summary,response_count,updated_at) VALUES (1,0,'',0,?) ON CONFLICT(id) DO UPDATE SET last_response_id=0,summary='',response_count=0,updated_at=excluded.updated_at").bind(new Date().toISOString())
         ]);
-        // Rebuild the public snapshot from the remaining responses, without changing the already-published threshold.
-        await refreshResultsSnapshot(env);
       }
+      // Refresh even on retries, so a previous derived-data refresh failure can recover.
+      await refreshResultsSnapshot(env);
       // Same result for unknown and already-used tokens; do not reveal whether a response exists.
       return json({ok:true});
     }finally{
