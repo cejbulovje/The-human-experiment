@@ -118,3 +118,31 @@ test('public-facing research copy does not use volunteer terminology', () => {
   const nav = readFileSync(new URL('../public/nav.js', import.meta.url), 'utf8');
   assert.doesNotMatch(nav, /добровол|volunteer|voluntário|voluntario|volontaire|freiwillig|ボランティア|志愿者|متطوع/i);
 });
+
+
+test('both hypothetical preference pages provide all nine shared language choices and localization', () => {
+  const localized = readFileSync(new URL('../public/preferences-i18n.js', import.meta.url), 'utf8');
+  for (const pageName of ['preferences.html', 'volunteers-voice.html']) {
+    const html = readFileSync(new URL('../public/' + pageName, import.meta.url), 'utf8');
+    assert.match(html, /<select id="page-language" aria-label="Language">/);
+    for (const locale of locales) assert.match(html, new RegExp('<option value="' + locale + '">'));
+    assert.match(html, /<script src="\/preferences-i18n\.js" defer><\/script>/);
+  }
+  for (const locale of locales) {
+    assert.match(localized, new RegExp('^    ' + locale + ': \\{', 'm'), 'missing page localization for ' + locale);
+  }
+  for (const key of ['heading','lead','questions','priority','preserve','wishes','body','show','reset','summaryLabels','voiceHeading','voiceLead','bullets','statusBody']) {
+    assert.match(localized, new RegExp('\\b' + key + ':'), 'missing localization key ' + key);
+  }
+  assert.match(localized, /human-experiment-language/);
+  assert.match(localized, /localStorage\.setItem\(sharedKey, select\.value\)/);
+  assert.match(localized, /document\.documentElement\.dir = t\.dir/);
+  assert.match(localized, /window\.preferenceLocale = t/);
+});
+
+test('hypothetical preference pages keep answers local and summary labels translatable', () => {
+  const html = readFileSync(new URL('../public/preferences.html', import.meta.url), 'utf8');
+  assert.match(html, /const locale = window\.preferenceLocale/);
+  assert.match(html, /locale\.summaryLabels/);
+  assert.doesNotMatch(html, /<form\b|type="submit"|\bfetch\s*\(|XMLHttpRequest|sendBeacon/i);
+});
