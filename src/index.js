@@ -328,6 +328,9 @@ async function aiAnalysis(request,env){
   try{
     await env.DB.prepare("CREATE TABLE IF NOT EXISTS ai_analysis_memory (id INTEGER PRIMARY KEY CHECK (id = 1), last_response_id INTEGER NOT NULL DEFAULT 0, summary TEXT NOT NULL DEFAULT '', response_count INTEGER NOT NULL DEFAULT 0, updated_at TEXT NOT NULL)").run();
     await env.DB.prepare("CREATE TABLE IF NOT EXISTS ai_analysis_lock (id INTEGER PRIMARY KEY CHECK (id = 1), token TEXT NOT NULL, expires_at TEXT NOT NULL)").run();
+    // Keep only today's visitor hashes; older hashes no longer contribute to the daily limit.
+    // Cleanup is best-effort so a cleanup hiccup cannot block an otherwise valid analysis request.
+    try{await env.DB.prepare('DELETE FROM ai_daily_visitors WHERE day < ?').bind(day).run();}catch{}
     const already=await env.DB.prepare('SELECT 1 AS used FROM ai_daily_visitors WHERE day=? AND ip_hash=?').bind(day,ipHash).first();
     if(already)return json({error:'visitor_limit'},429);
     const lock=await env.DB.prepare("INSERT INTO ai_analysis_lock (id,token,expires_at) VALUES (1,?,?) ON CONFLICT(id) DO UPDATE SET token=excluded.token,expires_at=excluded.expires_at WHERE ai_analysis_lock.expires_at < ? RETURNING token").bind(lockToken,lockUntil,now).first();
