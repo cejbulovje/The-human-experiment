@@ -941,6 +941,7 @@ ar: `<p class="lead">تخيّل أن هناك شخصًا في مكان ما عل
 function renderLanguage(lang) {
   const t = { ...translations.en, ...(translations[lang] || {}) };
   activeLanguage = translations[lang] ? lang : 'en';
+  if(responseDeleteButton&&!responseDeleteButton.disabled)responseDeleteButton.textContent=responseDeleteText('button');
   document.documentElement.lang = activeLanguage;
   document.documentElement.dir = activeLanguage === 'ar' ? 'rtl' : 'ltr';
   document.body.classList.toggle('rtl-language', activeLanguage === 'ar');
