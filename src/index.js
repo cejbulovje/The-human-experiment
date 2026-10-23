@@ -261,17 +261,35 @@ async function submitPreferences(request,env){
   try{allowedByRate=await rateLimit(request,env,'preferences',3);}catch{return json({ok:false,error:'rate_limit_unavailable'},503);}
   if(!allowedByRate)return json({ok:false,error:'rate_limited'},429);
   try{
+    // Return this one-time recovery credential to the participant; store only its hash.
+    const deletionToken=crypto.randomUUID()+crypto.randomUUID();
+    const deletionTokenHash=await sha256(deletionToken);
     await env.DB.prepare(`INSERT INTO hypothetical_preferences
-      (language,answers_json,aggregate_consent,created_at)
-      VALUES (?,?,?,?)`).bind(body.language,JSON.stringify(body.answers),body.aggregateConsent?1:0,new Date().toISOString()).run();
-    return json({ok:true});
+      (language,answers_json,aggregate_consent,delete_token_hash,created_at)
+      VALUES (?,?,?,?,?)`).bind(body.language,JSON.stringify(body.answers),body.aggregateConsent?1:0,deletionTokenHash,new Date().toISOString()).run();
+    return json({ok:true,deletionToken});
   }catch{return json({ok:false,error:'save_failed'},500);}
+}
+async function deletePreferences(request,env){
+  if(env.PREFERENCES_ENABLED!=='true')return json({ok:false,error:'preferences_disabled'},503);
+  if(!env.DB||!env.RATE_LIMIT_SALT)return json({ok:false,error:'not_configured'},503);
+  const parsed=await readJsonLimited(request,1024);
+  if(parsed.error)return json({ok:false,error:parsed.error},parsed.error==='too_large'?413:400);
+  const token=parsed.body?.deletionToken;
+  if(typeof token!=='string'||token.length<60||token.length>100)return json({ok:false,error:'invalid_token'},400);
+  try{
+    if(!await rateLimit(request,env,'preferences-delete',10))return json({ok:false,error:'rate_limited'},429);
+    const tokenHash=await sha256(token);
+    // Same response for found and unknown tokens avoids confirming whether a record exists.
+    await env.DB.prepare('DELETE FROM hypothetical_preferences WHERE delete_token_hash = ?').bind(tokenHash).run();
+    return json({ok:true});
+  }catch{return json({ok:false,error:'delete_unavailable'},503);}
 }
 export default {
   async fetch(request,env){
     const url=new URL(request.url);
     if(url.pathname==='/api/submit'&&request.method==='POST')return submit(request,env);
-    if(url.pathname==='/api/preferences'&&request.method==='POST')return submitPreferences(request,env);
+    if(url.pathname==='/api/preferences'&&request.method==='POST')return submitPreferences(request,env);\n    if(url.pathname==='/api/preferences/delete'&&request.method==='POST')return deletePreferences(request,env);
 async function aiAnalysis(request,env){
   if(!env.DB||!env.AI||!env.RATE_LIMIT_SALT)return json({error:'ai_unavailable'},503);
   const parsed=await readJsonLimited(request,2048);
