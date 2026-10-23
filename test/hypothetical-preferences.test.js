@@ -178,6 +178,39 @@ test('preference submission enforces the three-request rate limit per IP', async
   assert.equal(db.records.size,3);
 });
 
+test('preference deletion enforces the ten-request rate limit per IP', async t => {
+  const db = createPreferencesDb();
+  t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({success:true}), {status:200,headers:{'content-type':'application/json'}}));
+  const env = {PREFERENCES_ENABLED:'true',DB:db,TURNSTILE_SECRET_KEY:'test-secret',RATE_LIMIT_SALT:'test-salt'};
+  const submitted = await worker.fetch(new Request('https://example.test/api/preferences', {
+    method:'POST',
+    headers:{'content-type':'application/json','CF-Connecting-IP':'192.0.2.15'},
+    body:JSON.stringify({
+      language:'en',
+      answers:{priority:'autonomy',preserve:'identity',wishes:'respect',body:'no_change'},
+      aggregateConsent:true,
+      consentToStore:true,
+      turnstileToken:'valid-test-token'
+    })
+  }),env);
+  assert.equal(submitted.status,200);
+  const {deletionToken} = await submitted.json();
+  const remove = () => worker.fetch(new Request('https://example.test/api/preferences/delete', {
+    method:'POST',
+    headers:{'content-type':'application/json','CF-Connecting-IP':'192.0.2.16'},
+    body:JSON.stringify({deletionToken})
+  }),env);
+
+  for (let i=0;i<10;i++) {
+    const response = await remove();
+    assert.equal(response.status,200);
+    assert.deepEqual(await response.json(),{ok:true});
+  }
+  const limited = await remove();
+  assert.equal(limited.status,429);
+  assert.deepEqual(await limited.json(),{ok:false,error:'rate_limited'});
+});
+
 test('preference submission rejects Turnstile failure without writing data', async t => {
   const db = createPreferencesDb();
   t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({success:false}), {status:200,headers:{'content-type':'application/json'}}));
