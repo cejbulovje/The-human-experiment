@@ -26,7 +26,7 @@ test('homepage prioritizes the survey, then results, and keeps hypothetical pref
   const preferences = html.indexOf('class="preferences-cta"');
   assert.ok(prompt >= 0 && prompt < primary && primary < results && results < survey && survey < preferences);
   assert.match(html, /What if the decision were about you\?/);
-  assert.match(html, /This is not a volunteer application/);
+  assert.match(html, /This is a research prototype; no answers are sent or saved/);
   assert.doesNotMatch(html, /class="goal-cta"/);
   assert.doesNotMatch(html, /goal-cta-copy/);
   for (const key of ['preferences-eyebrow', 'preferences-title', 'preferences-copy', 'preferences-link']) {
@@ -95,15 +95,26 @@ test('hypothetical preferences prototype cannot submit a native form or send ans
   assert.doesNotMatch(html, /form\.elements\./);
   assert.doesNotMatch(html, /preference-question-6|name="use"/);
   assert.match(html, /id="preferences-consent" name="consent" value="yes" required/);
-  assert.match(html, /в планируемой рабочей версии ответы будут включаться в результаты исследования добровольцев/);
+  assert.match(html, /возможная рабочая версия сможет сопоставлять эти ответы с результатами основного опроса/);
   assert.match(html, /для поиска ИИ совпадений и различий/);
   assert.equal((html.match(/href="\/preferences\.html"[^>]*aria-current="page"/g) || []).length, 1);
 });
 
 
-test('volunteer voice page does not offer a potential-volunteer signup pathway', () => {
+test('research prototype page avoids recruitment language and signup pathways', () => {
   const html = readFileSync(new URL('../public/volunteers-voice.html', import.meta.url), 'utf8');
-  assert.doesNotMatch(html, /Стать потенциальным добровольцем|ПУТЬ 02|interest-button|interest-note/);
+  assert.doesNotMatch(html, /ПУТЬ 02|interest-button|interest-note|добровол|volunteer/i);
   assert.match(html, /Гипотетические предпочтения/);
-  assert.match(html, /не принимает заявки и не добавляет никого в базу добровольцев/);
+  assert.match(html, /Сейчас мы проверяем вопросы и исследовательскую идею/);
+});
+
+
+test('public-facing research copy does not use volunteer terminology', () => {
+  const files = ['index.html', 'preferences.html', 'results.html', 'volunteers-voice.html'];
+  for (const name of files) {
+    const html = readFileSync(new URL('../public/' + name, import.meta.url), 'utf8');
+    assert.doesNotMatch(html, /добровол|volunteer|voluntário|voluntario|volontaire|freiwillig|ボランティア|志愿者|متطوع/i, name + ' contains recruitment terminology');
+  }
+  const nav = readFileSync(new URL('../public/nav.js', import.meta.url), 'utf8');
+  assert.doesNotMatch(nav, /добровол|volunteer|voluntário|voluntario|volontaire|freiwillig|ボランティア|志愿者|متطوع/i);
 });
