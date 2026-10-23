@@ -45,3 +45,21 @@ test('hypothetical preferences endpoint rejects missing consent and unexpected f
   assert.equal(response.status, 400);
   assert.deepEqual(await response.json(), {ok:false,error:'invalid_response'});
 });
+
+test('deletion endpoint is disabled by default', async () => {
+  const response = await worker.fetch(new Request('https://example.test/api/preferences/delete', {
+    method:'POST', headers:{'content-type':'application/json'},
+    body:JSON.stringify({deletionToken:'x'.repeat(64)})
+  }), {});
+  assert.equal(response.status,503);
+  assert.deepEqual(await response.json(),{ok:false,error:'preferences_disabled'});
+});
+
+test('deletion endpoint rejects malformed token', async () => {
+  const response = await worker.fetch(new Request('https://example.test/api/preferences/delete', {
+    method:'POST', headers:{'content-type':'application/json'},
+    body:JSON.stringify({deletionToken:'short'})
+  }), {PREFERENCES_ENABLED:'true', DB:{}, RATE_LIMIT_SALT:'test-salt'});
+  assert.equal(response.status,400);
+  assert.deepEqual(await response.json(),{ok:false,error:'invalid_token'});
+});
