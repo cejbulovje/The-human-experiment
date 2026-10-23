@@ -17,8 +17,8 @@
     "test": "node --check src/index.js && node --check public/app.js && node --check public/results.js && node --check public/privacy.js && node --test",
     "db:migrate:local:participant-id": "wrangler d1 execute the-human-experiment --local --file=./db/migrations/0006_participant_id.sql",
     "db:migrate:remote:participant-id": "wrangler d1 execute the-human-experiment --remote --file=./db/migrations/0006_participant_id.sql",
-    "db:migrate:local:unique-participant-id": "wrangler d1 execute the-human-experiment --local --file=./db/migrations/0007_unique_participant_id.sql",
-    "db:migrate:remote:unique-participant-id": "wrangler d1 execute the-human-experiment --remote --file=./db/migrations/0007_unique_participant_id.sql"
+    "db:migrate:local:unique-participant-id": "wrangler d1 execute the-human-experiment --local --file=./db/migrations/0011_unique_participant_id.sql",
+    "db:migrate:remote:unique-participant-id": "wrangler d1 execute the-human-experiment --remote --file=./db/migrations/0011_unique_participant_id.sql"
   },
   "devDependencies": {
     "wrangler": "^4.0.0"
