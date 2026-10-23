@@ -31,6 +31,9 @@ test('hypothetical preferences prototype cannot submit a native form or send ans
   assert.doesNotMatch(html, /type="submit"/i);
   assert.doesNotMatch(html, /\bfetch\s*\(|XMLHttpRequest|sendBeacon|localStorage|sessionStorage/i);
   assert.match(html, /Ничего не отправлено и не сохранено/);
+  assert.match(html, /class="skip-link" href="#main-content"/);
+  assert.match(html, /<main id="main-content"/);
+  assert.match(html, /\.skip-link:focus\{[^}]*transform:translateY\(0\)/);
   assert.match(html, /form\.querySelector\('textarea\[name="comment"\]'\)\.value\.trim\(\)/);
   assert.doesNotMatch(html, /form\.elements\./);
   assert.equal((html.match(/href="\/preferences\.html" aria-current="page"/g) || []).length, 1);
