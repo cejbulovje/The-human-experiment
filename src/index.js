@@ -291,6 +291,7 @@ export default {
     if(url.pathname==='/api/submit'&&request.method==='POST')return submit(request,env);
     if(url.pathname==='/api/preferences'&&request.method==='POST')return submitPreferences(request,env);
     if(url.pathname==='/api/preferences/delete'&&request.method==='POST')return deletePreferences(request,env);
+    if(url.pathname==='/api/ai-analysis'&&request.method==='POST')return aiAnalysis(request,env);
 async function aiAnalysis(request,env){
   if(!env.DB||!env.AI||!env.RATE_LIMIT_SALT)return json({error:'ai_unavailable'},503);
   const parsed=await readJsonLimited(request,2048);
@@ -374,7 +375,6 @@ async function aiAnalysis(request,env){
     }
   }
 }
-    if(url.pathname==='/api/ai-analysis'&&request.method==='POST')return aiAnalysis(request,env);
     if(url.pathname==='/api/results'&&request.method==='GET'){
       try{return await results(env);}catch{return json({error:'results_unavailable'},503);}
     }
