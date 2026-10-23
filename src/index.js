@@ -76,7 +76,13 @@ async function submit(request,env){
     await env.DB.prepare("CREATE TABLE IF NOT EXISTS feedback_contacts (id INTEGER PRIMARY KEY AUTOINCREMENT, public_id TEXT NOT NULL UNIQUE, email TEXT NOT NULL, created_at TEXT NOT NULL)").run();
     const publicId=crypto.randomUUID();
     const topic=classifyTopic(body.freeAnswer);
-    let saved;\n    try{\n      saved=await env.DB.prepare('INSERT INTO responses (language, free_answer, q2, q3, q4, q2_other, q3_other, q4_other, gender, created_at, public_id, is_public, topic, signature, participant_id) SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ? WHERE ? IS NULL OR NOT EXISTS (SELECT 1 FROM responses WHERE participant_id = ?)').bind(body.language,body.freeAnswer.trim(),body.q2,body.q3,body.q4,q2Other,q3Other,q4Other,body.gender??null,new Date().toISOString(),publicId,topic,signature||null,participantId,participantId,participantId).run();\n    }catch(error){\n      if(participantId&&/UNIQUE constraint failed: responses\\.participant_id/i.test(String(error?.message||error)))return json({ok:false,error:'already_submitted'},409);\n      throw error;\n    }
+    let saved;
+    try{
+      saved=await env.DB.prepare('INSERT INTO responses (language, free_answer, q2, q3, q4, q2_other, q3_other, q4_other, gender, created_at, public_id, is_public, topic, signature, participant_id) SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ? WHERE ? IS NULL OR NOT EXISTS (SELECT 1 FROM responses WHERE participant_id = ?)').bind(body.language,body.freeAnswer.trim(),body.q2,body.q3,body.q4,q2Other,q3Other,q4Other,body.gender??null,new Date().toISOString(),publicId,topic,signature||null,participantId,participantId,participantId).run();
+    }catch(error){
+      if(participantId&&/UNIQUE constraint failed: responses\.participant_id/i.test(String(error?.message||error)))return json({ok:false,error:'already_submitted'},409);
+      throw error;
+    }
     if(participantId&&Number(saved.meta?.changes||0)===0)return json({ok:false,error:'already_submitted'},409);
     if(feedbackEmail){
       await env.DB.prepare('INSERT INTO feedback_contacts (public_id,email,created_at) VALUES (?,?,?)').bind(publicId,feedbackEmail,new Date().toISOString()).run();
