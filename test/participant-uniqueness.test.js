@@ -15,7 +15,7 @@ test('fresh schema rejects duplicate non-null participant IDs and allows multipl
       VALUES ('en', ?, 0, 0, 0, '2026-10-24T12:00:00.000Z', ?)`);
     const id = '11111111-1111-4111-8111-111111111111';
     insert.run('First linked answer', id);
-    assert.throws(() => insert.run('Duplicate linked answer', id), /UNIQUE constraint failed: responses\\.participant_id/);
+    assert.throws(() => insert.run('Duplicate linked answer', id), /UNIQUE constraint failed: responses\.participant_id/);
     insert.run('First anonymous answer', null);
     insert.run('Second anonymous answer', null);
     assert.equal(db.prepare('SELECT COUNT(*) AS n FROM responses WHERE participant_id = ?').get(id).n, 1);
