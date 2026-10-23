@@ -70,7 +70,7 @@ test('privacy copy explains token storage, browser loss, and AI-summary reset in
 });
 
 test('results snapshot can refresh changed totals without advancing the publication threshold', () => {
-  assert.match(worker, /WHERE excluded\\.published_threshold>public_results_snapshot\\.published_threshold OR excluded\\.total<>public_results_snapshot\\.total/);
+  assert.match(worker, /WHERE excluded\.published_threshold>public_results_snapshot\.published_threshold OR excluded\.total<>public_results_snapshot\.total/);
 });
 
 test('AI rebuild does not reintroduce public signatures after a deletion resets the summary', () => {
