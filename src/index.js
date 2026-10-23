@@ -46,7 +46,7 @@ async function submit(request,env){
     await env.DB.prepare('INSERT INTO responses (language, free_answer, q2, q3, q4, gender, created_at, participant_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)').bind(body.language,body.freeAnswer.trim(),body.q2,body.q3,body.q4,body.gender??null,new Date().toISOString(),participantId).run();
     return json({ok:true});
   }catch(error){
-    if(participantId&&/UNIQUE constraint failed: responses\\.participant_id/i.test(String(error?.message||error)))return json({ok:false,error:'already_submitted'},409);
+    if(participantId&&/UNIQUE constraint failed: responses\.participant_id/i.test(String(error?.message||error)))return json({ok:false,error:'already_submitted'},409);
     return json({ok:false,error:'save_failed'},500);
   }
 }
