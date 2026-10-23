@@ -143,7 +143,7 @@ async function results(env){
     await env.DB.prepare(`INSERT INTO public_results_snapshot (id,published_threshold,total,updated_at,q2,q3,q4,answered)
       VALUES (1,?,?,?,?,?,?,?)
       ON CONFLICT(id) DO UPDATE SET published_threshold=excluded.published_threshold,total=excluded.total,updated_at=excluded.updated_at,q2=excluded.q2,q3=excluded.q3,q4=excluded.q4,answered=excluded.answered
-      WHERE excluded.published_threshold>public_results_snapshot.published_threshold`).bind(reached,total,updatedAt,JSON.stringify(q2.items),JSON.stringify(q3.items),JSON.stringify(q4.items),JSON.stringify({q2:q2.answered,q3:q3.answered,q4:q4.answered})).run();
+      WHERE excluded.published_threshold>public_results_snapshot.published_threshold OR excluded.total<>public_results_snapshot.total`).bind(reached,total,updatedAt,JSON.stringify(q2.items),JSON.stringify(q3.items),JSON.stringify(q4.items),JSON.stringify({q2:q2.answered,q3:q3.answered,q4:q4.answered})).run();
     snapshot=await env.DB.prepare('SELECT published_threshold,total,updated_at,q2,q3,q4,answered FROM public_results_snapshot WHERE id=1').first();
   }
   if(!snapshot||Number(snapshot.published_threshold)<THRESHOLD)return json({unlocked:false,total,threshold:THRESHOLD,remaining:THRESHOLD-total,teaser:true});
