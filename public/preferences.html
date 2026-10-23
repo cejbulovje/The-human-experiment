@@ -41,7 +41,7 @@
           <a href="/" data-menu="survey">Опрос</a>
           <a href="/results.html" data-menu="results">Результаты</a>
           <a href="/preferences.html" data-menu="preferences" aria-current="page">Гипотетические предпочтения</a>
-          <a href="/volunteers-voice.html" data-menu="volunteer">Голос добровольца</a>
+          <a href="/volunteers-voice.html" data-menu="volunteer">Гипотетические предпочтения</a>
           <a href="/goal.html" data-menu="goal">Цель эксперимента</a>
           <a href="/privacy.html" data-menu="privacy">Конфиденциальность</a>
           <button type="button" data-site-share data-menu="share">Поделиться экспериментом</button>
@@ -63,7 +63,7 @@
     </section>
 
     <div id="preferences-form" class="preference-card">
-      <div class="status-note"><strong>Перед началом:</strong> в планируемой рабочей версии ответы будут включаться в результаты исследования добровольцев и использоваться для поиска ИИ совпадений и различий с желаниями участников основного опроса. Ответы не должны публиковаться вместе с вашим именем или контактами. Не указывайте в пояснении сведения, по которым можно установить вашу личность. Сейчас это только прототип: ответы остаются в этом окне, не отправляются и не сохраняются.</div>
+      <div class="status-note"><strong>Перед началом:</strong> возможная рабочая версия сможет сопоставлять эти ответы с результатами основного опроса с помощью ИИ, чтобы исследовать совпадения и различия между предпочтениями людей. Ответы не должны публиковаться вместе с вашим именем или контактами. Не указывайте в пояснении сведения, по которым можно установить вашу личность. Сейчас это только прототип: ответы остаются в этом окне, не отправляются и не сохраняются.</div>
       <label class="preference-option consent-option"><input type="checkbox" id="preferences-consent" name="consent" value="yes" required><span><strong>Я понимаю, как предполагается использовать ответы, и согласен(на) участвовать в исследовании.</strong></span></label>
 
       <section class="preference-question">
@@ -126,8 +126,8 @@
       <section id="prototype-result" class="prototype-result" aria-live="polite" hidden>
         <h2>Ваш гипотетический ответ</h2>
         <p id="result-summary"></p>
-        <p><strong>Статус:</strong> гипотетический ответ, не заявка добровольца.</p>
-        <p>Ничего не отправлено и не сохранено. В настоящей версии решение стать добровольцем должно приниматься отдельно — через самостоятельную заявку с отдельным согласием.</p>
+        <p><strong>Статус:</strong> гипотетический ответ для исследовательского прототипа.</p>
+        <p>Ничего не отправлено и не сохранено. Сейчас мы только исследуем гипотезу и проверяем формат вопросов.</p>
         <div class="action-row"><button type="button" class="secondary" id="edit-response">Вернуться к ответу</button><a class="text-link" href="/results.html">Перейти к результатам ↗</a></div>
       </section>
     </div>
