@@ -7,6 +7,52 @@ import { readFileSync } from 'node:fs';
 const migration = readFileSync(new URL('../db/migrations/0010_hypothetical_preferences.sql', import.meta.url), 'utf8');
 const schema = readFileSync(new URL('../db/schema.sql', import.meta.url), 'utf8');
 
+function createPreferencesDb() {
+  const records = new Map();
+  let nextId = 1;
+  const rateCounts = new Map();
+  const db = {
+    records,
+    prepare(sql) {
+      let params = [];
+      const statement = {
+        bind(...values) { params = values; return statement; },
+        async first() {
+          if (sql.includes('INSERT INTO rate_limits')) {
+            const key = params[0];
+            const count = (rateCounts.get(key) || 0) + 1;
+            rateCounts.set(key, count);
+            return {count};
+          }
+          if (sql.includes('DELETE FROM hypothetical_preferences WHERE delete_token_hash = ?')) {
+            const hash = params[0];
+            const existing = [...records.entries()].find(([, row]) => row.delete_token_hash === hash);
+            return existing ? {id: existing[0]} : null;
+          }
+          return null;
+        },
+        async run() {
+          if (sql.includes('INSERT INTO hypothetical_preferences')) {
+            const [language, answers_json, aggregate_consent, delete_token_hash, created_at] = params;
+            if ([...records.values()].some(row => row.delete_token_hash === delete_token_hash)) throw new Error('unique');
+            const id = nextId++;
+            records.set(id, {id, language, answers_json, aggregate_consent, delete_token_hash, created_at});
+            return {success:true,meta:{changes:1}};
+          }
+          if (sql.includes('DELETE FROM hypothetical_preferences WHERE delete_token_hash = ?')) {
+            const hash = params[0];
+            for (const [id, row] of records.entries()) if (row.delete_token_hash === hash) records.delete(id);
+            return {success:true,meta:{changes:1}};
+          }
+          return {success:true,meta:{changes:0}};
+        }
+      };
+      return statement;
+    }
+  };
+  return db;
+}
+
 function preferencesSql(sql) {
   const start = sql.indexOf('CREATE TABLE IF NOT EXISTS hypothetical_preferences');
   assert.notEqual(start, -1, 'hypothetical_preferences table must be defined');
@@ -48,6 +94,120 @@ test('hypothetical preferences migration is idempotent, validates fields, and st
   } finally {
     db.close();
   }
+});
+
+
+function createPreferencesDb() {
+  const records = new Map();
+  let nextId = 1;
+  const rateCounts = new Map();
+  const db = {
+    records,
+    prepare(sql) {
+      let params = [];
+      const statement = {
+        bind(...values) { params = values; return statement; },
+        async first() {
+          if (sql.includes('INSERT INTO rate_limits')) {
+            const key = params[0];
+            const count = (rateCounts.get(key) || 0) + 1;
+            rateCounts.set(key, count);
+            return {count};
+          }
+          if (sql.includes('DELETE FROM hypothetical_preferences WHERE delete_token_hash = ?')) {
+            const hash = params[0];
+            const existing = [...records.entries()].find(([, row]) => row.delete_token_hash === hash);
+            return existing ? {id: existing[0]} : null;
+          }
+          return null;
+        },
+        async run() {
+          if (sql.includes('INSERT INTO hypothetical_preferences')) {
+            const [language, answers_json, aggregate_consent, delete_token_hash, created_at] = params;
+            if ([...records.values()].some(row => row.delete_token_hash === delete_token_hash)) throw new Error('unique');
+            const id = nextId++;
+            records.set(id, {id, language, answers_json, aggregate_consent, delete_token_hash, created_at});
+            return {success:true,meta:{changes:1}};
+          }
+          if (sql.includes('DELETE FROM hypothetical_preferences WHERE delete_token_hash = ?')) {
+            const hash = params[0];
+            for (const [id, row] of records.entries()) if (row.delete_token_hash === hash) records.delete(id);
+            return {success:true,meta:{changes:1}};
+          }
+          return {success:true,meta:{changes:0}};
+        }
+      };
+      return statement;
+    }
+  };
+  return db;
+}
+
+
+test('valid preference submission stores only a deletion-token hash and returns one-time token', async t => {
+  const db = createPreferencesDb();
+  t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({success:true}), {status:200,headers:{'content-type':'application/json'}}));
+  const body = {
+    language:'en',
+    answers:{priority:'autonomy',preserve:'identity',wishes:'respect',body:'no_change'},
+    aggregateConsent:true,
+    consentToStore:true,
+    turnstileToken:'valid-test-token'
+  };
+  const response = await worker.fetch(new Request('https://example.test/api/preferences', {
+    method:'POST',headers:{'content-type':'application/json','CF-Connecting-IP':'192.0.2.10'},body:JSON.stringify(body)
+  }), {PREFERENCES_ENABLED:'true',DB:db,TURNSTILE_SECRET_KEY:'test-secret',RATE_LIMIT_SALT:'test-salt'});
+  assert.equal(response.status,200);
+  const result = await response.json();
+  assert.equal(result.ok,true);
+  assert.equal(typeof result.deletionToken,'string');
+  assert.ok(result.deletionToken.length>=60);
+  assert.equal(db.records.size,1);
+  const stored = [...db.records.values()][0];
+  assert.notEqual(stored.delete_token_hash,result.deletionToken);
+  assert.equal(stored.delete_token_hash.length,64);
+  assert.equal(stored.aggregate_consent,1);
+  assert.deepEqual(JSON.parse(stored.answers_json),body.answers);
+});
+
+test('deletion token removes the matching preference and unknown token returns same public response', async t => {
+  const db = createPreferencesDb();
+  t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({success:true}), {status:200,headers:{'content-type':'application/json'}}));
+  const body = {
+    language:'en',
+    answers:{priority:'autonomy',preserve:'identity',wishes:'respect',body:'no_change'},
+    aggregateConsent:false,
+    consentToStore:true,
+    turnstileToken:'valid-test-token'
+  };
+  const env = {PREFERENCES_ENABLED:'true',DB:db,TURNSTILE_SECRET_KEY:'test-secret',RATE_LIMIT_SALT:'test-salt'};
+  const submitted = await worker.fetch(new Request('https://example.test/api/preferences', {
+    method:'POST',headers:{'content-type':'application/json','CF-Connecting-IP':'192.0.2.11'},body:JSON.stringify(body)
+  }),env);
+  assert.equal(submitted.status,200);
+  const {deletionToken} = await submitted.json();
+  const deletionRequest = token => new Request('https://example.test/api/preferences/delete', {
+    method:'POST',headers:{'content-type':'application/json','CF-Connecting-IP':'192.0.2.12'},body:JSON.stringify({deletionToken:token})
+  });
+  const deleted = await worker.fetch(deletionRequest(deletionToken),env);
+  const unknown = await worker.fetch(deletionRequest('f'.repeat(64)),env);
+  assert.equal(deleted.status,200);
+  assert.equal(unknown.status,200);
+  assert.deepEqual(await deleted.json(),{ok:true});
+  assert.deepEqual(await unknown.json(),{ok:true});
+  assert.equal(db.records.size,0);
+});
+
+test('preference submission rejects Turnstile failure without writing data', async t => {
+  const db = createPreferencesDb();
+  t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({success:false}), {status:200,headers:{'content-type':'application/json'}}));
+  const response = await worker.fetch(new Request('https://example.test/api/preferences', {
+    method:'POST',headers:{'content-type':'application/json','CF-Connecting-IP':'192.0.2.13'},
+    body:JSON.stringify({language:'en',answers:{priority:'autonomy',preserve:'identity',wishes:'respect',body:'no_change'},aggregateConsent:true,consentToStore:true,turnstileToken:'invalid-token'})
+  }), {PREFERENCES_ENABLED:'true',DB:db,TURNSTILE_SECRET_KEY:'test-secret',RATE_LIMIT_SALT:'test-salt'});
+  assert.equal(response.status,400);
+  assert.deepEqual(await response.json(),{ok:false,error:'captcha_failed'});
+  assert.equal(db.records.size,0);
 });
 
 test('hypothetical preferences endpoint stays disabled by default', async () => {
