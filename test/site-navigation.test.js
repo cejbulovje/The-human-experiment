@@ -11,10 +11,22 @@ test('all public pages load the centered header and compact navigation', () => {
     assert.match(html, /class="topbar topbar-centered"/, pageName + ' missing centered header');
     assert.match(html, /class="brand-lockup header-brand-centered"/, pageName + ' missing centered brand');
     assert.match(html, /<script src="\/nav\.js" defer><\/script>/, pageName + ' missing navigation script');
-    for (const key of ['goal', 'privacy', 'share', 'survey', 'contact', 'support']) {
+    for (const key of ['goal', 'privacy', 'results', 'preferences', 'volunteer', 'share', 'survey', 'contact', 'support']) {
       assert.match(html, new RegExp('data-menu="' + key + '"'), pageName + ' missing menu item ' + key);
     }
   }
+});
+
+test('homepage prioritizes the survey, then results, and keeps hypothetical preferences secondary', () => {
+  const html = readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
+  const prompt = html.indexOf('class="prompt"');
+  const results = html.indexOf('class="results-teaser"');
+  const survey = html.indexOf('<form id="survey-form"');
+  const preferences = html.indexOf('class="preferences-cta"');
+  assert.ok(prompt >= 0 && prompt < results && results < survey && survey < preferences);
+  assert.match(html, /What if the decision were about you\?/);
+  assert.match(html, /This is not a volunteer application/);
+  assert.doesNotMatch(html, /goal-cta-copy/);
 });
 
 test('shared navigation has labels for all supported locales and implements sharing', () => {
