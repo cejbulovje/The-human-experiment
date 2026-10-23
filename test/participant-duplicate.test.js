@@ -68,3 +68,18 @@ test('the conditional insert allows responses without a valid participant ID', (
     db.close();
   }
 });
+
+test('the unique participant index permits multiple NULL participant IDs', () => {
+  const db = new DatabaseSync(':memory:');
+  try {
+    db.exec(schema);
+    const directInsert = db.prepare(`INSERT INTO responses
+      (language, free_answer, q2, q3, q4, created_at, public_id, is_public, topic, participant_id)
+      VALUES ('en', ?, 0, 0, 0, '2026-10-23T20:00:00.000Z', ?, 1, 'other', NULL)`);
+    assert.equal(Number(directInsert.run('First unlinked response', 'public-null-first').changes), 1);
+    assert.equal(Number(directInsert.run('Second unlinked response', 'public-null-second').changes), 1);
+    assert.equal(db.prepare('SELECT COUNT(*) AS total FROM responses WHERE participant_id IS NULL').get().total, 2);
+  } finally {
+    db.close();
+  }
+});
