@@ -36,7 +36,7 @@ const translations = {
     "share-button": "Share the experiment",
     "share-copied": "Link copied. Share it with others!",
     "share-failed": "Could not share automatically. Please copy the site address.",
-    "share-text": "THE HUMAN EXPERIMENT — An open worldwide thought experiment",
+    "share-text": "THE HUMAN EXPERIMENT - An open worldwide thought experiment",
     "signature-title": "How should your answer be signed?",
     "signature-help": "Anonymous is selected by default. If you add a signature, it will be shown publicly with your answer.",
     "signature-anonymous": "Anonymous",
@@ -87,7 +87,7 @@ const translations = {
     "success": "Thank you. Your response has been recorded.",
     "failure": "We could not submit your response. Please try again in a moment.",
     "network": "A network error occurred. Please try again.",
-    "intro3": "And you can influence this choice, too. What would you change about this person? Their appearance, character, habits, way of life—or nothing at all? Would you try to shape them according to your own ideal? Help them become who they want to be? Or suggest something no one has thought of before?",
+    "intro3": "And you can influence this choice, too. What would you change about this person? Their appearance, character, habits, way of life-or nothing at all? Would you try to shape them according to your own ideal? Help them become who they want to be? Or suggest something no one has thought of before?",
     "intro4": "Everyone will have their own opinion. But when millions of people can speak, something unexpected may emerge: something we do not yet know about ourselves, human desires, and what we can achieve together.",
     "intro5": "Perhaps this decision could mean far more than the fate of one person. What happens if humanity sees, for the first time, what it truly wants when millions of individual choices form one shared picture? Can we reach agreement? What will the majority choose? Could the collective choice be something none of us could have predicted? No one knows the answer in advance. That is the point of the experiment."
   },
@@ -98,7 +98,7 @@ const translations = {
     "goal-cta-link": "Узнать долгосрочную цель",
     "intro1": "Человечество получает возможность не просто изменить жизнь одного человека, но и самому стать частью его жизни.",
     "intro2": "Представь, что люди со всего мира получают возможность высказать своё мнение о том, какой должна стать жизнь конкретного человека. Миллионы взглядов, желаний и представлений о том, что правильно, что возможно и что вообще стоит изменить.",
-    "prompt": "Твой голос — часть этого выбора. Какое решение примешь ты?",
+    "prompt": "Твой голос - часть этого выбора. Какое решение примешь ты?",
     "start-survey": "Перейти к опросу",
     "preferences-eyebrow": "ДРУГАЯ СТОРОНА ВОПРОСА",
     "preferences-title": "А если бы решение принимали о тебе?",
@@ -126,7 +126,7 @@ const translations = {
     "share-button": "Поделиться экспериментом",
     "share-copied": "Ссылка скопирована. Поделись ею с другими!",
     "share-failed": "Не удалось поделиться автоматически. Скопируй адрес сайта вручную.",
-    "share-text": "THE HUMAN EXPERIMENT — Открытый всемирный мысленный эксперимент",
+    "share-text": "THE HUMAN EXPERIMENT - Открытый всемирный мысленный эксперимент",
     "signature-title": "Как подписать твой ответ?",
     "signature-help": "По умолчанию выбран анонимный ответ. Если добавишь подпись, она будет опубликована вместе с ответом.",
     "signature-anonymous": "Анонимно",
@@ -177,7 +177,7 @@ const translations = {
     "success": "Спасибо. Твой ответ сохранён.",
     "failure": "Не удалось отправить ответ. Попробуй ещё раз.",
     "network": "Ошибка соединения. Попробуй ещё раз.",
-    "intro3": "И ты тоже можешь повлиять на этот выбор. Что бы ты изменил в этом человеке? Его внешность, характер, привычки, образ жизни — или вообще ничего? Попытался бы воплотить в нём собственные представления об идеале? Помог бы ему стать тем, кем он сам хочет быть? Или предложил бы нечто, о чём никто прежде не задумывался?",
+    "intro3": "И ты тоже можешь повлиять на этот выбор. Что бы ты изменил в этом человеке? Его внешность, характер, привычки, образ жизни - или вообще ничего? Попытался бы воплотить в нём собственные представления об идеале? Помог бы ему стать тем, кем он сам хочет быть? Или предложил бы нечто, о чём никто прежде не задумывался?",
     "intro4": "У каждого будет своё мнение. Но когда миллионы людей получат возможность высказаться, может открыться нечто совершенно неожиданное: то, чего мы ещё не знаем о самих себе, о человеческих желаниях и о том, к чему способны прийти вместе.",
     "intro5": "Возможно, перед нами решение, значение которого выходит далеко за пределы судьбы одного человека. Что произойдёт, если человечество впервые увидит, чего оно действительно хочет, когда миллионы индивидуальных решений начнут складываться в одну общую картину? Сможем ли мы договориться? Что выберет большинство? И окажется ли коллективный выбор таким, каким его не смог бы предсказать никто из нас? Никто заранее не знает ответа. В этом и заключается смысл эксперимента."
   },
@@ -216,7 +216,7 @@ const translations = {
     "share-button": "Compartir el experimento",
     "share-copied": "Enlace copiado. ¡Compártelo con otras personas!",
     "share-failed": "No se pudo compartir automáticamente. Copia la dirección del sitio.",
-    "share-text": "THE HUMAN EXPERIMENT — Un experimento mental mundial abierto",
+    "share-text": "THE HUMAN EXPERIMENT - Un experimento mental mundial abierto",
     "q2Options": [
       "Apariencia o cuerpo",
       "Carácter o personalidad",
@@ -306,7 +306,7 @@ const translations = {
     "share-button": "Partilhar a experiência",
     "share-copied": "Ligação copiada. Partilha-a com outras pessoas!",
     "share-failed": "Não foi possível partilhar automaticamente. Copia o endereço do site.",
-    "share-text": "THE HUMAN EXPERIMENT — Uma experiência mental mundial aberta",
+    "share-text": "THE HUMAN EXPERIMENT - Uma experiência mental mundial aberta",
     "q2Options": [
       "Aparência ou corpo",
       "Caráter ou personalidade",
@@ -396,7 +396,7 @@ const translations = {
     "share-button": "分享这项实验",
     "share-copied": "链接已复制。分享给其他人吧！",
     "share-failed": "无法自动分享，请手动复制网站地址。",
-    "share-text": "THE HUMAN EXPERIMENT — 一项开放的全球思想实验",
+    "share-text": "THE HUMAN EXPERIMENT - 一项开放的全球思想实验",
     "q2Options": [
       "外貌或身体",
       "性格或个性",
@@ -486,7 +486,7 @@ const translations = {
     "share-button": "Experiment teilen",
     "share-copied": "Link kopiert. Teile ihn mit anderen!",
     "share-failed": "Automatisches Teilen nicht möglich. Bitte kopiere die Website-Adresse.",
-    "share-text": "THE HUMAN EXPERIMENT — Ein offenes weltweites Gedankenexperiment",
+    "share-text": "THE HUMAN EXPERIMENT - Ein offenes weltweites Gedankenexperiment",
     "q2Options": [
       "Aussehen oder Körper",
       "Charakter oder Persönlichkeit",
@@ -576,7 +576,7 @@ const translations = {
     "share-button": "実験をシェア",
     "share-copied": "リンクをコピーしました。ぜひ共有してください！",
     "share-failed": "自動共有できませんでした。サイトのアドレスをコピーしてください。",
-    "share-text": "THE HUMAN EXPERIMENT — 世界に開かれた思考実験",
+    "share-text": "THE HUMAN EXPERIMENT - 世界に開かれた思考実験",
     "q2Options": [
       "外見や身体",
       "性格や人格",
@@ -666,7 +666,7 @@ const translations = {
     "share-button": "Partager l’expérience",
     "share-copied": "Lien copié. Partagez-le avec d’autres personnes !",
     "share-failed": "Partage automatique impossible. Copiez l’adresse du site.",
-    "share-text": "THE HUMAN EXPERIMENT — Une expérience de pensée mondiale ouverte",
+    "share-text": "THE HUMAN EXPERIMENT - Une expérience de pensée mondiale ouverte",
     "q2Options": [
       "Apparence ou corps",
       "Caractère ou personnalité",
@@ -756,7 +756,7 @@ const translations = {
     "share-button": "مشاركة التجربة",
     "share-copied": "تم نسخ الرابط. شاركه مع الآخرين!",
     "share-failed": "تعذّرت المشاركة تلقائيًا. يُرجى نسخ عنوان الموقع يدويًا.",
-    "share-text": "THE HUMAN EXPERIMENT — تجربة فكرية عالمية مفتوحة",
+    "share-text": "THE HUMAN EXPERIMENT - تجربة فكرية عالمية مفتوحة",
     "q2Options": [
       "المظهر أو الجسد",
       "الشخصية أو الطباع",
@@ -878,7 +878,7 @@ function renderOptions(id, values, name, optional=false) {
 }
 const localizedIntroCopy = {
 en: `<p class="lead">Imagine a person somewhere on Earth who has voluntarily handed humanity full control over their life and future. People around the world can propose ideas, discuss them, and vote on what should happen to them.</p><p><strong>Each of us could have our own person somewhere on Earth.</strong> A real person whose fate we feel responsible for. We can discuss their future, propose ideas, and influence which ones gain support.</p><p>What would people want to do with this opportunity? Help this person, change their life, test bold ideas, or explore directions hard to imagine today? We will not decide in advance which answers are right or wrong. We want to see what people propose when the subject is a real person’s fate, not an abstract debate.</p><p>Genetics, biotechnology, and medicine are advancing rapidly. What if we combined scientific possibilities with collective will and let people decide not only how a person’s life might change, but also <strong>how their body, personality, and the person themselves might change</strong>? What ideas would gain support, and how far would imagination go?</p><h2>Where are the boundaries of the experiment?</h2><p>Participants can suggest changes to lifestyle, appearance, and habits, as well as deeper transformations of the body, personality, and abilities. We do not want to limit imagination in advance or tell people which ideas are right.</p><p>Not every idea that wins a vote can be carried out. Some changes may be technically impossible; others may conflict with the law or the person’s wishes. The experiment will show which ideas people support and which could actually be put into practice.</p><p>What does it really mean to hand humanity control over your life? Which decisions would a person entrust to others, where would they draw the line, and what happens when a collective decision conflicts with their own will? We are not setting the answers in advance. We want to explore these questions.</p><p><strong>This is an open experiment in collective choice.</strong> We want to gather views from around the world and discover what future people would propose for one person if they could shape that person’s fate together.</p><p>We do not know what ideas will emerge. Our goal is to discover what people truly want and how far their imagination will go.</p>`,
-ru: `<p class="lead">Представьте, что где-то на Земле есть человек, который добровольно передал человечеству полное управление своей жизнью и будущим. Теперь люди со всего мира могут предлагать идеи, обсуждать их и голосовать за то, что должно с ним произойти.</p><p><strong>У каждого из нас может появиться свой человек на Земле</strong>. Настоящий человек, за которого мы чувствуем ответственность, чья жизнь становится предметом нашего общего решения. Мы сможем обсуждать его будущее, предлагать идеи и влиять на то, какие из них получат поддержку.</p><p>Что люди захотят сделать, если действительно получат такую возможность? Помочь этому человеку, изменить его жизнь, проверить смелые идеи или пойти в направления, о которых сегодня трудно подумать? Мы не будем заранее определять, какие ответы правильные. Нам интересно увидеть, что люди предложат, когда речь идёт о судьбе конкретного человека, а не об абстрактных рассуждениях.</p><p>Генетика, биотехнологии и медицина стремительно развиваются. Что, если объединить возможности науки с коллективной волей людей и позволить им решать не только то, как изменится жизнь человека, но и <strong>как изменятся его тело, личность и сам человек</strong>? Какие идеи получат поддержку и насколько далеко зайдёт человеческое воображение?</p><h2>Где проходят границы эксперимента?</h2><p>Участники могут предлагать самые разные идеи: от изменений образа жизни, внешности и привычек до более глубоких преобразований тела, личности и способностей. Мы не хотим заранее ограничивать воображение или подсказывать, какие идеи считать правильными.</p><p>Не каждая идея, получившая поддержку в голосовании, может быть реализована. Одни изменения технически невозможны, другие могут противоречить закону или воле самого человека. Эксперимент покажет, какие идеи люди готовы поддержать и какие действительно можно воплотить в жизнь.</p><p>Что на самом деле означает передать человечеству управление своей жизнью? Какие решения человек готов доверить другим, где проведёт границу и что произойдёт, когда коллективное решение столкнётся с его личной волей? Мы не задаём ответы заранее, а хотим исследовать эти вопросы.</p><p><strong>Это открытый эксперимент над самой идеей коллективного выбора.</strong> Мы хотим собрать мнения людей со всего мира и узнать, какое будущее они предложат одному человеку, получив возможность вместе влиять на его судьбу.</p><p>Мы не знаем, к каким идеям это приведёт. Наша цель не предсказать результат, а увидеть, чего люди действительно захотят и насколько далеко зайдёт их воображение.</p>`,
+ru: `<p class="lead">Представьте, что где-то на Земле есть человек, который добровольно согласится предоставить человечеству возможность влиять на свою жизнь и будущее. Теперь люди со всего мира могут предлагать идеи, обсуждать их и голосовать за то, что, по их мнению, должно с ним произойти.</p><p><strong>У всех нас может появиться один общий человек на Земле.</strong> Настоящий человек, за будущее которого мы будем чувствовать ответственность, чья жизнь станет предметом нашего общего решения. Мы сможем обсуждать его будущее, предлагать идеи и влиять на то, какие из них получат поддержку.</p><p>Что люди захотят сделать, если действительно получат такую возможность? Помочь этому человеку, изменить его жизнь, проверить смелые идеи или пойти в направления, о которых сегодня трудно подумать? Мы не будем заранее определять, какие ответы правильные. Нам интересно увидеть, что люди предложат, когда речь идёт о судьбе конкретного человека, а не об абстрактных рассуждениях.</p><p>Генетика, биотехнологии и медицина стремительно развиваются. Что, если объединить возможности науки с коллективной волей людей и позволить им решать не только то, как изменится жизнь человека, но и <strong>как изменятся его тело, личность и сам человек</strong>? Какие идеи получат поддержку и насколько далеко зайдёт человеческое воображение?</p><h2>Где проходят границы эксперимента?</h2><p>Участники могут предлагать самые разные идеи: от изменений образа жизни, внешности и привычек до более глубоких преобразований тела, личности и способностей. Мы не хотим заранее ограничивать воображение или подсказывать, какие идеи считать правильными.</p><p>Не каждая идея, получившая поддержку в голосовании, может быть реализована. Одни изменения технически невозможны, другие могут противоречить закону или воле самого человека. Эксперимент покажет, какие идеи люди готовы поддержать и какие действительно можно воплотить в жизнь.</p><p>Что на самом деле означает предоставить человечеству возможность влиять на свою жизнь? Какие решения человек готов доверить другим, где проведёт границу и что произойдёт, когда коллективное решение столкнётся с его личной волей? Мы не задаём ответы заранее, а хотим исследовать эти вопросы.</p><p><strong>Это открытый эксперимент над самой идеей коллективного выбора.</strong> Мы хотим собрать мнения людей со всего мира и узнать, какое будущее они предложат одному человеку, получив возможность вместе влиять на его судьбу.</p><p>Мы не знаем, к каким идеям это приведёт. Наша цель не предсказать результат, а увидеть, чего люди действительно захотят и насколько далеко зайдёт их воображение.</p>``,
 es: `<p class="lead">Imagina que una persona en algún lugar de la Tierra ha cedido voluntariamente a la humanidad el control total de su vida y su futuro. Personas de todo el mundo pueden proponer ideas, debatirlas y votar sobre lo que debería ocurrirle.</p><p><strong>Cada uno de nosotros podría tener a su propia persona en algún lugar de la Tierra.</strong> Una persona real por cuyo destino sentimos responsabilidad. Podemos debatir su futuro, proponer ideas e influir en cuáles reciben apoyo.</p><p>¿Qué querría hacer la gente con esta oportunidad? Ayudar a esa persona, cambiar su vida, probar ideas audaces o explorar caminos hoy difíciles de imaginar. No decidiremos de antemano qué respuestas son correctas. Queremos ver qué propone la gente cuando se trata del destino de una persona concreta.</p><p>La genética, la biotecnología y la medicina avanzan rápidamente. ¿Y si combináramos la ciencia con la voluntad colectiva y permitiéramos decidir no solo cómo cambiaría la vida de alguien, sino también <strong>cómo cambiarían su cuerpo, su personalidad y la propia persona</strong>? ¿Qué ideas recibirían apoyo y hasta dónde llegaría la imaginación?</p><h2>¿Dónde están los límites del experimento?</h2><p>Se pueden proponer cambios en el estilo de vida, la apariencia y los hábitos, así como transformaciones más profundas del cuerpo, la personalidad y las capacidades. No queremos limitar la imaginación de antemano ni indicar qué ideas son correctas.</p><p>No todas las ideas votadas podrán realizarse. Algunas pueden ser técnicamente imposibles; otras, contrarias a la ley o a la voluntad de la persona. El experimento mostrará qué ideas se apoyan y cuáles podrían llevarse a la práctica.</p><p>¿Qué significa entregar a la humanidad el control de la propia vida? ¿Qué decisiones confiaría una persona a otros, dónde pondría el límite y qué ocurriría si una decisión colectiva chocara con su voluntad? Queremos explorar estas preguntas sin fijar las respuestas de antemano.</p><p><strong>Este es un experimento abierto sobre la elección colectiva.</strong> Queremos reunir opiniones de todo el mundo y descubrir qué futuro propondría la gente para una persona si pudiera decidir conjuntamente sobre su destino.</p><p>No sabemos qué ideas surgirán. Queremos descubrir qué desea realmente la gente y hasta dónde llega su imaginación.</p>`,
 pt: `<p class="lead">Imagine uma pessoa algures na Terra que entregou voluntariamente à humanidade o controlo total da sua vida e do seu futuro. Pessoas de todo o mundo podem propor ideias, debatê-las e votar sobre o que lhe deverá acontecer.</p><p><strong>Cada um de nós poderá ter a sua própria pessoa algures na Terra.</strong> Uma pessoa real por cujo destino sentimos responsabilidade. Podemos discutir o seu futuro, apresentar ideias e influenciar quais recebem apoio.</p><p>O que quereriam as pessoas fazer com esta oportunidade? Ajudar essa pessoa, mudar a sua vida, testar ideias ousadas ou explorar caminhos difíceis de imaginar hoje? Não decidiremos antecipadamente quais respostas são certas. Queremos ver o que as pessoas propõem quando está em causa o destino de uma pessoa concreta.</p><p>A genética, a biotecnologia e a medicina avançam rapidamente. E se juntássemos a ciência à vontade coletiva e permitíssemos decidir não só como a vida de alguém poderia mudar, mas também <strong>como poderiam mudar o seu corpo, a sua personalidade e a própria pessoa</strong>? Que ideias receberiam apoio e até onde iria a imaginação?</p><h2>Onde estão os limites da experiência?</h2><p>Podem ser propostas mudanças no estilo de vida, aparência e hábitos, bem como transformações mais profundas do corpo, da personalidade e das capacidades. Não queremos limitar antecipadamente a imaginação nem ditar quais ideias são corretas.</p><p>Nem todas as ideias apoiadas numa votação poderão ser concretizadas. Algumas podem ser tecnicamente impossíveis; outras podem contrariar a lei ou a vontade da própria pessoa. A experiência mostrará quais ideias recebem apoio e quais podem ser postas em prática.</p><p>O que significa entregar à humanidade o controlo da própria vida? Que decisões confiaria uma pessoa aos outros, onde traçaria o limite e o que aconteceria se uma decisão coletiva entrasse em conflito com a sua vontade? Queremos explorar estas questões sem definir as respostas antecipadamente.</p><p><strong>Esta é uma experiência aberta sobre a escolha coletiva.</strong> Queremos reunir opiniões de todo o mundo e descobrir que futuro as pessoas proporiam para alguém se pudessem decidir em conjunto sobre o seu destino.</p><p>Não sabemos que ideias irão surgir. Queremos descobrir o que as pessoas realmente querem e até onde vai a sua imaginação.</p>`,
 zh: `<p class="lead">想象一下，地球上有一个人自愿将自己生活和未来的完全决定权交给人类。世界各地的人都可以提出想法、展开讨论，并投票决定这个人接下来会发生什么。</p><p><strong>我们每个人都可能在地球上拥有一个属于自己的对象。</strong>这不是比喻，而是一个真实的人。我们可以讨论他的未来、提出想法，并影响哪些想法获得支持。</p><p>如果人们真的拥有这样的机会，他们会想做什么？帮助这个人、改变他的生活、尝试大胆的想法，还是探索如今难以想象的方向？我们不会预先规定哪些答案正确，而是想看看人们会如何面对一个具体的人的命运。</p><p>遗传学、生物技术和医学正在迅速发展。如果把科学的可能性与集体意愿结合起来，让人们不仅决定一个人的生活如何改变，还能决定<strong>他的身体、个性以及他本人将如何改变</strong>，会发生什么？哪些想法会获得支持？人类的想象力会走多远？</p><h2>实验的边界在哪里？</h2><p>参与者可以提出从生活方式、外貌和习惯到身体、个性和能力深层变化的各种想法。我们不想预先限制想象力，也不规定哪些想法才是正确的。</p><p>投票获得支持的想法不一定都能实现。有些改变在技术上无法做到，另一些可能违反法律或违背当事人的意愿。实验将帮助我们了解哪些想法获得支持，以及哪些有可能付诸实践。</p><p>把自己生活的决定权交给人类究竟意味着什么？一个人愿意把哪些决定交给别人，又会在哪里划定界限？当集体决定与他自己的意愿冲突时会怎样？我们不预先给出答案，而是希望探索这些问题。</p><p><strong>这是一次关于集体选择的开放实验。</strong>我们希望收集世界各地的意见，了解如果人们能够共同决定一个人的命运，他们会为这个人提出怎样的未来。</p><p>我们不知道最终会出现哪些想法。我们的目标是了解人们真正想要什么，以及他们的想象力能够走多远。</p>`,
@@ -912,7 +912,7 @@ function renderLanguage(lang) {
     if (Object.prototype.hasOwnProperty.call(t,key)) el.placeholder=t[key];
   });
   const wordmark=document.querySelector('.wordmark');
-  if(wordmark) wordmark.setAttribute('aria-label', activeLanguage==='ar' ? 'الصفحة الرئيسية لتجربة الإنسان' : ({ru:'Главная — The Human Experiment',es:'Inicio — The Human Experiment',pt:'Início — The Human Experiment',zh:'The Human Experiment 首页',de:'The Human Experiment Startseite',ja:'The Human Experiment ホーム',fr:'Accueil — The Human Experiment'}[activeLanguage] || 'The Human Experiment home'));
+  if(wordmark) wordmark.setAttribute('aria-label', activeLanguage==='ar' ? 'الصفحة الرئيسية لتجربة الإنسان' : ({ru:'Главная - The Human Experiment',es:'Inicio - The Human Experiment',pt:'Início - The Human Experiment',zh:'The Human Experiment 首页',de:'The Human Experiment Startseite',ja:'The Human Experiment ホーム',fr:'Accueil - The Human Experiment'}[activeLanguage] || 'The Human Experiment home'));
   languageSelect.setAttribute('aria-label', ({ru:'Язык',es:'Idioma',pt:'Idioma',zh:'语言',de:'Sprache',ja:'言語',fr:'Langue',ar:'اللغة'}[activeLanguage] || 'Language'));
   renderOptions('q2-options',t.q2Options,'q2'); renderOptions('q3-options',t.q3Options,'q3'); renderOptions('q4-options',t.q4Options,'q4');
   renderOptions('gender-options',t.genderOptions,'gender',true);
