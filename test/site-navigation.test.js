@@ -157,8 +157,8 @@ test('results page has one footer destination for preferences and clear methodol
   assert.doesNotMatch(html, /href="\/volunteers-voice\.html">Hypothetical preferences/);
   assert.match(script, /ГИПОТЕТИЧЕСКИЕ ПРЕДПОЧТЕНИЯ/);
   assert.match(script, /Будущее исследование:/);
-  assert.match(html, /data-voice="volunteers"/);
-  assert.match(html, /data-voice="volunteersText"/);
+  assert.match(html, /data-voice="resultsTitle"/);
+  assert.match(html, /data-voice="emptyText"/);
   assert.doesNotMatch(script, /ГОЛОС ДОБРОВОЛЬЦА|О голосе добровольца/);
 });
 
