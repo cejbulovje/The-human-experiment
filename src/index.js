@@ -231,10 +231,47 @@ export async function runAIWithLease(env,lockToken,messages,maxTokens,heartbeatI
   }
 }
 
+async function submitPreferences(request,env){
+  // This endpoint is deliberately disabled unless explicitly enabled in the environment.
+  if(env.PREFERENCES_ENABLED!=='true')return json({ok:false,error:'preferences_disabled'},503);
+  if(!env.DB||!env.TURNSTILE_SECRET_KEY||!env.RATE_LIMIT_SALT)return json({ok:false,error:'not_configured'},503);
+  const parsed=await readJsonLimited(request,4096);
+  if(parsed.error)return json({ok:false,error:parsed.error},parsed.error==='too_large'?413:400);
+  const body=parsed.body;
+  const languages=['en','ru','es','pt','zh','de','ja','fr','ar'];
+  const allowed={
+    priority:['autonomy','wellbeing','trust','context'],
+    preserve:['autonomy','body_control','identity','safety','being_heard'],
+    wishes:['respect','negotiate','depends','override'],
+    body:['no_change','support_choice','limited_change','unsure']
+  };
+  if(!body||!languages.includes(body.language)||body.consentToStore!==true||
+    typeof body.aggregateConsent!=='boolean'||!body.answers||typeof body.answers!=='object'||Array.isArray(body.answers)||
+    Object.keys(body.answers).length!==4||
+    Object.entries(allowed).some(([key,values])=>!values.includes(body.answers[key]))||
+    Object.keys(body.answers).some(key=>!Object.hasOwn(allowed,key))||
+    typeof body.turnstileToken!=='string'||body.turnstileToken.length<1||body.turnstileToken.length>2048){
+    return json({ok:false,error:'invalid_response'},400);
+  }
+  const ip=request.headers.get('CF-Connecting-IP')||'';
+  let captchaOK=false;
+  try{captchaOK=await verifyTurnstile(body.turnstileToken,ip,env.TURNSTILE_SECRET_KEY);}catch{}
+  if(!captchaOK)return json({ok:false,error:'captcha_failed'},400);
+  let allowedByRate=false;
+  try{allowedByRate=await rateLimit(request,env,'preferences',3);}catch{return json({ok:false,error:'rate_limit_unavailable'},503);}
+  if(!allowedByRate)return json({ok:false,error:'rate_limited'},429);
+  try{
+    await env.DB.prepare(`INSERT INTO hypothetical_preferences
+      (language,answers_json,aggregate_consent,created_at)
+      VALUES (?,?,?,?)`).bind(body.language,JSON.stringify(body.answers),body.aggregateConsent?1:0,new Date().toISOString()).run();
+    return json({ok:true});
+  }catch{return json({ok:false,error:'save_failed'},500);}
+}
 export default {
   async fetch(request,env){
     const url=new URL(request.url);
     if(url.pathname==='/api/submit'&&request.method==='POST')return submit(request,env);
+    if(url.pathname==='/api/preferences'&&request.method==='POST')return submitPreferences(request,env);
 async function aiAnalysis(request,env){
   if(!env.DB||!env.AI||!env.RATE_LIMIT_SALT)return json({error:'ai_unavailable'},503);
   const parsed=await readJsonLimited(request,2048);
