@@ -63,9 +63,9 @@
       <div class="status-note"><strong>Важно:</strong> этот ответ сам по себе не является заявкой добровольца. Он не регистрирует вас в базе добровольцев и не связывает ваш ответ с реальным сценарием.</div>
 
       <section class="preference-question">
-        <h2>1. Что было бы для вас главным приоритетом?</h2>
+        <h2 id="preference-question-1">1. Что было бы для вас главным приоритетом?</h2>
         <p>Выберите один вариант, наиболее близкий вашей позиции.</p>
-        <div class="preference-options">
+        <div class="preference-options" role="group" aria-labelledby="preference-question-1">
           <label class="preference-option"><input type="radio" name="priority" value="autonomy" required><span><strong>Свобода и самостоятельность</strong><br>Сохранить возможность самому принимать решения.</span></label>
           <label class="preference-option"><input type="radio" name="priority" value="wellbeing"><span><strong>Благополучие и безопасность</strong><br>Снизить страдания и повысить качество жизни.</span></label>
           <label class="preference-option"><input type="radio" name="priority" value="trust"><span><strong>Доверие и ответственность</strong><br>Дать другим возможность помочь, но с понятными границами.</span></label>
@@ -74,9 +74,9 @@
       </section>
 
       <section class="preference-question">
-        <h2>2. Что особенно важно было бы сохранить?</h2>
+        <h2 id="preference-question-2">2. Что особенно важно было бы сохранить?</h2>
         <p>Можно выбрать несколько пунктов.</p>
-        <div class="preference-options">
+        <div class="preference-options" role="group" aria-labelledby="preference-question-2">
           <label class="preference-option"><input type="checkbox" name="preserve" value="autonomy"><span>Право самостоятельно принимать решения</span></label>
           <label class="preference-option"><input type="checkbox" name="preserve" value="body"><span>Контроль над собственным телом</span></label>
           <label class="preference-option"><input type="checkbox" name="preserve" value="identity"><span>Личность и чувство собственной идентичности</span></label>
@@ -86,8 +86,8 @@
       </section>
 
       <section class="preference-question">
-        <h2>3. Как следовало бы учитывать ваши желания?</h2>
-        <div class="preference-options">
+        <h2 id="preference-question-3">3. Как следовало бы учитывать ваши желания?</h2>
+        <div class="preference-options" role="group" aria-labelledby="preference-question-3">
           <label class="preference-option"><input type="radio" name="wishes" value="ask" required><span>Сначала спросить меня и выслушать ответ.</span></label>
           <label class="preference-option"><input type="radio" name="wishes" value="limits"><span>Действовать только в заранее обозначенных пределах.</span></label>
           <label class="preference-option"><input type="radio" name="wishes" value="decide"><span>Оставить окончательное решение тому, кто получил власть.</span></label>
@@ -96,8 +96,8 @@
       </section>
 
       <section class="preference-question">
-        <h2>4. Как следовало бы поступать с изменениями тела?</h2>
-        <div class="preference-options">
+        <h2 id="preference-question-4">4. Как следовало бы поступать с изменениями тела?</h2>
+        <div class="preference-options" role="group" aria-labelledby="preference-question-4">
           <label class="preference-option"><input type="radio" name="body" value="consent" required><span>Допускать их только с моего согласия.</span></label>
           <label class="preference-option"><input type="radio" name="body" value="discuss"><span>Сначала обсуждать последствия и возможные альтернативы.</span></label>
           <label class="preference-option"><input type="radio" name="body" value="unimportant"><span>Для меня это не главный вопрос по сравнению с другими приоритетами.</span></label>
@@ -106,14 +106,14 @@
       </section>
 
       <section class="preference-question">
-        <h2>5. Хотите добавить пояснение?</h2>
+        <h2 id="preference-question-5">5. Хотите добавить пояснение?</h2>
         <p>Не указывайте имя, адрес, контакты или другие сведения, по которым можно установить вашу личность.</p>
         <textarea name="comment" rows="4" maxlength="1500" placeholder="Необязательно"></textarea>
       </section>
 
       <section class="preference-question">
-        <h2>6. Как можно использовать ваш ответ в рамках исследования?</h2>
-        <div class="preference-options">
+        <h2 id="preference-question-6">6. Как можно использовать ваш ответ в рамках исследования?</h2>
+        <div class="preference-options" role="group" aria-labelledby="preference-question-6">
           <label class="preference-option"><input type="radio" name="use" value="aggregate" required><span>Только в общей анонимной статистике.</span></label>
           <label class="preference-option"><input type="radio" name="use" value="comparison"><span>В анонимном сравнительном анализе с решениями участников опроса.</span></label>
           <label class="preference-option"><input type="radio" name="use" value="private"><span>Не включать мой ответ в публичные сравнения.</span></label>
