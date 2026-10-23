@@ -84,12 +84,19 @@ async function submit(request,env){
       throw error;
     }
     if(participantId&&Number(saved.meta?.changes||0)===0)return json({ok:false,error:'already_submitted'},409);
+    let feedbackEmailSaved=null;
     if(feedbackEmail){
-      await env.DB.prepare('INSERT INTO feedback_contacts (public_id,email,created_at) VALUES (?,?,?)').bind(publicId,feedbackEmail,new Date().toISOString()).run();
+      try{
+        await env.DB.prepare('INSERT INTO feedback_contacts (public_id,email,created_at) VALUES (?,?,?)').bind(publicId,feedbackEmail,new Date().toISOString()).run();
+        feedbackEmailSaved=true;
+      }catch{
+        // The public answer is already saved. Do not tell the participant the whole submission failed.
+        feedbackEmailSaved=false;
+      }
     }
     // Publish a new snapshot immediately when a milestone is crossed; a snapshot failure must not invalidate a saved response.
     try{await results(env);}catch{}
-    return json({ok:true});
+    return json(feedbackEmail ? {ok:true,feedbackEmailSaved} : {ok:true});
   }catch{return json({ok:false,error:'save_failed'},500);}
 }
 function classifyTopic(text){
