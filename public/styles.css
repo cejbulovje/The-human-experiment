@@ -391,3 +391,17 @@
   .topbar-centered .header-brand-centered .wordmark{font-size:.6rem;letter-spacing:.015em}
   .topbar-centered .header-controls select{width:74px;max-width:74px;font-size:.68rem}
 }
+
+
+/* Accessible touch targets for the compact site menu. */
+.site-menu-trigger{min-width:44px;min-height:44px}
+.site-menu-panel a,
+.site-menu-panel button{min-height:44px;display:flex;align-items:center}
+@media(max-width:600px){
+  .topbar-centered{grid-template-columns:44px minmax(0,1fr) auto}
+  .site-menu-trigger{width:44px;height:44px}
+}
+@media(max-width:370px){
+  .topbar-centered{grid-template-columns:44px minmax(0,1fr) 74px}
+  .site-menu-trigger{width:44px;height:44px}
+}
