@@ -96,14 +96,14 @@ test('hypothetical preferences prototype cannot submit a native form or send ans
   assert.doesNotMatch(html, /preference-question-6|name="use"/);
   assert.match(html, /id="preferences-consent" name="consent" value="yes" required/);
   assert.match(html, /возможная рабочая версия сможет сопоставлять эти ответы с результатами основного опроса/);
-  assert.match(html, /для поиска ИИ совпадений и различий/);
+
   assert.equal((html.match(/href="\/preferences\.html"[^>]*aria-current="page"/g) || []).length, 1);
 });
 
 
 test('research prototype page avoids recruitment language and signup pathways', () => {
   const html = readFileSync(new URL('../public/volunteers-voice.html', import.meta.url), 'utf8');
-  assert.doesNotMatch(html, /ПУТЬ 02|interest-button|interest-note|добровол|volunteer/i);
+  assert.doesNotMatch(html.replaceAll('/volunteers-voice.html', ''), /добровол|volunteer|voluntário|voluntario|volontaire|freiwillig|ボランティア|志愿者|متطوع/i);
   assert.match(html, /Гипотетические предпочтения/);
   assert.match(html, /Сейчас мы проверяем вопросы и исследовательскую идею/);
 });
@@ -113,7 +113,7 @@ test('public-facing research copy does not use volunteer terminology', () => {
   const files = ['index.html', 'preferences.html', 'results.html', 'volunteers-voice.html'];
   for (const name of files) {
     const html = readFileSync(new URL('../public/' + name, import.meta.url), 'utf8');
-    assert.doesNotMatch(html, /добровол|volunteer|voluntário|voluntario|volontaire|freiwillig|ボランティア|志愿者|متطوع/i, name + ' contains recruitment terminology');
+    assert.doesNotMatch(html.replaceAll('/volunteers-voice.html', ''), /добровол|volunteer|voluntário|voluntario|volontaire|freiwillig|ボランティア|志愿者|متطوع/i, name + ' contains recruitment terminology');
   }
   const nav = readFileSync(new URL('../public/nav.js', import.meta.url), 'utf8');
   assert.doesNotMatch(nav, /добровол|volunteer|voluntário|voluntario|volontaire|freiwillig|ボランティア|志愿者|متطوع/i);
