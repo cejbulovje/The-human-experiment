@@ -63,7 +63,8 @@
     </section>
 
     <div id="preferences-form" class="preference-card">
-      <div class="status-note"><strong>Важно:</strong> этот ответ сам по себе не является заявкой добровольца. Он не регистрирует вас в базе добровольцев и не связывает ваш ответ с реальным сценарием.</div>
+      <div class="status-note"><strong>Перед началом:</strong> в планируемой рабочей версии ответы будут включаться в результаты исследования добровольцев и использоваться для поиска ИИ совпадений и различий с желаниями участников основного опроса. Ответы не должны публиковаться вместе с вашим именем или контактами. Не указывайте в пояснении сведения, по которым можно установить вашу личность. Сейчас это только прототип: ответы остаются в этом окне, не отправляются и не сохраняются.</div>
+      <label class="preference-option consent-option"><input type="checkbox" id="preferences-consent" name="consent" value="yes" required><span><strong>Я понимаю, как предполагается использовать ответы, и согласен(на) участвовать в исследовании.</strong></span></label>
 
       <section class="preference-question">
         <h2 id="preference-question-1">1. Что было бы для вас главным приоритетом?</h2>
@@ -114,14 +115,7 @@
         <textarea name="comment" rows="4" maxlength="1500" placeholder="Необязательно"></textarea>
       </section>
 
-      <section class="preference-question">
-        <h2 id="preference-question-6">6. Как можно использовать ваш ответ в рамках исследования?</h2>
-        <div class="preference-options" role="group" aria-labelledby="preference-question-6">
-          <label class="preference-option"><input type="radio" name="use" value="aggregate" required><span>Только в общей анонимной статистике.</span></label>
-          <label class="preference-option"><input type="radio" name="use" value="comparison"><span>В анонимном сравнительном анализе с решениями участников опроса.</span></label>
-          <label class="preference-option"><input type="radio" name="use" value="private"><span>Не включать мой ответ в публичные сравнения.</span></label>
-        </div>
-      </section>
+
 
       <p class="privacy-hint">Демо-режим: при нажатии кнопки ответ останется в этом окне и никуда не отправится. Реальная публикация или обработка данных потребует отдельного согласованного механизма и ясных правил конфиденциальности.</p>
       <div class="action-row">
@@ -148,7 +142,6 @@
       preserve: { autonomy:'Самостоятельность', body:'Контроль над телом', identity:'Личность и идентичность', safety:'Безопасность и благополучие', voice:'Быть услышанным' },
       wishes: { ask:'Сначала спросить меня', limits:'Действовать в обозначенных пределах', decide:'Оставить решение другому', consent:'Получать согласие на существенные изменения' },
       body: { consent:'Изменения тела только с согласия', discuss:'Сначала обсуждать последствия', unimportant:'Это не главный приоритет', context:'Зависит от обстоятельств' },
-      use: { aggregate:'Общая анонимная статистика', comparison:'Анонимный сравнительный анализ', private:'Без публичного сравнительного анализа' }
     };
     function selected(name) {
       return [...form.querySelectorAll('[name="' + name + '"]:checked')].map(el => el.value);
@@ -161,9 +154,9 @@
         return;
       }
       const lines = [];
-      for (const key of ['priority','preserve','wishes','body','use']) {
+      for (const key of ['priority','preserve','wishes','body']) {
         const values = selected(key).map(value => labels[key][value] || value);
-        lines.push('<strong>' + ({priority:'Приоритет',preserve:'Что сохранить',wishes:'Учет желаний',body:'Изменения тела',use:'Использование ответа'}[key]) + ':</strong> ' + values.join(', '));
+        lines.push('<strong>' + ({priority:'Приоритет',preserve:'Что сохранить',wishes:'Учет желаний',body:'Изменения тела'}[key]) + ':</strong> ' + values.join(', '));
       }
       const comment = form.querySelector('textarea[name="comment"]').value.trim();
       if (comment) lines.push('<strong>Пояснение:</strong> ' + comment.replace(/[&<>"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[char])));
