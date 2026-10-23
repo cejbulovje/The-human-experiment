@@ -387,6 +387,7 @@ async function aiAnalysis(request,env){
       try{return await suggestTopic(request,env);}catch{return json({error:'topic_suggestion_unavailable'},503);}
     }
     if(url.pathname.startsWith('/api/'))return json({error:'not_found'},404);
+    if(url.pathname==='/api/ai-analysis'&&request.method==='POST')return aiAnalysis(request,env);
     const assetResponse=await env.ASSETS.fetch(request);
     const headers=new Headers(assetResponse.headers);
     headers.set('x-content-type-options','nosniff');
@@ -394,7 +395,6 @@ async function aiAnalysis(request,env){
     headers.set('referrer-policy','strict-origin-when-cross-origin');
     headers.set('permissions-policy','camera=(), microphone=(), geolocation=()');
     headers.set('content-security-policy', "frame-ancestors 'none'");
-    if(url.pathname==='/api/ai-analysis'&&request.method==='POST')return aiAnalysis(request,env);
     return new Response(assetResponse.body,{status:assetResponse.status,statusText:assetResponse.statusText,headers});
   }
 };
