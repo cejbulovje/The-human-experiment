@@ -161,3 +161,20 @@ test('results page has one footer destination for preferences and clear methodol
   assert.match(html, /data-voice="volunteersText"/);
   assert.doesNotMatch(script, /ГОЛОС ДОБРОВОЛЬЦА|О голосе добровольца/);
 });
+
+
+test('results page separates collective answers from hypothetical preference answers without fabricating data', () => {
+  const html = readFileSync(new URL('../public/results.html', import.meta.url), 'utf8');
+  const script = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
+  assert.match(html, /id="answer-list"/, 'main collective response feed remains intact');
+  assert.match(html, /aria-labelledby="preference-results-title"/, 'separate hypothetical answers section exists');
+  assert.match(html, /class="hypothetical-empty-state"/);
+  assert.match(html, /data-voice="emptyText"/);
+  assert.match(html, /data-voice="emptyNext"/);
+  assert.doesNotMatch(html, /id="hypothetical-answer-list"/, 'no fake second feed is presented as live data');
+  for (const locale of locales) {
+    for (const key of ['resultsTitle','resultsIntro','resultsCount','emptyTitle','emptyText','emptyNext']) {
+      assert.match(script, new RegExp('"' + key + '":'), 'missing localized hypothetical results key ' + key);
+    }
+  }
+});
