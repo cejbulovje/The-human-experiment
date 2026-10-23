@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
-const pages = ['index.html', 'goal.html', 'privacy.html', 'results.html'];
+const pages = ['index.html', 'goal.html', 'privacy.html', 'results.html', 'preferences.html', 'volunteers-voice.html'];
 const locales = ['en', 'ru', 'es', 'pt', 'zh', 'de', 'ja', 'fr', 'ar'];
 
 test('all public pages load the centered header and compact navigation', () => {
@@ -53,6 +53,30 @@ test('shared navigation has labels for all supported locales and implements shar
   for (const locale of locales) assert.match(script, new RegExp('^    ' + locale + ': \\{', 'm'), 'missing navigation locale ' + locale);
   assert.match(script, /navigator\.share/);
   assert.match(script, /navigator\.clipboard/);
+  for (const key of ['emailCopied', 'emailCopyFailed', 'copyEmail']) {
+    assert.equal((script.match(new RegExp('\\b' + key + ':', 'g')) || []).length, locales.length, key + ' must be translated in all supported locales');
+  }
+  assert.match(script, /menu\.setAttribute\('aria-label', t\.menu\)/);
+});
+
+test('every main page marks exactly one current navigation destination', () => {
+  const currentByPage = {
+    'index.html': '/', 'goal.html': '/goal.html', 'privacy.html': '/privacy.html',
+    'results.html': '/results.html', 'preferences.html': '/preferences.html',
+    'volunteers-voice.html': '/volunteers-voice.html'
+  };
+  for (const [pageName, href] of Object.entries(currentByPage)) {
+    const html = readFileSync(new URL('../public/' + pageName, import.meta.url), 'utf8');
+    const current = [...html.matchAll(/<a\b[^>]*aria-current="page"[^>]*>/g)].map(match => match[0]);
+    assert.equal(current.length, 1, pageName + ' must have exactly one current navigation link');
+    assert.ok(current[0].includes('href="' + href + '"'), pageName + ' current link must point to this page');
+  }
+});
+
+test('site menu controls meet minimum touch-target dimensions', () => {
+  const css = readFileSync(new URL('../public/styles.css', import.meta.url), 'utf8');
+  assert.match(css, /\.site-menu-trigger\{[^}]*min-width:44px;min-height:44px/);
+  assert.match(css, /\.site-menu-panel a,[\s\S]*?\.site-menu-panel button\{min-height:44px;display:flex;align-items:center\}/);
 });
 
 test('hypothetical preferences prototype cannot submit a native form or send answers', () => {
