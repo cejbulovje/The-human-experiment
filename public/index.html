@@ -91,6 +91,16 @@
         </div>
       </details>
 
+      <div class="question-block feedback-opt-in">
+        <div class="form-heading"><span class="step-number">✉</span><div><h2 data-i18n="feedback-title">Get the experiment results</h2><p data-i18n="feedback-help">Optional: leave your email to receive the final results and a thank-you message when the experiment ends. Your email will never appear publicly.</p></div></div>
+        <label class="option"><input id="feedback-opt-in" type="checkbox" name="feedbackOptIn"><span data-i18n="feedback-opt-in-label">I’d like to receive the final results and a thank-you email.</span></label>
+        <div id="feedback-email-field" hidden>
+          <label class="field-label" for="feedback-email" data-i18n="feedback-email-label">Email address</label>
+          <input id="feedback-email" name="feedbackEmail" type="email" maxlength="254" autocomplete="email" data-i18n-placeholder="feedback-email-placeholder" placeholder="you@example.com" style="display:block;width:100%;padding:13px 15px;border:1px solid #c9cbc2;border-radius:12px;background:#fff;color:var(--ink);font:inherit">
+          <p class="privacy-copy" data-i18n="feedback-email-note">Stored separately from your public answer. It will be used only for the final results and thank-you message.</p>
+        </div>
+      </div>
+
       <div class="turnstile-wrap">
         <p data-i18n="captcha-note">Complete the anti-bot check to submit your response.</p>
         <div class="cf-turnstile" id="turnstile-widget" data-sitekey="0x4AAAAAAFXnc77nuap7FdMr" data-theme="light" data-callback="onTurnstileSuccess" data-expired-callback="onTurnstileExpired" data-error-callback="onTurnstileExpired"></div>
