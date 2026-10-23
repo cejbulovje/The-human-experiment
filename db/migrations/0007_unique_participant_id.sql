@@ -1,0 +1,1 @@
+-- Enforce at most one response per non-null participant ID.\n-- NULL IDs remain allowed for legacy or unlinked submissions.\nCREATE UNIQUE INDEX IF NOT EXISTS idx_responses_participant_id_unique\n  ON responses(participant_id)\n  WHERE participant_id IS NOT NULL;\n
