@@ -159,7 +159,7 @@
         const values = selected(key).map(value => labels[key][value] || value);
         lines.push('<strong>' + ({priority:'Приоритет',preserve:'Что сохранить',wishes:'Учет желаний',body:'Изменения тела',use:'Использование ответа'}[key]) + ':</strong> ' + values.join(', '));
       }
-      const comment = form.elements.comment.value.trim();
+      const comment = form.querySelector('textarea[name="comment"]').value.trim();
       if (comment) lines.push('<strong>Пояснение:</strong> ' + comment.replace(/[&<>"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[char])));
       summary.innerHTML = lines.join('<br><br>');
       result.hidden = false;
