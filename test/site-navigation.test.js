@@ -148,3 +148,14 @@ test('hypothetical preference pages keep answers local and summary labels transl
   assert.match(html, /locale\.summaryLabels/);
   assert.doesNotMatch(html, /<form\b|type="submit"|\bfetch\s*\(|XMLHttpRequest|sendBeacon/i);
 });
+
+
+test('results page has one footer destination for preferences and clear methodology labeling', () => {
+  const html = readFileSync(new URL('../public/results.html', import.meta.url), 'utf8');
+  const script = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
+  assert.equal((html.match(/href="\\/volunteers-voice\\.html"/g) || []).length, 1);
+  assert.doesNotMatch(html, /href="\\/volunteers-voice\\.html">Hypothetical preferences/);
+  assert.match(script, /ГИПОТЕТИЧЕСКИЕ ПРЕДПОЧТЕНИЯ/);
+  assert.match(script, /Будущее исследование:/);
+  assert.doesNotMatch(script, /ГОЛОС ДОБРОВОЛЬЦА|О голосе добровольца/);
+});
