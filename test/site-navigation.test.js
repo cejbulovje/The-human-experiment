@@ -29,6 +29,23 @@ test('homepage prioritizes the survey, then results, and keeps hypothetical pref
   assert.match(html, /This is not a volunteer application/);
   assert.doesNotMatch(html, /class="goal-cta"/);
   assert.doesNotMatch(html, /goal-cta-copy/);
+  for (const key of ['preferences-eyebrow', 'preferences-title', 'preferences-copy', 'preferences-link']) {
+    assert.match(html, new RegExp('data-i18n="' + key + '"'), 'missing localized preferences CTA key ' + key);
+  }
+});
+
+test('hypothetical preferences CTA is translated in every supported language', () => {
+  const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
+  for (const key of ['preferences-eyebrow', 'preferences-title', 'preferences-copy', 'preferences-link']) {
+    assert.equal((app.match(new RegExp('"' + key + '"\\s*:', 'g')) || []).length, locales.length, key + ' must exist in all supported locales');
+  }
+});
+
+test('mobile header reserves space for controls and exposes keyboard focus', () => {
+  const css = readFileSync(new URL('../public/styles.css', import.meta.url), 'utf8');
+  assert.match(css, /\.site-menu-trigger:focus-visible\{[^}]*outline:3px solid/);
+  assert.match(css, /@media\(max-width:600px\)[\s\S]*?grid-template-columns:36px minmax\(0,1fr\) auto/);
+  assert.match(css, /@media\(max-width:370px\)[\s\S]*?grid-template-columns:34px minmax\(0,1fr\) 74px/);
 });
 
 test('shared navigation has labels for all supported locales and implements sharing', () => {
