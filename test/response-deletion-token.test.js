@@ -69,6 +69,10 @@ test('privacy copy explains token storage, browser loss, and AI-summary reset in
   assert.match(readFileSync(new URL('../public/privacy.html', import.meta.url), 'utf8'), /data-t="deletionTitle"/);
 });
 
+test('results snapshot can refresh changed totals without advancing the publication threshold', () => {
+  assert.match(worker, /WHERE excluded\\.published_threshold>public_results_snapshot\\.published_threshold OR excluded\\.total<>public_results_snapshot\\.total/);
+});
+
 test('AI rebuild does not reintroduce public signatures after a deletion resets the summary', () => {
   const start = worker.indexOf('async function aiAnalysis(');
   const end = worker.indexOf('\n    if(url.pathname===', start);
