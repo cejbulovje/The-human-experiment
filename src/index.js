@@ -386,8 +386,8 @@ async function aiAnalysis(request,env){
     if(url.pathname==='/api/topic-suggestion'&&request.method==='POST'){
       try{return await suggestTopic(request,env);}catch{return json({error:'topic_suggestion_unavailable'},503);}
     }
-    if(url.pathname.startsWith('/api/'))return json({error:'not_found'},404);
     if(url.pathname==='/api/ai-analysis'&&request.method==='POST')return aiAnalysis(request,env);
+    if(url.pathname.startsWith('/api/'))return json({error:'not_found'},404);
     const assetResponse=await env.ASSETS.fetch(request);
     const headers=new Headers(assetResponse.headers);
     headers.set('x-content-type-options','nosniff');
