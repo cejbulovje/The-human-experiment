@@ -344,3 +344,50 @@
 .primary-survey-cta{display:inline-flex;align-items:center;justify-content:center;margin:2px 0 8px;padding:13px 20px;border-radius:999px;background:var(--accent);color:#fff;font-weight:800;text-decoration:none}
 .primary-survey-cta:hover{background:#193b2c}
 .primary-survey-cta:focus-visible{outline:3px solid #92b9a1;outline-offset:3px}
+
+
+/* Small-screen header: reserve separate grid space for menu, brand, and language control. */
+.site-menu-trigger:focus-visible{outline:3px solid #92b9a1;outline-offset:3px}
+@media(max-width:600px){
+  .topbar-centered{
+    display:grid;
+    grid-template-columns:36px minmax(0,1fr) auto;
+    align-items:center;
+    column-gap:7px;
+  }
+  .topbar-centered .site-menu{grid-column:1;grid-row:1;min-width:0}
+  .topbar-centered .header-brand-centered{
+    position:static;
+    grid-column:2;
+    grid-row:1;
+    justify-self:center;
+    transform:none;
+    width:max-content;
+    max-width:100%;
+    min-width:0;
+    white-space:normal;
+  }
+  .topbar-centered .header-brand-centered .wordmark{
+    min-width:0;
+    white-space:normal;
+    overflow-wrap:anywhere;
+    text-align:left;
+  }
+  .topbar-centered .header-controls{
+    grid-column:3;
+    grid-row:1;
+    min-width:0;
+    margin-left:0;
+  }
+  .topbar-centered .header-controls select{
+    width:82px;
+    max-width:82px;
+    min-width:0;
+  }
+}
+@media(max-width:370px){
+  .topbar-centered{grid-template-columns:34px minmax(0,1fr) 74px;column-gap:5px}
+  .topbar-centered .header-brand-centered .brand-mark{width:28px;height:28px;flex-basis:28px}
+  .topbar-centered .header-brand-centered .wordmark{font-size:.6rem;letter-spacing:.015em}
+  .topbar-centered .header-controls select{width:74px;max-width:74px;font-size:.68rem}
+}
