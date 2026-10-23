@@ -99,3 +99,11 @@ test('hypothetical preferences prototype cannot submit a native form or send ans
   assert.match(html, /для поиска ИИ совпадений и различий/);
   assert.equal((html.match(/href="\/preferences\.html"[^>]*aria-current="page"/g) || []).length, 1);
 });
+
+
+test('volunteer voice page does not offer a potential-volunteer signup pathway', () => {
+  const html = readFileSync(new URL('../public/volunteers-voice.html', import.meta.url), 'utf8');
+  assert.doesNotMatch(html, /Стать потенциальным добровольцем|ПУТЬ 02|interest-button|interest-note/);
+  assert.match(html, /Гипотетические предпочтения/);
+  assert.match(html, /не принимает заявки и не добавляет никого в базу добровольцев/);
+});
