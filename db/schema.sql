@@ -28,6 +28,14 @@ CREATE TABLE IF NOT EXISTS rate_limits (
 CREATE UNIQUE INDEX IF NOT EXISTS idx_responses_public_id ON responses(public_id);
 CREATE INDEX IF NOT EXISTS idx_responses_participant_public ON responses(participant_id, is_public, created_at);
 CREATE INDEX IF NOT EXISTS idx_responses_public_created ON responses(is_public, created_at);
+
+-- Optional email opt-ins are kept outside the public response records and API.
+CREATE TABLE IF NOT EXISTS feedback_contacts (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  public_id TEXT NOT NULL UNIQUE,
+  email TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);
 CREATE TABLE IF NOT EXISTS response_reactions (response_id INTEGER NOT NULL REFERENCES responses(id) ON DELETE CASCADE, reaction TEXT NOT NULL CHECK (reaction IN ('interesting')), voter_hash TEXT NOT NULL, created_at TEXT NOT NULL, PRIMARY KEY (response_id, reaction, voter_hash));
 CREATE INDEX IF NOT EXISTS idx_response_reactions_response ON response_reactions(response_id, reaction);
 
