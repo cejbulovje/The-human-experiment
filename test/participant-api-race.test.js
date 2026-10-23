@@ -16,7 +16,8 @@ test('submit returns 409 when unique participant index catches a race after the 
           throw new Error('Unexpected first() query: ' + sql);
         },
         async run() {
-          if (sql.startsWith('CREATE TABLE IF NOT EXISTS feedback_contacts')) return { success: true };\n          if (sql.startsWith('DELETE FROM rate_limits')) return { success: true };
+          if (sql.startsWith('CREATE TABLE IF NOT EXISTS feedback_contacts')) return { success: true };
+          if (sql.startsWith('DELETE FROM rate_limits')) return { success: true };
           if (sql.startsWith('INSERT INTO responses')) {
             assert.equal(values.at(-1), '11111111-1111-4111-8111-111111111111');
             throw new Error('UNIQUE constraint failed: responses.participant_id');
