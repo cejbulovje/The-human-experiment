@@ -40,7 +40,7 @@
     </section>
 
     <section class="public-answers-section" aria-labelledby="answers-title">
-      <div class="section-heading"><div><p class="eyebrow" data-t="voicesEyebrow">VOICES OF PARTICIPANTS</p><h2 id="answers-title" data-t="answersTitle">What do other people think?</h2><p class="section-intro" data-t="answersLead">Read written answers from participants around the world.</p></div><span id="answer-total" class="answer-total">—</span></div>
+      <div class="section-heading"><div><p class="eyebrow" data-t="voicesEyebrow">VOICES OF PARTICIPANTS</p><h2 id="answers-title" data-t="answersTitle">Collective decisions: what do people think about someone else’s life?</h2><p class="section-intro" data-t="answersLead">Responses to the main experiment. These are kept separate from personal hypothetical preferences.</p></div><span id="answer-total" class="answer-total">—</span></div>
       <div class="answer-tools">
         <label class="search-field"><span class="sr-only" data-t="searchLabel">Search answers</span><input id="answer-search" type="search" data-placeholder="search" placeholder="Search answers…"></label>
         <label><span class="sr-only" data-t="topicLabel">Topic</span><select id="topic-filter"><option value="" data-t="allTopics">All topics</option><option value="character" data-topic="character">Character & habits</option><option value="appearance" data-topic="appearance">Appearance</option><option value="freedom" data-topic="freedom">Freedom & boundaries</option><option value="life" data-topic="life">Life & wellbeing</option><option value="relationships" data-topic="relationships">Relationships</option><option value="other" data-topic="other">Other</option></select></label>
@@ -54,22 +54,19 @@
       <div id="answer-list" class="answer-list"></div>
       <button id="show-more" class="show-more-button" type="button" hidden data-t="showMore">Show more</button>
     </section>
-    <section class="ai-analysis-section" aria-labelledby="preference-results-title">
-      <div class="section-heading"><div><p class="eyebrow" data-voice="eyebrow">HYPOTHETICAL PREFERENCES</p><h2 id="preference-results-title" data-voice="title">What would people want for themselves?</h2><p class="section-intro" data-voice="intro">These hypothetical preferences are a separate research category. The current prototype is for research design only.</p></div></div>
-      <div class="ai-analysis-card">
-        <h3 data-voice="kicker">Three separate kinds of participation</h3>
-        <ol>
-          <li><strong data-voice="collective">Collective decisions:</strong> <span data-voice="collectiveText">choices made by participants in the main experiment.</span></li>
-          <li><strong data-voice="preferences">Hypothetical preferences:</strong> <span data-voice="preferencesText">what respondents say they would want if decisions were made about their own life. This prototype does not yet collect or publish these answers.</span></li>
-          <li><strong data-voice="volunteers">Future research:</strong> <span data-voice="volunteersText">Any practical stage would require separate research, clear safeguards, and explicit informed consent.</span></li>
-        </ol>
+    <section class="public-answers-section hypothetical-answers-section" aria-labelledby="preference-results-title">
+      <div class="section-heading"><div><p class="eyebrow" data-voice="eyebrow">HYPOTHETICAL PREFERENCES</p><h2 id="preference-results-title" data-voice="resultsTitle">What would people want for their own lives?</h2><p class="section-intro" data-voice="resultsIntro">A separate stream for answers about a person's own life and wishes, not decisions about someone else.</p></div><span class="answer-total" data-voice="resultsCount">Not collecting yet</span></div>
+      <div class="status-panel hypothetical-empty-state" role="status" aria-live="polite">
+        <h3 data-voice="emptyTitle">No hypothetical preference answers yet</h3>
+        <p data-voice="emptyText">This prototype does not collect or store these answers, so there are no responses to display here.</p>
+        <p data-voice="emptyNext">When a separate collection process is built and clearly explained, real answers can appear in this section.</p>
+        <a class="subtle-button" href="/preferences.html" data-voice="answer">Answer hypothetical preferences ↗</a>
+      </div>
+      <div class="ai-analysis-card hypothetical-method-card">
         <h3 data-voice="analysis">Comparative analysis</h3>
-        <p data-voice="analysisText">Once separate datasets exist, AI may compare collective choices with respondents' stated preferences and highlight recurring themes. Any analysis must show sample sizes and limitations; it should not be treated as a diagnosis or as proof of what all people want.</p>
-        <div class="open-data-actions">
-          <a class="subtle-button" href="/preferences.html" data-voice="answer">Answer hypothetical preferences ↗</a>
-          <a class="subtle-button" href="/volunteers-voice.html" data-voice="explore">About the research methodology ↗</a>
-        </div>
-        <p class="method-note" data-voice="note">Prototype note: this section is explanatory only. No hypothetical preference responses are stored or included in the live results yet.</p>
+        <p data-voice="analysisText">Comparisons with collective decisions are only possible after separate datasets exist. Any analysis should show sample sizes and limitations.</p>
+        <a class="subtle-button" href="/volunteers-voice.html" data-voice="explore">About the research methodology ↗</a>
+        <p class="method-note" data-voice="note">Prototype only: no hypothetical preference answers are currently collected, stored, or included in live results.</p>
       </div>
     </section>
     <section class="ai-analysis-section" aria-labelledby="ai-analysis-title">
