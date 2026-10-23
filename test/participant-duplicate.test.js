@@ -83,3 +83,33 @@ test('the unique participant index permits multiple NULL participant IDs', () =>
     db.close();
   }
 });
+
+test('migrations 0006 and 0011 apply in order and enforce uniqueness while allowing NULL IDs', () => {
+  const participantIdMigration = readFileSync(new URL('../db/migrations/0006_participant_id.sql', import.meta.url), 'utf8');
+  const uniqueIndexMigration = readFileSync(new URL('../db/migrations/0011_unique_participant_id.sql', import.meta.url), 'utf8');
+  const db = new DatabaseSync(':memory:');
+  try {
+    db.exec(`
+      CREATE TABLE responses (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        free_answer TEXT NOT NULL,
+        is_public INTEGER NOT NULL DEFAULT 1,
+        created_at TEXT NOT NULL
+      );
+      INSERT INTO responses (free_answer, is_public, created_at)
+      VALUES ('Existing response', 1, '2026-10-20T12:00:00.000Z');
+    `);
+    db.exec(participantIdMigration);
+    db.exec(uniqueIndexMigration);
+
+    assert.equal(db.prepare('SELECT participant_id FROM responses WHERE free_answer=?').get('Existing response').participant_id, null);
+    const insert = db.prepare('INSERT INTO responses (free_answer, is_public, created_at, participant_id) VALUES (?, 1, ?, ?)');
+    insert.run('First linked', '2026-10-21T12:00:00.000Z', '33333333-3333-4333-8333-333333333333');
+    assert.throws(() => insert.run('Duplicate linked', '2026-10-21T12:01:00.000Z', '33333333-3333-4333-8333-333333333333'), /UNIQUE constraint failed/);
+    insert.run('Unlinked one', '2026-10-21T12:02:00.000Z', null);
+    insert.run('Unlinked two', '2026-10-21T12:03:00.000Z', null);
+    assert.equal(db.prepare('SELECT COUNT(*) AS total FROM responses WHERE participant_id IS NULL').get().total, 3);
+  } finally {
+    db.close();
+  }
+});
