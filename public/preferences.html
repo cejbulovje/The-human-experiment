@@ -41,7 +41,6 @@
           <a href="/preferences.html" aria-current="page">Гипотетические предпочтения</a>
           <a href="/volunteers-voice.html">Голос добровольца / The Volunteer’s Voice</a>
           <a href="/">Основной опрос</a>
-          <a href="/preferences.html" aria-current="page">Гипотетические предпочтения</a>
         </div>
       </details>
     </nav>
@@ -57,7 +56,7 @@
       <p class="prototype-tag">Тестовая версия · данные не отправляются</p>
     </section>
 
-    <form id="preferences-form" class="preference-card">
+    <div id="preferences-form" class="preference-card">
       <div class="status-note"><strong>Важно:</strong> этот ответ сам по себе не является заявкой добровольца. Он не регистрирует вас в базе добровольцев и не связывает ваш ответ с реальным сценарием.</div>
 
       <section class="preference-question">
@@ -120,7 +119,7 @@
 
       <p class="privacy-hint">Демо-режим: при нажатии кнопки ответ останется в этом окне и никуда не отправится. Реальная публикация или обработка данных потребует отдельного согласованного механизма и ясных правил конфиденциальности.</p>
       <div class="action-row">
-        <button type="submit">Посмотреть сводку ответа</button>
+        <button type="button" id="show-summary">Посмотреть сводку ответа</button>
         <button type="button" class="secondary" id="reset-form">Очистить форму</button>
       </div>
 
@@ -131,7 +130,7 @@
         <p>Ничего не отправлено и не сохранено. В настоящей версии решение стать добровольцем должно приниматься отдельно — через самостоятельную заявку с отдельным согласием.</p>
         <div class="action-row"><button type="button" class="secondary" id="edit-response">Вернуться к ответу</button><a class="text-link" href="/results.html">Перейти к результатам ↗</a></div>
       </section>
-    </form>
+    </div>
   </main>
 
   <script>
@@ -148,9 +147,13 @@
     function selected(name) {
       return [...form.querySelectorAll('[name="' + name + '"]:checked')].map(el => el.value);
     }
-    form.addEventListener('submit', event => {
-      event.preventDefault();
-      if (!form.reportValidity()) return;
+    document.getElementById('show-summary').addEventListener('click', () => {
+      const requiredFields = [...form.querySelectorAll('[required]')];
+      const firstInvalid = requiredFields.find(field => !field.checkValidity());
+      if (firstInvalid) {
+        firstInvalid.reportValidity();
+        return;
+      }
       const lines = [];
       for (const key of ['priority','preserve','wishes','body','use']) {
         const values = selected(key).map(value => labels[key][value] || value);
@@ -163,7 +166,8 @@
       result.scrollIntoView({behavior:'smooth',block:'start'});
     });
     document.getElementById('reset-form').addEventListener('click', () => {
-      form.reset();
+      form.querySelectorAll('input').forEach(input => { input.checked = false; });
+      form.querySelector('textarea[name="comment"]').value = '';
       result.hidden = true;
     });
     document.getElementById('edit-response').addEventListener('click', () => {
