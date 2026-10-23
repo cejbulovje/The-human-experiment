@@ -26,7 +26,8 @@ CREATE TABLE IF NOT EXISTS rate_limits (
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS idx_responses_public_id ON responses(public_id);
-CREATE INDEX IF NOT EXISTS idx_responses_participant_public ON responses(participant_id, is_public, created_at);\nCREATE UNIQUE INDEX IF NOT EXISTS idx_responses_participant_id_unique ON responses(participant_id) WHERE participant_id IS NOT NULL;
+CREATE INDEX IF NOT EXISTS idx_responses_participant_public ON responses(participant_id, is_public, created_at);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_responses_participant_id_unique ON responses(participant_id) WHERE participant_id IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_responses_public_created ON responses(is_public, created_at);
 
 -- Optional email opt-ins are kept outside the public response records and API.
