@@ -111,3 +111,24 @@ test('concurrent API submissions against SQLite save only one response', async (
     db.close();
   }
 });
+
+test('unique participant migration can be applied repeatedly and creates the expected partial index', () => {
+  const db = new DatabaseSync(':memory:');
+  try {
+    const schemaWithoutUniqueIndex = schema.replace(
+      /CREATE UNIQUE INDEX IF NOT EXISTS idx_responses_participant_id_unique[\\s\\S]*?;\\s*/,
+      ''
+    );
+    db.exec(schemaWithoutUniqueIndex);
+    const migration = readFileSync(new URL('../db/migrations/0011_unique_participant_id.sql', import.meta.url), 'utf8');
+
+    db.exec(migration);
+    db.exec(migration);
+
+    const index = db.prepare("SELECT sql FROM sqlite_master WHERE type='index' AND name='idx_responses_participant_id_unique'").get();
+    assert.ok(index);
+    assert.match(index.sql, /WHERE participant_id IS NOT NULL/i);
+  } finally {
+    db.close();
+  }
+});
