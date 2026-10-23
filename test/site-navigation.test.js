@@ -168,7 +168,7 @@ test('results page separates collective answers from hypothetical preference ans
   const script = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
   assert.match(html, /id="answer-list"/, 'main collective response feed remains intact');
   assert.match(html, /aria-labelledby="preference-results-title"/, 'separate hypothetical answers section exists');
-  assert.match(html, /class="hypothetical-empty-state"/);
+  assert.match(html, /class="status-panel hypothetical-empty-state"/);
   assert.match(html, /data-voice="emptyText"/);
   assert.match(html, /data-voice="emptyNext"/);
   assert.doesNotMatch(html, /id="hypothetical-answer-list"/, 'no fake second feed is presented as live data');
