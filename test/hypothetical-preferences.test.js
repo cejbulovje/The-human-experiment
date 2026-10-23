@@ -14,8 +14,8 @@ test('hypothetical preferences migration is idempotent and isolated from survey 
     db.exec(migration);
     const table = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='hypothetical_preferences'").get();
     assert.equal(table.name, 'hypothetical_preferences');
-    db.prepare('INSERT INTO hypothetical_preferences (language,answers_json,aggregate_consent,created_at) VALUES (?,?,?,?)')
-      .run('ru', JSON.stringify({priority:'autonomy',preserve:'identity',wishes:'respect',body:'no_change'}), 1, '2026-10-23T00:00:00.000Z');
+    db.prepare('INSERT INTO hypothetical_preferences (language,answers_json,aggregate_consent,delete_token_hash,created_at) VALUES (?,?,?,?,?)')
+      .run('ru', JSON.stringify({priority:'autonomy',preserve:'identity',wishes:'respect',body:'no_change'}), 1, 'hash-example', '2026-10-23T00:00:00.000Z');
     assert.equal(db.prepare('SELECT COUNT(*) AS n FROM hypothetical_preferences').get().n, 1);
   } finally { db.close(); }
   assert.match(schema, /CREATE TABLE IF NOT EXISTS hypothetical_preferences/);
