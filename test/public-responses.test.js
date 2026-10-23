@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import worker from '../src/index.js';
 
-function makeEnv() {
+function makeEnv({ seed = true } = {}) {
   const db = new DatabaseSync(':memory:');
   db.exec(`
     CREATE TABLE responses (
@@ -37,6 +37,7 @@ function makeEnv() {
       ('private-1', 'abcdefab-cdef-4abc-8def-abcdefabcdef', 'private hidden freedom', 'en', 'freedom', '2026-10-04T10:00:00.000Z', 1, 1, 1, 0),
       (NULL, NULL, 'Legacy public response', 'en', 'life', '2026-10-05T10:00:00.000Z', 1, 1, 1, 1);
   `);
+  if (!seed) db.exec('DELETE FROM responses');
   const DB = {
     prepare(sql) {
       let values = [];
@@ -187,11 +188,9 @@ test('nonexistent direct-link ID returns an empty result', async () => {
 
 
 test('empty public response catalog returns a successful empty payload', async () => {
-  const { env, close } = makeEnv();
+  const { env, close } = makeEnv({ seed: false });
   try {
-    // The helper's database is intentionally seeded; filter to an impossible ID
-    // to exercise the same successful empty-payload contract without changing the schema.
-    const result = await get('/api/public-responses?id=empty-catalog-check&limit=12', env);
+    const result = await get('/api/public-responses?limit=12', env);
     assert.equal(result.total, 0);
     assert.deepEqual(result.items, []);
     assert.equal(result.hasMore, false);
