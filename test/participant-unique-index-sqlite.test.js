@@ -19,7 +19,7 @@ test('prototype schema enforces unique non-null participant IDs and allows multi
     insert.run('First linked response', '2026-10-24T12:00:00.000Z', participantId);
     assert.throws(
       () => insert.run('Duplicate linked response', '2026-10-24T12:01:00.000Z', participantId),
-      /UNIQUE constraint failed: responses\\.participant_id/
+      error => String(error.message).includes('UNIQUE constraint failed: responses.participant_id')
     );
 
     insert.run('Anonymous response one', '2026-10-24T12:02:00.000Z', null);
