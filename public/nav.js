@@ -17,6 +17,8 @@
   };
   const applyLabels = () => {
     const t = translations[language()];
+    const menu = document.querySelector('.site-menu[aria-label]');
+    if (menu) menu.setAttribute('aria-label', t.menu);
     document.querySelectorAll('[data-menu]').forEach(el => {
       if (t[el.dataset.menu]) el.textContent = t[el.dataset.menu];
     });
