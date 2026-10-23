@@ -27,7 +27,10 @@ test('homepage prioritizes the survey, then results, and keeps hypothetical pref
   assert.ok(prompt >= 0 && prompt < primary && primary < results && results < survey && survey < preferences);
   assert.match(html, /What if the decision were about you\?/);
   assert.match(html, /This is not a volunteer application/);
+  assert.doesNotMatch(html, /class="goal-cta"/);
   assert.doesNotMatch(html, /goal-cta-copy/);
+  assert.match(html, /class="results-teaser"[\\s\\S]*?<\\/section>[\\s\\S]*?<form id="survey-form"/);
+  assert.match(html, /<form id="survey-form"[\\s\\S]*?<\\/form>[\\s\\S]*?class="preferences-cta"/);
 });
 
 test('shared navigation has labels for all supported locales and implements sharing', () => {
