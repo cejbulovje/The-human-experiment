@@ -44,6 +44,13 @@ const translations = {
     "signature-label": "Name or pseudonym",
     "signature-placeholder": "Enter a name or pseudonym",
     "signature-note": "This is a public display name, not a verified identity. Do not use another person’s name without their permission.",
+    "feedback-title": "Get the experiment results",
+    "feedback-help": "Optional: leave your email to receive the final results and a thank-you message when the experiment ends. Your email will never appear publicly.",
+    "feedback-opt-in-label": "I’d like to receive the final results and a thank-you email.",
+    "feedback-email-label": "Email address",
+    "feedback-email-placeholder": "you@example.com",
+    "feedback-email-note": "Stored separately from your public answer. It will be used only for the final results and thank-you message.",
+    "already-submitted": "This browser has already submitted an answer for this experiment. Answers cannot be changed or submitted again from the same participant ID.",
     "author-title": "Before you submit",
     "author-help": "Your answer should express your own view.",
     "author-confirm": "I confirm that this answer expresses my own opinion and understand that it will be published publicly. I may discuss other people or imagine what they might want, but I will not present guesses about their wishes as their confirmed views.",
@@ -134,6 +141,13 @@ const translations = {
     "signature-label": "Имя или псевдоним",
     "signature-placeholder": "Введи имя или псевдоним",
     "signature-note": "Указывай своё имя или выбранный тобой псевдоним. Не выдавай себя за другого человека и не используй чужое имя, чтобы создать ложное впечатление об авторе ответа.",
+    "feedback-title": "Получить результаты эксперимента",
+    "feedback-help": "По желанию оставь email, чтобы получить итоговые результаты и письмо с благодарностью после завершения эксперимента. Адрес не появится в публичных результатах.",
+    "feedback-opt-in-label": "Хочу получить итоговые результаты и письмо с благодарностью.",
+    "feedback-email-label": "Адрес электронной почты",
+    "feedback-email-placeholder": "you@example.com",
+    "feedback-email-note": "Адрес хранится отдельно от публичного ответа и используется только для отправки итогов и благодарности.",
+    "already-submitted": "С этого идентификатора участника ответ уже отправлен. Ответы нельзя изменить или отправить повторно.",
     "author-title": "Перед отправкой",
     "author-help": "Ответ должен выражать твою собственную позицию.",
     "author-confirm": "Подтверждаю, что ответ выражает моё собственное мнение и что я понимаю: он будет опубликован публично. Я могу рассуждать о других людях и представлять, чего они могли бы хотеть, но не буду выдавать предположения об их желаниях за подтверждённое мнение этих людей.",
@@ -837,6 +851,9 @@ const languageSelect = document.querySelector('#language');
 const answer = document.querySelector('#free-answer');
 const signatureField = document.querySelector('#signature-field');
 const signatureInput = document.querySelector('#signature-name');
+const feedbackOptIn = document.querySelector('#feedback-opt-in');
+const feedbackEmailField = document.querySelector('#feedback-email-field');
+const feedbackEmailInput = document.querySelector('#feedback-email');
 const authorConfirmed = document.querySelector('#author-confirmed');
 const charCount = document.querySelector('#char-count');
 const status = document.querySelector('#form-status');
@@ -889,7 +906,7 @@ ar: `<p class="lead">تخيّل أن هناك شخصًا في مكان ما عل
 };
 
 function renderLanguage(lang) {
-  const t = translations[lang] || translations.en;
+  const t = { ...translations.en, ...(translations[lang] || {}) };
   activeLanguage = translations[lang] ? lang : 'en';
   document.documentElement.lang = activeLanguage;
   document.documentElement.dir = activeLanguage === 'ar' ? 'rtl' : 'ltr';
@@ -959,6 +976,13 @@ function syncSignatureField() {
 }
 form.querySelectorAll('input[name="signatureMode"]').forEach(input => input.addEventListener('change', syncSignatureField));
 syncSignatureField();
+function syncFeedbackEmailField() {
+  const enabled = Boolean(feedbackOptIn?.checked);
+  if (feedbackEmailField) feedbackEmailField.hidden = !enabled;
+  if (feedbackEmailInput) feedbackEmailInput.required = enabled;
+}
+feedbackOptIn?.addEventListener('change', syncFeedbackEmailField);
+syncFeedbackEmailField();
 answer.addEventListener('input',()=>{charCount.textContent=`${answer.value.length} / 5000`;});
 let savedLanguage='en';
 try { const saved=localStorage.getItem('human-experiment-language'); if (saved && translations[saved]) savedLanguage=saved; } catch {}
@@ -974,14 +998,14 @@ form.addEventListener('submit',async event=>{
   const signature=signatureMode==='signed'?signatureInput.value.trim():'';
   if(!authorConfirmed.checked){status.textContent=t['author-required'];status.className='form-status error';return;}
   if(signatureMode==='signed'&&!signature){status.textContent=t['signature-required'];status.className='form-status error';signatureInput.focus();return;}
-  const payload={language:lang,participantId:getParticipantId(),freeAnswer:answer.value.trim(),q2:selected('q2'),q3:selected('q3'),q4:selected('q4'),q2Other:form.querySelector('[name="q2Other"]')?.value.trim()||'',q3Other:form.querySelector('[name="q3Other"]')?.value.trim()||'',q4Other:form.querySelector('[name="q4Other"]')?.value.trim()||'',gender:selected('gender'),signature,authorConfirmed:authorConfirmed.checked,turnstileToken};
+  const payload={language:lang,participantId:getParticipantId(),freeAnswer:answer.value.trim(),q2:selected('q2'),q3:selected('q3'),q4:selected('q4'),q2Other:form.querySelector('[name="q2Other"]')?.value.trim()||'',q3Other:form.querySelector('[name="q3Other"]')?.value.trim()||'',q4Other:form.querySelector('[name="q4Other"]')?.value.trim()||'',gender:selected('gender'),signature,feedbackEmail:feedbackOptIn?.checked?feedbackEmailInput.value.trim():'',authorConfirmed:authorConfirmed.checked,turnstileToken};
   submitButton.disabled=true; submitButton.textContent=t.sending;
   try{
     const response=await fetch('/api/submit',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
     let result; try { result=await response.json(); } catch { throw new Error('server'); }
-    if(!response.ok||!result.ok) throw new Error(result.error||'submit_failed');
+    if(!response.ok||!result.ok) { if(result.error==='already_submitted'){status.textContent=t['already-submitted'];status.className='form-status error';throw new Error('already_submitted');} throw new Error(result.error||'submit_failed'); }
     status.textContent=t.success;status.className='form-status success';if(postSubmitShare)postSubmitShare.hidden=false;const supportPanel=document.querySelector('#post-submit-support');if(supportPanel)supportPanel.hidden=false;form.reset();syncSignatureField();for(const name of ['q2','q3','q4']){const root=document.getElementById(name+'-options');const wrap=root.querySelector('.other-answer-wrap');const input=root.querySelector('.other-answer-input');wrap.hidden=true;input.required=false;}turnstileToken='';
     if(window.turnstile) window.turnstile.reset(); charCount.textContent='0 / 5000';
-  }catch(error){status.textContent=error instanceof TypeError?t.network:t.failure;status.className='form-status error';turnstileToken='';if(window.turnstile)window.turnstile.reset();}
+  }catch(error){if(error.message==='already_submitted'){turnstileToken='';if(window.turnstile)window.turnstile.reset();return;}status.textContent=error instanceof TypeError?t.network:t.failure;status.className='form-status error';turnstileToken='';if(window.turnstile)window.turnstile.reset();}
   finally{submitButton.disabled=turnstileWidget.dataset.sitekey.includes('REPLACE_WITH');submitButton.textContent=t.submit;}
 });
