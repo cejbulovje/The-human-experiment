@@ -97,53 +97,6 @@ test('hypothetical preferences migration is idempotent, validates fields, and st
 });
 
 
-function createPreferencesDb() {
-  const records = new Map();
-  let nextId = 1;
-  const rateCounts = new Map();
-  const db = {
-    records,
-    prepare(sql) {
-      let params = [];
-      const statement = {
-        bind(...values) { params = values; return statement; },
-        async first() {
-          if (sql.includes('INSERT INTO rate_limits')) {
-            const key = params[0];
-            const count = (rateCounts.get(key) || 0) + 1;
-            rateCounts.set(key, count);
-            return {count};
-          }
-          if (sql.includes('DELETE FROM hypothetical_preferences WHERE delete_token_hash = ?')) {
-            const hash = params[0];
-            const existing = [...records.entries()].find(([, row]) => row.delete_token_hash === hash);
-            return existing ? {id: existing[0]} : null;
-          }
-          return null;
-        },
-        async run() {
-          if (sql.includes('INSERT INTO hypothetical_preferences')) {
-            const [language, answers_json, aggregate_consent, delete_token_hash, created_at] = params;
-            if ([...records.values()].some(row => row.delete_token_hash === delete_token_hash)) throw new Error('unique');
-            const id = nextId++;
-            records.set(id, {id, language, answers_json, aggregate_consent, delete_token_hash, created_at});
-            return {success:true,meta:{changes:1}};
-          }
-          if (sql.includes('DELETE FROM hypothetical_preferences WHERE delete_token_hash = ?')) {
-            const hash = params[0];
-            for (const [id, row] of records.entries()) if (row.delete_token_hash === hash) records.delete(id);
-            return {success:true,meta:{changes:1}};
-          }
-          return {success:true,meta:{changes:0}};
-        }
-      };
-      return statement;
-    }
-  };
-  return db;
-}
-
-
 test('valid preference submission stores only a deletion-token hash and returns one-time token', async t => {
   const db = createPreferencesDb();
   t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({success:true}), {status:200,headers:{'content-type':'application/json'}}));
