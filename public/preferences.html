@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="/styles.css">
   <script src="/nav.js" defer></script>
   <style>
+    .skip-link{position:absolute;top:8px;left:8px;z-index:1000;transform:translateY(-160%);padding:10px 14px;background:#fff;color:#20221f;border:2px solid #254c3b;border-radius:8px;font-weight:700}
+    .skip-link:focus{transform:translateY(0);outline:3px solid #92b9a1;outline-offset:2px}
     .prototype-tag{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border:1px solid #c9cbc2;border-radius:999px;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
     .preference-card{max-width:850px;margin:28px auto;padding:clamp(20px,4vw,40px);background:#fff;border:1px solid var(--line,#deded6);border-radius:22px}
     .preference-question{padding:22px 0;border-bottom:1px solid #e7e6df}
@@ -30,6 +32,7 @@
   </style>
 </head>
 <body>
+  <a class="skip-link" href="#main-content">Перейти к содержимому</a>
   <header class="topbar topbar-centered">
     <nav class="site-menu" aria-label="Меню сайта">
       <details class="site-menu-details">
@@ -48,7 +51,7 @@
     <div class="header-controls"><a class="text-link" href="/results.html">Результаты ↗</a></div>
   </header>
 
-  <main class="shell">
+  <main id="main-content" class="shell">
     <section class="intro">
       <p class="eyebrow">ГОЛОС ЧЕЛОВЕКА</p>
       <h1>Если бы решение принимали о вашей жизни — чего хотели бы вы?</h1>
