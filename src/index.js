@@ -301,6 +301,8 @@ async function deleteResponse(request,env){
   const token=parsed.body?.deletionToken;
   if(typeof token!=='string'||token.length<60||token.length>100)return json({ok:false,error:'invalid_token'},400);
   try{
+    await env.DB.prepare("CREATE TABLE IF NOT EXISTS ai_analysis_lock (id INTEGER PRIMARY KEY CHECK (id = 1), token TEXT NOT NULL, expires_at TEXT NOT NULL)").run();
+    await env.DB.prepare("CREATE TABLE IF NOT EXISTS ai_analysis_memory (id INTEGER PRIMARY KEY CHECK (id = 1), last_response_id INTEGER NOT NULL DEFAULT 0, summary TEXT NOT NULL DEFAULT '', response_count INTEGER NOT NULL DEFAULT 0, updated_at TEXT NOT NULL)").run();
     if(!await rateLimit(request,env,'response-delete',5))return json({ok:false,error:'rate_limited'},429);
     const now=new Date().toISOString();
     const lockToken=crypto.randomUUID();
