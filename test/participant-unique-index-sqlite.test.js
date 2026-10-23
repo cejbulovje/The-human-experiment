@@ -116,7 +116,7 @@ test('unique participant migration can be applied repeatedly and creates the exp
   const db = new DatabaseSync(':memory:');
   try {
     const schemaWithoutUniqueIndex = schema.replace(
-      /CREATE UNIQUE INDEX IF NOT EXISTS idx_responses_participant_id_unique[\\s\\S]*?;\\s*/,
+      'CREATE UNIQUE INDEX IF NOT EXISTS idx_responses_participant_id_unique\n  ON responses(participant_id)\n  WHERE participant_id IS NOT NULL;',
       ''
     );
     db.exec(schemaWithoutUniqueIndex);
