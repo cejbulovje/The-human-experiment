@@ -289,7 +289,8 @@ export default {
   async fetch(request,env){
     const url=new URL(request.url);
     if(url.pathname==='/api/submit'&&request.method==='POST')return submit(request,env);
-    if(url.pathname==='/api/preferences'&&request.method==='POST')return submitPreferences(request,env);\n    if(url.pathname==='/api/preferences/delete'&&request.method==='POST')return deletePreferences(request,env);
+    if(url.pathname==='/api/preferences'&&request.method==='POST')return submitPreferences(request,env);
+    if(url.pathname==='/api/preferences/delete'&&request.method==='POST')return deletePreferences(request,env);
 async function aiAnalysis(request,env){
   if(!env.DB||!env.AI||!env.RATE_LIMIT_SALT)return json({error:'ai_unavailable'},503);
   const parsed=await readJsonLimited(request,2048);
