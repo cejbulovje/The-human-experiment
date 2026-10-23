@@ -50,5 +50,5 @@ test('hypothetical preferences prototype cannot submit a native form or send ans
   assert.match(html, /\.skip-link:focus\{[^}]*transform:translateY\(0\)/);
   assert.match(html, /form\.querySelector\('textarea\[name="comment"\]'\)\.value\.trim\(\)/);
   assert.doesNotMatch(html, /form\.elements\./);
-  assert.equal((html.match(/href="\/preferences\.html" aria-current="page"/g) || []).length, 1);
+  assert.equal((html.match(/href="\/preferences\.html"[^>]*aria-current="page"/g) || []).length, 1);
 });
