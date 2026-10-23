@@ -27,6 +27,27 @@ test('response deletion migration adds a nullable hashed-token column and unique
   }
 });
 
+test('deleting a response cascades to reactions and topic suggestions while its email is removed separately', () => {
+  const db = new DatabaseSync(':memory:');
+  try {
+    db.exec('PRAGMA foreign_keys = ON;');
+    db.exec(schema);
+    db.prepare(`INSERT INTO responses (id, language, free_answer, q2, q3, q4, created_at, public_id, is_public, delete_token_hash)
+      VALUES (1, 'en', 'test answer', 0, 0, 0, '2026-01-01T00:00:00.000Z', 'public-test-id', 1, ?)`).run('a'.repeat(64));
+    db.prepare('INSERT INTO feedback_contacts (public_id,email,created_at) VALUES (?,?,?)').run('public-test-id','test@example.com','2026-01-01T00:00:00.000Z');
+    db.prepare("INSERT INTO response_reactions (response_id,reaction,voter_hash,created_at) VALUES (1,'interesting','voter-hash','2026-01-01T00:00:00.000Z')").run();
+    db.prepare("INSERT INTO topic_suggestions (response_id,suggested_topic,voter_hash,created_at) VALUES (1,'other','voter-hash','2026-01-01T00:00:00.000Z')").run();
+    db.prepare('DELETE FROM feedback_contacts WHERE public_id=?').run('public-test-id');
+    db.prepare('DELETE FROM responses WHERE id=? AND delete_token_hash=?').run(1,'a'.repeat(64));
+    assert.equal(db.prepare('SELECT COUNT(*) AS n FROM responses').get().n, 0);
+    assert.equal(db.prepare('SELECT COUNT(*) AS n FROM feedback_contacts').get().n, 0);
+    assert.equal(db.prepare('SELECT COUNT(*) AS n FROM response_reactions').get().n, 0);
+    assert.equal(db.prepare('SELECT COUNT(*) AS n FROM topic_suggestions').get().n, 0);
+  } finally {
+    db.close();
+  }
+});
+
 test('submission stores only the hash and returns the one-time deletion token', () => {
   const submitStart = worker.indexOf('async function submit(');
   const submitEnd = worker.indexOf('\nfunction classifyTopic', submitStart);
