@@ -156,12 +156,24 @@
         return;
       }
       const lines = [];
-      for (const key of ['priority','preserve','wishes','body']) {
-        const values = selected(key).map(value => labels[key][value] || value);
-        lines.push('<strong>' + ({priority:'Приоритет',preserve:'Что сохранить',wishes:'Учет желаний',body:'Изменения тела'}[key]) + ':</strong> ' + values.join(', '));
+      const locale = window.preferenceLocale || {};
+      const keys = ['priority','preserve','wishes','body'];
+      const indexes = {priority:{autonomy:0,wellbeing:1,trust:2,context:3},preserve:{autonomy:0,body:1,identity:2,safety:3,voice:4},wishes:{ask:0,limits:1,decide:2,consent:3},body:{consent:0,discuss:1,unimportant:2,context:3}};
+      for (const [labelIndex, key] of keys.entries()) {
+        const values = selected(key).map(value => {
+          const translated = locale[key];
+          const index = indexes[key][value];
+          if (translated && index !== undefined) return key === 'priority' ? translated[index].split('|')[0] : translated[index];
+          return labels[key][value] || value;
+        });
+        const heading = (locale.summaryLabels || ['Приоритет','Что сохранить','Учет желаний','Изменения тела'])[labelIndex];
+        lines.push('<strong>' + heading + ':</strong> ' + values.join(', '));
       }
       const comment = form.querySelector('textarea[name="comment"]').value.trim();
-      if (comment) lines.push('<strong>Пояснение:</strong> ' + comment.replace(/[&<>"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[char])));
+      if (comment) {
+        const heading = (locale.summaryLabels || [])[4] || 'Пояснение';
+        lines.push('<strong>' + heading + ':</strong> ' + comment.replace(/[&<>"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[char])));
+      }
       summary.innerHTML = lines.join('<br><br>');
       result.hidden = false;
       result.scrollIntoView({behavior:'smooth',block:'start'});
