@@ -92,6 +92,7 @@ const translations = {
     "captchaMissing": "Please complete the anti-bot check.",
     "sending": "Submitting…",
     "success": "Thank you. Your response has been recorded.",
+    "emailSaveFailed": "Your answer was saved, but we could not save your email for the final results. You can still take part; the email opt-in was not recorded.",
     "failure": "We could not submit your response. Please try again in a moment.",
     "network": "A network error occurred. Please try again.",
     "intro3": "And you can influence this choice, too. What would you change about this person? Their appearance, character, habits, way of life-or nothing at all? Would you try to shape them according to your own ideal? Help them become who they want to be? Or suggest something no one has thought of before?",
@@ -189,6 +190,7 @@ const translations = {
     "captchaMissing": "Пройди проверку на ботов.",
     "sending": "Отправка…",
     "success": "Спасибо. Твой ответ сохранён.",
+    "emailSaveFailed": "Твой ответ сохранён, но email для получения итогов сохранить не удалось. Ответ учтён; подписка на письмо не оформлена.",
     "failure": "Не удалось отправить ответ. Попробуй ещё раз.",
     "network": "Ошибка соединения. Попробуй ещё раз.",
     "intro3": "И ты тоже можешь повлиять на этот выбор. Что бы ты изменил в этом человеке? Его внешность, характер, привычки, образ жизни - или вообще ничего? Попытался бы воплотить в нём собственные представления об идеале? Помог бы ему стать тем, кем он сам хочет быть? Или предложил бы нечто, о чём никто прежде не задумывался?",
@@ -1004,7 +1006,7 @@ form.addEventListener('submit',async event=>{
     const response=await fetch('/api/submit',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
     let result; try { result=await response.json(); } catch { throw new Error('server'); }
     if(!response.ok||!result.ok) { if(result.error==='already_submitted'){status.textContent=t['already-submitted'];status.className='form-status error';throw new Error('already_submitted');} throw new Error(result.error||'submit_failed'); }
-    status.textContent=t.success;status.className='form-status success';if(postSubmitShare)postSubmitShare.hidden=false;const supportPanel=document.querySelector('#post-submit-support');if(supportPanel)supportPanel.hidden=false;form.reset();syncSignatureField();syncFeedbackEmailField();for(const name of ['q2','q3','q4']){const root=document.getElementById(name+'-options');const wrap=root.querySelector('.other-answer-wrap');const input=root.querySelector('.other-answer-input');wrap.hidden=true;input.required=false;}turnstileToken='';
+    status.textContent=result.feedbackEmailSaved===false?(t.emailSaveFailed||(lang==='ru'?"Ответ сохранён, но email для итогов сохранить не удалось.":"Your answer was saved, but your email could not be saved.")):t.success;status.className='form-status success';if(postSubmitShare)postSubmitShare.hidden=false;const supportPanel=document.querySelector('#post-submit-support');if(supportPanel)supportPanel.hidden=false;form.reset();syncSignatureField();syncFeedbackEmailField();for(const name of ['q2','q3','q4']){const root=document.getElementById(name+'-options');const wrap=root.querySelector('.other-answer-wrap');const input=root.querySelector('.other-answer-input');wrap.hidden=true;input.required=false;}turnstileToken='';
     if(window.turnstile) window.turnstile.reset(); charCount.textContent='0 / 5000';
   }catch(error){if(error.message==='already_submitted'){turnstileToken='';if(window.turnstile)window.turnstile.reset();return;}status.textContent=error instanceof TypeError?t.network:t.failure;status.className='form-status error';turnstileToken='';if(window.turnstile)window.turnstile.reset();}
   finally{submitButton.disabled=turnstileWidget.dataset.sitekey.includes('REPLACE_WITH');submitButton.textContent=t.submit;}
