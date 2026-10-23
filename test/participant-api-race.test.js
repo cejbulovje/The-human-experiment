@@ -28,7 +28,7 @@ test('submit maps a unique participant-ID race to HTTP 409', async () => {
   };
   const originalFetch = globalThis.fetch;
   globalThis.fetch = async (url) => {
-    assert.match(String(url), /challenges\\.cloudflare\\.com\\/turnstile\\/v0\\/siteverify/);
+    assert.match(String(url), /challenges\.cloudflare\.com\/turnstile\/v0\/siteverify/);
     return new Response(JSON.stringify({ success: true }), {
       status: 200,
       headers: { 'content-type': 'application/json' }
