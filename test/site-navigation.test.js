@@ -27,9 +27,9 @@ test('shared navigation has labels for all supported locales and implements shar
 test('hypothetical preferences prototype cannot submit a native form or send answers', () => {
   const html = readFileSync(new URL('../public/preferences.html', import.meta.url), 'utf8');
   assert.match(html, /<div id="preferences-form" class="preference-card">/);
-  assert.doesNotMatch(html, /<form\\b/i);
+  assert.doesNotMatch(html, /<form\b/i);
   assert.doesNotMatch(html, /type="submit"/i);
-  assert.doesNotMatch(html, /\\bfetch\\s*\\(|XMLHttpRequest|sendBeacon|localStorage|sessionStorage/i);
+  assert.doesNotMatch(html, /\bfetch\s*\(|XMLHttpRequest|sendBeacon|localStorage|sessionStorage/i);
   assert.match(html, /Ничего не отправлено и не сохранено/);
-  assert.equal((html.match(/href="\\/preferences\\.html" aria-current="page"/g) || []).length, 1);
+  assert.equal((html.match(/href="\/preferences\.html" aria-current="page"/g) || []).length, 1);
 });
