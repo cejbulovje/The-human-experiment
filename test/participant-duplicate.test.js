@@ -4,7 +4,7 @@ import { DatabaseSync } from 'node:sqlite';
 import { readFileSync } from 'node:fs';
 
 const schema = readFileSync(new URL('../db/schema.sql', import.meta.url), 'utf8');
-const uniqueIndexMigration = readFileSync(new URL('../db/migrations/0007_unique_participant_id.sql', import.meta.url), 'utf8');
+const uniqueIndexMigration = readFileSync(new URL('../db/migrations/0011_unique_participant_id.sql', import.meta.url), 'utf8');
 const insert = `INSERT INTO responses
   (language, free_answer, q2, q3, q4, q2_other, q3_other, q4_other, gender,
    created_at, public_id, is_public, topic, signature, participant_id)
