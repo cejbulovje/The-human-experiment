@@ -11,7 +11,7 @@ test('all public pages load the centered header and compact navigation', () => {
     assert.match(html, /class="topbar topbar-centered"/, pageName + ' missing centered header');
     assert.match(html, /class="brand-lockup header-brand-centered"/, pageName + ' missing centered brand');
     assert.match(html, /<script src="\/nav\.js" defer><\/script>/, pageName + ' missing navigation script');
-    for (const key of ['goal', 'privacy', 'results', 'preferences', 'volunteer', 'share', 'survey', 'contact', 'support']) {
+    for (const key of ['goal', 'privacy', 'results', 'preferences', 'research', 'share', 'survey', 'contact', 'support']) {
       assert.match(html, new RegExp('data-menu="' + key + '"'), pageName + ' missing menu item ' + key);
     }
   }
