@@ -414,6 +414,8 @@ async function aiAnalysis(request,env){
     headers.set('referrer-policy','strict-origin-when-cross-origin');
     headers.set('permissions-policy','camera=(), microphone=(), geolocation=()');
     headers.set('content-security-policy', "frame-ancestors 'none'");
+    // Start CSP in report-only mode: inventory violations before enforcing a stricter policy.
+    headers.set('content-security-policy-report-only', "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; script-src 'self' https://challenges.cloudflare.com 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; font-src 'self' data:");
     return new Response(assetResponse.body,{status:assetResponse.status,statusText:assetResponse.statusText,headers});
   }
 };
