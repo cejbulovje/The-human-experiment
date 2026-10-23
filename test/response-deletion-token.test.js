@@ -53,6 +53,7 @@ test('deletion requires the secret token, serializes against AI analysis, remove
 
 test('survey UI persists the deletion token locally and offers an explicit confirmation before deletion', () => {
   assert.match(app, /human-experiment-response-deletion-token/);
+  assert.match(app, /localStorage\.getItem\('human-experiment-response-deletion-token'\)\|\|responseDeletionToken\|\|''/);
   assert.match(app, /window\.confirm\(responseDeleteText\('confirm'\)\)/);
   assert.match(app, /fetch\('\/api\/response\/delete'/);
   assert.match(html, /id="delete-response-button"/);
