@@ -65,6 +65,18 @@ test('results date-filter accessibility labels follow the selected locale', () =
   assert.match(results, /\$\('#date-to'\)\?\.setAttribute\('aria-label',words\.toLabel\)/);
 });
 
+test('Arabic hypothetical-preferences labels do not say default preferences', () => {
+  const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
+  const results = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
+  const preferences = readFileSync(new URL('../public/preferences-i18n.js', import.meta.url), 'utf8');
+  for (const [name, source] of [['homepage', app], ['results', results], ['preferences page', preferences]]) {
+    assert.doesNotMatch(source, /التفضيلات الافتراضية/, name + ' contains outdated Arabic wording');
+  }
+  assert.match(app, /استكشف التفضيلات المفترضة/);
+  assert.match(preferences, /title:'التفضيلات المفترضة - THE HUMAN EXPERIMENT'/);
+  assert.match(preferences, /voiceCard:'التفضيلات المفترضة'/);
+});
+
 test('every homepage translation key and placeholder exists in all nine locales', () => {
   const html = readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
   const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
