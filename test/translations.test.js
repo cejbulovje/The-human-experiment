@@ -114,7 +114,7 @@ test('goal and privacy page text keys exist in every locale', () => {
 
 test('hypothetical-preferences page defines all translation fields for every locale', () => {
   const source = readFileSync(new URL('../public/preferences-i18n.js', import.meta.url), 'utf8');
-  const starts = [...source.matchAll(/^\\s{4}(ru|en|es|pt|zh|de|ja|fr|ar): \\{/gm)];
+  const starts = [...source.matchAll(/^\s{4}(ru|en|es|pt|zh|de|ja|fr|ar): \{/gm)];
   assert.equal(starts.length, locales.length, 'preferences page must define all nine locales');
   const requiredKeys = [
     'name', 'dir', 'title', 'skip', 'resultLink', 'eyebrow', 'heading', 'lead', 'tag',
@@ -129,10 +129,10 @@ test('hypothetical-preferences page defines all translation fields for every loc
     const locale = starts[i][1];
     const block = source.slice(starts[i].index, starts[i + 1]?.index ?? source.length);
     for (const key of requiredKeys) {
-      assert.match(block, new RegExp('\\\\b' + key + ':'), 'preferences page missing ' + key + ' for ' + locale);
+      assert.match(block, new RegExp('\\b' + key + ':'), 'preferences page missing ' + key + ' for ' + locale);
     }
   }
-  const arabic = source.match(/^\\s{4}ar: \\{([^\\n]*)/m)?.[1] || '';
+  const arabic = source.match(/^\s{4}ar: \{([^\n]*)/m)?.[1] || '';
   assert.match(arabic, /dir:'rtl'/, 'Arabic preferences page must use right-to-left direction');
 });
 
