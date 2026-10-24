@@ -84,8 +84,8 @@
     });
   });
   const shareLabels = {
-    en: { title: "Share via", copy: "Copy link", email: "Email", close: "Close", copied: "Link copied" },
-    ru: { title: "Поделиться через", copy: "Скопировать ссылку", email: "Электронная почта", close: "Закрыть", copied: "Ссылка скопирована" },
+    en: { title: "Share via", copy: "Copy link", email: "Email", close: "Close", copied: "Link copied", instagram: "Instagram (copy link)" },
+    ru: { title: "Поделиться через", copy: "Скопировать ссылку", email: "Электронная почта", close: "Закрыть", copied: "Ссылка скопирована", instagram: "Instagram (скопировать ссылку)" },
     es: { title: "Compartir mediante", copy: "Copiar enlace", email: "Correo electrónico", close: "Cerrar", copied: "Enlace copiado" },
     pt: { title: "Partilhar através de", copy: "Copiar ligação", email: "E-mail", close: "Fechar", copied: "Ligação copiada" },
     zh: { title: "分享方式", copy: "复制链接", email: "电子邮件", close: "关闭", copied: "链接已复制" },
@@ -107,6 +107,11 @@
         <a data-share-service="telegram" target="_blank" rel="noopener noreferrer">Telegram</a>
         <a data-share-service="facebook" target="_blank" rel="noopener noreferrer">Facebook</a>
         <a data-share-service="x" target="_blank" rel="noopener noreferrer">X</a>
+        <a data-share-service="viber"></a>
+        <a data-share-service="reddit" target="_blank" rel="noopener noreferrer">Reddit</a>
+        <a data-share-service="linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a data-share-service="pinterest" target="_blank" rel="noopener noreferrer">Pinterest</a>
+        <button type="button" data-share-service="instagram"></button>
         <a data-share-service="email"></a>
         <button type="button" data-share-service="copy"></button>
       </div>
@@ -114,6 +119,24 @@
     document.body.append(shareDialog);
     shareDialog.querySelector('.share-dialog-close').addEventListener('click', () => shareDialog.close());
     shareDialog.addEventListener('click', event => { if (event.target === shareDialog) shareDialog.close(); });
+    shareDialog.querySelector('[data-share-service="instagram"]').addEventListener('click', async () => {
+      const url = location.origin + '/';
+      try {
+        if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(url);
+        else {
+          const helper = document.createElement('textarea');
+          helper.value = url; helper.setAttribute('readonly', '');
+          helper.style.position = 'fixed'; helper.style.opacity = '0';
+          document.body.append(helper); helper.select();
+          const copied = document.execCommand('copy'); helper.remove();
+          if (!copied) throw new Error('copy_failed');
+        }
+        const labels = shareLabels[language()] || shareLabels.en;
+        shareDialog.querySelector('.share-dialog-status').textContent = labels.copied + ' — open Instagram and paste it into your post or message.';
+      } catch {
+        shareDialog.querySelector('.share-dialog-status').textContent = translations[language()].failed;
+      }
+    });
     shareDialog.querySelector('[data-share-service="copy"]').addEventListener('click', async () => {
       const url = location.origin + '/';
       try {
@@ -142,11 +165,17 @@
     dialog.querySelector('#share-dialog-title').textContent = labels.title;
     dialog.querySelector('.share-dialog-close').setAttribute('aria-label', labels.close);
     dialog.querySelector('[data-share-service="email"]').textContent = labels.email;
+    dialog.querySelector('[data-share-service="viber"]').textContent = 'Viber';
+    dialog.querySelector('[data-share-service="instagram"]').textContent = labels.instagram || shareLabels.en.instagram;
     dialog.querySelector('[data-share-service="copy"]').textContent = labels.copy;
     dialog.querySelector('[data-share-service="whatsapp"]').href = 'https://wa.me/?text=' + encodeURIComponent(message);
     dialog.querySelector('[data-share-service="telegram"]').href = 'https://t.me/share/url?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(t.share);
     dialog.querySelector('[data-share-service="facebook"]').href = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url);
     dialog.querySelector('[data-share-service="x"]').href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(t.share) + '&url=' + encodeURIComponent(url);
+    dialog.querySelector('[data-share-service="viber"]').href = 'viber://forward?text=' + encodeURIComponent(message);
+    dialog.querySelector('[data-share-service="reddit"]').href = 'https://www.reddit.com/submit?url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(t.share);
+    dialog.querySelector('[data-share-service="linkedin"]').href = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(url);
+    dialog.querySelector('[data-share-service="pinterest"]').href = 'https://www.pinterest.com/pin/create/button/?url=' + encodeURIComponent(url) + '&description=' + encodeURIComponent(t.share);
     dialog.querySelector('[data-share-service="email"]').href = 'mailto:?subject=' + encodeURIComponent('THE HUMAN EXPERIMENT') + '&body=' + encodeURIComponent(message);
     dialog.querySelector('.share-dialog-status').textContent = '';
     if (!dialog.open) dialog.showModal();
