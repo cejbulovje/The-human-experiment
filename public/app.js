@@ -998,7 +998,7 @@ function renderLanguage(lang) {
   languageSelect.setAttribute('aria-label', ({ru:'Язык',es:'Idioma',pt:'Idioma',zh:'语言',de:'Sprache',ja:'言語',fr:'Langue',ar:'اللغة'}[activeLanguage] || 'Language'));
   renderOptions('q2-options',t.q2Options,'q2'); renderOptions('q3-options',t.q3Options,'q3'); renderOptions('q4-options',t.q4Options,'q4');
   renderOptions('gender-options',t.genderOptions,'gender',true);
-  if(charCount) charCount.textContent=`${answer.value.length} / 5000`;
+  if(charCount) charCount.textContent=`${answer.value.length} / 10000`;
   languageSelect.value=activeLanguage;
   document.querySelectorAll('[data-i18n-share]').forEach(el => { el.textContent = t['share-button'] || translations.en['share-button']; });
   try { localStorage.setItem('human-experiment-language',activeLanguage); } catch {}
@@ -1048,7 +1048,7 @@ function syncFeedbackEmailField() {
 }
 feedbackOptIn?.addEventListener('change', syncFeedbackEmailField);
 syncFeedbackEmailField();
-answer.addEventListener('input',()=>{charCount.textContent=`${answer.value.length} / 5000`;});
+answer.addEventListener('input',()=>{charCount.textContent=`${answer.value.length} / 10000`;});
 let savedLanguage='';
 try { savedLanguage=localStorage.getItem('human-experiment-language') || ''; } catch {}
 if (!translations[savedLanguage]) {
@@ -1075,7 +1075,7 @@ form.addEventListener('submit',async event=>{
     let result; try { result=await response.json(); } catch { throw new Error('server'); }
     if(!response.ok||!result.ok) { if(result.error==='already_submitted'){status.textContent=t['already-submitted'];status.className='form-status error';throw new Error('already_submitted');} throw new Error(result.error||'submit_failed'); }
     status.textContent=t.success;status.className='form-status success';if(postSubmitShare)postSubmitShare.hidden=false;const supportPanel=document.querySelector('#post-submit-support');if(supportPanel)supportPanel.hidden=false;form.reset();syncSignatureField();syncFeedbackEmailField();for(const name of ['q2','q3','q4']){const root=document.getElementById(name+'-options');const wrap=root.querySelector('.other-answer-wrap');const input=root.querySelector('.other-answer-input');wrap.hidden=true;input.required=false;}turnstileToken='';
-    if(window.turnstile) window.turnstile.reset(); charCount.textContent='0 / 5000';
+    if(window.turnstile) window.turnstile.reset(); charCount.textContent='0 / 10000';
   }catch(error){if(error.message==='already_submitted'){turnstileToken='';if(window.turnstile)window.turnstile.reset();return;}status.textContent=error instanceof TypeError?t.network:t.failure;status.className='form-status error';turnstileToken='';if(window.turnstile)window.turnstile.reset();}
   finally{submitButton.disabled=turnstileWidget.dataset.sitekey.includes('REPLACE_WITH');submitButton.textContent=t.submit;}
 });
