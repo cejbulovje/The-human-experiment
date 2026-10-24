@@ -91,6 +91,27 @@ test('results-page AI and hypothetical-preferences dictionaries are complete in 
   }
 });
 
+test('goal and privacy page text keys exist in every locale', () => {
+  const pages = [
+    {script: 'goal.js', html: 'goal.html'},
+    {script: 'privacy.js', html: 'privacy.html'}
+  ];
+  for (const page of pages) {
+    const source = readFileSync(new URL('../public/' + page.script, import.meta.url), 'utf8');
+    const html = readFileSync(new URL('../public/' + page.html, import.meta.url), 'utf8');
+    const requiredKeys = [...new Set([...html.matchAll(/data-t="([^"]+)"/g)].map(match => match[1]))];
+    const starts = [...source.matchAll(/^\\s{0,2}(en|ru|es|pt|zh|de|ja|fr|ar):\\s*\\{/gm)];
+    assert.equal(starts.length, locales.length, page.script + ' must define all nine locales');
+    for (let i = 0; i < starts.length; i++) {
+      const locale = starts[i][1];
+      const block = source.slice(starts[i].index, starts[i + 1]?.index ?? source.length);
+      for (const key of requiredKeys) {
+        assert.match(block, new RegExp('\\\\b' + key + ':'), page.script + ' missing ' + key + ' for ' + locale);
+      }
+    }
+  }
+});
+
 test('Arabic hypothetical-preferences labels do not say default preferences', () => {
   const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
   const results = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
