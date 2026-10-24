@@ -54,6 +54,8 @@ test('shared navigation has labels for all supported locales and implements shar
   for (const locale of locales) assert.match(script, new RegExp('^    ' + locale + ': \\{', 'm'), 'missing navigation locale ' + locale);
   assert.match(script, /navigator\.share/);
   assert.match(script, /navigator\.clipboard/);
+  assert.equal((script.match(/\\blanguage:/g) || []).length, locales.length, 'language selector accessibility label must be translated in every locale');
+  assert.match(script, /languagePicker\.setAttribute\('aria-label', t\.language\)/);
   for (const key of ['emailCopied', 'emailCopyFailed', 'copyEmail']) {
     assert.equal((script.match(new RegExp('\\b' + key + ':', 'g')) || []).length, locales.length, key + ' must be translated in all supported locales');
   }
