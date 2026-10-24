@@ -43,7 +43,7 @@ test('results page translates every shared dynamic label for all non-English loc
   assert.ok(start >= 0 && end > start, 'results-specific translation map must exist');
   const block = results.slice(start, end);
   const requiredKeys = [
-    'otherDetail', 'loading', 'topicLabel', 'fromLabel', 'toLabel', 'sortLabel',
+    'otherDetail', 'loading', 'searchLabel', 'topicLabel', 'fromLabel', 'toLabel', 'sortLabel',
     'reactions', 'date', 'ctx2', 'ctx3', 'ctx4', 'statsLocked', 'statsOpen'
   ];
   for (const locale of ['es', 'pt', 'zh', 'de', 'ja', 'fr', 'ar']) {
@@ -54,6 +54,13 @@ test('results page translates every shared dynamic label for all non-English loc
     }
   }
 });
+
+test('English and Russian results search labels are translated', () => {
+  const results = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
+  assert.match(results, /en:\{[^\n]*searchLabel:'Search answers'/);
+  assert.match(results, /ru:\{[^\n]*searchLabel:'Поиск по ответам'/);
+});
+
 
 test('language switching still applies translations when localStorage is unavailable', () => {
   const localized = readFileSync(new URL('../public/preferences-i18n.js', import.meta.url), 'utf8');
