@@ -459,6 +459,9 @@
   max-width: 100%;
   white-space: normal;
 }
+[dir="rtl"] .footer-brand {
+  direction: ltr;
+}
 [dir="rtl"] .footer-links {
   direction: rtl;
   justify-content: flex-start;
