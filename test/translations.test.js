@@ -70,7 +70,7 @@ test('results-page AI and hypothetical-preferences dictionaries are complete in 
   const results = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
   const html = readFileSync(new URL('../public/results.html', import.meta.url), 'utf8');
   for (const dictionaryName of ['OPEN_DATA_UI', 'AI_ANALYSIS_UI', 'PREFERENCE_RESEARCH_UI']) {
-    const line = results.split('\\n').find(candidate => candidate.startsWith('const ' + dictionaryName + '='));
+    const line = results.split('\n').find(candidate => candidate.startsWith('const ' + dictionaryName + '='));
     assert.ok(line, dictionaryName + ' dictionary must exist');
     const json = line.slice(('const ' + dictionaryName + '=').length).replace(/;$/, '');
     const dictionary = JSON.parse(json);
@@ -81,8 +81,8 @@ test('results-page AI and hypothetical-preferences dictionaries are complete in 
         dictionaryName + ' keys must match English for ' + locale);
     }
   }
-  const aiKeys = new Set(Object.keys(JSON.parse(results.split('\\n').find(line => line.startsWith('const AI_ANALYSIS_UI=')).slice('const AI_ANALYSIS_UI='.length).replace(/;$/, '')).en));
-  const preferenceKeys = new Set(Object.keys(JSON.parse(results.split('\\n').find(line => line.startsWith('const PREFERENCE_RESEARCH_UI=')).slice('const PREFERENCE_RESEARCH_UI='.length).replace(/;$/, '')).en));
+  const aiKeys = new Set(Object.keys(JSON.parse(results.split('\n').find(line => line.startsWith('const AI_ANALYSIS_UI=')).slice('const AI_ANALYSIS_UI='.length).replace(/;$/, '')).en));
+  const preferenceKeys = new Set(Object.keys(JSON.parse(results.split('\n').find(line => line.startsWith('const PREFERENCE_RESEARCH_UI=')).slice('const PREFERENCE_RESEARCH_UI='.length).replace(/;$/, '')).en));
   for (const key of new Set([...html.matchAll(/data-ai(?:-placeholder)?="([^"]+)"/g)].map(match => match[1]))) {
     assert.ok(aiKeys.has(key), 'missing AI results translation key: ' + key);
   }
