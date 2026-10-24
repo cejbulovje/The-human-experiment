@@ -54,7 +54,7 @@ test('shared navigation has labels for all supported locales and implements shar
   for (const locale of locales) assert.match(script, new RegExp('^    ' + locale + ': \\{', 'm'), 'missing navigation locale ' + locale);
   assert.match(script, /navigator\.share/);
   assert.match(script, /navigator\.clipboard/);
-  assert.equal((script.match(/\\blanguage:/g) || []).length, locales.length, 'language selector accessibility label must be translated in every locale');
+  assert.equal((script.match(/\blanguage:/g) || []).length, locales.length, 'language selector accessibility label must be translated in every locale');
   assert.match(script, /languagePicker\.setAttribute\('aria-label', t\.language\)/);
   assert.match(script, /querySelectorAll\('\.brand-lockup'\)[\s\S]*?setAttribute\('aria-label', t\.home\)/);
   assert.match(script, /querySelectorAll\('\.footer-links\[aria-label\]'\)[\s\S]*?setAttribute\('aria-label', t\.projectLinks\)/);
