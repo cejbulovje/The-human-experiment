@@ -51,3 +51,8 @@ test('results page translates every shared dynamic label for all non-English loc
     }
   }
 });
+
+test('language switching still applies translations when localStorage is unavailable', () => {
+  const localized = readFileSync(new URL('../public/preferences-i18n.js', import.meta.url), 'utf8');
+  assert.match(localized, /select\.addEventListener\('change',[\s\S]*?try \{ localStorage\.setItem\(sharedKey, select\.value\); \} catch \{\}[\s\S]*?apply\(\);/);
+});
