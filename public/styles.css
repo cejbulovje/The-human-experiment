@@ -112,13 +112,13 @@
 .topbar-centered{position:relative;min-height:82px}
 .topbar-centered .header-brand-centered{position:absolute;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:9px;white-space:nowrap;text-decoration:none}
 .topbar-centered .header-brand-centered .brand-mark{width:68px;height:68px;object-fit:contain}
-.topbar-centered .header-controls{margin-left:auto;display:flex;align-items:center;gap:12px;min-width:0}
+.topbar-centered .header-controls{margin-inline-start:auto;display:flex;align-items:center;gap:12px;min-width:0}
 .site-menu{position:relative;z-index:20;flex:0 0 auto}
 .site-menu-details{position:relative}
 .site-menu-trigger{list-style:none;cursor:pointer;display:grid;place-items:center;width:40px;height:40px;border:1px solid var(--line);border-radius:12px;background:var(--card);font-size:1.05rem;color:var(--ink)}
 .site-menu-trigger::-webkit-details-marker{display:none}
-.site-menu-panel{position:absolute;left:0;top:calc(100% + 9px);width:min(250px,calc(100vw - 36px));padding:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 32px #20221f18;display:grid;gap:2px}
-.site-menu-panel a,.site-menu-panel button{display:block;width:100%;padding:10px 12px;border:0;border-radius:8px;background:transparent;color:var(--ink);font:inherit;font-size:.9rem;text-align:left;text-decoration:none;cursor:pointer}
+.site-menu-panel{position:absolute;inset-inline-start:0;top:calc(100% + 9px);width:min(250px,calc(100vw - 36px));padding:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 32px #20221f18;display:grid;gap:2px}
+.site-menu-panel a,.site-menu-panel button{display:block;width:100%;padding:10px 12px;border:0;border-radius:8px;background:transparent;color:var(--ink);font:inherit;font-size:.9rem;text-align:start;text-decoration:none;cursor:pointer}
 .site-menu-panel a:hover,.site-menu-panel button:hover{background:var(--accent-2)}
 [dir="rtl"] .site-menu-panel a,[dir="rtl"] .site-menu-panel button{text-align:right}
 @media(max-width:600px){.topbar-centered{padding:14px 16px;gap:8px;min-height:72px}.topbar-centered .header-brand-centered{gap:5px;max-width:calc(100% - 112px)}.topbar-centered .header-brand-centered .brand-mark{width:54px;height:54px}.topbar-centered .wordmark{font-size:1.125rem;letter-spacing:.08em}.topbar-centered .header-controls{gap:4px}.topbar-centered .header-controls .text-link{display:none}.topbar-centered .header-controls select{max-width:92px;padding:7px 6px;font-size:.75rem}.site-menu-trigger{width:36px;height:36px}}
@@ -179,7 +179,7 @@
 /* Keep the footer compact and readable, with links flowing horizontally when space allows. */
 .footer{flex-direction:row;align-items:flex-start;justify-content:space-between;gap:24px}
 .footer-links{width:auto;display:flex;flex-direction:row;align-items:center;flex-wrap:wrap;gap:12px 20px}
-.footer-links a,.footer-links button{display:inline-block;max-width:100%;text-align:left}
+.footer-links a,.footer-links button{display:inline-block;max-width:100%;text-align:start}
 @media(max-width:600px){.footer{flex-direction:column;align-items:flex-start;gap:12px}.footer-links{width:100%;flex-direction:row;align-items:center;flex-wrap:wrap;gap:10px 16px}}
 
 /* Align the footer brand and navigation on a shared baseline. */
@@ -193,12 +193,12 @@
 /* Footer: logo and navigation flow together; contact is centered on its own line. */
 .footer{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px 22px}
 .footer-links{display:contents}
-.footer-links a,.footer-links button{display:inline-block;max-width:100%;text-align:left}
+.footer-links a,.footer-links button{display:inline-block;max-width:100%;text-align:start}
 .footer-links .share-feedback{display:none}
 .footer-links .footer-contact-copy{flex:0 0 100%;width:100%;justify-self:auto;text-align:center;cursor:pointer}
 @media(max-width:600px){
   .footer{flex-direction:row;align-items:center;justify-content:center;gap:10px 14px}
-  .footer-brand{margin-right:4px}
+  .footer-brand{margin-inline-end:4px}
   .footer-links .footer-contact-copy{flex-basis:100%;width:100%;text-align:center}
 }
 
@@ -282,7 +282,7 @@
   border-color:var(--accent) !important;
   background:var(--accent-2) !important;
 }
-.footer-contact-copy span + span{margin-left:0.3em}
+.footer-contact-copy span + span{margin-inline-start:0.3em}
 
 /* Final footer overrides: preserve the highlighted share pill and visible contact spacing. */
 .footer-links .footer-share.share-button{
@@ -323,7 +323,7 @@
 .open-data-status{min-height:1.4em;color:var(--muted);font-size:.9rem}
 .open-data-instructions{border-top:1px solid var(--line);margin-top:18px;padding-top:16px}
 .open-data-instructions h3{margin:0 0 8px}
-.open-data-instructions ol{padding-left:22px;line-height:1.7}
+.open-data-instructions ol{padding-inline-start:22px;line-height:1.7}
 @media(max-width:600px){.open-data-actions{align-items:stretch;flex-direction:column}.open-data-actions>*{width:100%;box-sizing:border-box}}
 
 
@@ -371,13 +371,13 @@
     min-width:0;
     white-space:normal;
     overflow-wrap:anywhere;
-    text-align:left;
+    text-align:start;
   }
   .topbar-centered .header-controls{
     grid-column:3;
     grid-row:1;
     min-width:0;
-    margin-left:0;
+    margin-inline-start:0;
   }
   .topbar-centered .header-controls select{
     width:82px;
