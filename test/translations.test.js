@@ -100,13 +100,13 @@ test('goal and privacy page text keys exist in every locale', () => {
     const source = readFileSync(new URL('../public/' + page.script, import.meta.url), 'utf8');
     const html = readFileSync(new URL('../public/' + page.html, import.meta.url), 'utf8');
     const requiredKeys = [...new Set([...html.matchAll(/data-t="([^"]+)"/g)].map(match => match[1]))];
-    const starts = [...source.matchAll(/^\\s{0,2}(en|ru|es|pt|zh|de|ja|fr|ar):\\s*\\{/gm)];
+    const starts = [...source.matchAll(/^\s{0,2}(en|ru|es|pt|zh|de|ja|fr|ar):\s*\{/gm)];
     assert.equal(starts.length, locales.length, page.script + ' must define all nine locales');
     for (let i = 0; i < starts.length; i++) {
       const locale = starts[i][1];
       const block = source.slice(starts[i].index, starts[i + 1]?.index ?? source.length);
       for (const key of requiredKeys) {
-        assert.match(block, new RegExp('\\\\b' + key + ':'), page.script + ' missing ' + key + ' for ' + locale);
+        assert.match(block, new RegExp('\\b' + key + ':'), page.script + ' missing ' + key + ' for ' + locale);
       }
     }
   }
