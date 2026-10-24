@@ -84,15 +84,15 @@
     });
   });
   const shareLabels = {
-    en: { title: "Share via", copy: "Copy link", email: "Email", close: "Close", copied: "Link copied", instagram: "Instagram (copy link)" },
-    ru: { title: "Поделиться через", copy: "Скопировать ссылку", email: "Электронная почта", close: "Закрыть", copied: "Ссылка скопирована", instagram: "Instagram (скопировать ссылку)" },
-    es: { title: "Compartir mediante", copy: "Copiar enlace", email: "Correo electrónico", close: "Cerrar", copied: "Enlace copiado" },
-    pt: { title: "Partilhar através de", copy: "Copiar ligação", email: "E-mail", close: "Fechar", copied: "Ligação copiada" },
-    zh: { title: "分享方式", copy: "复制链接", email: "电子邮件", close: "关闭", copied: "链接已复制" },
-    de: { title: "Teilen über", copy: "Link kopieren", email: "E-Mail", close: "Schließen", copied: "Link kopiert" },
-    ja: { title: "共有方法", copy: "リンクをコピー", email: "メール", close: "閉じる", copied: "リンクをコピーしました" },
-    fr: { title: "Partager via", copy: "Copier le lien", email: "E-mail", close: "Fermer", copied: "Lien copié" },
-    ar: { title: "المشاركة عبر", copy: "نسخ الرابط", email: "البريد الإلكتروني", close: "إغلاق", copied: "تم نسخ الرابط" }
+    en: { title: "Share via", copy: "Copy link", email: "Email", close: "Close", copied: "Link copied", instagram: "Instagram (copy invitation)" },
+    ru: { title: "Поделиться через", copy: "Скопировать ссылку", email: "Электронная почта", close: "Закрыть", copied: "Ссылка скопирована", instagram: "Instagram (скопировать приглашение)" },
+    es: { title: "Compartir mediante", copy: "Copiar enlace", email: "Correo electrónico", close: "Cerrar", copied: "Enlace copiado", instagram: "Instagram (copiar invitación)" },
+    pt: { title: "Partilhar através de", copy: "Copiar ligação", email: "E-mail", close: "Fechar", copied: "Copiar convite para Instagram" },
+    zh: { title: "分享方式", copy: "复制链接", email: "电子邮件", close: "关闭", copied: "链接已复制", instagram: "Instagram（复制邀请内容）" },
+    de: { title: "Teilen über", copy: "Link kopieren", email: "E-Mail", close: "Schließen", copied: "Link kopiert", instagram: "Instagram (Einladung kopieren)" },
+    ja: { title: "共有方法", copy: "リンクをコピー", email: "メール", close: "閉じる", copied: "リンクをコピーしました", instagram: "Instagram（招待文をコピー）" },
+    fr: { title: "Partager via", copy: "Copier le lien", email: "E-mail", close: "Fermer", copied: "Lien copié", instagram: "Instagram (copier l’invitation)" },
+    ar: { title: "المشاركة عبر", copy: "نسخ الرابط", email: "البريد الإلكتروني", close: "إغلاق", copied: "تم نسخ الرابط", instagram: "Instagram (نسخ الدعوة)" }
   };
   let shareDialog;
   const getShareDialog = () => {
@@ -121,21 +121,21 @@
     shareDialog.querySelector('.share-dialog-close').addEventListener('click', () => shareDialog.close());
     shareDialog.addEventListener('click', event => { if (event.target === shareDialog) shareDialog.close(); });
     shareDialog.querySelector('[data-share-service="instagram"]').addEventListener('click', async () => {
-      const url = location.origin + '/';
+      const t = translations[language()] || translations.en;
+      const invitation = t.share + ' — ' + location.origin + '/';
       try {
-        if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(url);
+        if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(invitation);
         else {
           const helper = document.createElement('textarea');
-          helper.value = url; helper.setAttribute('readonly', '');
+          helper.value = invitation; helper.setAttribute('readonly', '');
           helper.style.position = 'fixed'; helper.style.opacity = '0';
           document.body.append(helper); helper.select();
           const copied = document.execCommand('copy'); helper.remove();
           if (!copied) throw new Error('copy_failed');
         }
-        const labels = shareLabels[language()] || shareLabels.en;
-        shareDialog.querySelector('.share-dialog-status').textContent = labels.copied + ' — open Instagram and paste it into your post or message.';
+        shareDialog.querySelector('.share-dialog-status').textContent = (shareLabels[language()] || shareLabels.en).copied + ' — open Instagram and paste the invitation into your post or message.';
       } catch {
-        shareDialog.querySelector('.share-dialog-status').textContent = translations[language()].failed;
+        shareDialog.querySelector('.share-dialog-status').textContent = (translations[language()] || translations.en).failed;
       }
     });
     shareDialog.querySelector('[data-share-service="copy"]').addEventListener('click', async () => {
