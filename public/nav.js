@@ -84,15 +84,15 @@
     });
   });
   const shareLabels = {
-    en: { title: "Share via", copy: "Copy link", email: "Email", close: "Close", copied: "Link copied", instagram: "Instagram (copy invitation)" },
-    ru: { title: "Поделиться через", copy: "Скопировать ссылку", email: "Электронная почта", close: "Закрыть", copied: "Ссылка скопирована", instagram: "Instagram (скопировать приглашение)" },
-    es: { title: "Compartir mediante", copy: "Copiar enlace", email: "Correo electrónico", close: "Cerrar", copied: "Enlace copiado", instagram: "Instagram (copiar invitación)" },
+    en: { title: "Share via", copy: "Copy link", email: "Email", close: "Close", copied: "Link copied", instagram: "Instagram" },
+    ru: { title: "Поделиться через", copy: "Скопировать ссылку", email: "Электронная почта", close: "Закрыть", copied: "Ссылка скопирована", instagram: "Instagram" },
+    es: { title: "Compartir mediante", copy: "Copiar enlace", email: "Correo electrónico", close: "Cerrar", copied: "Enlace copiado", instagram: "Instagram" },
     pt: { title: "Partilhar através de", copy: "Copiar ligação", email: "E-mail", close: "Fechar", copied: "Copiar convite para Instagram" },
-    zh: { title: "分享方式", copy: "复制链接", email: "电子邮件", close: "关闭", copied: "链接已复制", instagram: "Instagram（复制邀请内容）" },
-    de: { title: "Teilen über", copy: "Link kopieren", email: "E-Mail", close: "Schließen", copied: "Link kopiert", instagram: "Instagram (Einladung kopieren)" },
-    ja: { title: "共有方法", copy: "リンクをコピー", email: "メール", close: "閉じる", copied: "リンクをコピーしました", instagram: "Instagram（招待文をコピー）" },
-    fr: { title: "Partager via", copy: "Copier le lien", email: "E-mail", close: "Fermer", copied: "Lien copié", instagram: "Instagram (copier l’invitation)" },
-    ar: { title: "المشاركة عبر", copy: "نسخ الرابط", email: "البريد الإلكتروني", close: "إغلاق", copied: "تم نسخ الرابط", instagram: "Instagram (نسخ الدعوة)" }
+    zh: { title: "分享方式", copy: "复制链接", email: "电子邮件", close: "关闭", copied: "链接已复制", instagram: "Instagram" },
+    de: { title: "Teilen über", copy: "Link kopieren", email: "E-Mail", close: "Schließen", copied: "Link kopiert", instagram: "Instagram" },
+    ja: { title: "共有方法", copy: "リンクをコピー", email: "メール", close: "閉じる", copied: "リンクをコピーしました", instagram: "Instagram" },
+    fr: { title: "Partager via", copy: "Copier le lien", email: "E-mail", close: "Fermer", copied: "Lien copié", instagram: "Instagram" },
+    ar: { title: "المشاركة عبر", copy: "نسخ الرابط", email: "البريد الإلكتروني", close: "إغلاق", copied: "تم نسخ الرابط", instagram: "Instagram" }
   };
   let shareDialog;
   const getShareDialog = () => {
