@@ -71,11 +71,11 @@ test('every homepage translation key and placeholder exists in all nine locales'
   const keys = [...new Set([...html.matchAll(/data-i18n="([^"]+)"/g)].map(match => match[1]))];
   const placeholders = [...new Set([...html.matchAll(/data-i18n-placeholder="([^"]+)"/g)].map(match => match[1]))];
   for (const key of keys) {
-    assert.equal((app.match(new RegExp('"' + key + '"\\s*:', 'g')) || []).length, locales.length,
+    assert.equal((app.match(new RegExp('"' + key + '":', 'g')) || []).length, locales.length,
       'homepage translation "' + key + '" must exist in every locale');
   }
   for (const key of placeholders) {
-    assert.equal((app.match(new RegExp('"' + key + '"\\s*:', 'g')) || []).length, locales.length,
+    assert.equal((app.match(new RegExp('"' + key + '":', 'g')) || []).length, locales.length,
       'homepage placeholder "' + key + '" must exist in every locale');
   }
 });
