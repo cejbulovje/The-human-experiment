@@ -439,8 +439,8 @@
   grid-column: 1 / 2;
 }
 [dir="rtl"] .answer-tools #reset-filters {
-  grid-column: 2 / 3;
-  justify-self: start;
+  grid-column: 3 / 4;
+  justify-self: end;
   align-self: stretch;
   width: auto;
   min-width: 0;
