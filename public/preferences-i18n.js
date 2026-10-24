@@ -89,7 +89,7 @@
     });
   }
   select.addEventListener('change', () => {
-    localStorage.setItem(sharedKey, select.value);
+    try { localStorage.setItem(sharedKey, select.value); } catch {}
     apply();
     document.dispatchEvent(new CustomEvent('human-experiment-language-change', {detail:{language:select.value}}));
   });
