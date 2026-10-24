@@ -442,9 +442,9 @@
 [dir="rtl"] .answer-tools #reset-filters {
   grid-column: 2 / 4;
   grid-row: 3;
-  justify-self: stretch;
-  align-self: stretch;
-  width: 100%;
+  justify-self: start;
+  align-self: center;
+  width: auto;
   min-width: 0;
   max-width: 100%;
   white-space: normal;
