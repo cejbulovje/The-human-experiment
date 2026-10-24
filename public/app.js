@@ -271,7 +271,7 @@ const translations = {
       "Prefiero no decirlo"
     ],
     "required": "Responde las tres preguntas de opción múltiple.",
-    "captchaMissing": "Completa la verificación ant bots.",
+    "captchaMissing": "Completa la verificación anti-bot.",
     "sending": "Enviando…",
     "success": "Gracias. Tu respuesta se ha guardado.",
     "failure": "No se pudo enviar tu respuesta. Inténtalo de nuevo.",
@@ -370,7 +370,7 @@ const translations = {
       "Prefiro não dizer"
     ],
     "required": "Responda às três perguntas de múltipla escolha.",
-    "captchaMissing": "Conclua a verificação ant robôs.",
+    "captchaMissing": "Conclua a verificação anti-bot.",
     "sending": "Enviando…",
     "success": "Obrigado. Sua resposta foi registrada.",
     "failure": "Não foi possível enviar sua resposta. Tente novamente.",
