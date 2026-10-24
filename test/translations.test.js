@@ -58,3 +58,9 @@ test('language switching still applies translations when localStorage is unavail
   const localized = readFileSync(new URL('../public/preferences-i18n.js', import.meta.url), 'utf8');
   assert.match(localized, /select\.addEventListener\('change',[\s\S]*?try \{ localStorage\.setItem\(sharedKey, select\.value\); \} catch \{\}[\s\S]*?apply\(\);/);
 });
+
+test('results date-filter accessibility labels follow the selected locale', () => {
+  const results = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
+  assert.match(results, /\$\('#date-from'\)\?\.setAttribute\('aria-label',words\.fromLabel\)/);
+  assert.match(results, /\$\('#date-to'\)\?\.setAttribute\('aria-label',words\.toLabel\)/);
+});
