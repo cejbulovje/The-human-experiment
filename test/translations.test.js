@@ -64,3 +64,18 @@ test('results date-filter accessibility labels follow the selected locale', () =
   assert.match(results, /\$\('#date-from'\)\?\.setAttribute\('aria-label',words\.fromLabel\)/);
   assert.match(results, /\$\('#date-to'\)\?\.setAttribute\('aria-label',words\.toLabel\)/);
 });
+
+test('every homepage translation key and placeholder exists in all nine locales', () => {
+  const html = readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
+  const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
+  const keys = [...new Set([...html.matchAll(/data-i18n="([^"]+)"/g)].map(match => match[1]))];
+  const placeholders = [...new Set([...html.matchAll(/data-i18n-placeholder="([^"]+)"/g)].map(match => match[1]))];
+  for (const key of keys) {
+    assert.equal((app.match(new RegExp('"' + key + '"\\\\s*:', 'g')) || []).length, locales.length,
+      'homepage translation "' + key + '" must exist in every locale');
+  }
+  for (const key of placeholders) {
+    assert.equal((app.match(new RegExp('"' + key + '"\\\\s*:', 'g')) || []).length, locales.length,
+      'homepage placeholder "' + key + '" must exist in every locale');
+  }
+});
