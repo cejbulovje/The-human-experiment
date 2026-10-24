@@ -132,22 +132,22 @@
 }
 .topbar-centered .header-brand-centered .brand-mark{
   display:block;
-  width:46.2672px;
-  height:46.2672px;
-  flex:0 0 46.2672px;
+  width:48.58056px;
+  height:48.58056px;
+  flex:0 0 48.58056px;
   object-fit:contain;
 }
 .topbar-centered .header-brand-centered .wordmark{
   display:block;
-  font-size:1.22472rem;
+  font-size:1.285956rem;
   line-height:1.05;
   letter-spacing:.08em;
   font-weight:800;
 }
 @media(max-width:900px){
   .topbar-centered .header-brand-centered{gap:7px;max-width:calc(100% - 110px)}
-  .topbar-centered .header-brand-centered .brand-mark{width:40.1436px;height:40.1436px;flex-basis:40.1436px}
-  .topbar-centered .header-brand-centered .wordmark{font-size:clamp(.91854rem,2.0412vw,1.12266rem);letter-spacing:.055em}
+  .topbar-centered .header-brand-centered .brand-mark{width:42.15078px;height:42.15078px;flex-basis:42.15078px}
+  .topbar-centered .header-brand-centered .wordmark{font-size:clamp(.964467rem,2.14326vw,1.178793rem);letter-spacing:.055em}
 }
 @media(max-width:600px){
   .topbar-centered{min-height:78px;padding:10px 12px;gap:7px}
@@ -157,12 +157,12 @@
     white-space:normal;
   }
   .topbar-centered .header-brand-centered .brand-mark{
-    width:34.7004px;
-    height:34.7004px;
-    flex:0 0 34.7004px;
+    width:36.43542px;
+    height:36.43542px;
+    flex:0 0 36.43542px;
   }
   .topbar-centered .header-brand-centered .wordmark{
-    font-size:clamp(.69399rem,2.85768vw,.836892rem);
+    font-size:clamp(.7286895rem,3.000564vw,.8787366rem);
     line-height:1.05;
     letter-spacing:.035em;
   }
@@ -172,8 +172,8 @@
 }
 @media(max-width:370px){
   .topbar-centered .header-brand-centered{max-width:calc(100% - 78px);gap:4px}
-   .topbar-centered .header-brand-centered .brand-mark{width:30.24px;height:30.24px;flex-basis:30.24px}
-  .topbar-centered .header-brand-centered .wordmark{font-size:.6912rem;letter-spacing:.027em}
+   .topbar-centered .header-brand-centered .brand-mark{width:31.752px;height:31.752px;flex-basis:31.752px}
+  .topbar-centered .header-brand-centered .wordmark{font-size:.72576rem;letter-spacing:.02835em}
 }
 
 /* Keep the footer compact and readable, with links flowing horizontally when space allows. */
