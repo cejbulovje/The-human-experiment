@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS responses (
   created_at TEXT NOT NULL,
   public_id TEXT,
   participant_id TEXT,
+  delete_token_hash TEXT,
   is_public INTEGER NOT NULL DEFAULT 0,
   topic TEXT NOT NULL DEFAULT 'other'
 );
@@ -28,6 +29,7 @@ CREATE TABLE IF NOT EXISTS rate_limits (
 CREATE UNIQUE INDEX IF NOT EXISTS idx_responses_public_id ON responses(public_id);
 CREATE INDEX IF NOT EXISTS idx_responses_participant_public ON responses(participant_id, is_public, created_at);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_responses_participant_id_unique ON responses(participant_id) WHERE participant_id IS NOT NULL;
+CREATE UNIQUE INDEX IF NOT EXISTS idx_responses_delete_token_hash ON responses(delete_token_hash) WHERE delete_token_hash IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_responses_public_created ON responses(is_public, created_at);
 
 -- Optional email opt-ins are kept outside the public response records and API.
