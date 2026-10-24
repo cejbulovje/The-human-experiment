@@ -14,9 +14,14 @@
   const select = document.getElementById('page-language');
   if (!select) return;
   const supported = Object.keys(locales);
-  const current = localStorage.getItem(sharedKey);
-  select.value = supported.includes(current) ? current : (document.documentElement.lang || 'ru');
-  if (!supported.includes(select.value)) select.value = 'ru';
+  let current = '';
+  try { current = localStorage.getItem(sharedKey) || ''; } catch {}
+  if (!supported.includes(current)) {
+    const browserLanguages = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'en']);
+    current = browserLanguages.map(value => String(value).toLowerCase().split('-')[0]).find(value => supported.includes(value)) || 'en';
+    try { localStorage.setItem(sharedKey, current); } catch {}
+  }
+  select.value = current;
   const isPreferences = Boolean(document.getElementById('preferences-form'));
   function setText(node, value) { if (node && value !== undefined) node.textContent = value; }
   function apply() {
