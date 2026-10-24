@@ -132,22 +132,22 @@
 }
 .topbar-centered .header-brand-centered .brand-mark{
   display:block;
-  width:48.58056px;
-  height:48.58056px;
-  flex:0 0 48.58056px;
+  width:51px;
+  height:51px;
+  flex:0 0 51px;
   object-fit:contain;
 }
 .topbar-centered .header-brand-centered .wordmark{
   display:block;
-  font-size:1.285956rem;
+  font-size:1.3rem;
   line-height:1.05;
   letter-spacing:.08em;
   font-weight:800;
 }
 @media(max-width:900px){
   .topbar-centered .header-brand-centered{gap:7px;max-width:calc(100% - 110px)}
-  .topbar-centered .header-brand-centered .brand-mark{width:42.15078px;height:42.15078px;flex-basis:42.15078px}
-  .topbar-centered .header-brand-centered .wordmark{font-size:clamp(.964467rem,2.14326vw,1.178793rem);letter-spacing:.055em}
+  .topbar-centered .header-brand-centered .brand-mark{width:44px;height:44px;flex-basis:44px}
+  .topbar-centered .header-brand-centered .wordmark{font-size:clamp(.98rem,2.2vw,1.2rem);letter-spacing:.055em}
 }
 @media(max-width:600px){
   .topbar-centered{min-height:78px;padding:10px 12px;gap:7px}
@@ -157,12 +157,12 @@
     white-space:normal;
   }
   .topbar-centered .header-brand-centered .brand-mark{
-    width:36.43542px;
-    height:36.43542px;
-    flex:0 0 36.43542px;
+    width:38px;
+    height:38px;
+    flex:0 0 38px;
   }
   .topbar-centered .header-brand-centered .wordmark{
-    font-size:clamp(.7286895rem,3.000564vw,.8787366rem);
+    font-size:clamp(.78rem,3.05vw,.9rem);
     line-height:1.05;
     letter-spacing:.035em;
   }
@@ -172,8 +172,8 @@
 }
 @media(max-width:370px){
   .topbar-centered .header-brand-centered{max-width:calc(100% - 78px);gap:4px}
-   .topbar-centered .header-brand-centered .brand-mark{width:31.752px;height:31.752px;flex-basis:31.752px}
-  .topbar-centered .header-brand-centered .wordmark{font-size:.72576rem;letter-spacing:.02835em}
+   .topbar-centered .header-brand-centered .brand-mark{width:33px;height:33px;flex-basis:33px}
+  .topbar-centered .header-brand-centered .wordmark{font-size:.75rem;letter-spacing:.03em}
 }
 
 /* Keep the footer compact and readable, with links flowing horizontally when space allows. */
