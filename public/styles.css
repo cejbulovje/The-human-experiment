@@ -435,43 +435,67 @@
   justify-content: flex-start;
 }
 
-/* Prevent Arabic filter labels from crowding adjacent controls. */
+/* Robust RTL layout for results filters: prevent overflow and crowding. */
 [dir="rtl"] .answer-tools {
-  grid-template-columns: minmax(190px, 2fr) repeat(3, minmax(112px, 1fr)) minmax(128px, max-content);
+  display: flex;
+  direction: rtl;
+  flex-wrap: wrap;
   align-items: stretch;
+  justify-content: flex-start;
+  gap: 10px;
 }
-[dir="rtl"] .answer-tools #reset-filters,
-[dir="rtl"] .answer-tools #all-participants {
-  min-width: 128px;
-  max-width: 100%;
-  padding-inline: 14px;
-  line-height: 1.4;
-  white-space: normal;
-  overflow-wrap: anywhere;
+[dir="rtl"] .answer-tools > label {
+  flex: 1 1 145px;
+  min-width: 0;
+}
+[dir="rtl"] .answer-tools > .search-field {
+  flex: 2 1 220px;
+}
+[dir="rtl"] .answer-tools input[type="search"],
+[dir="rtl"] .answer-tools select {
+  width: 100%;
+  min-width: 0;
+  direction: rtl;
+  text-align: right;
 }
 [dir="rtl"] .answer-tools input[type="date"] {
   width: 100%;
-  padding-inline: 7px;
+  min-width: 0;
+  direction: ltr;
+  text-align: left;
+  padding-inline: 6px;
   font-size: .82rem;
 }
+[dir="rtl"] .answer-tools #reset-filters,
+[dir="rtl"] .answer-tools #all-participants {
+  flex: 0 1 auto;
+  min-width: 132px;
+  max-width: 100%;
+  white-space: normal;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  padding: 9px 12px;
+}
 @media (max-width: 760px) {
-  [dir="rtl"] .answer-tools {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  [dir="rtl"] .answer-tools > label,
+  [dir="rtl"] .answer-tools > .search-field {
+    flex: 1 1 calc(50% - 10px);
   }
-  [dir="rtl"] .answer-tools .search-field {
-    grid-column: 1 / -1;
+  [dir="rtl"] .answer-tools > .search-field {
+    flex-basis: 100%;
   }
   [dir="rtl"] .answer-tools #reset-filters,
   [dir="rtl"] .answer-tools #all-participants {
     min-width: 0;
+    flex: 1 1 calc(50% - 10px);
   }
 }
 @media (max-width: 420px) {
-  [dir="rtl"] .answer-tools {
-    grid-template-columns: minmax(0, 1fr);
-  }
-  [dir="rtl"] .answer-tools .search-field {
-    grid-column: auto;
+  [dir="rtl"] .answer-tools > label,
+  [dir="rtl"] .answer-tools > .search-field,
+  [dir="rtl"] .answer-tools #reset-filters,
+  [dir="rtl"] .answer-tools #all-participants {
+    flex-basis: 100%;
   }
 }
 
