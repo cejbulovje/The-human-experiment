@@ -132,22 +132,22 @@
 }
 .topbar-centered .header-brand-centered .brand-mark{
   display:block;
-  width:68px;
-  height:68px;
-  flex:0 0 68px;
+  width:54.4px;
+  height:54.4px;
+  flex:0 0 54.4px;
   object-fit:contain;
 }
 .topbar-centered .header-brand-centered .wordmark{
   display:block;
-  font-size:1.8rem;
+  font-size:1.44rem;
   line-height:1.05;
   letter-spacing:.08em;
   font-weight:800;
 }
 @media(max-width:900px){
   .topbar-centered .header-brand-centered{gap:7px;max-width:calc(100% - 110px)}
-  .topbar-centered .header-brand-centered .brand-mark{width:59px;height:59px;flex-basis:59px}
-  .topbar-centered .header-brand-centered .wordmark{font-size:clamp(1.35rem,3vw,1.65rem);letter-spacing:.055em}
+  .topbar-centered .header-brand-centered .brand-mark{width:47.2px;height:47.2px;flex-basis:47.2px}
+  .topbar-centered .header-brand-centered .wordmark{font-size:clamp(1.08rem,2.4vw,1.32rem);letter-spacing:.055em}
 }
 @media(max-width:600px){
   .topbar-centered{min-height:78px;padding:10px 12px;gap:7px}
@@ -157,12 +157,12 @@
     white-space:normal;
   }
   .topbar-centered .header-brand-centered .brand-mark{
-    width:51px;
-    height:51px;
-    flex:0 0 51px;
+    width:40.8px;
+    height:40.8px;
+    flex:0 0 40.8px;
   }
   .topbar-centered .header-brand-centered .wordmark{
-    font-size:clamp(1.02rem,4.2vw,1.23rem);
+    font-size:clamp(.816rem,3.36vw,.984rem);
     line-height:1.05;
     letter-spacing:.035em;
   }
@@ -172,8 +172,8 @@
 }
 @media(max-width:370px){
   .topbar-centered .header-brand-centered{max-width:calc(100% - 78px);gap:4px}
-   .topbar-centered .header-brand-centered .brand-mark{width:42px;height:42px;flex-basis:42px}
-  .topbar-centered .header-brand-centered .wordmark{font-size:.96rem;letter-spacing:.03em}
+   .topbar-centered .header-brand-centered .brand-mark{width:33.6px;height:33.6px;flex-basis:33.6px}
+  .topbar-centered .header-brand-centered .wordmark{font-size:.768rem;letter-spacing:.03em}
 }
 
 /* Keep the footer compact and readable, with links flowing horizontally when space allows. */
@@ -388,7 +388,7 @@
 @media(max-width:370px){
   .topbar-centered{grid-template-columns:34px minmax(0,1fr) 74px;column-gap:5px}
    .topbar-centered .header-brand-centered .brand-mark{width:42px;height:42px;flex-basis:42px}
-  .topbar-centered .header-brand-centered .wordmark{font-size:.9rem;letter-spacing:.0225em}
+  .topbar-centered .header-brand-centered .wordmark{font-size:.72rem;letter-spacing:.0225em}
   .topbar-centered .header-controls select{width:74px;max-width:74px;font-size:.68rem}
 }
 
