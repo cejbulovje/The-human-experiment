@@ -437,9 +437,11 @@
 }
 [dir="rtl"] .answer-tools > label:has(#answer-sort) {
   grid-column: 1 / 2;
+  grid-row: 3;
 }
 [dir="rtl"] .answer-tools #reset-filters {
   grid-column: 2 / 4;
+  grid-row: 3;
   justify-self: stretch;
   align-self: stretch;
   width: 100%;
