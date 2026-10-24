@@ -88,6 +88,16 @@ test('site menu controls meet minimum touch-target dimensions', () => {
   assert.match(css, /\.site-menu-panel a,[\s\S]*?\.site-menu-panel button\{min-height:44px;display:flex;align-items:center\}/);
 });
 
+test('RTL layout uses direction-aware CSS for navigation and text alignment', () => {
+  const css = readFileSync(new URL('../public/styles.css', import.meta.url), 'utf8');
+  assert.match(css, /\.site-menu-panel\{position:absolute;inset-inline-start:0;/);
+  assert.match(css, /\.topbar-centered \.header-controls\{margin-inline-start:auto;/);
+  assert.match(css, /text-align:start/);
+  assert.match(css, /padding-inline-start:22px/);
+  assert.doesNotMatch(css, /text-align:left/);
+});
+
+
 test('hypothetical preferences prototype cannot submit a native form or send answers', () => {
   const html = readFileSync(new URL('../public/preferences.html', import.meta.url), 'utf8');
   assert.match(html, /<div id="preferences-form" class="preference-card">/);
