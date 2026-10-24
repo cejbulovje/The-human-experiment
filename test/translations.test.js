@@ -27,7 +27,8 @@ test('all supported locales have a single, complete set of public-disclosure tra
       'author-title', 'author-help', 'author-confirm', 'author-required',
       'signature-required', 'privacy',
       'feedback-title', 'feedback-help', 'feedback-opt-in-label',
-      'feedback-email-label', 'feedback-email-placeholder', 'feedback-email-note'
+      'feedback-email-label', 'feedback-email-placeholder', 'feedback-email-note',
+      'other-placeholder', 'other-help', 'already-submitted'
     ]) {
       assert.equal(keys.filter(candidate => candidate === key).length, 1,
         `${locale} must define "${key}" exactly once`);
