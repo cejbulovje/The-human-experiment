@@ -55,6 +55,14 @@ test('results page translates every shared dynamic label for all non-English loc
   }
 });
 
+test('Spanish and Portuguese anti-bot instructions use corrected wording', () => {
+  const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
+  assert.match(app, /"captcha-note": "Completa la verificación anti-bot para enviar tu respuesta\."/);
+  assert.match(app, /"captcha-note": "Conclua a verificação anti-bot para enviar sua resposta\."/);
+  assert.doesNotMatch(app, /verificación ant bots|verificação ant robôs/);
+});
+
+
 test('English and Russian results search labels are translated', () => {
   const results = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
   assert.match(results, /en:\{[^\n]*searchLabel:'Search answers'/);
