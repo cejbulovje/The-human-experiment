@@ -59,7 +59,7 @@ test('shared navigation has labels for all supported locales and implements shar
   assert.match(script, /querySelectorAll\('\.brand-lockup'\)[\s\S]*?setAttribute\('aria-label', t\.home\)/);
   assert.match(script, /querySelectorAll\('\.footer-links\[aria-label\]'\)[\s\S]*?setAttribute\('aria-label', t\.projectLinks\)/);
   for (const key of ['language', 'home', 'projectLinks']) {
-    assert.equal((script.match(new RegExp('\\\\b' + key + ':' , 'g')) || []).length, locales.length, key + ' must be translated in all locales');
+    assert.equal((script.match(new RegExp('\\b' + key + ':', 'g')) || []).length, locales.length, key + ' must be translated in all locales');
   }
   for (const key of ['emailCopied', 'emailCopyFailed', 'copyEmail']) {
     assert.equal((script.match(new RegExp('\\b' + key + ':', 'g')) || []).length, locales.length, key + ' must be translated in all supported locales');
