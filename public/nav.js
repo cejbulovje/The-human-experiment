@@ -83,36 +83,76 @@
       }
     });
   });
-  document.querySelectorAll('[data-site-share]').forEach(button => {
-    button.addEventListener('click', async () => {
-      const t = translations[language()];
+  const shareLabels = {
+    en: { title: "Share via", copy: "Copy link", email: "Email", close: "Close", copied: "Link copied" },
+    ru: { title: "Поделиться через", copy: "Скопировать ссылку", email: "Электронная почта", close: "Закрыть", copied: "Ссылка скопирована" },
+    es: { title: "Compartir mediante", copy: "Copiar enlace", email: "Correo electrónico", close: "Cerrar", copied: "Enlace copiado" },
+    pt: { title: "Partilhar através de", copy: "Copiar ligação", email: "E-mail", close: "Fechar", copied: "Ligação copiada" },
+    zh: { title: "分享方式", copy: "复制链接", email: "电子邮件", close: "关闭", copied: "链接已复制" },
+    de: { title: "Teilen über", copy: "Link kopieren", email: "E-Mail", close: "Schließen", copied: "Link kopiert" },
+    ja: { title: "共有方法", copy: "リンクをコピー", email: "メール", close: "閉じる", copied: "リンクをコピーしました" },
+    fr: { title: "Partager via", copy: "Copier le lien", email: "E-mail", close: "Fermer", copied: "Lien copié" },
+    ar: { title: "المشاركة عبر", copy: "نسخ الرابط", email: "البريد الإلكتروني", close: "إغلاق", copied: "تم نسخ الرابط" }
+  };
+  let shareDialog;
+  const getShareDialog = () => {
+    if (shareDialog) return shareDialog;
+    shareDialog = document.createElement('dialog');
+    shareDialog.className = 'share-dialog';
+    shareDialog.setAttribute('aria-labelledby', 'share-dialog-title');
+    shareDialog.innerHTML = `
+      <div class="share-dialog-head"><h2 id="share-dialog-title"></h2><button type="button" class="share-dialog-close" aria-label="Close">×</button></div>
+      <div class="share-options">
+        <a data-share-service="whatsapp" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+        <a data-share-service="telegram" target="_blank" rel="noopener noreferrer">Telegram</a>
+        <a data-share-service="facebook" target="_blank" rel="noopener noreferrer">Facebook</a>
+        <a data-share-service="x" target="_blank" rel="noopener noreferrer">X</a>
+        <a data-share-service="email"></a>
+        <button type="button" data-share-service="copy"></button>
+      </div>
+      <p class="share-dialog-status" role="status" aria-live="polite"></p>`;
+    document.body.append(shareDialog);
+    shareDialog.querySelector('.share-dialog-close').addEventListener('click', () => shareDialog.close());
+    shareDialog.addEventListener('click', event => { if (event.target === shareDialog) shareDialog.close(); });
+    shareDialog.querySelector('[data-share-service="copy"]').addEventListener('click', async () => {
       const url = location.origin + '/';
       try {
-        if (navigator.share) await navigator.share({ title: 'THE HUMAN EXPERIMENT', text: t.share, url });
+        if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(url);
         else {
-          if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(url);
-          else {
-            const helper = document.createElement('textarea');
-            helper.value = url;
-            helper.setAttribute('readonly', '');
-            helper.style.position = 'fixed';
-            helper.style.opacity = '0';
-            document.body.append(helper);
-            helper.select();
-            const copied = document.execCommand('copy');
-            helper.remove();
-            if (!copied) throw new Error('copy_failed');
-          }
-          button.textContent = t.shared;
-          setTimeout(applyLabels, 1800);
+          const helper = document.createElement('textarea');
+          helper.value = url; helper.setAttribute('readonly', '');
+          helper.style.position = 'fixed'; helper.style.opacity = '0';
+          document.body.append(helper); helper.select();
+          const copied = document.execCommand('copy'); helper.remove();
+          if (!copied) throw new Error('copy_failed');
         }
-      } catch (error) {
-        if (error?.name !== 'AbortError') {
-          button.textContent = t.failed;
-          setTimeout(applyLabels, 1800);
-        }
+        shareDialog.querySelector('.share-dialog-status').textContent = shareLabels[language()].copied;
+      } catch {
+        shareDialog.querySelector('.share-dialog-status').textContent = translations[language()].failed;
       }
     });
+    return shareDialog;
+  };
+  const openShareDialog = () => {
+    const t = translations[language()];
+    const labels = shareLabels[language()] || shareLabels.en;
+    const dialog = getShareDialog();
+    const url = location.origin + '/';
+    const message = t.share + ' — ' + url;
+    dialog.querySelector('#share-dialog-title').textContent = labels.title;
+    dialog.querySelector('.share-dialog-close').setAttribute('aria-label', labels.close);
+    dialog.querySelector('[data-share-service="email"]').textContent = labels.email;
+    dialog.querySelector('[data-share-service="copy"]').textContent = labels.copy;
+    dialog.querySelector('[data-share-service="whatsapp"]').href = 'https://wa.me/?text=' + encodeURIComponent(message);
+    dialog.querySelector('[data-share-service="telegram"]').href = 'https://t.me/share/url?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(t.share);
+    dialog.querySelector('[data-share-service="facebook"]').href = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url);
+    dialog.querySelector('[data-share-service="x"]').href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(t.share) + '&url=' + encodeURIComponent(url);
+    dialog.querySelector('[data-share-service="email"]').href = 'mailto:?subject=' + encodeURIComponent('THE HUMAN EXPERIMENT') + '&body=' + encodeURIComponent(message);
+    dialog.querySelector('.share-dialog-status').textContent = '';
+    if (!dialog.open) dialog.showModal();
+  };
+  document.querySelectorAll('[data-site-share]').forEach(button => {
+    button.addEventListener('click', openShareDialog);
   });
   document.querySelectorAll('.site-menu-details').forEach(details => {
     document.addEventListener('click', event => { if (!details.contains(event.target)) details.open = false; });
