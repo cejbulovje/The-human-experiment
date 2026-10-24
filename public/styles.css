@@ -493,3 +493,16 @@
     grid-column: 1;
   }
 }
+
+
+/* Share options dialog */
+.share-dialog{width:min(440px,calc(100% - 32px));border:1px solid var(--line);border-radius:20px;padding:22px;background:var(--card);color:var(--ink);box-shadow:0 24px 80px #20221f30}
+.share-dialog::backdrop{background:#20221f80;backdrop-filter:blur(3px)}
+.share-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+.share-dialog-head h2{font-size:1.2rem;margin:0}
+.share-dialog-close{border:0;background:transparent;color:var(--ink);font-size:1.6rem;line-height:1;cursor:pointer;padding:4px 8px}
+.share-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.share-options a,.share-options button{display:flex;align-items:center;justify-content:center;min-height:48px;padding:10px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--accent);font:inherit;font-weight:700;text-decoration:none;cursor:pointer}
+.share-options a:hover,.share-options button:hover{background:var(--accent-2);border-color:var(--accent)}
+.share-dialog-status{min-height:1.4em;margin:12px 0 0;color:var(--accent);font-size:.9rem}
+@media(max-width:420px){.share-dialog{padding:18px}.share-options{grid-template-columns:1fr}}
