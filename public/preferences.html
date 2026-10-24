@@ -112,7 +112,8 @@
       <section class="preference-question">
         <h2 id="preference-question-5">5. Хотите добавить пояснение?</h2>
         <p>Не указывайте имя, адрес, контакты или другие сведения, по которым можно установить вашу личность.</p>
-        <textarea name="comment" rows="4" maxlength="1500" placeholder="Необязательно"></textarea>
+        <textarea name="comment" rows="4" maxlength="10000" placeholder="Необязательно" aria-describedby="comment-counter"></textarea>
+        <p id="comment-counter" class="privacy-hint" aria-live="polite">0 / 10000</p>
       </section>
 
 
@@ -144,6 +145,10 @@
       wishes: { ask:'Сначала спросить меня', limits:'Действовать в обозначенных пределах', decide:'Оставить решение другому', consent:'Получать согласие на существенные изменения' },
       body: { consent:'Изменения тела только с согласия', discuss:'Сначала обсуждать последствия', unimportant:'Это не главный приоритет', context:'Зависит от обстоятельств' }
     };
+    const commentField = form.querySelector('textarea[name="comment"]');
+    const commentCounter = document.getElementById('comment-counter');
+    function updateCommentCounter() { commentCounter.textContent = commentField.value.length.toLocaleString() + ' / 10,000'; }
+    commentField.addEventListener('input', updateCommentCounter);
     function selected(name) {
       return [...form.querySelectorAll('[name="' + name + '"]:checked')].map(el => el.value);
     }
@@ -179,7 +184,8 @@
     });
     document.getElementById('reset-form').addEventListener('click', () => {
       form.querySelectorAll('input').forEach(input => { input.checked = false; });
-      form.querySelector('textarea[name="comment"]').value = '';
+      commentField.value = '';
+      updateCommentCounter();
       result.hidden = true;
     });
     document.getElementById('edit-response').addEventListener('click', () => {
