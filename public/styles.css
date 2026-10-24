@@ -435,3 +435,43 @@
   justify-content: flex-start;
 }
 
+/* Prevent Arabic filter labels from crowding adjacent controls. */
+[dir="rtl"] .answer-tools {
+  grid-template-columns: minmax(190px, 2fr) repeat(3, minmax(112px, 1fr)) minmax(128px, max-content);
+  align-items: stretch;
+}
+[dir="rtl"] .answer-tools #reset-filters,
+[dir="rtl"] .answer-tools #all-participants {
+  min-width: 128px;
+  max-width: 100%;
+  padding-inline: 14px;
+  line-height: 1.4;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+[dir="rtl"] .answer-tools input[type="date"] {
+  width: 100%;
+  padding-inline: 7px;
+  font-size: .82rem;
+}
+@media (max-width: 760px) {
+  [dir="rtl"] .answer-tools {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  [dir="rtl"] .answer-tools .search-field {
+    grid-column: 1 / -1;
+  }
+  [dir="rtl"] .answer-tools #reset-filters,
+  [dir="rtl"] .answer-tools #all-participants {
+    min-width: 0;
+  }
+}
+@media (max-width: 420px) {
+  [dir="rtl"] .answer-tools {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  [dir="rtl"] .answer-tools .search-field {
+    grid-column: auto;
+  }
+}
+
