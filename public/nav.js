@@ -111,6 +111,7 @@
         <a data-share-service="reddit" target="_blank" rel="noopener noreferrer">Reddit</a>
         <a data-share-service="linkedin" target="_blank" rel="noopener noreferrer">LinkedIn</a>
         <a data-share-service="pinterest" target="_blank" rel="noopener noreferrer">Pinterest</a>
+        <a data-share-service="threads" target="_blank" rel="noopener noreferrer">Threads</a>
         <button type="button" data-share-service="instagram"></button>
         <a data-share-service="email"></a>
         <button type="button" data-share-service="copy"></button>
@@ -176,6 +177,7 @@
     dialog.querySelector('[data-share-service="reddit"]').href = 'https://www.reddit.com/submit?url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(t.share);
     dialog.querySelector('[data-share-service="linkedin"]').href = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(url);
     dialog.querySelector('[data-share-service="pinterest"]').href = 'https://www.pinterest.com/pin/create/button/?url=' + encodeURIComponent(url) + '&description=' + encodeURIComponent(t.share);
+    dialog.querySelector('[data-share-service="threads"]').href = 'https://www.threads.net/';
     dialog.querySelector('[data-share-service="email"]').href = 'mailto:?subject=' + encodeURIComponent('THE HUMAN EXPERIMENT') + '&body=' + encodeURIComponent(message);
     dialog.querySelector('.share-dialog-status').textContent = '';
     if (!dialog.open) dialog.showModal();
