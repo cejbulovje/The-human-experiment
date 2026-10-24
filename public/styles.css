@@ -132,22 +132,22 @@
 }
 .topbar-centered .header-brand-centered .brand-mark{
   display:block;
-  width:48.96px;
-  height:48.96px;
-  flex:0 0 48.96px;
+  width:51.408px;
+  height:51.408px;
+  flex:0 0 51.408px;
   object-fit:contain;
 }
 .topbar-centered .header-brand-centered .wordmark{
   display:block;
-  font-size:1.296rem;
+  font-size:1.3608rem;
   line-height:1.05;
   letter-spacing:.08em;
   font-weight:800;
 }
 @media(max-width:900px){
   .topbar-centered .header-brand-centered{gap:7px;max-width:calc(100% - 110px)}
-  .topbar-centered .header-brand-centered .brand-mark{width:42.48px;height:42.48px;flex-basis:42.48px}
-  .topbar-centered .header-brand-centered .wordmark{font-size:clamp(.972rem,2.16vw,1.188rem);letter-spacing:.055em}
+  .topbar-centered .header-brand-centered .brand-mark{width:44.604px;height:44.604px;flex-basis:44.604px}
+  .topbar-centered .header-brand-centered .wordmark{font-size:clamp(1.0206rem,2.268vw,1.2474rem);letter-spacing:.055em}
 }
 @media(max-width:600px){
   .topbar-centered{min-height:78px;padding:10px 12px;gap:7px}
@@ -157,12 +157,12 @@
     white-space:normal;
   }
   .topbar-centered .header-brand-centered .brand-mark{
-    width:36.72px;
-    height:36.72px;
-    flex:0 0 36.72px;
+    width:38.556px;
+    height:38.556px;
+    flex:0 0 38.556px;
   }
   .topbar-centered .header-brand-centered .wordmark{
-    font-size:clamp(.7344rem,3.024vw,.8856rem);
+    font-size:clamp(.77112rem,3.1752vw,.92988rem);
     line-height:1.05;
     letter-spacing:.035em;
   }
@@ -387,8 +387,8 @@
 }
 @media(max-width:370px){
   .topbar-centered{grid-template-columns:34px minmax(0,1fr) 74px;column-gap:5px}
-   .topbar-centered .header-brand-centered .brand-mark{width:37.8px;height:37.8px;flex-basis:37.8px}
-  .topbar-centered .header-brand-centered .wordmark{font-size:.648rem;letter-spacing:.02025em}
+   .topbar-centered .header-brand-centered .brand-mark{width:39.69px;height:39.69px;flex-basis:39.69px}
+  .topbar-centered .header-brand-centered .wordmark{font-size:.6804rem;letter-spacing:.02126em}
   .topbar-centered .header-controls select{width:74px;max-width:74px;font-size:.68rem}
 }
 
