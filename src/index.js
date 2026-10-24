@@ -49,7 +49,7 @@ export function parseOtherAnswers(body){
 async function submit(request,env){
   if(!env.DB||!env.TURNSTILE_SECRET_KEY||!env.RATE_LIMIT_SALT)return json({ok:false,error:'not_configured'},503);
   const parsed=await readJsonLimited(request,12000);if(parsed.error)return json({ok:false,error:parsed.error},parsed.error==='too_large'?413:400);const body=parsed.body;
-  if(!body||!['en','ru','es','pt','zh','de','ja','fr','ar'].includes(body.language)||!validText(body.freeAnswer,5000)||!validChoice(body.q2,OPTIONS.q2.en.length)||!validChoice(body.q3,OPTIONS.q3.en.length)||!validChoice(body.q4,OPTIONS.q4.en.length))return json({ok:false,error:'invalid_response'},400);
+  if(!body||!['en','ru','es','pt','zh','de','ja','fr','ar'].includes(body.language)||!validText(body.freeAnswer,10000)||!validChoice(body.q2,OPTIONS.q2.en.length)||!validChoice(body.q3,OPTIONS.q3.en.length)||!validChoice(body.q4,OPTIONS.q4.en.length))return json({ok:false,error:'invalid_response'},400);
   const otherAnswers=parseOtherAnswers(body);
   if(!otherAnswers)return json({ok:false,error:'invalid_other_answer'},400);
   const {q2Other,q3Other,q4Other}=otherAnswers;
