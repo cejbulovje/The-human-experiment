@@ -846,6 +846,17 @@ const supportThanks = {
   fr: ["Envie d’aider l’expérience à se développer ?", "Les options de soutien arrivent bientôt.", "Soutenir le projet"],
   ar: ["هل ترغب في المساعدة على تطوير التجربة؟", "ستتوفر خيارات الدعم قريبًا."]
 };
+const FEEDBACK_EMAIL_SAVE_WARNING = {
+  en: " Your answer was saved, but we couldn't save your email for experiment updates. Please try again later if you'd like to receive email notifications.",
+  ru: " Твой ответ сохранён, но email для уведомлений об эксперименте сохранить не удалось. Если хочешь получать уведомления, попробуй позже.",
+  es: " Tu respuesta se guardó, pero no pudimos guardar tu correo para las notificaciones del experimento. Inténtalo de nuevo más tarde si deseas recibirlas.",
+  pt: " Sua resposta foi salva, mas não conseguimos guardar seu email para as notificações do experimento. Tente novamente mais tarde se quiser recebê-las.",
+  zh: " 你的回答已保存，但未能保存用于接收实验通知的邮箱。如果仍希望接收通知，请稍后重试。",
+  de: " Deine Antwort wurde gespeichert, aber deine E-Mail-Adresse für Experiment-Benachrichtigungen konnte nicht gespeichert werden. Versuche es später erneut, wenn du diese erhalten möchtest.",
+  ja: " 回答は保存されましたが、実験通知用のメールアドレスを保存できませんでした。通知を希望する場合は、後でもう一度お試しください。",
+  fr: " Votre réponse a été enregistrée, mais nous n’avons pas pu enregistrer votre adresse e-mail pour les notifications de l’expérience. Réessayez plus tard si vous souhaitez les recevoir.",
+  ar: " تم حفظ إجابتك، لكن تعذّر حفظ بريدك الإلكتروني لإشعارات التجربة. يُرجى المحاولة لاحقًا إذا كنت ترغب في تلقيها."
+};
 const RESPONSE_DELETE_UI={
   en:{button:'Delete my published answer',confirm:'Permanently delete your published answer and its separately stored email opt-in? This cannot be undone.',working:'Deleting…',success:'Deletion request completed. If the token matched a response, its data was removed.',error:'Could not complete deletion. Please try again later.',busy:'AI analysis is running. Please try again in a few minutes.',missing:'No deletion token is saved in this browser.'},
   ru:{button:'Удалить мой опубликованный ответ',confirm:'Безвозвратно удалить опубликованный ответ и отдельно сохранённый email для итогов? Это действие нельзя отменить.',working:'Удаление…',success:'Запрос выполнен. Если токен соответствовал ответу, связанные данные удалены.',error:'Не удалось выполнить удаление. Попробуй позже.',busy:'Сейчас выполняется анализ ИИ. Повтори попытку через несколько минут.',missing:'В этом браузере не найден сохранённый токен удаления.'},
@@ -1039,7 +1050,7 @@ form.addEventListener('submit',async event=>{
     let result; try { result=await response.json(); } catch { throw new Error('server'); }
     if(!response.ok||!result.ok) { if(result.error==='already_submitted'){status.textContent=t['already-submitted'];status.className='form-status error';throw new Error('already_submitted');} throw new Error(result.error||'submit_failed'); }
     if(typeof result.deletionToken==='string'){responseDeletionToken=result.deletionToken;try{localStorage.setItem('human-experiment-response-deletion-token',responseDeletionToken);}catch{}showResponseDeleteControl();}
-    status.textContent=t.success;status.className='form-status success';if(postSubmitShare)postSubmitShare.hidden=false;const supportPanel=document.querySelector('#post-submit-support');if(supportPanel)supportPanel.hidden=false;form.reset();syncSignatureField();syncFeedbackEmailField();for(const name of ['q2','q3','q4']){const root=document.getElementById(name+'-options');const wrap=root.querySelector('.other-answer-wrap');const input=root.querySelector('.other-answer-input');wrap.hidden=true;input.required=false;}turnstileToken='';
+    status.textContent=t.success+(payload.feedbackEmail&&result.feedbackEmailSaved===false?(FEEDBACK_EMAIL_SAVE_WARNING[lang]||FEEDBACK_EMAIL_SAVE_WARNING.en):'');status.className='form-status success';if(postSubmitShare)postSubmitShare.hidden=false;const supportPanel=document.querySelector('#post-submit-support');if(supportPanel)supportPanel.hidden=false;form.reset();syncSignatureField();syncFeedbackEmailField();for(const name of ['q2','q3','q4']){const root=document.getElementById(name+'-options');const wrap=root.querySelector('.other-answer-wrap');const input=root.querySelector('.other-answer-input');wrap.hidden=true;input.required=false;}turnstileToken='';
     if(window.turnstile) window.turnstile.reset(); charCount.textContent='0 / 5000';
   }catch(error){if(error.message==='already_submitted'){turnstileToken='';if(window.turnstile)window.turnstile.reset();return;}status.textContent=error instanceof TypeError?t.network:t.failure;status.className='form-status error';turnstileToken='';if(window.turnstile)window.turnstile.reset();}
   finally{submitButton.disabled=turnstileWidget.dataset.sitekey.includes('REPLACE_WITH');submitButton.textContent=t.submit;}
