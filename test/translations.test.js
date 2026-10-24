@@ -140,10 +140,10 @@ test('all public pages respect browser language preferences and Arabic RTL', () 
   const scripts = ['app.js', 'goal.js', 'privacy.js', 'results.js', 'preferences-i18n.js'];
   for (const filename of scripts) {
     const source = readFileSync(new URL('../public/' + filename, import.meta.url), 'utf8');
-    assert.match(source, /navigator\\.languages/, filename + ' must inspect browser language preferences');
+    assert.match(source, /navigator\.languages/, filename + ' must inspect browser language preferences');
     assert.match(source, /human-experiment-language/, filename + ' must share the selected language across pages');
-    assert.match(source, /split\\('-'\\)\\[0\\]/, filename + ' must normalize language-region tags');
-    assert.match(source, /document\\.documentElement\\.dir/, filename + ' must set document direction');
+    assert.match(source, /split\('-'\)\[0\]/, filename + ' must normalize language-region tags');
+    assert.match(source, /document\.documentElement\.dir/, filename + ' must set document direction');
     assert.match(source, /rtl/, filename + ' must support right-to-left layout');
   }
 });
