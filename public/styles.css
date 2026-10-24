@@ -499,3 +499,18 @@
   }
 }
 
+/* Keep the sort control compact on RTL layouts instead of stretching full width. */
+[dir="rtl"] .answer-tools > label:has(#answer-sort) {
+  flex: 0 1 220px;
+}
+[dir="rtl"] .answer-tools #reset-filters {
+  flex: 0 0 auto;
+  min-width: 0;
+  width: auto;
+}
+@media (max-width: 760px) {
+  [dir="rtl"] .answer-tools > label:has(#answer-sort) {
+    flex: 1 1 calc(50% - 10px);
+  }
+}
+
