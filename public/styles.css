@@ -405,3 +405,33 @@
   .topbar-centered{grid-template-columns:44px minmax(0,1fr) 74px}
   .site-menu-trigger{width:44px;height:44px}
 }
+
+/* Results page: keep filter controls compact and predictable in Arabic RTL. */
+[dir="rtl"] .answer-tools {
+  direction: rtl;
+  justify-content: flex-start;
+  gap: 10px;
+}
+[dir="rtl"] .answer-tools > label {
+  min-width: 0;
+}
+[dir="rtl"] .answer-tools input[type="search"],
+[dir="rtl"] .answer-tools select {
+  direction: rtl;
+  text-align: right;
+  max-width: 100%;
+}
+[dir="rtl"] .answer-tools input[type="date"] {
+  direction: ltr;
+  text-align: left;
+  min-width: 0;
+}
+[dir="rtl"] #reset-filters,
+[dir="rtl"] #all-participants {
+  white-space: nowrap;
+}
+[dir="rtl"] .footer-links {
+  direction: rtl;
+  justify-content: flex-start;
+}
+
