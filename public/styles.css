@@ -579,3 +579,30 @@
     text-align:center;
   }
 }
+
+
+/* Author answers stay discoverable without setting the tone of the results page. */
+.author-answer-card{padding:14px 16px;margin:12px 0 18px}
+.author-answer-card .answer-card-top{margin-bottom:8px}
+.author-answer-toggle{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:38px;
+  padding:8px 13px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:transparent;
+  color:var(--accent);
+  font:inherit;
+  font-size:.84rem;
+  font-weight:700;
+  cursor:pointer;
+}
+.author-answer-toggle:hover{border-color:var(--accent);background:var(--accent-2)}
+.author-answer-toggle:focus-visible{outline:3px solid #92b9a1;outline-offset:3px}
+.author-answer-full{margin-top:14px}
+.author-answer-full[hidden]{display:none}
+.author-answer-full .author-answer-title{margin:0 0 14px;font-size:1.12rem;line-height:1.4}
+.author-answer-shortcut{display:inline-flex;align-items:center;min-height:28px;padding:2px 9px;border:1px solid var(--line);border-radius:999px;background:var(--card);text-decoration:none}
+.author-answer-shortcut:hover{border-color:var(--accent);background:var(--accent-2);color:var(--accent)}
