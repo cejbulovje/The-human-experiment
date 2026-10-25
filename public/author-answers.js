@@ -163,4 +163,20 @@
   }
   document.addEventListener('DOMContentLoaded', render);
   document.getElementById('page-language')?.addEventListener('change', render);
+  document.addEventListener('click', event => {
+    const shortcut = event.target.closest('.author-answer-shortcut');
+    if (!shortcut) return;
+    const targetId = shortcut.getAttribute('href')?.slice(1);
+    const root = targetId && document.getElementById(targetId);
+    const full = root?.querySelector('.author-answer-full');
+    const toggle = root?.querySelector('.author-answer-toggle');
+    if (!full || !toggle) return;
+    event.preventDefault();
+    full.hidden = false;
+    toggle.setAttribute('aria-expanded', 'true');
+    const lang = document.getElementById('page-language')?.value || 'en';
+    const words = labels[lang] || labels.en;
+    toggle.textContent = words.hide || 'Hide the full answer';
+    root.scrollIntoView({behavior:'smooth', block:'start'});
+  });
 })();
