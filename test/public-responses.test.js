@@ -22,8 +22,22 @@ function makeEnv({ seed = true } = {}) {
       q4_other TEXT,
       gender INTEGER,
       signature TEXT,
-      is_public INTEGER NOT NULL DEFAULT 1
+      is_public INTEGER NOT NULL DEFAULT 1,
+      answer_number INTEGER
     );
+    CREATE UNIQUE INDEX idx_responses_answer_number
+      ON responses(answer_number) WHERE answer_number IS NOT NULL;
+    CREATE TRIGGER assign_public_answer_number
+    AFTER INSERT ON responses
+    WHEN NEW.is_public = 1 AND NEW.answer_number IS NULL
+    BEGIN
+      UPDATE responses
+      SET answer_number = COALESCE(
+        (SELECT MAX(answer_number) + 1 FROM responses WHERE id <> NEW.id AND answer_number IS NOT NULL),
+        2
+      )
+      WHERE id = NEW.id;
+    END;
     CREATE TABLE response_reactions (
       response_id INTEGER NOT NULL,
       reaction TEXT NOT NULL
