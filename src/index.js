@@ -169,7 +169,7 @@ async function publicResponses(request,env){
   const count=await env.DB.prepare(`SELECT COUNT(*) AS total FROM responses r WHERE ${where}`).bind(...binds).first();
   const rows=await env.DB.prepare(`SELECT r.id, r.public_id, r.participant_id, r.free_answer, r.language, r.topic, r.created_at, r.q2, r.q3, r.q4, r.q2_other, r.q3_other, r.q4_other, r.gender, r.signature,
     (SELECT COUNT(*) FROM response_reactions rr WHERE rr.response_id=r.id AND rr.reaction='interesting') AS reaction_count,
-    (SELECT COUNT(*) FROM responses r2 WHERE r2.is_public=1 AND r2.id<=r.id) + 1 AS answer_number,
+    r.answer_number AS answer_number,
     (SELECT COUNT(*) FROM responses r2 WHERE r2.is_public=1 AND r2.topic=r.topic) AS topic_frequency
     FROM responses r WHERE ${where} ORDER BY ${order} LIMIT ? OFFSET ?`).bind(...binds,limit,offset).all();
   const topics={character:'Character & habits',appearance:'Appearance',freedom:'Freedom & boundaries',life:'Life & wellbeing',relationships:'Relationships',other:'Other'};
