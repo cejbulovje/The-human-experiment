@@ -111,12 +111,12 @@
     const paragraphs = isCollective ? source.collective : source.volunteer;
     const card = document.createElement('article');
     card.className = 'answer-card author-answer-card';
-    card.id = 'author-answer-' + kind;
+    card.id = isCollective ? 'author-answer-collective-card' : 'answer-1';
     const top = document.createElement('div');
     top.className = 'answer-card-top';
     const code = document.createElement('span');
     code.className = 'answer-code';
-    code.textContent = words.number + ' · ' + words.author;
+    code.textContent = isCollective ? words.author : words.number + ' · ' + words.author;
     top.append(code);
 
     const toggle = document.createElement('button');
@@ -180,12 +180,15 @@
     const shortcut = event.target.closest('.author-answer-shortcut');
     if (!shortcut) return;
     const targetId = shortcut.getAttribute('href')?.slice(1);
-    const root = targetId && document.getElementById(targetId);
-    const full = root?.querySelector('.author-answer-full');
-    const toggle = root?.querySelector('.author-answer-toggle');
-    if (!full || !toggle) return;
+    const card = targetId && document.getElementById(targetId);
+    const root = targetId === 'answer-1' ? document.getElementById('author-answer-hypothetical') : card;
+    const answerCard = targetId === 'answer-1' ? card : root?.querySelector('.author-answer-card');
+    const full = answerCard?.querySelector('.author-answer-full');
+    const toggle = answerCard?.querySelector('.author-answer-toggle');
+    if (!root || !full || !toggle) return;
     event.preventDefault();
     root.hidden = false;
+    answerCard.hidden = false;
     full.hidden = false;
     toggle.setAttribute('aria-expanded', 'true');
     const lang = document.getElementById('page-language')?.value || 'en';
