@@ -158,8 +158,14 @@
     const locale = lang === 'ru' ? 'ru' : 'en';
     const collectiveRoot = document.getElementById('author-answer-collective');
     const volunteerRoot = document.getElementById('author-answer-hypothetical');
-    if (collectiveRoot) collectiveRoot.replaceChildren(makeCard('collective', locale));
-    if (volunteerRoot) volunteerRoot.replaceChildren(makeCard('volunteer', locale));
+    if (collectiveRoot) {
+      collectiveRoot.replaceChildren(makeCard('collective', locale));
+      collectiveRoot.hidden = true;
+    }
+    if (volunteerRoot) {
+      volunteerRoot.replaceChildren(makeCard('volunteer', locale));
+      volunteerRoot.hidden = true;
+    }
   }
   document.addEventListener('DOMContentLoaded', render);
   document.getElementById('page-language')?.addEventListener('change', render);
@@ -172,6 +178,7 @@
     const toggle = root?.querySelector('.author-answer-toggle');
     if (!full || !toggle) return;
     event.preventDefault();
+    root.hidden = false;
     full.hidden = false;
     toggle.setAttribute('aria-expanded', 'true');
     const lang = document.getElementById('page-language')?.value || 'en';
