@@ -157,6 +157,10 @@
   function render() {
     const lang = document.getElementById('page-language')?.value || 'en';
     const locale = lang === 'ru' ? 'ru' : 'en';
+    const words = labels[lang] || labels.en;
+    document.querySelectorAll('.author-answer-shortcut').forEach(shortcut => {
+      shortcut.textContent = words.author + ' · ' + words.number;
+    });
     const collectiveRoot = document.getElementById('author-answer-collective');
     const volunteerRoot = document.getElementById('author-answer-hypothetical');
     if (collectiveRoot) {
