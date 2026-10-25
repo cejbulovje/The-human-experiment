@@ -65,6 +65,7 @@
 .answer-tools label{min-width:0}
 .answer-tools input,.answer-tools select{width:100%;min-width:0;min-height:43px;border:1px solid var(--line);border-radius:11px;background:var(--card);padding:9px 11px;color:var(--ink);font:inherit;font-size:.88rem}
 .answer-list{display:grid;gap:14px}
+.author-answer-shortcut{font-size:.85em;color:var(--muted);text-decoration:underline;text-underline-offset:3px;white-space:nowrap}
 .answer-card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:clamp(16px,3vw,24px);box-shadow:0 6px 24px #20221f05}
 .answer-card-top,.answer-meta,.answer-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
 .answer-code{font-size:.75rem;letter-spacing:.04em;font-weight:800;color:var(--accent)}
