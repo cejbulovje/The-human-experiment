@@ -52,7 +52,9 @@ test('mobile header reserves space for controls and exposes keyboard focus', () 
 test('shared navigation has labels for all supported locales and implements sharing', () => {
   const script = readFileSync(new URL('../public/nav.js', import.meta.url), 'utf8');
   for (const locale of locales) assert.match(script, new RegExp('^    ' + locale + ': \\{', 'm'), 'missing navigation locale ' + locale);
-  assert.match(script, /navigator\.share/);
+  assert.match(script, /const openShareDialog = \(\) =>/);
+  assert.match(script, /data-share-service="whatsapp"/);
+  assert.match(script, /data-share-service="copy"/);
   assert.match(script, /navigator\.clipboard/);
   assert.equal((script.match(/\blanguage:/g) || []).length, locales.length, 'language selector accessibility label must be translated in every locale');
   assert.match(script, /languagePicker\.setAttribute\('aria-label', t\.language\)/);
