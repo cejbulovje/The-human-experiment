@@ -148,7 +148,7 @@
       full.hidden = !open;
       toggle.textContent = open ? words.hide : words.show;
       toggle.setAttribute('aria-expanded', String(open));
-      if (!open) card.hidden = true;
+      if (!open && card.parentElement) card.parentElement.hidden = true;
     });
     card.append(top, toggle, full);
     return card;
