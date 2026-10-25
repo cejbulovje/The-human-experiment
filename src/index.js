@@ -149,8 +149,10 @@ async function publicResponses(request,env){
   if(!env.DB)return json({error:'not_configured'},503);
   const url=new URL(request.url);const rawLimit=url.searchParams.get('limit');const parsedLimit=rawLimit===null||rawLimit===''?12:Number(rawLimit);const limit=Number.isSafeInteger(parsedLimit)?Math.max(1,Math.min(30,parsedLimit)):12;const rawOffset=url.searchParams.get('offset');const parsedOffset=rawOffset===null||rawOffset===''?0:Number(rawOffset);const offset=Number.isSafeInteger(parsedOffset)?Math.max(0,Math.min(1000000,parsedOffset)):0;
   const requestedId=(url.searchParams.get('id')||'').trim().slice(0,100);
+  const requestedNumberRaw=(url.searchParams.get('number')||'').trim();const requestedNumber=/^\d{1,9}$/.test(requestedNumberRaw)?Number(requestedNumberRaw):0;
   const search=(url.searchParams.get('q')||'').trim().slice(0,160);const topic=(url.searchParams.get('topic')||'').trim();const from=(url.searchParams.get('from')||'').slice(0,10);const to=(url.searchParams.get('to')||'').slice(0,10);const sort=url.searchParams.get('sort')||'newest';
   const clauses=['r.is_public=1'];const binds=[];
+  if(requestedNumber>0){clauses.push('r.answer_number=?');binds.push(requestedNumber);}
   if(requestedId){if(/^legacy-\d+$/.test(requestedId)){clauses.push('(r.public_id=? OR (r.public_id IS NULL AND r.id=?))');const legacyId=Number(requestedId.slice(7));binds.push(requestedId,legacyId);}else{clauses.push('r.public_id=?');binds.push(requestedId);}}
   const participantParam=url.searchParams.get('participant');const requestedParticipant=(participantParam||'').trim();
   if(participantParam!==null){if(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(requestedParticipant)){clauses.push('r.participant_id=?');binds.push(requestedParticipant.toLowerCase());}else{clauses.push('1=0');}}
