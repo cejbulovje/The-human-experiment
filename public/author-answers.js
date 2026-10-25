@@ -136,7 +136,6 @@
     paragraphs.forEach((paragraph, index) => {
       const p = document.createElement('p');
       p.textContent = paragraph;
-      if (!isCollective && index === 3) p.className = 'author-answer-central';
       body.append(p);
     });
     const note = document.createElement('p');
@@ -187,6 +186,7 @@
     const toggle = answerCard?.querySelector('.author-answer-toggle');
     if (!root || !full || !toggle) return;
     event.preventDefault();
+    if (targetId === 'answer-1') history.replaceState({}, '', '#answer-1');
     root.hidden = false;
     answerCard.hidden = false;
     full.hidden = false;
