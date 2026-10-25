@@ -635,3 +635,22 @@
 #author-answer-collective[hidden],
 #author-answer-hypothetical[hidden]{display:none!important}
 .author-answer-shortcut{font-size:.8em;font-weight:700}
+
+
+/* Compact footer pills: keep each outline close to its link text. */
+.footer-links a,
+.footer-links button,
+.footer-links .footer-contact-copy,
+.footer-links .footer-share.share-button{
+  min-height:32px;
+  padding:4px 8px!important;
+}
+@media(max-width:600px){
+  .footer-links a,
+  .footer-links button,
+  .footer-links .footer-contact-copy,
+  .footer-links .footer-share.share-button{
+    min-height:32px;
+    padding:4px 7px!important;
+  }
+}
