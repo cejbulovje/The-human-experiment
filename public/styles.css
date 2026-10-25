@@ -606,3 +606,32 @@
 .author-answer-full .author-answer-title{margin:0 0 14px;font-size:1.12rem;line-height:1.4}
 .author-answer-shortcut{display:inline-flex;align-items:center;min-height:28px;padding:2px 9px;border:1px solid var(--line);border-radius:999px;background:var(--card);text-decoration:none}
 .author-answer-shortcut:hover{border-color:var(--accent);background:var(--accent-2);color:var(--accent)}
+
+
+/* Participant answers: show a short preview first, with the full text optional. */
+.answer-text-wrap{margin:18px 0}
+.answer-text-wrap .answer-text{margin:0 0 10px}
+.answer-text-wrap .answer-full-text[hidden],
+.answer-text-wrap .answer-preview[hidden]{display:none}
+.answer-expand-toggle{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:38px;
+  padding:8px 13px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:transparent;
+  color:var(--accent);
+  font:inherit;
+  font-size:.82rem;
+  font-weight:750;
+  cursor:pointer;
+}
+.answer-expand-toggle:hover{border-color:var(--accent);background:var(--accent-2)}
+.answer-expand-toggle:focus-visible{outline:3px solid #92b9a1;outline-offset:3px}
+
+/* The author's answer is absent from the page until its shortcut is selected. */
+#author-answer-collective[hidden],
+#author-answer-hypothetical[hidden]{display:none!important}
+.author-answer-shortcut{font-size:.8em;font-weight:700}
