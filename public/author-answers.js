@@ -142,7 +142,7 @@
     const note = document.createElement('p');
     note.className = 'author-answer-note';
     note.textContent = words.note;
-    full.append(heading, body, note);
+    if (!isCollective) full.append(heading, body, note); else full.append(heading, body);
     toggle.addEventListener('click', () => {
       const open = full.hidden;
       full.hidden = !open;
@@ -165,7 +165,9 @@
     const volunteerRoot = document.getElementById('author-answer-hypothetical');
     if (collectiveRoot) {
       collectiveRoot.replaceChildren(makeCard('collective', locale));
-      collectiveRoot.hidden = true;
+      collectiveRoot.hidden = false;
+      const answerList = document.getElementById('answer-list');
+      if (answerList && collectiveRoot.parentElement !== answerList) answerList.append(collectiveRoot);
     }
     if (volunteerRoot) {
       volunteerRoot.replaceChildren(makeCard('volunteer', locale));
