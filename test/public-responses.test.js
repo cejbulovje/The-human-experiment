@@ -64,6 +64,7 @@ test('public response search combines text, topic and date filters before pagina
     assert.equal(result.total, 1);
     assert.equal(result.items.length, 1);
     assert.equal(result.items[0].id, 'a-1');
+    assert.equal(result.items[0].answerNumber, 2);
     assert.equal(result.hasMore, false);
   } finally { close(); }
 });
