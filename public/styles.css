@@ -507,3 +507,75 @@
 .share-options a:hover,.share-options button:hover{background:var(--accent-2);border-color:var(--accent)}
 .share-dialog-status{min-height:1.4em;margin:12px 0 0;color:var(--accent);font-size:.9rem}
 @media(max-width:420px){.share-dialog{padding:18px}.share-options{grid-template-columns:1fr}}
+
+
+/* Mobile Results: make empty native date controls self-explanatory. */
+.date-filter-label .filter-caption{display:none}
+@media(max-width:760px){
+  .date-filter-label .filter-caption{
+    display:block;
+    margin:0 0 5px 2px;
+    color:var(--muted);
+    font-size:.78rem;
+    font-weight:700;
+    line-height:1.35;
+  }
+  .answer-tools .date-filter-label input[type="date"]{
+    display:block;
+    min-height:48px;
+    width:100%;
+    padding:9px 10px;
+    color:var(--ink);
+    background:var(--card);
+  }
+}
+
+/* Footer navigation: give every destination a quiet, rounded outline. */
+.footer-links a,
+.footer-links button,
+.footer-links .footer-contact-copy,
+.footer-links .footer-share.share-button{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:40px;
+  max-width:100%;
+  padding:8px 12px!important;
+  border:1px solid var(--line)!important;
+  border-radius:999px!important;
+  background:var(--card)!important;
+  color:var(--muted)!important;
+  box-shadow:none!important;
+  font:inherit;
+  line-height:1.4;
+  text-decoration:none!important;
+  white-space:normal;
+}
+.footer-links a:hover,
+.footer-links button:hover{
+  border-color:#a8b8aa!important;
+  background:var(--accent-2)!important;
+  color:var(--accent)!important;
+}
+.footer-links .footer-contact-copy{
+  flex:0 1 auto;
+  width:auto;
+  text-align:center;
+  cursor:pointer;
+}
+@media(max-width:600px){
+  .footer{gap:12px}
+  .footer-brand{flex:0 0 100%}
+  .footer-links a,
+  .footer-links button,
+  .footer-links .footer-contact-copy{
+    min-height:40px;
+    padding:8px 11px!important;
+  }
+  .footer-links .footer-contact-copy{
+    flex:0 1 auto;
+    width:auto;
+    justify-content:center;
+    text-align:center;
+  }
+}
