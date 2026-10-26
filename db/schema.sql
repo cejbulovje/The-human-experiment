@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS responses (
   public_id TEXT,
   participant_id TEXT,
   is_public INTEGER NOT NULL DEFAULT 0,
-  topic TEXT NOT NULL DEFAULT 'other'
+  topic TEXT NOT NULL DEFAULT 'other',
+  answer_number INTEGER
 );
 CREATE INDEX IF NOT EXISTS idx_responses_created_at ON responses(created_at);
 CREATE INDEX IF NOT EXISTS idx_responses_language ON responses(language);
