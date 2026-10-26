@@ -209,13 +209,73 @@
         hypotheticalEmpty.hidden = view === 'overview';
         const title = hypotheticalEmpty.querySelector('[data-voice="emptyTitle"]');
         const text = hypotheticalEmpty.querySelector('[data-voice="emptyText"]');
-        const labels = {
-          all:['Все ответы','Когда появятся реальные ответы, здесь будет полный список.'],
-          question:['Ответы по вопросам','После начала сбора здесь можно будет выбрать вопрос и посмотреть ответы на него.'],
-          latest:['Новые ответы','Новые ответы появятся здесь после начала сбора личных предпочтений.'],
-          popular:['Популярные ответы','Популярность будет определяться по реальным реакциям участников.'],
-          unusual:['Необычные ответы','Здесь будут отображаться ответы, которые выделяются на фоне остальных.']
+        const language = document.documentElement.lang || 'en';
+        const labelsByLanguage = {
+          en: {
+            all:['All answers','A complete list will appear here when real answers are collected.'],
+            question:['Answers by question','You will be able to choose a question and explore its answers once collection begins.'],
+            latest:['Latest answers','New answers will appear here after personal preferences collection begins.'],
+            popular:['Popular answers','Popularity will be based on real participant reactions.'],
+            unusual:['Unusual answers','Answers that stand out from the rest will appear here.']
+          },
+          ru: {
+            all:['Все ответы','Когда появятся реальные ответы, здесь будет полный список.'],
+            question:['Ответы по вопросам','После начала сбора здесь можно будет выбрать вопрос и посмотреть ответы на него.'],
+            latest:['Новые ответы','Новые ответы появятся здесь после начала сбора личных предпочтений.'],
+            popular:['Популярные ответы','Популярность будет определяться по реальным реакциям участников.'],
+            unusual:['Необычные ответы','Здесь будут отображаться ответы, которые выделяются на фоне остальных.']
+          },
+          es: {
+            all:['Todas las respuestas','Aquí aparecerá la lista completa cuando se recopilen respuestas reales.'],
+            question:['Respuestas por pregunta','Cuando comience la recopilación, podrás elegir una pregunta y explorar sus respuestas.'],
+            latest:['Respuestas recientes','Aquí aparecerán nuevas respuestas cuando comience la recopilación de preferencias personales.'],
+            popular:['Respuestas populares','La popularidad se basará en las reacciones reales de los participantes.'],
+            unusual:['Respuestas inusuales','Aquí aparecerán las respuestas que destaquen entre las demás.']
+          },
+          pt: {
+            all:['Todas as respostas','A lista completa aparecerá aqui quando forem recolhidas respostas reais.'],
+            question:['Respostas por pergunta','Quando a recolha começar, poderá escolher uma pergunta e explorar as respostas.'],
+            latest:['Respostas recentes','Novas respostas aparecerão aqui quando começar a recolha de preferências pessoais.'],
+            popular:['Respostas populares','A popularidade será determinada pelas reações reais dos participantes.'],
+            unusual:['Respostas incomuns','Aqui aparecerão as respostas que se destacam das restantes.']
+          },
+          zh: {
+            all:['全部回答','开始收集真实回答后，完整列表将在这里显示。'],
+            question:['按问题查看回答','开始收集后，你可以选择一个问题并查看相关回答。'],
+            latest:['最新回答','开始收集个人偏好后，新的回答将在这里显示。'],
+            popular:['热门回答','热门程度将根据参与者的真实反应确定。'],
+            unusual:['特别回答','这里将显示与其他回答明显不同的内容。']
+          },
+          de: {
+            all:['Alle Antworten','Sobald echte Antworten gesammelt werden, erscheint hier die vollständige Liste.'],
+            question:['Antworten nach Frage','Sobald die Erhebung beginnt, kannst du eine Frage auswählen und ihre Antworten ansehen.'],
+            latest:['Neueste Antworten','Hier erscheinen neue Antworten, sobald die Erhebung persönlicher Präferenzen beginnt.'],
+            popular:['Beliebte Antworten','Die Beliebtheit richtet sich nach echten Reaktionen der Teilnehmenden.'],
+            unusual:['Ungewöhnliche Antworten','Hier erscheinen Antworten, die sich von den anderen abheben.']
+          },
+          ja: {
+            all:['すべての回答','実際の回答の収集が始まると、ここに一覧が表示されます。'],
+            question:['質問別の回答','収集開始後、質問を選んで回答を確認できるようになります。'],
+            latest:['最新の回答','個人の好みの収集が始まると、新しい回答がここに表示されます。'],
+            popular:['人気の回答','人気は参加者による実際のリアクションに基づいて決まります。'],
+            unusual:['特徴的な回答','ほかの回答と異なる特徴のある回答がここに表示されます。']
+          },
+          fr: {
+            all:['Toutes les réponses','La liste complète apparaîtra ici lorsque de vraies réponses seront recueillies.'],
+            question:['Réponses par question','Lorsque la collecte commencera, vous pourrez choisir une question et consulter ses réponses.'],
+            latest:['Réponses récentes','Les nouvelles réponses apparaîtront ici lorsque la collecte des préférences personnelles commencera.'],
+            popular:['Réponses populaires','La popularité sera déterminée par les réactions réelles des participants.'],
+            unusual:['Réponses inhabituelles','Les réponses qui se distinguent des autres apparaîtront ici.']
+          },
+          ar: {
+            all:['جميع الإجابات','ستظهر القائمة الكاملة هنا عند جمع إجابات حقيقية.'],
+            question:['الإجابات حسب السؤال','عند بدء الجمع، ستتمكن من اختيار سؤال واستعراض إجاباته.'],
+            latest:['أحدث الإجابات','ستظهر الإجابات الجديدة هنا عند بدء جمع التفضيلات الشخصية.'],
+            popular:['الإجابات الشائعة','ستُحدَّد الشعبية بناءً على تفاعلات المشاركين الحقيقية.'],
+            unusual:['إجابات غير مألوفة','ستظهر هنا الإجابات التي تتميز عن غيرها.']
+          }
         };
+        const labels = labelsByLanguage[language] || labelsByLanguage.en;
         const pair = labels[view] || labels.all;
         if (title) title.textContent = pair[0];
         if (text) text.textContent = pair[1];
