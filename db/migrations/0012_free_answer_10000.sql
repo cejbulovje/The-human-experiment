@@ -1,6 +1,6 @@
 -- Raise the main survey free-answer limit without discarding existing responses.
--- Foreign-key enforcement is disabled only while the responses table is rebuilt;
--- dependent tables keep their references to the final table name, responses.
+-- Preserve columns and stable numbering added by later migrations.
+-- Foreign-key enforcement is disabled only while the responses table is rebuilt.
 PRAGMA foreign_keys = OFF;
 BEGIN TRANSACTION;
 
@@ -21,16 +21,19 @@ CREATE TABLE responses_new (
   public_id TEXT,
   participant_id TEXT,
   is_public INTEGER NOT NULL DEFAULT 0,
-  topic TEXT NOT NULL DEFAULT 'other'
+  topic TEXT NOT NULL DEFAULT 'other',
+  answer_number INTEGER
 );
 
 INSERT INTO responses_new (
   id, language, free_answer, q2, q3, q4, q2_other, q3_other, q4_other,
-  gender, orientation, signature, created_at, public_id, participant_id, is_public, topic
+  gender, orientation, signature, created_at, public_id, participant_id,
+  is_public, topic, answer_number
 )
 SELECT
   id, language, free_answer, q2, q3, q4, q2_other, q3_other, q4_other,
-  gender, orientation, signature, created_at, public_id, participant_id, is_public, topic
+  gender, orientation, signature, created_at, public_id, participant_id,
+  is_public, topic, answer_number
 FROM responses;
 
 DROP TABLE responses;
@@ -42,6 +45,21 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_responses_public_id ON responses(public_id
 CREATE INDEX IF NOT EXISTS idx_responses_participant_public ON responses(participant_id, is_public, created_at);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_responses_participant_id_unique ON responses(participant_id) WHERE participant_id IS NOT NULL;
 CREATE INDEX IF NOT EXISTS idx_responses_public_created ON responses(is_public, created_at);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_responses_answer_number
+  ON responses(answer_number)
+  WHERE answer_number IS NOT NULL;
+
+CREATE TRIGGER IF NOT EXISTS assign_public_answer_number
+AFTER INSERT ON responses
+WHEN NEW.is_public = 1 AND NEW.answer_number IS NULL
+BEGIN
+  UPDATE responses
+  SET answer_number = COALESCE(
+    (SELECT MAX(answer_number) + 1 FROM responses WHERE id <> NEW.id AND answer_number IS NOT NULL),
+    2
+  )
+  WHERE id = NEW.id;
+END;
 
 COMMIT;
 PRAGMA foreign_keys = ON;
