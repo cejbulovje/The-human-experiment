@@ -95,6 +95,22 @@
   };
 
 
+  const localizedVolunteerAnswers = {
+    es: [
+      'Si fuera voluntario en este experimento, probablemente estaría dispuesto a dejar que la humanidad decidiera qué ocurre en mi vida. Personas de todo el mundo podrían elegir mi imagen, determinar mis actividades, proponerme nuevas oportunidades y decidir cómo sería mi camino a partir de entonces.',
+      'Me interesaría descubrir adónde conduce una experiencia así. ¿Qué querría cambiar la gente en mi vida? ¿Qué oportunidades me ofrecería? ¿Cómo imaginaría mi futuro si pudiera diseñarlo en conjunto?',
+      'Preferiría que, al principio, mi identidad y mi edad exacta permanecieran en secreto. Creo que esos datos podrían influir en las decisiones de los participantes, crear expectativas o llevarlos a juzgarme de antemano. Me parecería más interesante que al principio vieran al voluntario simplemente como una persona —un hombre o una mujer de cierta edad, preferiblemente en la plenitud de la vida—, sin conocer su nombre, biografía ni otros detalles de su vida privada. Así tendrían más libertad para imaginar quién podría ser, sin adaptar sus decisiones a una opinión ya formada.',
+      '❤️ Estaría dispuesto a confiar mi destino a la humanidad, sin perder la esperanza en su humanidad. Para mí, eso significaría no solo permitir que las personas tomaran decisiones, sino también darles la oportunidad de demostrar cómo asumirían esa responsabilidad.',
+      'También me gustaría compartir mis ideas y reflexiones con los participantes, si les interesara. No esperaría que mi opinión tuviera que tenerse en cuenta ni que mis ideas pasaran a formar parte del experimento. Pero, si quisieran escucharme, les contaría con gusto lo que se me ocurriera. Creo que podría tener ideas poco habituales, incluso algunas que los participantes no se hubieran planteado antes. Al fin y al cabo, el propio experimento surgió de imaginar algo que todavía no existe en la realidad. Me interesaría saber si encuentran valor en otras reflexiones mías.',
+      'Por supuesto, querría vivir una vida feliz e interesante, no sufrir. Pero no querría decidir de antemano por los participantes cómo debería ser mi vida. Me interesaría ver qué decisiones toman por sí mismos, aunque algunas fueran inesperadas o distintas de las que yo habría elegido.',
+      'Tendría solo unas pocas condiciones fundamentales. No querría sufrir torturas, violencia ni otras formas de sufrimiento físico deliberado. Estoy dispuesto a confiar en la humanidad hasta el punto de aceptar incluso una decisión que pudiera ser la última de mi vida. En ese caso, solo pediría que ocurriera sin dolor. También querría conservar la posibilidad de comunicarme con mis padres, verlos y mantener una relación con ellos.',
+      'Me interesaría ver cómo aprovecha la gente esta oportunidad. ¿Qué objetivos se propondría? ¿Qué querría cambiar en mi vida, qué oportunidades me abriría y cómo imaginaría mi futuro? Quiero creer que, si pudieran decidir juntos el destino de una persona, querrían hacer más plena, interesante y feliz no solo su vida, sino también las suyas propias. Espero que la experiencia aporte algo valioso a cada uno y nos permita no solo cambiar la vida de alguien, sino también enriquecer la nuestra. Sobre todo, querría ver a qué conclusiones llega la gente por sí misma, sin imponer una respuesta de antemano.',
+      'Me gustaría descubrir qué ocurriría si realmente confiara a otras personas esta responsabilidad. No porque esté seguro de que todas sus decisiones serían acertadas, sino porque quiero ver cómo aprovechan esta oportunidad. ¿Podrían tener en cuenta no solo sus propias ideas sobre cómo debería ser mi vida, sino también qué podría hacerme feliz a mí?',
+      'En última instancia, este experimento sería una prueba de confianza entre una persona y toda la humanidad. Daría a la gente la oportunidad de influir en mi destino, y ellos tendrían la oportunidad de demostrar qué significa para ellos ser responsables de otra persona.',
+      'Quizá eso sea lo que más me interesa: ver qué sucede cuando una persona decide confiar en la humanidad sin conocer de antemano el resultado, pero sin renunciar a la esperanza en su humanidad.'
+    ]
+  };
+
   const volunteerParagraphTranslations = {
     en: '❤️ I would be ready to entrust my fate to humanity while preserving hope in its humanity. To me, that would mean not only allowing people to make decisions, but also giving them the opportunity to show how they would handle such responsibility.',
     ru: '❤️ Я был бы готов доверить свою судьбу человечеству, сохранив надежду на его человечность. Для меня это означало бы не просто позволить людям принимать решения, но и дать им возможность самим показать, как они распорядятся такой ответственностью.',
@@ -112,7 +128,7 @@
     const words = labels[locale] || labels.en;
     const isCollective = kind === 'collective';
     const title = isCollective ? (words.collectiveTitle || source.collectiveTitle) : (words.volunteerTitle || source.volunteerTitle);
-    const paragraphs = isCollective ? source.collective : source.volunteer;
+    const paragraphs = isCollective ? source.collective : (localizedVolunteerAnswers[locale] || source.volunteer);
     const card = document.createElement('article');
     card.className = 'answer-card author-answer-card';
     card.id = isCollective ? 'author-answer-collective-card' : 'answer-1';
@@ -159,7 +175,7 @@
 
   function render() {
     const lang = document.getElementById('page-language')?.value || 'en';
-    const locale = lang === 'ru' ? 'ru' : 'en';
+    const locale = answers[lang] || localizedVolunteerAnswers[lang] ? lang : 'en';
     const words = labels[lang] || labels.en;
     document.querySelectorAll('.author-answer-shortcut').forEach(shortcut => {
       shortcut.textContent = words.author + ' · ' + words.number;
