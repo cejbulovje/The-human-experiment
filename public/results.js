@@ -66,6 +66,20 @@ let searchTimer;function resetSearch(){clearTimeout(searchTimer);searchTimer=set
   requestAnimationFrame(()=>card.scrollIntoView({behavior:'smooth',block:'start'}));
   return true;
 }
+function openHypotheticalAuthorAnswerOne(){
+  const root=$('#author-answer-hypothetical');
+  const card=document.getElementById('answer-1');
+  const full=card?.querySelector('.author-answer-full');
+  const toggle=card?.querySelector('.author-answer-toggle');
+  if(!root||!card||!full||!toggle)return false;
+  root.hidden=false;card.hidden=false;full.hidden=false;
+  toggle.setAttribute('aria-expanded','true');
+  const labels={ru:{show:'Читать полный ответ',hide:'Свернуть ответ'},en:{show:'Read the full answer',hide:'Collapse answer'}};
+  toggle.textContent=(labels[lang]||labels.en).hide;
+  $('#answers-status').hidden=true;
+  requestAnimationFrame(()=>card.scrollIntoView({behavior:'smooth',block:'start'}));
+  return true;
+}
 async function loadLinkedAnswer(){
   if(location.hash==='#author-answer-1'){openCollectiveAuthorAnswerOne();return;}
   const raw=location.hash.match(/^#answer-(.+)$/);
@@ -73,7 +87,7 @@ async function loadLinkedAnswer(){
   let id=raw[1];
   try{id=decodeURIComponent(id);}catch{}
   if(!id||id.length>100)return;
-  if(id==='1'){openAuthorAnswerOne();return;}
+  if(id==='1'){openHypotheticalAuthorAnswerOne();return;}
   try{
     const params=new URLSearchParams({id,limit:'1',offset:'0'});
     const res=await fetch('/api/public-responses?'+params.toString());
