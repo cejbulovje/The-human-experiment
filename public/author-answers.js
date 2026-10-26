@@ -246,6 +246,7 @@
       'وأريد أن أرى ما إذا كان هذا الشخص قادرًا على جعل العالم أقرب قليلًا، والحياة أكثر إثارة قليلًا، ومساعدة كل منا على الشعور بعمق أكبر بأنه ليس وحيدًا وأن مشاركته لها معنى حقيقي. ربما ننظر يومًا إلى الوراء ونفهم أننا بدأنا بسؤال بسيط عن الكيفية التي ينبغي أن يكون عليها شخص واحد، لكننا اكتشفنا في النهاية شيئًا أكبر بكثير: ما الذي يمكن أن نصبح عليه عندما نعمل معًا.'
     ]
 
+  };
   const localizedVolunteerAnswers = {
     es: [
       'Si fuera voluntario en este experimento, probablemente estaría dispuesto a dejar que la humanidad decidiera qué ocurre en mi vida. Personas de todo el mundo podrían elegir mi imagen, determinar mis actividades, proponerme nuevas oportunidades y decidir cómo sería mi camino a partir de entonces.',
