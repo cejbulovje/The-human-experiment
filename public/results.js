@@ -108,7 +108,7 @@ async function loadLinkedAnswer(){
     requestAnimationFrame(()=>document.getElementById(`answer-${CSS.escape(item.id)}`)?.scrollIntoView({behavior:'smooth',block:'start'}));
   }catch{}
 }
-restoreFiltersFromUrl();applyLanguage();syncParticipantMode();loadStats();loadAnswers(true).then(()=>loadLinkedAnswer());
+restoreFiltersFromUrl();applyLanguage();syncParticipantMode();loadStats();if(DEMO_MODE){document.addEventListener('DOMContentLoaded',()=>{queueMicrotask(()=>loadAnswers(true).then(()=>loadLinkedAnswer()));},{once:true});}else{loadAnswers(true).then(()=>loadLinkedAnswer());}
 
 const aiForm=$('#ai-analysis-form');
 aiForm.addEventListener('submit',async event=>{
