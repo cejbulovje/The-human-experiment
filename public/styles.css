@@ -654,3 +654,5 @@
     padding:4px 7px!important;
   }
 }
+
+.brand-inline{display:inline-flex;align-items:center;gap:.22em;white-space:nowrap;vertical-align:baseline;font-weight:700;letter-spacing:.015em;unicode-bidi:isolate}.brand-inline img{display:inline-block;width:1.05em;height:1.05em;object-fit:contain;vertical-align:middle;flex:0 0 auto}.brand-inline.notranslate{translate:no}
