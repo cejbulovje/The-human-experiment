@@ -16,7 +16,7 @@
       const intro = document.createElement('p');
       intro.className = 'author-answer-intro';
       intro.textContent = introText[locale];
-      heading.before(intro);
+      article.insertBefore(intro, article.querySelector('.author-answer-toggle'));
     }
     const emojis = ['🤝','👁️','🛡️','🌐',null,'🪞','❤️','🌱',null,null,null,'🔄','💡','🌍','🎨','✨','🌟','🤝','🌍❤️'];
     const paragraphs = article.querySelectorAll('.author-answer-body p');
