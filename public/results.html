@@ -283,6 +283,7 @@
       const tools = document.querySelector('.hypothetical-answer-tools');
       if (tools) tools.hidden = view === 'overview';
     };
+    document.addEventListener('results-language-changed', render);
     streamLinks.forEach(link => link.addEventListener('click', event => {
       event.preventDefault();
       stream = link.dataset.resultsStream === 'hypothetical' ? 'hypothetical' : 'collective';
