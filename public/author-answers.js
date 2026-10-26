@@ -92,15 +92,6 @@
     ja: {author:'実験の発案者による回答', note:'発案者の例です。独立した参加者の回答ではなく、統計には含まれません。', number:'No. 1', show:"回答全文を読む", hide:"回答全文を閉じる", collectiveTitle:"私の選択：私たちが共に責任を担う一人の人", volunteerTitle:"もし私が参加者だったら"},
     fr: {author:'Réponse de l’auteur de l’expérience', note:'Exemple de l’auteur. Ce n’est pas une réponse d’un participant indépendant et elle n’est pas comptabilisée.', number:'N° 1', show:"Lire la réponse complète", hide:"Masquer la réponse complète", collectiveTitle:"Mon choix : une personne dont nous sommes collectivement responsables", volunteerTitle:"Si j’étais volontaire"},
     ar: {author:'إجابة صاحب فكرة التجربة', note:'مثال من صاحب الفكرة، وليس إجابة مشارك مستقل، ولا يُحتسب ضمن الإحصاءات.', number:'رقم 1', show:"قراءة الإجابة كاملة", hide:"إخفاء الإجابة كاملة", collectiveTitle:"اختياري: شخص نتحمل مسؤوليته معًا", volunteerTitle:"لو كنت متطوعًا"},
-    en: {author:'Experiment author’s answer', note:'Author’s example. Not an independent participant response; excluded from statistics.', number:'No. 1', show:'Read the full answer', hide:'Hide the full answer'},
-    ru: {author:'Ответ автора эксперимента', note:'Авторский пример. Не является ответом независимого участника и не учитывается в статистике.', number:'№ 1', show:'Читать полный ответ', hide:'Скрыть полный ответ'},
-    es: {author:'Respuesta del autor del experimento', note:'Ejemplo del autor. No es una respuesta de un participante independiente y no cuenta para las estadísticas.', number:'N.º 1', show:'Leer la respuesta completa', hide:'Ocultar la respuesta completa'},
-    pt: {author:'Resposta do autor do experimento', note:'Exemplo do autor. Não é uma resposta de participante independente e não entra nas estatísticas.', number:'N.º 1', show:'Ler a resposta completa', hide:'Ocultar a resposta completa'},
-    zh: {author:'实验发起者的回答', note:'作者示例。不是独立参与者的回答，不计入统计。', number:'第 1 条', show:'阅读完整回答', hide:'收起完整回答'},
-    de: {author:'Antwort des Experimentautors', note:'Beispiel des Autors. Keine unabhängige Teilnehmerantwort und nicht Teil der Statistik.', number:'Nr. 1', show:'Vollständige Antwort lesen', hide:'Vollständige Antwort ausblenden'},
-    ja: {author:'実験の発案者による回答', note:'発案者の例です。独立した参加者の回答ではなく、統計には含まれません。', number:'No. 1', show:'回答全文を読む', hide:'回答全文を閉じる'},
-    fr: {author:'Réponse de l’auteur de l’expérience', note:'Exemple de l’auteur. Ce n’est pas une réponse d’un participant indépendant et elle n’est pas comptabilisée.', number:'N° 1', show:'Lire la réponse complète', hide:'Masquer la réponse complète'},
-    ar: {author:'إجابة صاحب فكرة التجربة', note:'مثال من صاحب الفكرة، وليس إجابة مشارك مستقل، ولا يُحتسب ضمن الإحصاءات.', number:'رقم 1', show:'قراءة الإجابة كاملة', hide:'إخفاء الإجابة كاملة'}
   };
 
 
