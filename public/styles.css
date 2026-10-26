@@ -81,6 +81,7 @@
 .answer-context{margin-top:16px;padding:14px 16px;background:var(--accent-2);border-radius:12px;color:var(--ink)}
 .answer-context p{margin:6px 0;font-size:.88rem;line-height:1.55}
 .show-more-button{display:block;margin:20px auto 0;padding:12px 24px;background:var(--card)}
+#show-more[hidden]{display:none!important}
 #answers-status:empty{display:none}
 @media(min-width:761px) and (max-width:1050px){.answer-tools{grid-template-columns:minmax(180px,2fr) minmax(150px,1.3fr) auto minmax(120px,1fr)}.answer-tools .date-filter-label{min-width:0}}@media(max-width:760px){.answer-tools{grid-template-columns:repeat(2,minmax(0,1fr))}.answer-tools .search-field{grid-column:1/-1}.answer-tools .answer-number-jump{grid-column:span 1}.answer-tools #answer-number-go{width:100%}.section-heading{align-items:flex-start;flex-direction:column;gap:10px}}
 @media(max-width:420px){.answer-tools{grid-template-columns:1fr}.answer-tools .search-field{grid-column:auto}.answer-actions{gap:7px}.reaction-button,.subtle-button{font-size:.77rem;padding:8px 10px}}
