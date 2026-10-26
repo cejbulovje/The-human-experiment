@@ -222,7 +222,7 @@
         const after = source.slice(match.index + match[0].length);
         const dash = after.match(/^(\s*[-‐‑–—]\s*)/);
         if (dash) {
-          brand.append(document.createTextNode(' -'));
+          brand.append(document.createTextNode(' -\u00a0'));
           cursor = match.index + match[0].length + dash[0].length;
         } else {
           cursor = match.index + match[0].length;
