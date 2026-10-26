@@ -423,7 +423,7 @@
     }
     if (volunteerRoot) {
       volunteerRoot.replaceChildren(makeCard('volunteer', locale));
-      volunteerRoot.hidden = true;
+      volunteerRoot.hidden = collectiveRoot?.dataset.resultsUnlocked !== 'true';
     }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', render, { once: true });
