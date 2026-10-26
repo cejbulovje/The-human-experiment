@@ -414,7 +414,11 @@
       collectiveRoot.replaceChildren(makeCard('collective', locale));
       collectiveRoot.hidden = false;
       const answerList = document.getElementById('answer-list');
-      if (answerList && collectiveRoot.parentElement !== answerList) answerList.append(collectiveRoot);
+      if (answerList) {
+        if (collectiveRoot.parentElement !== answerList) answerList.prepend(collectiveRoot);
+        else if (answerList.firstElementChild !== collectiveRoot) answerList.prepend(collectiveRoot);
+        collectiveRoot.hidden = false;
+      }
     }
     if (volunteerRoot) {
       volunteerRoot.replaceChildren(makeCard('volunteer', locale));
