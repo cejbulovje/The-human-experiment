@@ -359,7 +359,7 @@
     const paragraphs = isCollective ? (localizedCollectiveAnswers[locale] || source.collective) : (localizedVolunteerAnswers[locale] || source.volunteer);
     const card = document.createElement('article');
     card.className = 'answer-card author-answer-card';
-    card.id = isCollective ? 'answer-1' : 'author-answer-volunteer';
+    card.id = isCollective ? 'author-answer-1' : 'author-answer-volunteer';
     const top = document.createElement('div');
     top.className = 'answer-card-top';
     const code = document.createElement('span');
