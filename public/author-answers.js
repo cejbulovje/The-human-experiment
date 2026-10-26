@@ -426,7 +426,8 @@
       volunteerRoot.hidden = true;
     }
   }
-  document.addEventListener('DOMContentLoaded', render);
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', render, { once: true });
+  else render();
   document.getElementById('page-language')?.addEventListener('change', render);
   document.addEventListener('click', event => {
     const shortcut = event.target.closest('.author-answer-shortcut');
