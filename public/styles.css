@@ -61,7 +61,7 @@
 .section-heading .eyebrow{margin-bottom:8px}
 .section-intro{color:var(--muted);margin:0;max-width:620px}
 .status-chip,.answer-total{font-size:.78rem;color:var(--muted);border:1px solid var(--line);background:var(--card);padding:7px 11px;border-radius:999px;white-space:nowrap}
-.answer-tools{display:grid;grid-template-columns:minmax(180px,2fr) repeat(4,minmax(100px,1fr));gap:9px;margin:24px 0 16px}
+.answer-tools{display:grid;grid-template-columns:minmax(220px,2fr) minmax(170px,1.25fr) auto minmax(130px,1fr) minmax(145px,1fr) minmax(145px,1fr);align-items:end;gap:12px;margin:24px 0 16px}.answer-tools .answer-number-jump{display:grid;grid-template-columns:1fr;gap:4px}.answer-tools .answer-number-jump>span{font-size:.76rem;color:var(--muted);line-height:1.25}.answer-tools #answer-number-go{align-self:end;min-height:43px;white-space:nowrap}.answer-tools #reset-filters,.answer-tools #all-participants{min-height:43px;white-space:nowrap}
 .answer-tools label{min-width:0}
 .answer-tools input,.answer-tools select{width:100%;min-width:0;min-height:43px;border:1px solid var(--line);border-radius:11px;background:var(--card);padding:9px 11px;color:var(--ink);font:inherit;font-size:.88rem}
 .answer-list{display:grid;gap:14px}
@@ -82,7 +82,7 @@
 .answer-context p{margin:6px 0;font-size:.88rem;line-height:1.55}
 .show-more-button{display:block;margin:20px auto 0;padding:12px 24px;background:var(--card)}
 #answers-status:empty{display:none}
-@media(max-width:760px){.answer-tools{grid-template-columns:repeat(2,minmax(0,1fr))}.answer-tools .search-field{grid-column:1/-1}.section-heading{align-items:flex-start;flex-direction:column;gap:10px}}
+@media(min-width:761px) and (max-width:1050px){.answer-tools{grid-template-columns:minmax(180px,2fr) minmax(150px,1.3fr) auto minmax(120px,1fr)}.answer-tools .date-filter-label{min-width:0}}@media(max-width:760px){.answer-tools{grid-template-columns:repeat(2,minmax(0,1fr))}.answer-tools .search-field{grid-column:1/-1}.answer-tools .answer-number-jump{grid-column:span 1}.answer-tools #answer-number-go{width:100%}.section-heading{align-items:flex-start;flex-direction:column;gap:10px}}
 @media(max-width:420px){.answer-tools{grid-template-columns:1fr}.answer-tools .search-field{grid-column:auto}.answer-actions{gap:7px}.reaction-button,.subtle-button{font-size:.77rem;padding:8px 10px}}
 .topic-correction{margin-top:12px;font-size:.8rem;color:var(--muted)}
 .topic-correction summary{cursor:pointer;display:inline-block}
