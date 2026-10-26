@@ -105,7 +105,7 @@ function classifyTopic(text){
   return (groups.find(([key,re])=>re.test(value))||['other'])[0];
 }
 export function resultThresholdsThrough(maximum=1_000_000_000_000){
-  const thresholds=[100,500];
+  const thresholds=[100,200,500];
   for(let power=1000;power<=maximum;power*=10){
     thresholds.push(power,power*2,power*5);
   }
