@@ -702,3 +702,16 @@
 /* Results page desktop layout: give the answer feed and filters enough room. */
 @media(min-width:1060px){.shell.results-page{max-width:1160px}.results-page .answer-tools{grid-template-columns:minmax(220px,2fr) minmax(150px,1.3fr) auto minmax(130px,1fr) minmax(150px,1.1fr) minmax(150px,1.1fr)}.results-page .answer-tools #reset-filters,.results-page .answer-tools #all-participants{justify-self:start}}
 @media(min-width:761px) and (max-width:1059px){.shell.results-page{max-width:960px}.results-page .answer-tools{grid-template-columns:minmax(200px,2fr) minmax(145px,1.3fr) auto minmax(125px,1fr)}.results-page .answer-tools .date-filter-label{min-width:0}}
+
+/* Results view tabs: shared visual language for all result views */
+.results-view-tabs{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin:28px 0 24px}
+.results-view-tab{min-height:42px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:rgba(255,255,255,.55);color:var(--ink);font:inherit;font-size:.92rem;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.results-view-tab:hover{border-color:var(--accent)}
+.results-view-tab.is-active{background:var(--accent);border-color:var(--accent);color:#fff}
+.results-view-tab:focus-visible{outline:3px solid #92b9a1;outline-offset:2px}
+.results-question-picker{display:flex;align-items:center;gap:12px;margin:0 0 22px;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.results-question-picker[hidden],.results-page [hidden]{display:none!important}
+.results-question-picker label{font-weight:650}
+.results-question-picker select{flex:1;min-width:0;max-width:100%;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:white;color:var(--ink);font:inherit}
+.results-page .statistics-section,.results-page .public-answers-section{scroll-margin-top:18px}
+@media(max-width:760px){.results-view-tabs{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.results-view-tab{font-size:.84rem;padding:9px 5px}.results-question-picker{align-items:stretch;flex-direction:column}}
