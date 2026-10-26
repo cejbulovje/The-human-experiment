@@ -48,7 +48,7 @@ test('statistics stay locked at 99 public responses',async()=>{
 test('100 responses publish one snapshot and repeated reads do not rewrite it',async()=>{
   const db=new MockD1(100); const first=await fetchResults(db);
   assert.equal(first.status,200); assert.equal(first.body.unlocked,true); assert.equal(first.body.total,100);
-  assert.equal(first.body.publishedThreshold,100); assert.equal(first.body.nextThreshold,500); assert.equal(db.writes,1);
+  assert.equal(first.body.publishedThreshold,100); assert.equal(first.body.nextThreshold,200); assert.equal(db.writes,1);
   const timestamp=db.snapshot.updated_at; const second=await fetchResults(db);
   assert.equal(second.status,200); assert.equal(second.body.publishedThreshold,100); assert.equal(db.writes,1); assert.equal(db.snapshot.updated_at,timestamp);
 });
