@@ -419,6 +419,7 @@
         else if (answerList.firstElementChild !== collectiveRoot) answerList.prepend(collectiveRoot);
         collectiveRoot.hidden = false;
       }
+      window.dispatchEvent(new CustomEvent('author-answer-rendered'));
     }
     if (volunteerRoot) {
       volunteerRoot.replaceChildren(makeCard('volunteer', locale));
