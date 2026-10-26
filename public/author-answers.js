@@ -410,6 +410,10 @@
     });
     const collectiveRoot = document.getElementById('author-answer-collective');
     const volunteerRoot = document.getElementById('author-answer-hypothetical');
+    window.__THE_HUMAN_EXPERIMENT_AUTHOR_ANSWERS__ = {
+      collective: localizedCollectiveAnswers[locale] || answers[locale]?.collective || answers.en.collective,
+      volunteer: localizedVolunteerAnswers[locale] || answers[locale]?.volunteer || answers.en.volunteer
+    };
     if (collectiveRoot) {
       collectiveRoot.replaceChildren(makeCard('collective', locale));
       collectiveRoot.hidden = false;
