@@ -103,6 +103,19 @@
     ar: {author:'إجابة صاحب فكرة التجربة', note:'مثال من صاحب الفكرة، وليس إجابة مشارك مستقل، ولا يُحتسب ضمن الإحصاءات.', number:'رقم 1', show:'قراءة الإجابة كاملة', hide:'إخفاء الإجابة كاملة'}
   };
 
+
+  const volunteerParagraphTranslations = {
+    en: '❤️ I would be ready to entrust my fate to humanity while preserving hope in its humanity. To me, that would mean not only allowing people to make decisions, but also giving them the opportunity to show how they would handle such responsibility.',
+    ru: '❤️ Я был бы готов доверить свою судьбу человечеству, сохранив надежду на его человечность. Для меня это означало бы не просто позволить людям принимать решения, но и дать им возможность самим показать, как они распорядятся такой ответственностью.',
+    es: '❤️ Estaría dispuesto a confiar mi destino a la humanidad, sin perder la esperanza en su humanidad. Para mí, eso significaría no solo permitir que las personas tomaran decisiones, sino también darles la oportunidad de demostrar cómo asumirían esa responsabilidad.',
+    pt: '❤️ Eu estaria disposto a confiar meu destino à humanidade, mantendo a esperança na sua humanidade. Para mim, isso significaria não apenas permitir que as pessoas tomassem decisões, mas também dar a elas a oportunidade de mostrar como lidariam com essa responsabilidade.',
+    zh: '❤️ 我愿意把自己的命运托付给人类，同时仍然相信人性的善意。对我而言，这不仅意味着允许人们作出决定，也意味着给他们机会，亲自展示他们会如何承担这份责任。',
+    de: '❤️ Ich wäre bereit, mein Schicksal der Menschheit anzuvertrauen und dabei die Hoffnung auf ihre Menschlichkeit zu bewahren. Für mich hieße das nicht nur, den Menschen Entscheidungen zu überlassen, sondern ihnen auch die Möglichkeit zu geben, selbst zu zeigen, wie sie mit dieser Verantwortung umgehen würden.',
+    ja: '❤️ 人類の人間性への希望を失わずに、自分の運命を人類に委ねる覚悟があります。私にとってそれは、人々に決定を任せるだけでなく、その責任にどう向き合うのかを自ら示す機会を与えることでもあります。',
+    fr: '❤️ Je serais prêt à confier mon destin à l’humanité tout en gardant espoir en son humanité. Pour moi, cela signifierait non seulement laisser les gens prendre des décisions, mais aussi leur donner l’occasion de montrer eux-mêmes comment ils assumeraient cette responsabilité.',
+    ar: '❤️ سأكون مستعدًا لأن أضع مصيري بين يدي البشرية، مع الحفاظ على أملي في إنسانيتها. وهذا لا يعني بالنسبة إليّ السماح للناس باتخاذ القرارات فحسب، بل منحهم أيضًا الفرصة ليُظهروا بأنفسهم كيف سيتعاملون مع هذه المسؤولية.'
+  };
+
   function makeCard(kind, locale) {
     const source = answers[locale] || answers.en;
     const words = labels[locale] || labels.en;
@@ -135,7 +148,7 @@
     body.className = 'author-answer-body';
     paragraphs.forEach((paragraph, index) => {
       const p = document.createElement('p');
-      p.textContent = paragraph;
+      p.textContent = kind === 'volunteer' && index === 3 ? (volunteerParagraphTranslations[locale] || volunteerParagraphTranslations.en) : paragraph;
       body.append(p);
     });
     const note = document.createElement('p');
