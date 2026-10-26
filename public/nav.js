@@ -190,7 +190,7 @@
     details.querySelectorAll('a').forEach(link => link.addEventListener('click', () => { details.open = false; }));
   });
 
-  // Keep the project name isolated from browser auto-translation and preserve readable spacing.
+  // Replace visible brand mentions with a non-translatable inline lockup, preserving punctuation and spacing.
   const protectBrandText = (root = document.body) => {
     if (!root) return;
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
@@ -219,7 +219,6 @@
         logo.alt = '';
         logo.setAttribute('aria-hidden', 'true');
         brand.append(logo, document.createTextNode('THE HUMAN EXPERIMENT'));
-        // Keep a following dash attached to the protected brand so browser translation cannot drop it.
         const after = source.slice(match.index + match[0].length);
         const dash = after.match(/^(\s*[-‐‑–—]\s*)/);
         if (dash) {
@@ -227,9 +226,11 @@
           cursor = match.index + match[0].length + dash[0].length;
         } else {
           cursor = match.index + match[0].length;
-          // Replace one source whitespace with a non-breaking space, preventing both merging and a double gap.
-          if (/^\s/.test(after)) cursor += 1;
-          fragment.append(document.createTextNode('\u00a0'));
+          // Use a visible non-breaking gap after the brand when source text continues.
+          if (after.length) {
+            brand.append(document.createTextNode('\u00a0'));
+            if (/^\s/.test(after)) cursor += 1;
+          }
         }
         fragment.append(brand);
       });
