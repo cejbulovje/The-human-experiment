@@ -134,60 +134,61 @@
   (() => {
     const tabs = [...document.querySelectorAll('[data-results-view]')];
     const streamLinks = [...document.querySelectorAll('[data-results-stream]')];
-    streamLinks.forEach(link => link.addEventListener('click', event => {
-      event.preventDefault();
-      const stream = link.dataset.resultsStream;
-      streamLinks.forEach(item => item.classList.toggle('is-active', item === link));
-      const hypotheticalSection = document.querySelector('.hypothetical-answers-section');
-      if (stream === 'hypothetical') {
-        tabs.forEach(tab => { tab.classList.toggle('is-active', tab.dataset.resultsView === 'overview'); tab.setAttribute('aria-pressed', String(tab.dataset.resultsView === 'overview')); });
-        const stats = document.querySelector('#statistics-section');
-        const answers = document.querySelector('.public-answers-section:not(.hypothetical-answers-section)');
-        const ai = document.querySelector('.ai-analysis-section');
-        if (stats) stats.hidden = true;
-        if (answers) answers.hidden = true;
-        if (ai) ai.hidden = true;
-        if (hypotheticalSection) { hypotheticalSection.hidden = false; hypotheticalSection.scrollIntoView({behavior:'smooth',block:'start'}); }
-      } else {
-        const overviewTab = tabs.find(tab => tab.dataset.resultsView === 'overview');
-        if (overviewTab) overviewTab.click();
-        document.querySelector('#statistics-section')?.scrollIntoView({behavior:'smooth',block:'start'});
-      }
-    }));
-    if (!tabs.length) return;
     const stats = document.querySelector('#statistics-section');
-    const answers = document.querySelector('.public-answers-section');
+    const collectiveAnswers = document.querySelector('.public-answers-section:not(.hypothetical-answers-section)');
     const hypothetical = document.querySelector('.hypothetical-answers-section');
     const ai = document.querySelector('.ai-analysis-section');
     const picker = document.querySelector('.results-question-picker');
     const questionSelect = document.querySelector('#results-question-select');
-    const charts = ['q2','q3','q4'].map((q) => document.querySelector('#chart-' + q)?.closest('.result-section'));
-    const showView = (view) => {
-      tabs.forEach((tab) => {
+    const charts = ['q2','q3','q4'].map(q => document.querySelector('#chart-' + q)?.closest('.result-section'));
+    let stream = 'collective';
+    let view = 'overview';
+    const render = () => {
+      streamLinks.forEach(link => {
+        const active = link.dataset.resultsStream === stream;
+        link.classList.toggle('is-active', active);
+        link.setAttribute('aria-current', active ? 'true' : 'false');
+      });
+      tabs.forEach(tab => {
         const active = tab.dataset.resultsView === view;
         tab.classList.toggle('is-active', active);
         tab.setAttribute('aria-pressed', String(active));
+        tab.hidden = stream !== 'collective';
       });
+      const collective = stream === 'collective';
       const overview = view === 'overview';
       const question = view === 'question';
       const list = ['all','latest','popular','unusual'].includes(view);
-      if (stats) stats.hidden = !(overview || question);
-      if (answers) answers.hidden = !(overview || list || question);
-      if (hypothetical) hypothetical.hidden = !overview;
-      if (ai) ai.hidden = !overview;
-      if (picker) picker.hidden = !question;
-      charts.forEach((chart, index) => { if (chart) chart.hidden = question && ['q2','q3','q4'][index] !== questionSelect.value; });
-      if (list) {
-        const sort = document.querySelector('#answer-sort');
-        if (sort) { sort.value = ({latest:'newest',popular:'popular',unusual:'unusual'})[view] || 'newest'; sort.dispatchEvent(new Event('change')); }
-      }
-      if (overview && charts.length) charts.forEach(chart => { if (chart) chart.hidden = false; });
-      if (question && questionSelect) charts.forEach((chart,index)=>{if(chart)chart.hidden=['q2','q3','q4'][index]!==questionSelect.value;});
-      if (answers && question) answers.scrollIntoView({behavior:'smooth',block:'start'});
+      if (stats) stats.hidden = !collective || !(overview || question);
+      if (collectiveAnswers) collectiveAnswers.hidden = !collective || !(overview || list || question);
+      if (hypothetical) hypothetical.hidden = collective;
+      if (ai) ai.hidden = !collective || !overview;
+      if (picker) picker.hidden = !collective || !question;
+      charts.forEach((chart,index) => {
+        if (chart) chart.hidden = !collective || (question && ['q2','q3','q4'][index] !== questionSelect?.value);
+      });
+      if (collective && overview) charts.forEach(chart => { if (chart) chart.hidden = false; });
     };
-    tabs.forEach(tab => tab.addEventListener('click', () => showView(tab.dataset.resultsView)));
-    questionSelect?.addEventListener('change', () => showView('question'));
-    showView('overview');
+    streamLinks.forEach(link => link.addEventListener('click', event => {
+      event.preventDefault();
+      stream = link.dataset.resultsStream === 'hypothetical' ? 'hypothetical' : 'collective';
+      if (stream === 'collective') view = 'overview';
+      render();
+      (stream === 'collective' ? stats : hypothetical)?.scrollIntoView({behavior:'smooth',block:'start'});
+    }));
+    tabs.forEach(tab => tab.addEventListener('click', () => {
+      stream = 'collective';
+      view = tab.dataset.resultsView;
+      if (['latest','popular','unusual'].includes(view)) {
+        const sort = document.querySelector('#answer-sort');
+        if (sort) {
+          const target = ({latest:'newest',popular:'popular',unusual:'unusual'})[view];
+          if (sort.value !== target) { sort.value = target; sort.dispatchEvent(new Event('change')); }
+        }
+      }
+      render();
+    }));
+    questionSelect?.addEventListener('change', render);
+    render();
   })();
-  </script>
-</body></html>
+  </script></body></html>
