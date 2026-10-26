@@ -343,9 +343,9 @@ async function aiAnalysis(request,env){
     const lock=await env.DB.prepare("INSERT INTO ai_analysis_lock (id,token,expires_at) VALUES (1,?,?) ON CONFLICT(id) DO UPDATE SET token=excluded.token,expires_at=excluded.expires_at WHERE ai_analysis_lock.expires_at < ? RETURNING token").bind(lockToken,lockUntil,now).first();
     if(!lock)return json({error:'analysis_busy'},429);
     lockAcquired=true;
-    const alreadyAfterLock=await env.DB.prepare('SELECT 1 AS used FROM ai_daily_visitors WHERE day=? AND ip_hash=?').bind(day,ipHash).first();
+    const alreadyAfterLock=await env.DB.prepare('SELECT 1 AS used FROM ai_daily_visitors WHERE day=? AND ip_hash=? AND stream=?').bind(day,ipHash,stream).first();
     if(alreadyAfterLock)return json({error:'visitor_limit'},429);
-    const memory=await env.DB.prepare('SELECT last_response_id,summary,response_count FROM ${memoryTable} WHERE id=1').first();
+    const memory=await env.DB.prepare(`SELECT last_response_id,summary,response_count FROM ${memoryTable} WHERE id=1`).first();
     const lastId=Number(memory?.last_response_id||0);
     let summary=String(memory?.summary||'');
     let lastProcessedId=lastId;
@@ -383,7 +383,7 @@ async function aiAnalysis(request,env){
       cursor=batch[batch.length-1].id;
       lastProcessedId=cursor;
       processedCount+=batch.length;
-      await env.DB.prepare("INSERT INTO ${memoryTable} (id,last_response_id,summary,response_count,updated_at) VALUES (1,?,?,?,?) ON CONFLICT(id) DO UPDATE SET last_response_id=excluded.last_response_id,summary=excluded.summary,response_count=excluded.response_count,updated_at=excluded.updated_at").bind(lastProcessedId,summary,processedCount,new Date().toISOString()).run();
+      await env.DB.prepare(`INSERT INTO ${memoryTable} (id,last_response_id,summary,response_count,updated_at) VALUES (1,?,?,?,?) ON CONFLICT(id) DO UPDATE SET last_response_id=excluded.last_response_id,summary=excluded.summary,response_count=excluded.response_count,updated_at=excluded.updated_at`).bind(lastProcessedId,summary,processedCount,new Date().toISOString()).run();
     }
     if(!summary)return json({error:'no_responses'},409);
     const finalPrompt="Answer the user's question using the persistent cumulative summary of "+processedCount+(stream==='hypothetical'?" personal-preference responses. These describe what participants say they would want for their own lives; do not treat them as choices people make about others.":" public collective responses. These describe choices about another person.")+" The summary includes previously analyzed responses and newly added responses. Do not claim exact counts unless the summary explicitly provides them. State that responses are voluntary and not representative of the world population. Do not identify participants. Separate observations from interpretations.\nQUESTION:\n"+question+"\nCUMULATIVE SUMMARY:\n"+summary;
