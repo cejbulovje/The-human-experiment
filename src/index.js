@@ -154,7 +154,7 @@ async function publicResponses(request,env){
   const publicCountRow=await env.DB.prepare('SELECT COUNT(*) AS total FROM responses WHERE is_public=1').first();
   const publicTotal=Number(publicCountRow?.total||0);
   const authorVisible=publicTotal>=THRESHOLD;
-  const clauses=["r.is_public=1","(r.public_id IS NULL OR r.public_id <> 'author-answer-1')"];const binds=[];
+  const clauses=["r.is_public=1"];if(!authorVisible)clauses.push("(r.public_id IS NULL OR r.public_id <> 'author-answer-1')");const binds=[];
   if(requestedNumber>0){clauses.push('r.answer_number=?');binds.push(requestedNumber);}
   if(requestedId){if(/^legacy-\d+$/.test(requestedId)){clauses.push('(r.public_id=? OR (r.public_id IS NULL AND r.id=?))');const legacyId=Number(requestedId.slice(7));binds.push(requestedId,legacyId);}else{clauses.push('r.public_id=?');binds.push(requestedId);}}
   const participantParam=url.searchParams.get('participant');const requestedParticipant=(participantParam||'').trim();
@@ -200,7 +200,7 @@ async function publicResponses(request,env){
       q4Other: row.q4_other || ''
     }
   }));
-  const participantTotal=Number(count?.total||0);const total=participantTotal+(authorVisible?1:0);return json({items,total,limit,offset,hasMore:offset+items.length<participantTotal});
+  const participantTotal=Number(count?.total||0);const total=participantTotal;return json({items,total,limit,offset,hasMore:offset+items.length<participantTotal});
 }
 async function suggestTopic(request,env){
   if(!env.DB||!env.RATE_LIMIT_SALT)return json({error:'not_configured'},503);
