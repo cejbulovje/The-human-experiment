@@ -584,6 +584,8 @@
 /* Author answers stay discoverable without setting the tone of the results page. */
 /* The experiment author's answer is a pinned first card, visually distinct but still part of the shared feed. */
 #author-answer-collective{min-width:0}
+#author-answer-collective.author-answer-exiting{overflow:hidden;transition:max-height .45s ease,opacity .35s ease,transform .45s ease;}
+@media(prefers-reduced-motion:reduce){#author-answer-collective.author-answer-exiting{transition:none;}}
 #author-answer-collective .author-answer-card{
   position:relative;
   overflow:hidden;
