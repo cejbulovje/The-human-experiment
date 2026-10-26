@@ -158,69 +158,88 @@
   <script>
   (() => {
     const tabs = [...document.querySelectorAll('[data-results-view]')];
-    document.querySelectorAll('[data-hypothetical-view]').forEach(tab => tab.addEventListener('click', () => {
-      document.querySelectorAll('[data-hypothetical-view]').forEach(item => {
-        const active = item === tab;
-        item.classList.toggle('is-active', active);
-        item.setAttribute('aria-pressed', String(active));
-      });
-    }));
     const streamLinks = [...document.querySelectorAll('[data-results-stream]')];
     const stats = document.querySelector('#statistics-section');
     const collectiveAnswers = document.querySelector('.public-answers-section:not(.hypothetical-answers-section)');
     const hypothetical = document.querySelector('.hypothetical-answers-section');
-    const ai = document.querySelector('.ai-analysis-section');
+    const ai = document.querySelector('.ai-analysis-section:not(.hypothetical-ai-analysis-section)');
+    const hypotheticalAI = document.querySelector('.hypothetical-ai-analysis-section');
     const picker = document.querySelector('.results-question-picker');
     const questionSelect = document.querySelector('#results-question-select');
     const charts = ['q2','q3','q4'].map(q => document.querySelector('#chart-' + q)?.closest('.result-section'));
+    const hypotheticalTabs = [...document.querySelectorAll('[data-hypothetical-view]')];
     let stream = 'collective';
     let view = 'overview';
     const render = () => {
+      const collective = stream === 'collective';
+      const overview = view === 'overview';
+      const question = view === 'question';
+      const list = ['all','latest','popular','unusual'].includes(view);
       streamLinks.forEach(link => {
         const active = link.dataset.resultsStream === stream;
         link.classList.toggle('is-active', active);
-        link.setAttribute('aria-current', active ? 'true' : 'false');
+        link.setAttribute('aria-current', active ? 'page' : 'false');
       });
       tabs.forEach(tab => {
         const active = tab.dataset.resultsView === view;
         tab.classList.toggle('is-active', active);
         tab.setAttribute('aria-pressed', String(active));
-        tab.hidden = stream !== 'collective';
       });
-      const collective = stream === 'collective';
-      const overview = view === 'overview';
-      const question = view === 'question';
-      const list = ['all','latest','popular','unusual'].includes(view);
+      hypotheticalTabs.forEach(tab => {
+        const active = tab.dataset.hypotheticalView === view;
+        tab.classList.toggle('is-active', active);
+        tab.setAttribute('aria-pressed', String(active));
+      });
       if (stats) stats.hidden = !collective || !(overview || question);
       if (collectiveAnswers) collectiveAnswers.hidden = !collective || !(overview || list || question);
       if (hypothetical) hypothetical.hidden = collective;
       if (ai) ai.hidden = !collective || !overview;
+      if (hypotheticalAI) hypotheticalAI.hidden = collective || !overview;
       if (picker) picker.hidden = !collective || !question;
       charts.forEach((chart,index) => {
         if (chart) chart.hidden = !collective || (question && ['q2','q3','q4'][index] !== questionSelect?.value);
       });
       if (collective && overview) charts.forEach(chart => { if (chart) chart.hidden = false; });
+      const hypotheticalNotice = document.querySelector('.hypothetical-data-notice');
+      const hypotheticalEmpty = document.querySelector('.hypothetical-empty-state');
+      if (hypotheticalNotice) hypotheticalNotice.hidden = view !== 'overview';
+      if (hypotheticalEmpty) {
+        hypotheticalEmpty.hidden = view === 'overview';
+        const title = hypotheticalEmpty.querySelector('[data-voice="emptyTitle"]');
+        const text = hypotheticalEmpty.querySelector('[data-voice="emptyText"]');
+        const labels = {
+          all:['Все ответы','Когда появятся реальные ответы, здесь будет полный список.'],
+          question:['Ответы по вопросам','После начала сбора здесь можно будет выбрать вопрос и посмотреть ответы на него.'],
+          latest:['Новые ответы','Новые ответы появятся здесь после начала сбора личных предпочтений.'],
+          popular:['Популярные ответы','Популярность будет определяться по реальным реакциям участников.'],
+          unusual:['Необычные ответы','Здесь будут отображаться ответы, которые выделяются на фоне остальных.']
+        };
+        const pair = labels[view] || labels.all;
+        if (title) title.textContent = pair[0];
+        if (text) text.textContent = pair[1];
+      }
+      const tools = document.querySelector('.hypothetical-answer-tools');
+      if (tools) tools.hidden = view === 'overview';
     };
     streamLinks.forEach(link => link.addEventListener('click', event => {
       event.preventDefault();
       stream = link.dataset.resultsStream === 'hypothetical' ? 'hypothetical' : 'collective';
-      if (stream === 'collective') view = 'overview';
       render();
       (stream === 'collective' ? stats : hypothetical)?.scrollIntoView({behavior:'smooth',block:'start'});
     }));
-    tabs.forEach(tab => tab.addEventListener('click', event => {
-      event.stopImmediatePropagation();
-      stream = 'collective';
+    tabs.forEach(tab => tab.addEventListener('click', () => {
       view = tab.dataset.resultsView;
       if (['latest','popular','unusual'].includes(view)) {
         const sort = document.querySelector('#answer-sort');
-        if (sort) {
-          const target = ({latest:'newest',popular:'popular',unusual:'unusual'})[view];
-          if (sort.value !== target) { sort.value = target; sort.dispatchEvent(new Event('change')); }
-        }
+        const target = ({latest:'newest',popular:'popular',unusual:'unusual'})[view];
+        if (sort && sort.value !== target) { sort.value = target; sort.dispatchEvent(new Event('change')); }
       }
       render();
-    }, true));
+    }));
+    hypotheticalTabs.forEach(tab => tab.addEventListener('click', () => {
+      view = tab.dataset.hypotheticalView;
+      render();
+    }));
     questionSelect?.addEventListener('change', render);
     render();
   })();
