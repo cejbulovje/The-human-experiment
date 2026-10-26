@@ -227,12 +227,11 @@
           cursor = match.index + match[0].length + dash[0].length;
         } else {
           cursor = match.index + match[0].length;
-        }
-        fragment.append(brand);
-        if (cursor === match.index + match[0].length) {
-          // Keep the word boundary visually clear even if auto-translation trims the source whitespace.
+          // Replace one source whitespace with a non-breaking space, preventing both merging and a double gap.
+          if (/^\s/.test(after)) cursor += 1;
           fragment.append(document.createTextNode('\u00a0'));
         }
+        fragment.append(brand);
       });
       const tail = source.slice(cursor);
       if (tail) fragment.append(document.createTextNode(tail));
