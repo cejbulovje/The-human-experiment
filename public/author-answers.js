@@ -258,7 +258,7 @@
       'Me gustaría descubrir qué ocurriría si realmente confiara a otras personas esta responsabilidad. No porque esté seguro de que todas sus decisiones serían acertadas, sino porque quiero ver cómo aprovechan esta oportunidad. ¿Podrían tener en cuenta no solo sus propias ideas sobre cómo debería ser mi vida, sino también qué podría hacerme feliz a mí?',
       'En última instancia, este experimento sería una prueba de confianza entre una persona y toda la humanidad. Daría a la gente la oportunidad de influir en mi destino, y ellos tendrían la oportunidad de demostrar qué significa para ellos ser responsables de otra persona.',
       'Quizá eso sea lo que más me interesa: ver qué sucede cuando una persona decide confiar en la humanidad sin conocer de antemano el resultado, pero sin renunciar a la esperanza en su humanidad.'
-    ]
+    ],
     fr: [
       'Si j’étais volontaire dans cette expérience, je serais probablement prêt à laisser l’humanité décider de ce qui se passe dans ma vie. Des personnes du monde entier pourraient choisir mon apparence, déterminer mes activités, me proposer de nouvelles possibilités et décider à quoi ressemblerait la suite de mon parcours.',
       'Je serais curieux de voir où une telle expérience pourrait mener. Que voudraient changer les gens dans ma vie ? Quelles possibilités me proposeraient-ils ? Comment imagineraient-ils mon avenir s’ils pouvaient le façonner ensemble ?',
