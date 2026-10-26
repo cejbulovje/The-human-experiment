@@ -822,3 +822,49 @@
  .results-page .bar-value{grid-column:2;grid-row:1}
  .results-page .bar-track{grid-column:1/-1;grid-row:2}
 }
+
+
+/* Mobile refinement for the approved Results dashboard.
+   Keep the desktop composition intact while preventing filters from becoming
+   a long stack of full-width controls on narrow screens. */
+@media(max-width:760px){
+ .results-page .results-stream-links{display:flex;gap:6px;margin:16px 0 12px}
+ .results-page .results-stream-link{min-width:0;padding:10px 9px;gap:5px}
+ .results-page .results-stream-link strong{font-size:.78rem;line-height:1.25}
+ .results-page .results-stream-link small{display:none}
+ .results-page .results-stream-arrow{display:none}
+ .results-page .results-view-tabs{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:12px 0 20px}
+ .results-page .results-view-tab{min-height:38px;padding:8px 4px;font-size:.82rem;line-height:1.2}
+ .results-page .section-heading{gap:12px}
+ .results-page .statistics-section>.section-heading h2,
+ .results-page .public-answers-section>.section-heading h2{font-size:1.35rem;line-height:1.2}
+ .results-page .result-section h3{font-size:1rem;padding:11px 12px}
+ .results-page .result-section .bar-list{padding:11px 12px 13px}
+ .results-page .bar-label{font-size:.82rem;line-height:1.3}
+ .results-page .bar-value{font-size:.8rem;white-space:nowrap}
+ .results-page .bar-track{height:11px}
+ .results-page .answer-tools{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+ .results-page .answer-tools .search-field{grid-column:1/-1}
+ .results-page .answer-tools label{min-width:0}
+ .results-page .answer-tools input,
+ .results-page .answer-tools select{width:100%;min-width:0;max-width:100%;font-size:.85rem}
+ .results-page .answer-tools .answer-number-jump{grid-column:1}
+ .results-page .answer-tools #answer-number-go{grid-column:2;align-self:end}
+ .results-page .answer-tools #reset-filters,
+ .results-page .answer-tools #all-participants{grid-column:1/-1;width:100%}
+ .results-page .answer-pagination-controls{display:flex;align-items:center;gap:8px;flex-direction:row;flex-wrap:wrap}
+ .results-page .answer-pagination-controls label{font-size:.82rem}
+ .results-page .answer-pagination-controls select{width:auto}
+ .results-page .answers-page-summary{font-size:.78rem}
+ .results-page .answer-card{padding:14px}
+ .results-page .ai-analysis-card{padding:16px}
+ .results-page .ai-analysis-form textarea{min-height:100px}
+}
+@media(max-width:420px){
+ .results-page{padding-left:12px;padding-right:12px}
+ .results-page .results-stream-link{padding:9px 6px}
+ .results-page .results-stream-link strong{font-size:.72rem}
+ .results-page .results-view-tab{font-size:.76rem}
+ .results-page .bar-label{font-size:.78rem}
+ .results-page .bar-value{font-size:.75rem}
+}
