@@ -1,7 +1,7 @@
--- Raise the main survey free-answer limit without discarding existing responses.
--- Preserve columns and stable numbering added by later migrations.
--- Foreign-key enforcement is disabled only while the responses table is rebuilt.
-PRAGMA foreign_keys = OFF;
+-- Raise the main survey free-answer limit while preserving responses and dependent records.
+-- Rebuild child tables before the parent so D1 foreign-key enforcement can remain enabled.
+-- This migration assumes the current schema's only responses foreign-key dependents are
+-- response_reactions and topic_suggestions; keep their definitions and indexes in sync with schema.sql.
 BEGIN TRANSACTION;
 
 CREATE TABLE responses_new (
@@ -36,6 +36,12 @@ SELECT
   is_public, topic, answer_number
 FROM responses;
 
+-- Preserve dependent rows outside the parent table before rebuilding it.
+CREATE TABLE response_reactions_backup AS SELECT * FROM response_reactions;
+CREATE TABLE topic_suggestions_backup AS SELECT * FROM topic_suggestions;
+
+DROP TABLE response_reactions;
+DROP TABLE topic_suggestions;
 DROP TABLE responses;
 ALTER TABLE responses_new RENAME TO responses;
 
@@ -61,5 +67,30 @@ BEGIN
   WHERE id = NEW.id;
 END;
 
+CREATE TABLE response_reactions (
+  response_id INTEGER NOT NULL REFERENCES responses(id) ON DELETE CASCADE,
+  reaction TEXT NOT NULL CHECK (reaction IN ('interesting')),
+  voter_hash TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  PRIMARY KEY (response_id, reaction, voter_hash)
+);
+CREATE INDEX idx_response_reactions_response ON response_reactions(response_id, reaction);
+
+CREATE TABLE topic_suggestions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  response_id INTEGER NOT NULL REFERENCES responses(id) ON DELETE CASCADE,
+  suggested_topic TEXT NOT NULL CHECK (suggested_topic IN ('character','appearance','freedom','life','relationships','other')),
+  voter_hash TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  UNIQUE(response_id, voter_hash)
+);
+
+INSERT INTO response_reactions (response_id, reaction, voter_hash, created_at)
+SELECT response_id, reaction, voter_hash, created_at FROM response_reactions_backup;
+INSERT INTO topic_suggestions (id, response_id, suggested_topic, voter_hash, created_at)
+SELECT id, response_id, suggested_topic, voter_hash, created_at FROM topic_suggestions_backup;
+
+DROP TABLE response_reactions_backup;
+DROP TABLE topic_suggestions_backup;
+
 COMMIT;
-PRAGMA foreign_keys = ON;
