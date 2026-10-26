@@ -352,8 +352,8 @@
   };
 
   window.__THE_HUMAN_EXPERIMENT_AUTHOR_ANSWERS__ = {
-    collective: localizedCollectiveAnswers,
-    volunteer: localizedVolunteerAnswers
+    collective: Object.assign({}, localizedCollectiveAnswers, { ru: answers.ru.collective, en: answers.en?.collective || answers.ru.collective }),
+    volunteer: Object.assign({}, localizedVolunteerAnswers, { ru: answers.ru.volunteer, en: answers.en?.volunteer || answers.ru.volunteer })
   };
 
   function makeCard(kind, locale) {
