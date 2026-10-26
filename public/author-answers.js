@@ -147,7 +147,7 @@
       '我想知道，如果我真的把这份责任交给别人，会发生什么。我并不是确信每一个决定都会正确，而是想看看人们会怎样利用这个机会。他们能否不只考虑自己认为我的生活应该是什么样子，也考虑什么才会让我本人感到幸福？',
       '归根结底，这项实验将考验一个人与全人类之间的信任。我会让人们有机会共同影响我的命运，而他们也有机会展示，对他们而言，这样的责任意味着什么。',
       '也许这正是最令我感兴趣的地方：当一个人选择信任全人类，却不知道结果会如何，同时仍然对人性抱有希望时，究竟会发生什么。'
-    ]
+    ],
     pt: [
       'Se eu fosse voluntário neste experimento, provavelmente estaria disposto a deixar que a humanidade decidisse o que acontece na minha vida. Pessoas de todo o mundo poderiam escolher minha imagem, determinar minhas atividades, sugerir novas oportunidades e decidir como seria o caminho que eu seguiria.',
       'Eu teria curiosidade em descobrir aonde uma experiência assim levaria. O que as pessoas gostariam de mudar na minha vida? Que oportunidades me ofereceriam? Como imaginariam meu futuro se pudessem construí-lo em conjunto?',
