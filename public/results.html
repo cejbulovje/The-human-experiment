@@ -28,6 +28,18 @@
   <main class="shell results-page">
     <p class="eyebrow" data-t="eyebrow">THE COLLECTIVE PICTURE</p><h1 data-t="title">What did people choose?</h1>
     <p class="lead" data-t="lead">Explore the overall statistics and read participants’ written responses.</p>
+    <nav class="results-stream-links" aria-label="Выбор результатов">
+      <a class="results-stream-link is-active" href="#statistics-section" data-results-stream="collective">
+        <span class="results-stream-kicker">01</span>
+        <span><strong>Коллективные решения</strong><small>Что люди решили бы о жизни другого человека</small></span>
+        <span class="results-stream-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="results-stream-link" href="#preference-results-title" data-results-stream="hypothetical">
+        <span class="results-stream-kicker">02</span>
+        <span><strong>Чего люди хотели бы для собственной жизни</strong><small>Личные желания и границы человека</small></span>
+        <span class="results-stream-arrow" aria-hidden="true">↗</span>
+      </a>
+    </nav>
     <nav class="results-view-tabs" aria-label="Results views">
       <button type="button" class="results-view-tab is-active" data-results-view="overview">Обзор</button>
       <button type="button" class="results-view-tab" data-results-view="all">Все ответы</button>
@@ -121,6 +133,27 @@
   <script>
   (() => {
     const tabs = [...document.querySelectorAll('[data-results-view]')];
+    const streamLinks = [...document.querySelectorAll('[data-results-stream]')];
+    streamLinks.forEach(link => link.addEventListener('click', event => {
+      event.preventDefault();
+      const stream = link.dataset.resultsStream;
+      streamLinks.forEach(item => item.classList.toggle('is-active', item === link));
+      const hypotheticalSection = document.querySelector('.hypothetical-answers-section');
+      if (stream === 'hypothetical') {
+        tabs.forEach(tab => { tab.classList.toggle('is-active', tab.dataset.resultsView === 'overview'); tab.setAttribute('aria-pressed', String(tab.dataset.resultsView === 'overview')); });
+        const stats = document.querySelector('#statistics-section');
+        const answers = document.querySelector('.public-answers-section:not(.hypothetical-answers-section)');
+        const ai = document.querySelector('.ai-analysis-section');
+        if (stats) stats.hidden = true;
+        if (answers) answers.hidden = true;
+        if (ai) ai.hidden = true;
+        if (hypotheticalSection) { hypotheticalSection.hidden = false; hypotheticalSection.scrollIntoView({behavior:'smooth',block:'start'}); }
+      } else {
+        const overviewTab = tabs.find(tab => tab.dataset.resultsView === 'overview');
+        if (overviewTab) overviewTab.click();
+        document.querySelector('#statistics-section')?.scrollIntoView({behavior:'smooth',block:'start'});
+      }
+    }));
     if (!tabs.length) return;
     const stats = document.querySelector('#statistics-section');
     const answers = document.querySelector('.public-answers-section');
