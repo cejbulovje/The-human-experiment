@@ -189,6 +189,46 @@
     document.addEventListener('click', event => { if (!details.contains(event.target)) details.open = false; });
     details.querySelectorAll('a').forEach(link => link.addEventListener('click', () => { details.open = false; }));
   });
+
+  // Keep the project name as a protected brand wherever it appears in visible page text.
+  const protectBrandText = (root = document.body) => {
+    if (!root) return;
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+      acceptNode(node) {
+        const parent = node.parentElement;
+        if (!parent || parent.closest('script, style, noscript, textarea, input, select, option, title, .wordmark, .brand-inline')) return NodeFilter.FILTER_REJECT;
+        return node.nodeValue.includes('THE HUMAN EXPERIMENT') ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
+      }
+    });
+    const nodes = [];
+    while (walker.nextNode()) nodes.push(walker.currentNode);
+    nodes.forEach(node => {
+      const parts = node.nodeValue.split('THE HUMAN EXPERIMENT');
+      if (parts.length < 2) return;
+      const fragment = document.createDocumentFragment();
+      parts.forEach((part, index) => {
+        if (part) fragment.append(document.createTextNode(part));
+        if (index < parts.length - 1) {
+          const brand = document.createElement('span');
+          brand.className = 'brand-inline notranslate';
+          brand.setAttribute('translate', 'no');
+          const logo = document.createElement('img');
+          logo.src = '/logo-human-crowd.webp';
+          logo.alt = '';
+          logo.setAttribute('aria-hidden', 'true');
+          brand.append(logo, document.createTextNode('THE HUMAN EXPERIMENT'));
+          fragment.append(brand);
+        }
+      });
+      node.replaceWith(fragment);
+    });
+  };
+  protectBrandText();
+  const brandObserver = new MutationObserver(records => {
+    if (records.some(record => record.addedNodes.length || record.type === 'characterData')) protectBrandText();
+  });
+  if (document.body) brandObserver.observe(document.body, { childList: true, subtree: true, characterData: true });
+
   // Page-specific scripts restore the saved language after this deferred script runs.
   // Refresh menu labels at DOMContentLoaded so they match that restored language.
   if (document.readyState === 'complete') applyLabels();
