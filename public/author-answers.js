@@ -230,7 +230,7 @@
     const words = labels[locale] || labels.en;
     const isCollective = kind === 'collective';
     const title = isCollective ? (words.collectiveTitle || source.collectiveTitle) : (words.volunteerTitle || source.volunteerTitle);
-    const paragraphs = isCollective ? source.collective : (localizedVolunteerAnswers[locale] || source.volunteer);
+    const paragraphs = isCollective ? (localizedCollectiveAnswers[locale] || source.collective) : (localizedVolunteerAnswers[locale] || source.volunteer);
     const card = document.createElement('article');
     card.className = 'answer-card author-answer-card';
     card.id = isCollective ? 'author-answer-collective-card' : 'answer-1';
