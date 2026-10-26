@@ -22,7 +22,7 @@ test('AI stream limit migration preserves existing daily visitors as collective 
       .run('2026-10-26', 'existing-hash', '2026-10-26T10:00:00.000Z');
     db.exec(migration);
     const rows = db.prepare('SELECT day,ip_hash,stream,created_at FROM ai_daily_visitors').all();
-    assert.deepEqual(rows, [{
+    assert.deepEqual(rows.map(row => ({ day: row.day, ip_hash: row.ip_hash, stream: row.stream, created_at: row.created_at })), [{
       day: '2026-10-26',
       ip_hash: 'existing-hash',
       stream: 'collective',
