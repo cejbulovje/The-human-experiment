@@ -351,6 +351,11 @@
     ar: '❤️ سأكون مستعدًا لأن أضع مصيري بين يدي البشرية، مع الحفاظ على أملي في إنسانيتها. وهذا لا يعني بالنسبة إليّ السماح للناس باتخاذ القرارات فحسب، بل منحهم أيضًا الفرصة ليُظهروا بأنفسهم كيف سيتعاملون مع هذه المسؤولية.'
   };
 
+  window.__THE_HUMAN_EXPERIMENT_AUTHOR_ANSWERS__ = {
+    collective: localizedCollectiveAnswers.en || answers.en.collective,
+    volunteer: localizedVolunteerAnswers.en || answers.en.volunteer
+  };
+
   function makeCard(kind, locale) {
     const source = answers[locale] || answers.en;
     const words = labels[locale] || labels.en;
@@ -410,10 +415,6 @@
     });
     const collectiveRoot = document.getElementById('author-answer-collective');
     const volunteerRoot = document.getElementById('author-answer-hypothetical');
-    window.__THE_HUMAN_EXPERIMENT_AUTHOR_ANSWERS__ = {
-      collective: localizedCollectiveAnswers[locale] || answers[locale]?.collective || answers.en.collective,
-      volunteer: localizedVolunteerAnswers[locale] || answers[locale]?.volunteer || answers.en.volunteer
-    };
     if (collectiveRoot) {
       collectiveRoot.replaceChildren(makeCard('collective', locale));
       collectiveRoot.hidden = false;
