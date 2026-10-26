@@ -176,7 +176,8 @@
       render();
       (stream === 'collective' ? stats : hypothetical)?.scrollIntoView({behavior:'smooth',block:'start'});
     }));
-    tabs.forEach(tab => tab.addEventListener('click', () => {
+    tabs.forEach(tab => tab.addEventListener('click', event => {
+      event.stopImmediatePropagation();
       stream = 'collective';
       view = tab.dataset.resultsView;
       if (['latest','popular','unusual'].includes(view)) {
@@ -187,7 +188,7 @@
         }
       }
       render();
-    }));
+    }, true));
     questionSelect?.addEventListener('change', render);
     render();
   })();
