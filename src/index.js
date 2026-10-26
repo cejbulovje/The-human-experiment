@@ -151,7 +151,10 @@ async function publicResponses(request,env){
   const requestedId=(url.searchParams.get('id')||'').trim().slice(0,100);
   const requestedNumberRaw=(url.searchParams.get('number')||'').trim();const requestedNumber=/^\d{1,9}$/.test(requestedNumberRaw)?Number(requestedNumberRaw):0;
   const search=(url.searchParams.get('q')||'').trim().slice(0,160);const topic=(url.searchParams.get('topic')||'').trim();const from=(url.searchParams.get('from')||'').slice(0,10);const to=(url.searchParams.get('to')||'').slice(0,10);const sort=url.searchParams.get('sort')||'newest';
-  const clauses=['r.is_public=1'];const binds=[];
+  const publicCountRow=await env.DB.prepare("SELECT COUNT(*) AS total, SUM(CASE WHEN public_id='author-answer-1' THEN 1 ELSE 0 END) AS author_count FROM responses WHERE is_public=1").first();
+  const publicTotal=Number(publicCountRow?.total||0);
+  const authorVisible=Number(publicCountRow?.author_count||0)>0&&publicTotal>=THRESHOLD;
+  const clauses=["r.is_public=1","(r.public_id IS NULL OR r.public_id <> 'author-answer-1')"];const binds=[];
   if(requestedNumber>0){clauses.push('r.answer_number=?');binds.push(requestedNumber);}
   if(requestedId){if(/^legacy-\d+$/.test(requestedId)){clauses.push('(r.public_id=? OR (r.public_id IS NULL AND r.id=?))');const legacyId=Number(requestedId.slice(7));binds.push(requestedId,legacyId);}else{clauses.push('r.public_id=?');binds.push(requestedId);}}
   const participantParam=url.searchParams.get('participant');const requestedParticipant=(participantParam||'').trim();
@@ -197,7 +200,7 @@ async function publicResponses(request,env){
       q4Other: row.q4_other || ''
     }
   }));
-  return json({items,total:Number(count?.total||0),limit,offset,hasMore:offset+items.length<Number(count?.total||0)});
+  const participantTotal=Number(count?.total||0);const total=participantTotal+(authorVisible?1:0);return json({items,total,limit,offset,hasMore:offset+items.length<participantTotal});
 }
 async function suggestTopic(request,env){
   if(!env.DB||!env.RATE_LIMIT_SALT)return json({error:'not_configured'},503);
