@@ -143,6 +143,13 @@
   <script>
   (() => {
     const tabs = [...document.querySelectorAll('[data-results-view]')];
+    document.querySelectorAll('[data-hypothetical-view]').forEach(tab => tab.addEventListener('click', () => {
+      document.querySelectorAll('[data-hypothetical-view]').forEach(item => {
+        const active = item === tab;
+        item.classList.toggle('is-active', active);
+        item.setAttribute('aria-pressed', String(active));
+      });
+    }));
     const streamLinks = [...document.querySelectorAll('[data-results-stream]')];
     const stats = document.querySelector('#statistics-section');
     const collectiveAnswers = document.querySelector('.public-answers-section:not(.hypothetical-answers-section)');
