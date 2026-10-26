@@ -84,15 +84,15 @@
     });
   });
   const shareLabels = {
-    en: { title: "Share via", copy: "Copy link", email: "Email", close: "Close", copied: "Link copied", instagram: "Instagram" },
-    ru: { title: "Поделиться через", copy: "Скопировать ссылку", email: "Электронная почта", close: "Закрыть", copied: "Ссылка скопирована", instagram: "Instagram" },
-    es: { title: "Compartir mediante", copy: "Copiar enlace", email: "Correo electrónico", close: "Cerrar", copied: "Enlace copiado", instagram: "Instagram" },
-    pt: { title: "Partilhar através de", copy: "Copiar ligação", email: "E-mail", close: "Fechar", copied: "Copiar convite para Instagram" },
-    zh: { title: "分享方式", copy: "复制链接", email: "电子邮件", close: "关闭", copied: "链接已复制", instagram: "Instagram" },
-    de: { title: "Teilen über", copy: "Link kopieren", email: "E-Mail", close: "Schließen", copied: "Link kopiert", instagram: "Instagram" },
-    ja: { title: "共有方法", copy: "リンクをコピー", email: "メール", close: "閉じる", copied: "リンクをコピーしました", instagram: "Instagram" },
-    fr: { title: "Partager via", copy: "Copier le lien", email: "E-mail", close: "Fermer", copied: "Lien copié", instagram: "Instagram" },
-    ar: { title: "المشاركة عبر", copy: "نسخ الرابط", email: "البريد الإلكتروني", close: "إغلاق", copied: "تم نسخ الرابط", instagram: "Instagram" }
+    en: { title: "Share via", copy: "Copy link", email: "Email", close: "Close", copied: "Link copied", instagram: "Instagram", instagramHint: "Open Instagram and paste the invitation into your post or message." },
+    ru: { title: "Поделиться через", copy: "Скопировать ссылку", email: "Электронная почта", close: "Закрыть", copied: "Ссылка скопирована", instagram: "Instagram", instagramHint: "Открой Instagram и вставь приглашение в публикацию или сообщение." },
+    es: { title: "Compartir mediante", copy: "Copiar enlace", email: "Correo electrónico", close: "Cerrar", copied: "Enlace copiado", instagram: "Instagram", instagramHint: "Abre Instagram y pega la invitación en tu publicación o mensaje." },
+    pt: { title: "Partilhar através de", copy: "Copiar ligação", email: "E-mail", close: "Fechar", copied: "Ligação copiada", instagram: "Instagram", instagramHint: "Abra o Instagram e cole o convite na sua publicação ou mensagem." },
+    zh: { title: "分享方式", copy: "复制链接", email: "电子邮件", close: "关闭", copied: "链接已复制", instagram: "Instagram", instagramHint: "打开 Instagram，将邀请内容粘贴到帖子或消息中。" },
+    de: { title: "Teilen über", copy: "Link kopieren", email: "E-Mail", close: "Schließen", copied: "Link kopiert", instagram: "Instagram", instagramHint: "Öffne Instagram und füge die Einladung in deinen Beitrag oder deine Nachricht ein." },
+    ja: { title: "共有方法", copy: "リンクをコピー", email: "メール", close: "閉じる", copied: "リンクをコピーしました", instagram: "Instagram", instagramHint: "Instagramを開き、招待文を投稿またはメッセージに貼り付けてください。" },
+    fr: { title: "Partager via", copy: "Copier le lien", email: "E-mail", close: "Fermer", copied: "Lien copié", instagram: "Instagram", instagramHint: "Ouvrez Instagram et collez l’invitation dans votre publication ou votre message." },
+    ar: { title: "المشاركة عبر", copy: "نسخ الرابط", email: "البريد الإلكتروني", close: "إغلاق", copied: "تم نسخ الرابط", instagram: "Instagram", instagramHint: "افتح إنستغرام والصق الدعوة في منشورك أو رسالتك." },
   };
   let shareDialog;
   const getShareDialog = () => {
@@ -133,7 +133,7 @@
           const copied = document.execCommand('copy'); helper.remove();
           if (!copied) throw new Error('copy_failed');
         }
-        shareDialog.querySelector('.share-dialog-status').textContent = (shareLabels[language()] || shareLabels.en).copied + ' — open Instagram and paste the invitation into your post or message.';
+        shareDialog.querySelector('.share-dialog-status').textContent = (shareLabels[language()] || shareLabels.en).copied + ' — ' + ((shareLabels[language()] || shareLabels.en).instagramHint || shareLabels.en.instagramHint);
       } catch {
         shareDialog.querySelector('.share-dialog-status').textContent = (translations[language()] || translations.en).failed;
       }
