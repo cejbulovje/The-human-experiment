@@ -15,4 +15,29 @@ jobs:
         with:
           node-version: 22
       - run: npm ci
+      - name: Report dependency audit findings
+        if: always()
+        run: |
+          npm audit --json > "$RUNNER_TEMP/npm-audit.json" || true
+          node --input-type=module -e '
+            import fs from "node:fs";
+            const path = process.env.RUNNER_TEMP + "/npm-audit.json";
+            let report;
+            try {
+              report = JSON.parse(fs.readFileSync(path, "utf8"));
+            } catch {
+              console.log("npm audit did not return valid JSON; inspect npm output above.");
+              process.exit(0);
+            }
+            for (const [name, item] of Object.entries(report.vulnerabilities ?? {})) {
+              const advisories = (item.via ?? [])
+                .filter((entry) => typeof entry === "object")
+                .map((entry) => entry.title + " (" + entry.severity + ")" + (entry.url ? " — " + entry.url : ""));
+              console.log(item.severity.toUpperCase() + " " + name + "@" + item.range +
+                "; direct=" + item.isDirect +
+                "; fixAvailable=" + JSON.stringify(item.fixAvailable) +
+                (advisories.length ? "; advisories=" + advisories.join(" | ") : ""));
+            }
+            console.log("npm audit totals: " + JSON.stringify(report.metadata?.vulnerabilities ?? {}));
+          '
       - run: npm test
