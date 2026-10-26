@@ -46,8 +46,9 @@ CREATE TABLE IF NOT EXISTS topic_suggestions (id INTEGER PRIMARY KEY AUTOINCREME
 CREATE TABLE IF NOT EXISTS ai_daily_visitors (
   day TEXT NOT NULL,
   ip_hash TEXT NOT NULL,
+  stream TEXT NOT NULL DEFAULT 'collective' CHECK (stream IN ('collective','hypothetical')),
   created_at TEXT NOT NULL,
-  PRIMARY KEY (day, ip_hash)
+  PRIMARY KEY (day, ip_hash, stream)
 );
 CREATE TABLE IF NOT EXISTS ai_daily_usage (
   day TEXT PRIMARY KEY,
@@ -55,6 +56,13 @@ CREATE TABLE IF NOT EXISTS ai_daily_usage (
 );
 
 CREATE TABLE IF NOT EXISTS ai_analysis_memory (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  last_response_id INTEGER NOT NULL DEFAULT 0,
+  summary TEXT NOT NULL DEFAULT '',
+  response_count INTEGER NOT NULL DEFAULT 0,
+  updated_at TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS ai_hypothetical_analysis_memory (
   id INTEGER PRIMARY KEY CHECK (id = 1),
   last_response_id INTEGER NOT NULL DEFAULT 0,
   summary TEXT NOT NULL DEFAULT '',
