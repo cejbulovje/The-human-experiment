@@ -359,12 +359,12 @@
     const paragraphs = isCollective ? (localizedCollectiveAnswers[locale] || source.collective) : (localizedVolunteerAnswers[locale] || source.volunteer);
     const card = document.createElement('article');
     card.className = 'answer-card author-answer-card';
-    card.id = isCollective ? 'author-answer-collective-card' : 'answer-1';
+    card.id = isCollective ? 'answer-1' : 'author-answer-volunteer';
     const top = document.createElement('div');
     top.className = 'answer-card-top';
     const code = document.createElement('span');
     code.className = 'answer-code';
-    code.textContent = isCollective ? words.author : words.number + ' · ' + words.author;
+    code.textContent = words.number + ' · ' + words.author;
     top.append(code);
 
     const toggle = document.createElement('button');
