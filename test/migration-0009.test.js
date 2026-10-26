@@ -28,10 +28,12 @@ test('public results snapshot migration is idempotent and stores the published v
   assert.match(schema, /CREATE TABLE IF NOT EXISTS public_results_snapshot/);
 });
 
-test('publication thresholds follow 100, 500, then the 1-2-5 progression', () => {
+test('publication thresholds follow 100, 200, 500, then the 1-2-5 progression', () => {
   assert.equal(highestReachedResultsThreshold(99), 0);
   assert.equal(highestReachedResultsThreshold(100), 100);
-  assert.equal(highestReachedResultsThreshold(499, 100), 100);
+  assert.equal(highestReachedResultsThreshold(199, 100), 100);
+  assert.equal(highestReachedResultsThreshold(200, 100), 200);
+  assert.equal(highestReachedResultsThreshold(499, 200), 200);
   assert.equal(highestReachedResultsThreshold(500, 100), 500);
   assert.equal(highestReachedResultsThreshold(1500, 500), 1000);
   assert.equal(highestReachedResultsThreshold(4999, 1000), 2000);
@@ -42,7 +44,8 @@ test('publication thresholds follow 100, 500, then the 1-2-5 progression', () =>
 
 test('next published milestone skips already reached thresholds', () => {
   assert.equal(nextResultsThreshold(0), 100);
-  assert.equal(nextResultsThreshold(100), 500);
+  assert.equal(nextResultsThreshold(100), 200);
+  assert.equal(nextResultsThreshold(200), 500);
   assert.equal(nextResultsThreshold(500), 1000);
   assert.equal(nextResultsThreshold(1000), 2000);
   assert.equal(nextResultsThreshold(5000), 10000);
