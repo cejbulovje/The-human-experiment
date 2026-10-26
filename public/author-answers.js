@@ -116,9 +116,7 @@
       'Quiero descubrir en qué podría convertirse esta idea si personas de todo el mundo se unieran de verdad en torno a una sola persona. ¿Podríamos crear algo que no viviera únicamente de votaciones, concursos y encuentros, sino que formara parte de la vida cotidiana, diera nuevos objetivos, motivos de alegría, interés por el futuro y ganas de participar en algo común? ¿Podríamos convertir el deseo de conocer a una persona en un camino para descubrir nuevas capacidades, ayudarnos y crear juntos algo que nadie podría crear por separado?',
       'Porque, en definitiva, este experimento no trata solo de una persona. Trata de cada uno de nosotros. De lo que puede ocurrir cuando personas separadas por distancias, idiomas y fronteras comparten una historia en la que todos pueden encontrar su lugar. Una persona será el comienzo, pero la continuación dependerá de todos nosotros.',
       'Y quiero ver si gracias a esta persona podemos acercar un poco más al mundo, hacer la vida un poco más interesante y ayudar a cada uno a sentir con más fuerza que no está solo y que su participación importa de verdad. Quizá algún día miremos atrás y comprendamos que empezamos con una pregunta sencilla sobre cómo debería ser una persona, pero terminamos descubriendo algo mucho más grande: en quiénes podemos convertirnos cuando actuamos juntos.'
-    ]
-  };,
-
+    ],
     fr: [
       'Si l’on m’invitait à participer à cette expérience, j’y verrais l’occasion de faire partie de quelque chose de plus grand qu’un simple vote. L’idée qu’une personne, quelque part sur Terre, devienne notre personne commune me plaît : quelqu’un dont le destin nous importe, dont nous suivons la vie avec intérêt et pour l’avenir de qui nous sommes prêts à assumer une part de responsabilité.',
       'Je voudrais savoir ce qui se passe dans sa vie, voir comment elle change, ce qu’elle rencontre et quelles conséquences ont nos décisions. Il serait important qu’elle ne disparaisse pas de notre horizon après le vote. Avec son consentement, nous pourrions suivre en ligne certains aspects de sa vie, en gardant un lien sans empiéter sur son intimité.',
