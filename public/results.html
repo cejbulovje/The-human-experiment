@@ -96,20 +96,30 @@
       <div id="answer-list" class="answer-list"><div id="author-answer-collective" hidden></div></div>
       <button id="show-more" class="show-more-button" type="button" hidden data-t="showMore">Show more</button>
     </section>
-    <section class="public-answers-section hypothetical-answers-section" aria-labelledby="preference-results-title">
-      <div class="section-heading"><div><p class="eyebrow" data-voice="eyebrow">HYPOTHETICAL PREFERENCES</p><h2 id="preference-results-title" data-voice="resultsTitle">What would people want for their own lives?</h2><p class="section-intro" data-voice="resultsIntro">A separate stream for answers about a person's own life and wishes, not decisions about someone else. <a class="author-answer-shortcut" href="#answer-1" aria-label="Open the experiment author’s answer, number one">Ответ автора · № 1</a></p></div><span class="answer-total" data-voice="resultsCount">Not collecting yet</span></div>
-      <div id="author-answer-hypothetical"></div>
-      <div class="status-panel hypothetical-empty-state" role="status" aria-live="polite">
-        <h3 data-voice="emptyTitle">No hypothetical preference answers yet</h3>
-        <p data-voice="emptyText">This prototype does not collect or store these answers, so there are no responses to display here.</p>
-        <p data-voice="emptyNext">When a separate collection process is built and clearly explained, real answers can appear in this section.</p>
-        <a class="subtle-button" href="/preferences.html" data-voice="answer">Answer hypothetical preferences ↗</a>
+    <section class="public-answers-section hypothetical-answers-section" aria-labelledby="preference-results-title" hidden>
+      <div class="section-heading"><div><p class="eyebrow">ГИПОТЕТИЧЕСКИЕ ПРЕДПОЧТЕНИЯ</p><h2 id="preference-results-title">Чего люди хотели бы для собственной жизни?</h2><p class="section-intro">Отдельный поток личных предпочтений — не решений за чужую жизнь.</p></div><span class="answer-total">Сбор не начат</span></div>
+      <div class="status-panel hypothetical-data-notice">
+        Ответы на вопросы о собственной жизни пока не собираются и не сохраняются. Поэтому реальных результатов и статистики здесь ещё нет. Ниже сохранена структура раздела для будущей коллекции ответов.
       </div>
-      <div class="ai-analysis-card hypothetical-method-card">
-        <h3 data-voice="analysis">Comparative analysis</h3>
-        <p data-voice="analysisText">Comparisons with collective decisions are only possible after separate datasets exist. Any analysis should show sample sizes and limitations.</p>
-        <a class="subtle-button" href="/methodology.html" data-voice="explore">About the research methodology ↗</a>
-        <p class="method-note" data-voice="note">Prototype only: no hypothetical preference answers are currently collected, stored, or included in live results.</p>
+      <nav class="results-view-tabs hypothetical-view-tabs" aria-label="Просмотр личных предпочтений">
+        <button type="button" class="results-view-tab is-active" data-hypothetical-view="all">Все ответы</button>
+        <button type="button" class="results-view-tab" data-hypothetical-view="question">По вопросам</button>
+        <button type="button" class="results-view-tab" data-hypothetical-view="latest">Новые</button>
+        <button type="button" class="results-view-tab" data-hypothetical-view="popular">Популярные</button>
+        <button type="button" class="results-view-tab" data-hypothetical-view="unusual">Необычные</button>
+      </nav>
+      <div class="answer-tools hypothetical-answer-tools">
+        <label class="search-field"><span class="sr-only">Поиск по личным ответам</span><input type="search" placeholder="Поиск по ответам…" disabled></label>
+        <label><span class="sr-only">Вопрос</span><select id="hypothetical-question-filter" disabled><option>Все вопросы</option><option>1. Главный приоритет</option><option>2. Что важно сохранить</option><option>3. Как учитывать желания</option><option>4. Изменения тела</option><option>5. Пояснения</option></select></label>
+        <label><span class="sr-only">Сортировка</span><select disabled><option>Сначала новые</option><option>Популярные</option><option>Необычные</option></select></label>
+        <label class="hypothetical-page-size">Ответов на странице <select disabled><option>10</option><option selected>20</option><option>30</option><option>50</option><option>100</option></select></label>
+      </div>
+      <div class="answer-list hypothetical-answer-list" id="hypothetical-answer-list">
+        <article class="status-panel hypothetical-empty-state">
+          <h3>Личных ответов пока нет</h3>
+          <p>Когда начнётся отдельный сбор ответов и появятся реальные данные, здесь будут карточки ответов, фильтры по пяти вопросам, сортировка и постраничная загрузка — по той же схеме, что и в коллективном потоке.</p>
+          <a class="subtle-button" href="/preferences.html">Посмотреть вопросы о собственной жизни ↗</a>
+        </article>
       </div>
     </section>
     <section class="ai-analysis-section" aria-labelledby="ai-analysis-title">
