@@ -190,36 +190,52 @@
     details.querySelectorAll('a').forEach(link => link.addEventListener('click', () => { details.open = false; }));
   });
 
-  // Keep the project name as a protected brand wherever it appears in visible page text.
+  // Keep the project name isolated from browser auto-translation and preserve readable spacing.
   const protectBrandText = (root = document.body) => {
     if (!root) return;
     const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
       acceptNode(node) {
         const parent = node.parentElement;
-        if (!parent || parent.closest('script, style, noscript, textarea, input, select, option, title, .wordmark, .brand-inline')) return NodeFilter.FILTER_REJECT;
+        if (!parent || parent.closest('script, style, noscript, textarea, input, select, option, title, .wordmark, .brand-inline, [translate="no"]')) return NodeFilter.FILTER_REJECT;
         return node.nodeValue.includes('THE HUMAN EXPERIMENT') ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT;
       }
     });
     const nodes = [];
     while (walker.nextNode()) nodes.push(walker.currentNode);
     nodes.forEach(node => {
-      const parts = node.nodeValue.split('THE HUMAN EXPERIMENT');
-      if (parts.length < 2) return;
+      const source = node.nodeValue;
+      const matches = [...source.matchAll(/THE HUMAN EXPERIMENT/g)];
+      if (!matches.length) return;
       const fragment = document.createDocumentFragment();
-      parts.forEach((part, index) => {
-        if (part) fragment.append(document.createTextNode(part));
-        if (index < parts.length - 1) {
-          const brand = document.createElement('span');
-          brand.className = 'brand-inline notranslate';
-          brand.setAttribute('translate', 'no');
-          const logo = document.createElement('img');
-          logo.src = '/logo-human-crowd.webp';
-          logo.alt = '';
-          logo.setAttribute('aria-hidden', 'true');
-          brand.append(logo, document.createTextNode('THE HUMAN EXPERIMENT'));
-          fragment.append(brand);
+      let cursor = 0;
+      matches.forEach(match => {
+        const before = source.slice(cursor, match.index);
+        if (before) fragment.append(document.createTextNode(before));
+        const brand = document.createElement('span');
+        brand.className = 'brand-inline notranslate';
+        brand.setAttribute('translate', 'no');
+        const logo = document.createElement('img');
+        logo.src = '/logo-human-crowd.webp';
+        logo.alt = '';
+        logo.setAttribute('aria-hidden', 'true');
+        brand.append(logo, document.createTextNode('THE HUMAN EXPERIMENT'));
+        // Keep a following dash attached to the protected brand so browser translation cannot drop it.
+        const after = source.slice(match.index + match[0].length);
+        const dash = after.match(/^(\s*[-‐‑–—]\s*)/);
+        if (dash) {
+          brand.append(document.createTextNode(' -'));
+          cursor = match.index + match[0].length + dash[0].length;
+        } else {
+          cursor = match.index + match[0].length;
+        }
+        fragment.append(brand);
+        if (cursor === match.index + match[0].length) {
+          // Keep the word boundary visually clear even if auto-translation trims the source whitespace.
+          fragment.append(document.createTextNode('\u00a0'));
         }
       });
+      const tail = source.slice(cursor);
+      if (tail) fragment.append(document.createTextNode(tail));
       node.replaceWith(fragment);
     });
   };
