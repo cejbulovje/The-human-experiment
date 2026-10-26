@@ -112,6 +112,8 @@ async function loadLinkedAnswer(){
 restoreFiltersFromUrl();applyLanguage();syncParticipantMode();loadStats();if(DEMO_MODE){document.addEventListener('DOMContentLoaded',()=>{queueMicrotask(()=>loadAnswers(true).then(()=>loadLinkedAnswer()));},{once:true});}else{loadAnswers(true).then(()=>loadLinkedAnswer());}
 
 document.querySelectorAll('[id^="ai-analysis-"][id$="-form"],#ai-analysis-form').forEach(aiForm=>{
+  const aiSuffix=aiForm.dataset.aiStream==='hypothetical'?'-hypothetical':'';
+  if(DEMO_MODE){const aiButton=$('#ai-submit'+aiSuffix);const aiStatus=$('#ai-status'+aiSuffix);if(aiButton)aiButton.disabled=true;if(aiStatus)aiStatus.textContent=(AI_ANALYSIS_UI[lang]||AI_ANALYSIS_UI.en).failed;}
   aiForm.addEventListener('submit',async event=>{
     event.preventDefault();
     const stream=aiForm.dataset.aiStream==='hypothetical'?'hypothetical':'collective';
@@ -119,6 +121,7 @@ document.querySelectorAll('[id^="ai-analysis-"][id$="-form"],#ai-analysis-form')
     const question=$('#ai-question'+suffix).value.trim();
     if(question.length<3||question.length>300)return;
     const button=$('#ai-submit'+suffix),status=$('#ai-status'+suffix),answer=$('#ai-answer'+suffix),words=AI_ANALYSIS_UI[lang]||AI_ANALYSIS_UI.en;
+    if(DEMO_MODE){status.textContent=words.failed;button.disabled=true;return;}
     button.disabled=true;status.textContent=words.working;answer.hidden=true;answer.textContent='';
     try{
       const response=await fetch('/api/ai-analysis',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({question,stream})});
