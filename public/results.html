@@ -28,6 +28,22 @@
   <main class="shell results-page">
     <p class="eyebrow" data-t="eyebrow">THE COLLECTIVE PICTURE</p><h1 data-t="title">What did people choose?</h1>
     <p class="lead" data-t="lead">Explore the overall statistics and read participants’ written responses.</p>
+    <nav class="results-view-tabs" aria-label="Results views">
+      <button type="button" class="results-view-tab is-active" data-results-view="overview">Обзор</button>
+      <button type="button" class="results-view-tab" data-results-view="all">Все ответы</button>
+      <button type="button" class="results-view-tab" data-results-view="question">По вопросам</button>
+      <button type="button" class="results-view-tab" data-results-view="latest">Новые</button>
+      <button type="button" class="results-view-tab" data-results-view="popular">Популярные</button>
+      <button type="button" class="results-view-tab" data-results-view="unusual">Необычные</button>
+    </nav>
+    <div class="results-question-picker" hidden>
+      <label for="results-question-select">Выберите вопрос</label>
+      <select id="results-question-select">
+        <option value="q2">Что бы ты изменил в этом человеке в первую очередь?</option>
+        <option value="q3">Что бы ты сделал, если бы желания этого человека противоречили твоим?</option>
+        <option value="q4">Как, по твоему мнению, поступило бы большинство людей?</option>
+      </select>
+    </div>
     <div id="results-status" class="status-panel" role="status" aria-live="polite" data-t="loading">Loading results…</div>
     <section id="statistics-section" class="statistics-section">
       <div class="section-heading"><div><p class="eyebrow" data-t="statsEyebrow">THE COLLECTIVE PICTURE</p><h2 data-t="statsTitle">Collective statistics</h2></div><span id="stats-state" class="status-chip"></span></div>
@@ -89,4 +105,44 @@
     </section>
   </main>
   <footer class="footer"><a class="brand-lockup footer-brand" href="/" aria-label="THE HUMAN EXPERIMENT home"><img src="/logo-human-crowd.webp" alt="" class="brand-mark"><span class="wordmark">THE HUMAN EXPERIMENT</span></a><nav class="footer-links" aria-label="Project links"><a href="/goal.html" data-menu="goal">Goal of the experiment</a><a href="/privacy.html" data-menu="privacy">Privacy</a><a href="/results.html" data-menu="results">Results</a><a href="/preferences.html" data-menu="preferences">Hypothetical preferences</a><a href="/methodology.html" data-voice="explore">About the research methodology</a><button class="footer-share share-button" type="button" data-site-share data-menu="share">Share the experiment</button><a href="mailto:mankindexperiment@gmail.com?subject=Support%20THE%20HUMAN%20EXPERIMENT" data-menu="support">Support the project</a><button type="button" class="footer-contact-copy" data-contact-copy><span data-menu="contact">Contact</span>:&nbsp;<span>mankindexperiment@gmail.com</span></button></nav></footer>
+
+  <script>
+  (() => {
+    const tabs = [...document.querySelectorAll('[data-results-view]')];
+    if (!tabs.length) return;
+    const stats = document.querySelector('#statistics-section');
+    const answers = document.querySelector('.public-answers-section');
+    const hypothetical = document.querySelector('.hypothetical-answers-section');
+    const ai = document.querySelector('.ai-analysis-section');
+    const picker = document.querySelector('.results-question-picker');
+    const questionSelect = document.querySelector('#results-question-select');
+    const charts = ['q2','q3','q4'].map((q) => document.querySelector('#chart-' + q)?.closest('.result-section'));
+    const showView = (view) => {
+      tabs.forEach((tab) => {
+        const active = tab.dataset.resultsView === view;
+        tab.classList.toggle('is-active', active);
+        tab.setAttribute('aria-pressed', String(active));
+      });
+      const overview = view === 'overview';
+      const question = view === 'question';
+      const list = ['all','latest','popular','unusual'].includes(view);
+      if (stats) stats.hidden = !(overview || question);
+      if (answers) answers.hidden = !(overview || list || question);
+      if (hypothetical) hypothetical.hidden = !overview;
+      if (ai) ai.hidden = !overview;
+      if (picker) picker.hidden = !question;
+      charts.forEach((chart, index) => { if (chart) chart.hidden = question && ['q2','q3','q4'][index] !== questionSelect.value; });
+      if (list) {
+        const sort = document.querySelector('#answer-sort');
+        if (sort) { sort.value = ({latest:'newest',popular:'popular',unusual:'unusual'})[view] || 'newest'; sort.dispatchEvent(new Event('change')); }
+      }
+      if (overview && charts.length) charts.forEach(chart => { if (chart) chart.hidden = false; });
+      if (question && questionSelect) charts.forEach((chart,index)=>{if(chart)chart.hidden=['q2','q3','q4'][index]!==questionSelect.value;});
+      if (answers && question) answers.scrollIntoView({behavior:'smooth',block:'start'});
+    };
+    tabs.forEach(tab => tab.addEventListener('click', () => showView(tab.dataset.resultsView)));
+    questionSelect?.addEventListener('change', () => showView('question'));
+    showView('overview');
+  })();
+  </script>
 </body></html>
