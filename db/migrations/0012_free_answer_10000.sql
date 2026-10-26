@@ -2,8 +2,6 @@
 -- Rebuild child tables before the parent so D1 foreign-key enforcement can remain enabled.
 -- This migration assumes the current schema's only responses foreign-key dependents are
 -- response_reactions and topic_suggestions; keep their definitions and indexes in sync with schema.sql.
-BEGIN TRANSACTION;
-
 CREATE TABLE responses_new (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   language TEXT NOT NULL CHECK (language IN ('en', 'ru', 'es', 'pt', 'zh', 'de', 'ja', 'fr', 'ar')),
@@ -92,5 +90,3 @@ SELECT id, response_id, suggested_topic, voter_hash, created_at FROM topic_sugge
 
 DROP TABLE response_reactions_backup;
 DROP TABLE topic_suggestions_backup;
-
-COMMIT;
