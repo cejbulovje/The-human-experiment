@@ -163,6 +163,15 @@
     const hypotheticalTabs = [...document.querySelectorAll('[data-hypothetical-view]')];
     let stream = 'collective';
     let view = 'overview';
+    const syncCollectiveSort = () => {
+      if (!['latest','popular','unusual'].includes(view)) return;
+      const sort = document.querySelector('#answer-sort');
+      const target = ({latest:'newest',popular:'popular',unusual:'unusual'})[view];
+      if (sort && sort.value !== target) {
+        sort.value = target;
+        sort.dispatchEvent(new Event('change'));
+      }
+    };
     const render = () => {
       const collective = stream === 'collective';
       const overview = view === 'overview';
@@ -217,16 +226,13 @@
     streamLinks.forEach(link => link.addEventListener('click', event => {
       event.preventDefault();
       stream = link.dataset.resultsStream === 'hypothetical' ? 'hypothetical' : 'collective';
+      if (stream === 'collective') syncCollectiveSort();
       render();
       (stream === 'collective' ? stats : hypothetical)?.scrollIntoView({behavior:'smooth',block:'start'});
     }));
     tabs.forEach(tab => tab.addEventListener('click', () => {
       view = tab.dataset.resultsView;
-      if (['latest','popular','unusual'].includes(view)) {
-        const sort = document.querySelector('#answer-sort');
-        const target = ({latest:'newest',popular:'popular',unusual:'unusual'})[view];
-        if (sort && sort.value !== target) { sort.value = target; sort.dispatchEvent(new Event('change')); }
-      }
+      if (stream === 'collective') syncCollectiveSort();
       render();
     }));
     hypotheticalTabs.forEach(tab => tab.addEventListener('click', () => {
