@@ -271,7 +271,7 @@
       'Je serais curieux de découvrir ce qui se passerait si je confiais réellement cette responsabilité aux autres. Non pas parce que je suis certain que toutes leurs décisions seraient justes, mais parce que je veux voir comment ils saisiraient cette occasion. Pourraient-ils tenir compte non seulement de leurs propres idées sur ce que devrait être ma vie, mais aussi de ce qui pourrait me rendre heureux, moi ?',
       'En définitive, cette expérience serait une épreuve de confiance entre une personne et l’humanité tout entière. Je donnerais aux gens la possibilité d’influencer mon destin, et ils auraient l’occasion de montrer ce que cette responsabilité signifie pour eux.',
       'C’est peut-être ce qui m’intéresse le plus : voir ce qui se passe lorsqu’une personne choisit de faire confiance à l’humanité sans connaître le résultat à l’avance, tout en gardant espoir en son humanité.'
-    ]
+    ],
     de: [
       'Wenn ich an diesem Experiment als freiwillige Person teilnehmen würde, wäre ich wahrscheinlich bereit, der Menschheit zu überlassen, was in meinem Leben geschieht. Menschen auf der ganzen Welt könnten mein Erscheinungsbild auswählen, meine Aktivitäten bestimmen, neue Möglichkeiten vorschlagen und entscheiden, wie mein weiterer Weg aussehen sollte.',
       'Mich würde interessieren, wohin eine solche Erfahrung führt. Was würden die Menschen in meinem Leben verändern wollen? Welche Möglichkeiten würden sie mir anbieten? Wie würden sie sich meine Zukunft vorstellen, wenn sie sie gemeinsam gestalten könnten?',
@@ -284,7 +284,7 @@
       'Mich würde interessieren, was geschieht, wenn ich anderen diese Verantwortung wirklich anvertraue. Nicht, weil ich sicher wäre, dass jede Entscheidung richtig sein wird, sondern weil ich sehen möchte, wie sie diese Möglichkeit nutzen. Können sie nicht nur ihre eigenen Vorstellungen davon berücksichtigen, wie mein Leben aussehen sollte, sondern auch das, was mich glücklich machen würde?',
       'Letztlich wäre dieses Experiment eine Prüfung des Vertrauens zwischen einem einzelnen Menschen und der gesamten Menschheit. Ich würde den Menschen die Möglichkeit geben, mein Schicksal mitzugestalten, und sie hätten die Gelegenheit zu zeigen, was diese Verantwortung für sie bedeutet.',
       'Vielleicht interessiert mich genau das am meisten: zu sehen, was geschieht, wenn ein Mensch beschließt, der Menschheit zu vertrauen, ohne das Ergebnis im Voraus zu kennen, und dabei die Hoffnung auf ihre Menschlichkeit bewahrt.'
-    ]
+    ],
     zh: [
       '如果我作为志愿者参加这项实验，我或许愿意把自己生活中发生什么的决定权交给全人类。世界各地的人们可以选择我的形象、决定我的活动、为我提出新的机会，并共同决定我未来的人生道路。',
       '我很想看看这样的经历会把事情带向何方。人们会想改变我生活中的什么？他们会给我提供哪些机会？如果大家能够共同塑造我的未来，他们会怎样想象它？',
