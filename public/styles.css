@@ -1203,3 +1203,49 @@
   .results-page .hypothetical-empty-state p{font-size:.82rem;line-height:1.45}
   .results-page .hypothetical-ai-analysis-section{margin-top:22px;padding-top:16px}
 }
+
+
+/* Final hierarchy pass for the personal-preferences stream. */
+.results-page .hypothetical-answers-section{
+  margin-top:12px;
+  padding-top:0;
+  border-top:1px solid var(--line);
+}
+.results-page .hypothetical-answers-section>.section-heading{
+  padding-top:14px;
+  margin-bottom:10px;
+}
+.results-page .hypothetical-answers-section>.section-heading .eyebrow,
+.results-page .hypothetical-answers-section>.section-heading h2,
+.results-page .hypothetical-answers-section>.section-heading .section-intro{
+  display:none;
+}
+.results-page .hypothetical-answers-section>.section-heading{
+  justify-content:flex-end;
+  min-height:28px;
+}
+.results-page .hypothetical-data-notice{
+  margin:8px 0 18px;
+}
+.results-page .hypothetical-empty-state{
+  margin:0;
+}
+.results-page .hypothetical-ai-analysis-section{
+  margin-top:22px;
+  padding-top:18px;
+}
+.results-page .hypothetical-ai-analysis-section .ai-analysis-card{
+  margin-top:10px;
+}
+@media(min-width:761px){
+  .results-page .hypothetical-answers-section{margin-top:10px}
+  .results-page .hypothetical-answers-section>.section-heading{padding-top:12px}
+  .results-page .hypothetical-data-notice{margin-bottom:14px}
+  .results-page .hypothetical-ai-analysis-section{margin-top:20px;padding-top:18px}
+}
+@media(max-width:760px){
+  .results-page .hypothetical-answers-section{margin-top:8px}
+  .results-page .hypothetical-answers-section>.section-heading{padding-top:10px;margin-bottom:8px}
+  .results-page .hypothetical-data-notice{margin:6px 0 12px}
+  .results-page .hypothetical-ai-analysis-section{margin-top:16px;padding-top:14px}
+}
