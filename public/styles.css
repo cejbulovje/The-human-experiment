@@ -1129,3 +1129,34 @@
   .results-page .results-stream-link{min-height:58px;align-items:center}
   .results-page .results-stream-link>span:nth-child(2){gap:2px}
 }
+
+
+/* Results header count card: align the live response count with the page title. */
+@media(min-width:761px){
+  .results-page{position:relative}
+  .results-page .results-stat-card{
+    position:absolute;top:32px;right:40px;width:250px;min-height:116px;
+    margin:0;padding:17px 18px;display:grid;grid-template-columns:1fr auto;
+    grid-template-rows:auto auto;align-content:center;align-items:center;gap:4px 12px;
+    border:1px solid #d7e1d9;border-radius:12px;background:#eef2ed;
+  }
+  .results-page .results-stat-card .stat-label:first-child{grid-column:1/-1;font-size:.82rem;color:#5e7065}
+  .results-page .results-stat-card strong{grid-column:1;grid-row:2;font-size:2.8rem;line-height:1;color:#075744}
+  .results-page .results-stat-card #updated-at{grid-column:1/-1;font-size:.78rem;line-height:1.35;color:#5e7065}
+  .results-page>.eyebrow,.results-page>h1,.results-page>.lead{max-width:calc(100% - 290px)}
+  .results-page .statistics-section{margin-top:24px}
+  .results-page .statistics-section>.section-heading{display:none}
+  .results-page #results-content>.stat-card{display:none}
+}
+@media(max-width:760px){
+  .results-page .results-stat-card{
+    position:static;width:100%;min-height:0;margin:10px 0 12px;padding:10px 13px;
+    display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;
+    align-items:center;gap:3px 10px;border:1px solid #d7e1d9;border-radius:10px;background:#eef2ed;
+  }
+  .results-page .results-stat-card .stat-label:first-child{grid-column:1/-1;font-size:.72rem;color:#5e7065}
+  .results-page .results-stat-card strong{grid-column:1;grid-row:2;font-size:2.1rem;line-height:1;color:#075744}
+  .results-page .results-stat-card #updated-at{grid-column:2;grid-row:2;font-size:.7rem;line-height:1.3;color:#5e7065}
+  .results-page .statistics-section>.section-heading{display:none}
+  .results-page #results-content>.stat-card{display:none}
+}
