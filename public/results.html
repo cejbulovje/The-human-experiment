@@ -360,7 +360,7 @@
     if (rankingUnavailable()) {
       requestId++;
       offset=0;
-      list.querySelectorAll('article:not(.hypothetical-empty-state)').forEach(el=>el.remove());
+      list.querySelectorAll('article:not(.hypothetical-empty-state):not(.author-answer-card)').forEach(el=>el.remove());
       if (empty) empty.hidden=true;
       status.hidden=false;
       status.textContent = section.dataset.resultsView === 'popular'
@@ -373,7 +373,7 @@
     if(busy) { pendingLoad=true; pendingReset=pendingReset||reset; return; }
     const thisRequest = ++requestId;
     busy=true;
-    if(reset){offset=0; list.querySelectorAll('article:not(.hypothetical-empty-state)').forEach(el=>el.remove());}
+    if(reset){offset=0; list.querySelectorAll('article:not(.hypothetical-empty-state):not(.author-answer-card)').forEach(el=>el.remove());}
     if(empty) empty.hidden=true;
     status.hidden=false; status.textContent='Загружаем реальные ответы…';
     try {
