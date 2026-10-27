@@ -66,11 +66,11 @@
       <div class="status-note"><strong>Перед началом:</strong> возможная рабочая версия сможет сопоставлять эти ответы с результатами основного опроса с помощью ИИ, чтобы исследовать совпадения и различия между предпочтениями людей. Ответы не должны публиковаться вместе с вашим именем или контактами. Не указывайте в пояснении сведения, по которым можно установить вашу личность. Сейчас это только прототип: ответы остаются в этом окне, не отправляются и не сохраняются.</div>
       <label class="preference-option consent-option"><input type="checkbox" id="preferences-consent" name="consent" value="yes" required><span><strong>Я понимаю, как предполагается использовать ответы, и согласен(на) участвовать в исследовании.</strong></span></label>
 
-      <section class="preference-question" aria-labelledby="public-profile-title">
+      <section class="preference-question public-profile-section" aria-labelledby="public-profile-title">
         <h2 id="public-profile-title">Публичное отображение</h2>
-        <label class="preference-option"><span>Псевдоним (необязательно)</span><input type="text" id="preferences-pseudonym" name="pseudonym" maxlength="60" autocomplete="nickname" placeholder="Можно оставить пустым"></label>
-        <label class="preference-option consent-option"><input type="checkbox" id="preferences-public-consent" name="publicConsent"><span><strong>Я отдельно разрешаю публиковать мои ответы, выбранный псевдоним и пояснение в разделе результатов.</strong></span></label>
-        <p class="privacy-hint">Без этого отдельного согласия ответ не должен появляться в публичной ленте. Отправка пока отключена: на сайте ещё не настроен публичный ключ CAPTCHA.</p>
+        <label class="preference-option"><span id="pseudonym-label">Псевдоним (необязательно)</span><input type="text" id="preferences-pseudonym" name="pseudonym" maxlength="60" autocomplete="nickname" placeholder="Можно оставить пустым"></label>
+        <label class="preference-option consent-option"><input type="checkbox" id="preferences-public-consent" name="publicConsent"><span><strong id="preferences-public-consent-label">Я отдельно разрешаю публиковать мои ответы, выбранный псевдоним и пояснение в разделе результатов.</strong></span></label>
+        <p class="privacy-hint" id="public-consent-hint">Без этого отдельного согласия ответ не должен появляться в публичной ленте. Отправка пока отключена: на сайте ещё не настроен публичный ключ CAPTCHA.</p>
       </section>
 
       <section class="preference-question">
