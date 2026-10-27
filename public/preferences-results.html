@@ -10,6 +10,11 @@
   <script src="/author-answer-emojis.js" defer></script>
 <style>
 /* Dedicated personal-preferences results page: keep shared scripts/data logic, show only this stream. */
+.preference-page-switcher { display:grid !important; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin:20px 0; }
+.preference-page-switcher .results-stream-link { display:flex; align-items:center; gap:12px; min-width:0; text-decoration:none; }
+.preference-page-switcher .results-stream-link.is-active { background:#075b49; color:#fff; }
+@media (max-width:640px) { .preference-page-switcher { grid-template-columns:1fr; } }
+
 .results-page > .eyebrow, .results-page > h1, .results-page > .lead, .results-stream-links, .results-view-tabs, #statistics-section, .public-answers-section:not(.hypothetical-answers-section), .ai-analysis-section:not(.hypothetical-ai-analysis-section) { display:none !important; }
 </style>
 </head>
@@ -103,6 +108,18 @@
     </section>
     <section class="public-answers-section hypothetical-answers-section" aria-labelledby="preference-results-title" hidden>
       <div class="section-heading"><div><p class="eyebrow">ГИПОТЕТИЧЕСКИЕ ПРЕДПОЧТЕНИЯ</p><h2 id="preference-results-title" data-voice="resultsTitle">Чего люди хотели бы для собственной жизни?</h2><p class="section-intro" data-voice="resultsIntro">Отдельный поток личных предпочтений — не решений за чужую жизнь.</p></div></div>
+      <nav class="results-stream-links preference-page-switcher" aria-label="Переключение между голосованиями">
+        <a class="results-stream-link" href="/results.html">
+          <span class="results-stream-kicker">01</span>
+          <span><strong>Коллективные решения</strong><small>Что люди решили бы о жизни другого человека</small></span>
+          <span class="results-stream-arrow" aria-hidden="true">↗</span>
+        </a>
+        <a class="results-stream-link is-active" href="/preferences-results.html" aria-current="page">
+          <span class="results-stream-kicker">02</span>
+          <span><strong>Личные предпочтения</strong><small>Чего люди хотели бы для собственной жизни</small></span>
+          <span class="results-stream-arrow" aria-hidden="true">✓</span>
+        </a>
+      </nav>
       <div class="status-panel hypothetical-data-notice">
         Показываются только ответы, для которых участник отдельно разрешил публичное отображение. Этот поток не объединяется с коллективными ответами.
       </div>
