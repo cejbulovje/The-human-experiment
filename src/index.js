@@ -262,6 +262,7 @@ async function publicPreferences(request,env){
   const url=new URL(request.url);
   const sort=url.searchParams.get('sort')||'latest';
   if(!['latest','newest','popular','unusual'].includes(sort))return json({error:'invalid_sort'},400);
+  if(['popular','unusual'].includes(sort))return json({error:'ranking_unavailable'},409);
   const limit=Math.min(50,Math.max(1,Number.parseInt(url.searchParams.get('limit')||'20',10)||20));
   const offset=Math.max(0,Number.parseInt(url.searchParams.get('offset')||'0',10)||0);
   const q=(url.searchParams.get('q')||'').trim().slice(0,100).toLocaleLowerCase();
@@ -276,8 +277,6 @@ async function publicPreferences(request,env){
     }));
     if(q)answers=answers.filter(item=>[item.pseudonym,item.comment,JSON.stringify(item.answers)].some(value=>String(value||'').toLocaleLowerCase().includes(q)));
     if(question)answers=answers.filter(item=>Object.hasOwn(item.answers,question));
-    if(sort==='unusual')answers=answers.reverse();
-    // No reaction/voting data exists for this stream yet, so "popular" is currently newest-first.
     const total=answers.length;
     return json({ok:true,total,limit,offset,sort,answers:answers.slice(offset,offset+limit)});
   }catch{return json({error:'preferences_unavailable'},503);}
