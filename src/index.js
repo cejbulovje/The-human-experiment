@@ -270,12 +270,12 @@ async function publicPreferences(request,env){
   const questionKeys=['priority','preserve','wishes','body'];
   if(question&&!questionKeys.includes(question))return json({error:'invalid_question'},400);
   try{
-    const rows=await env.DB.prepare('SELECT id,language,answers_json,pseudonym,comment,created_at FROM hypothetical_preferences WHERE public_consent=1 ORDER BY created_at DESC,id DESC').all();
+    const rows=await env.DB.prepare('SELECT id,language,answers_json,comment,created_at FROM hypothetical_preferences ORDER BY created_at DESC,id DESC').all();
     let answers=(rows.results||[]).map(row=>({
       id:Number(row.id),language:row.language,answers:JSON.parse(row.answers_json),
-      pseudonym:row.pseudonym||null,comment:row.comment||'',createdAt:row.created_at
+      comment:row.comment||'',createdAt:row.created_at
     }));
-    if(q)answers=answers.filter(item=>[item.pseudonym,item.comment,JSON.stringify(item.answers)].some(value=>String(value||'').toLocaleLowerCase().includes(q)));
+    if(q)answers=answers.filter(item=>[item.comment,JSON.stringify(item.answers)].some(value=>String(value||'').toLocaleLowerCase().includes(q)));
     if(question)answers=answers.filter(item=>Object.hasOwn(item.answers,question));
     const total=answers.length;
     return json({ok:true,total,limit,offset,sort,answers:answers.slice(offset,offset+limit)});
@@ -284,7 +284,7 @@ async function publicPreferences(request,env){
 async function preferencesStats(env){
   if(!env.DB)return json({error:'not_configured'},503);
   try{
-    const rows=await env.DB.prepare('SELECT answers_json,language FROM hypothetical_preferences WHERE public_consent=1').all();
+    const rows=await env.DB.prepare('SELECT answers_json,language FROM hypothetical_preferences').all();
     const totals={total:0,languages:{},questions:{priority:{},preserve:{},wishes:{},body:{}}};
     for(const row of rows.results||[]){
       totals.total++;
@@ -312,16 +312,14 @@ async function submitPreferences(request,env){
     wishes:['ask','limits','decide','consent'],
     body:['consent','discuss','unimportant','context']
   };
-  if(!body||!languages.includes(body.language)||body.consentToStore!==true||body.publicConsent!==true||
-    typeof body.aggregateConsent!=='boolean'||!body.answers||typeof body.answers!=='object'||Array.isArray(body.answers)||
+  if(!body||!languages.includes(body.language)||body.consentToStore!==true||!body.answers||typeof body.answers!=='object'||Array.isArray(body.answers)||
     Object.keys(body.answers).length!==4||
     Object.entries(allowed).some(([key,values])=>key==='preserve'
       ?(!Array.isArray(body.answers[key])||body.answers[key].some(value=>!values.includes(value)))
       :!values.includes(body.answers[key]))||
     Object.keys(body.answers).some(key=>!Object.hasOwn(allowed,key))||
-    (body.pseudonym!==undefined&&typeof body.pseudonym!=='string')||
     (body.comment!==undefined&&typeof body.comment!=='string')||
-    String(body.pseudonym||'').trim().length>60||String(body.comment||'').length>10000||
+String(body.comment||'').length>10000||
     typeof body.turnstileToken!=='string'||body.turnstileToken.length<1||body.turnstileToken.length>2048){
     return json({ok:false,error:'invalid_response'},400);
   }
@@ -337,8 +335,8 @@ async function submitPreferences(request,env){
     const deletionToken=crypto.randomUUID()+crypto.randomUUID();
     const deletionTokenHash=await sha256(deletionToken);
     await env.DB.prepare(`INSERT INTO hypothetical_preferences
-      (language,answers_json,aggregate_consent,delete_token_hash,created_at,pseudonym,comment,public_consent)
-      VALUES (?,?,?,?,?,?,?,1)`).bind(body.language,JSON.stringify(body.answers),body.aggregateConsent?1:0,deletionTokenHash,new Date().toISOString(),String(body.pseudonym||'').trim()||null,String(body.comment||'').trim()||null).run();
+      (language,answers_json,aggregate_consent,delete_token_hash,created_at,comment,public_consent)
+      VALUES (?,?,?,?,?,?,1)`).bind(body.language,JSON.stringify(body.answers),1,deletionTokenHash,new Date().toISOString(),String(body.comment||'').trim()||null).run();
     return json({ok:true,deletionToken});
   }catch{return json({ok:false,error:'save_failed'},500);}
 }
@@ -399,7 +397,7 @@ async function aiAnalysis(request,env){
     let lastProcessedId=lastId;
     let processedCount=Number(memory?.response_count||0);
     const countRow=stream==='hypothetical'
-      ? await env.DB.prepare('SELECT COUNT(*) AS total FROM hypothetical_preferences WHERE aggregate_consent=1 AND id>?').bind(lastId).first()
+      ? await env.DB.prepare('SELECT COUNT(*) AS total FROM hypothetical_preferences WHERE id>?').bind(lastId).first()
       : await env.DB.prepare('SELECT COUNT(*) AS total FROM responses WHERE is_public=1 AND id>?').bind(lastId).first();
     const newCount=Number(countRow?.total||0);
     const batchSize=5;
@@ -412,7 +410,7 @@ async function aiAnalysis(request,env){
     let cursor=lastId;
     for(let n=0;n<batchCount;n++){
       const rows=stream==='hypothetical'
-        ? await env.DB.prepare("SELECT id,answers_json,language FROM hypothetical_preferences WHERE aggregate_consent=1 AND id>? ORDER BY id ASC LIMIT 5").bind(cursor).all()
+        ? await env.DB.prepare("SELECT id,answers_json,language FROM hypothetical_preferences WHERE id>? ORDER BY id ASC LIMIT 5").bind(cursor).all()
         : await env.DB.prepare("SELECT id,free_answer,signature,language,topic,q2,q3,q4 FROM responses WHERE is_public=1 AND id>? ORDER BY id ASC LIMIT 5").bind(cursor).all();
       const batch=(rows.results||[]).map(r=>stream==='hypothetical'
         ? ({id:Number(r.id),language:r.language,answers:JSON.parse(String(r.answers_json||'{}'))})
