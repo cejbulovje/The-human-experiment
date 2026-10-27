@@ -1271,3 +1271,50 @@
   margin-top:0 !important;
   padding-top:0 !important;
 }
+
+
+/* Restore full visual parity for the personal-preferences stream. */
+.results-page .hypothetical-answers-section>.section-heading{
+  display:flex !important;
+  align-items:flex-end;
+  justify-content:space-between;
+  gap:18px;
+  min-height:0;
+  margin:0 0 20px;
+  padding-top:0;
+}
+.results-page .hypothetical-answers-section>.section-heading .eyebrow,
+.results-page .hypothetical-answers-section>.section-heading h2,
+.results-page .hypothetical-answers-section>.section-heading .section-intro{
+  display:block;
+}
+.results-page .hypothetical-answers-section>.section-heading h2{
+  font-size:clamp(1.45rem,3vw,2rem);
+  line-height:1.15;
+  letter-spacing:-.035em;
+  margin:0 0 8px;
+}
+.results-page .hypothetical-answers-section>.section-heading .section-intro{
+  color:var(--muted);
+  margin:0;
+  max-width:620px;
+  font-size:inherit;
+  line-height:inherit;
+}
+.results-page .hypothetical-answer-tools{
+  display:grid;
+  grid-template-columns:minmax(220px,2fr) minmax(150px,1fr) minmax(145px,1fr) minmax(170px,1.1fr);
+  align-items:end;
+  gap:12px;
+  margin:24px 0 16px;
+}
+@media(max-width:760px){
+  .results-page .hypothetical-answers-section>.section-heading{align-items:flex-start;flex-direction:column;gap:10px;margin-bottom:20px}
+  .results-page .hypothetical-answers-section>.section-heading h2{font-size:clamp(1.45rem,3vw,2rem);line-height:1.15}
+  .results-page .hypothetical-answer-tools{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .results-page .hypothetical-answer-tools .search-field{grid-column:1/-1}
+}
+@media(max-width:420px){
+  .results-page .hypothetical-answer-tools{grid-template-columns:1fr}
+  .results-page .hypothetical-answer-tools .search-field{grid-column:auto}
+}
