@@ -99,15 +99,15 @@
     <section class="public-answers-section hypothetical-answers-section" aria-labelledby="preference-results-title" hidden>
       <div class="section-heading"><div><p class="eyebrow">ГИПОТЕТИЧЕСКИЕ ПРЕДПОЧТЕНИЯ</p><h2 id="preference-results-title" data-voice="resultsTitle">Чего люди хотели бы для собственной жизни?</h2><p class="section-intro" data-voice="resultsIntro">Отдельный поток личных предпочтений — не решений за чужую жизнь.</p></div></div>
       <div class="status-panel hypothetical-data-notice">
-        Ответы на вопросы о собственной жизни пока не собираются и не сохраняются. Поэтому реальных результатов и статистики здесь ещё нет. Ниже сохранена структура раздела для будущей коллекции ответов.
+        Показываются только ответы, для которых участник отдельно разрешил публичное отображение. Этот поток не объединяется с коллективными ответами.
       </div>
       <div class="answer-tools hypothetical-answer-tools">
-        <label class="search-field"><span class="sr-only">Поиск по личным ответам</span><input type="search" placeholder="Поиск по ответам…" disabled></label>
-        <label><span class="sr-only">Вопрос</span><select id="hypothetical-question-filter" disabled><option>Все вопросы</option><option>1. Главный приоритет</option><option>2. Что важно сохранить</option><option>3. Как учитывать желания</option><option>4. Изменения тела</option><option>5. Пояснения</option></select></label>
-        <label><span class="sr-only">Сортировка</span><select disabled><option>Сначала новые</option><option>Популярные</option><option>Необычные</option></select></label>
-        <label class="hypothetical-page-size">Ответов на странице <select disabled><option>10</option><option selected>20</option><option>30</option><option>50</option><option>100</option></select></label>
+        <label class="search-field"><span class="sr-only">Поиск по личным ответам</span><input id="hypothetical-search" type="search" placeholder="Поиск по ответам…"></label>
+        <label><span class="sr-only">Вопрос</span><select id="hypothetical-question-filter"><option value="">Все вопросы</option><option value="priority">1. Главный приоритет</option><option value="preserve">2. Что важно сохранить</option><option value="wishes">3. Как учитывать желания</option><option value="body">4. Изменения тела</option></select></label>
+        <label><span class="sr-only">Сортировка</span><select id="hypothetical-sort"><option value="latest">Сначала новые</option><option value="popular">Популярные</option><option value="unusual">Необычные</option></select></label>
+        <label class="hypothetical-page-size">Ответов на странице <select id="hypothetical-page-size"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></label>
       </div>
-      <div class="answer-list hypothetical-answer-list">
+      <p id="hypothetical-stats" class="method-note" role="status" aria-live="polite">Загрузка статистики…</p><div id="hypothetical-status" class="status-panel" role="status" aria-live="polite" hidden></div><div class="answer-list hypothetical-answer-list">
         <article class="status-panel hypothetical-empty-state">
           <h3 data-voice="emptyTitle">Личных ответов пока нет</h3>
           <p data-voice="emptyText">Когда начнётся отдельный сбор ответов и появятся реальные данные, здесь будут карточки ответов, фильтры по пяти вопросам, сортировка и постраничная загрузка — по той же схеме, что и в коллективном потоке.</p>
@@ -315,4 +315,83 @@
     questionSelect?.addEventListener('change', render);
     render();
   })();
-  </script></body></html>
+  </script>
+<script>
+(() => {
+  const section = document.querySelector('.hypothetical-answers-section');
+  if (!section) return;
+  const list = section.querySelector('.hypothetical-answer-list');
+  const empty = section.querySelector('.hypothetical-empty-state');
+  const status = section.querySelector('#hypothetical-status');
+  const stats = section.querySelector('#hypothetical-stats');
+  const search = section.querySelector('#hypothetical-search');
+  const question = section.querySelector('#hypothetical-question-filter');
+  const sort = section.querySelector('#hypothetical-sort');
+  const pageSize = section.querySelector('#hypothetical-page-size');
+  let offset = 0, total = 0, busy = false;
+  const labels = {
+    priority:{autonomy:'Свобода и самостоятельность',wellbeing:'Благополучие и безопасность',trust:'Доверие и ответственность',context:'Зависит от обстоятельств'},
+    preserve:{autonomy:'Право самостоятельно принимать решения',body:'Контроль над собственным телом',identity:'Личность и идентичность',safety:'Безопасность и физическое благополучие',voice:'Возможность быть услышанным'},
+    wishes:{ask:'Сначала спросить меня и выслушать ответ',limits:'Действовать в заранее обозначенных пределах',decide:'Оставить окончательное решение тому, кто получил власть',consent:'Получать моё согласие на существенные изменения'},
+    body:{consent:'Допускать изменения только с моего согласия',discuss:'Сначала обсуждать последствия и альтернативы',unimportant:'Это не главный вопрос по сравнению с другими приоритетами',context:'Зависит от конкретного изменения и обстоятельств'}
+  };
+  const names = {priority:'Главный приоритет',preserve:'Что важно сохранить',wishes:'Как учитывать желания',body:'Изменения тела'};
+  function node(tag, text, cls) { const el=document.createElement(tag); if(text!==undefined) el.textContent=text; if(cls) el.className=cls; return el; }
+  function renderAnswer(item) {
+    const article=node('article',undefined,'answer-card');
+    const header=node('div',undefined,'answer-card-header');
+    header.append(node('strong',item.pseudonym || 'Анонимный участник'));
+    header.append(node('time',item.createdAt ? new Date(item.createdAt).toLocaleDateString() : ''));
+    article.append(header);
+    for(const key of ['priority','preserve','wishes','body']) {
+      const raw=item.answers?.[key];
+      if(raw===undefined) continue;
+      const vals=(Array.isArray(raw)?raw:[raw]).map(v=>labels[key]?.[v] || String(v));
+      const p=node('p'); p.append(node('strong',names[key]+': '),document.createTextNode(vals.join(', '))); article.append(p);
+    }
+    if(item.comment) { const p=node('p',item.comment); p.className='answer-comment'; article.append(p); }
+    return article;
+  }
+  async function load(reset=true) {
+    if(busy) return;
+    busy=true;
+    if(reset){offset=0; list.querySelectorAll('article:not(.hypothetical-empty-state)').forEach(el=>el.remove());}
+    if(empty) empty.hidden=true;
+    status.hidden=false; status.textContent='Загружаем реальные ответы…';
+    try {
+      const params=new URLSearchParams({limit:pageSize.value,offset:String(offset),sort:sort.value});
+      if(search.value.trim()) params.set('q',search.value.trim());
+      if(question.value) params.set('question',question.value);
+      const response=await fetch('/api/preferences/public?'+params.toString(),{headers:{Accept:'application/json'}});
+      const data=await response.json();
+      if(!response.ok || !data.ok) throw new Error('unavailable');
+      total=data.total;
+      data.answers.forEach(item=>list.append(renderAnswer(item)));
+      offset+=data.answers.length;
+      status.textContent=total ? 'Показано '+Math.min(offset,total)+' из '+total+' публичных ответов.' : 'Пока нет опубликованных ответов.';
+      const more=section.querySelector('#hypothetical-load-more');
+      if(more) more.hidden=offset>=total;
+      if(!total && empty) empty.hidden=false;
+    } catch {
+      status.textContent='Не удалось загрузить ответы. Попробуйте позже.';
+    } finally { busy=false; }
+  }
+  async function loadStats() {
+    try {
+      const response=await fetch('/api/preferences/stats',{headers:{Accept:'application/json'}});
+      const data=await response.json();
+      if(!response.ok || !data.ok) throw new Error('unavailable');
+      stats.textContent='Всего публичных личных ответов: '+data.stats.total+'. Данные статистики относятся только к этому отдельному потоку.';
+    } catch { stats.textContent='Статистика личных предпочтений временно недоступна.'; }
+  }
+  const more=node('button','Показать ещё','show-more-button'); more.type='button'; more.id='hypothetical-load-more'; more.hidden=true; more.addEventListener('click',()=>load(false)); status.after(more);
+  let debounce;
+  search.addEventListener('input',()=>{clearTimeout(debounce);debounce=setTimeout(()=>load(true),250);});
+  [question,sort,pageSize].forEach(el=>el.addEventListener('change',()=>load(true)));
+  document.querySelectorAll('[data-results-stream="hypothetical"],[data-hypothetical-view]').forEach(el=>el.addEventListener('click',()=>{load(true);loadStats();}));
+  loadStats();
+  if(new URLSearchParams(location.search).get('stream')==='hypothetical') load(true);
+})();
+</script>
+
+</body></html>
