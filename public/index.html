@@ -48,20 +48,7 @@
       <div class="form-heading"><span class="step-number">01</span><div><h2 data-i18n="q1">Tell us what you would do</h2><p data-i18n="q1help">Answer in your own words. There are no expected answers.</p></div></div>
       <label class="field-label" for="free-answer" data-i18n="answer-label">Your answer</label>
       <textarea id="free-answer" name="freeAnswer" maxlength="10000" rows="5" required data-i18n-placeholder="answer-placeholder" placeholder="I would…"></textarea>
-      <div class="field-meta"><span data-i18n="private-note">Your written answer will be published anonymously on the public results page. Please do not include personal or identifying information.</span><span id="char-count">0 / 10000</span></div>
-
-      <div class="question-block signature-block">
-        <div class="form-heading"><span class="step-number">✎</span><div><h2 data-i18n="signature-title">How should your answer be signed?</h2><p data-i18n="signature-help">Anonymous is selected by default. If you add a signature, it will be shown publicly with your answer.</p></div></div>
-        <div class="options">
-          <label class="option"><input type="radio" name="signatureMode" value="anonymous" checked><span data-i18n="signature-anonymous">Anonymous</span></label>
-          <label class="option"><input type="radio" name="signatureMode" value="signed"><span data-i18n="signature-signed">Add a name or pseudonym</span></label>
-        </div>
-        <div id="signature-field" hidden>
-          <label class="field-label" for="signature-name" data-i18n="signature-label">Name or pseudonym</label>
-          <input id="signature-name" name="signature" type="text" maxlength="60" autocomplete="nickname" data-i18n-placeholder="signature-placeholder" placeholder="Enter a name or pseudonym" style="display:block;width:100%;padding:13px 15px;border:1px solid #c9cbc2;border-radius:12px;background:#fff;color:var(--ink);font:inherit">
-          <p class="privacy-copy" data-i18n="signature-note">This is a public display name, not a verified identity. Do not use another person's name without their permission.</p>
-        </div>
-      </div>
+      <div class="field-meta"><span data-i18n="private-note">Your submitted answer will be public without an author signature and used for AI analysis. Do not include identifying information you do not want to make public.</span><span id="char-count">0 / 10000</span></div>
 
       <div class="question-block author-confirmation">
         <div class="form-heading"><span class="step-number">✓</span><div><h2 data-i18n="author-title">Before you submit</h2><p data-i18n="author-help">Your answer should express your own view.</p></div></div>
@@ -110,7 +97,7 @@
       <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
       <button class="share-button post-submit-share" id="post-submit-share" type="button" data-i18n-share hidden>Share the experiment</button>
       <div class="post-submit-support" id="post-submit-support" hidden><p id="support-thanks-title">If you’d like to help the experiment grow</p><p id="support-thanks-copy">Support options are coming soon.</p><a href="mailto:mankindexperiment@gmail.com?subject=Support%20THE%20HUMAN%20EXPERIMENT" id="support-thanks-link">Support the project</a></div>
-      <p class="privacy-copy" data-i18n="privacy">Your answer will be published publicly. Do not include contact details or personal information about other people. If you want a signature, enter your own name or pseudonym in the separate signature field.</p>
+      <p class="privacy-copy" data-i18n="privacy">Your answer will be published publicly without an author signature and used for AI analysis. Do not include contact details or identifying information you do not want to make public.</p>
     </form>
 
     <section class="preferences-cta" aria-labelledby="preferences-cta-title">
