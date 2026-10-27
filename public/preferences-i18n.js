@@ -82,7 +82,6 @@
       });
       const textarea = document.querySelector('textarea[name="comment"]');
       if (textarea) textarea.placeholder = t.placeholder;
-      setText([...document.querySelectorAll('.privacy-hint')].find(node => node.id !== 'comment-counter'), t.privacy);
       setText(document.getElementById('show-summary'), t.show);
       setText(document.getElementById('reset-form'), t.reset);
       setText(document.querySelector('#prototype-result h2'), t.summaryTitle);
