@@ -1,0 +1,428 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Explore public answers about personal hypothetical preferences in The Human Experiment.">
+  <meta name="theme-color" content="#f6f4ef">
+  <title>Personal preference results - THE HUMAN EXPERIMENT</title>
+  <link rel="icon" type="image/png" href="/favicon.png"><link rel="shortcut icon" href="/favicon.ico">
+  <link rel="stylesheet" href="/styles.css"><script src="/nav.js" defer></script><script src="/results.js" defer></script><script src="/author-answers.js" defer></script>
+  <script src="/author-answer-emojis.js" defer></script>
+<style>
+/* Dedicated personal-preferences results page: keep shared scripts/data logic, show only this stream. */
+.results-page > .eyebrow, .results-page > h1, .results-page > .lead, .results-stream-links, .results-view-tabs, #statistics-section, .public-answers-section:not(.hypothetical-answers-section), .ai-analysis-section:not(.hypothetical-ai-analysis-section) { display:none !important; }
+</style>
+</head>
+<body>
+  <header class="topbar topbar-centered"><nav class="site-menu" aria-label="Site menu">
+      <details class="site-menu-details">
+        <summary class="site-menu-trigger" data-menu-label>☰</summary>
+        <div class="site-menu-panel">
+          <a href="/" data-menu="survey">Survey</a>
+          <a href="/results.html" data-menu="results">Collective results</a>
+          <a href="/preferences-results.html" aria-current="page">Personal preference results</a>
+          <a href="/preferences.html" data-menu="preferences">Hypothetical preferences</a>
+          <a href="/goal.html" data-menu="goal">Goal of the experiment</a>
+          <a href="/privacy.html" data-menu="privacy">Privacy</a>
+          <button type="button" data-site-share data-menu="share">Share the experiment</button>
+          <button type="button" class="footer-contact-copy" data-contact-copy data-menu="contact">Contact</button>
+          <a href="mailto:mankindexperiment@gmail.com?subject=Support%20THE%20HUMAN%20EXPERIMENT" data-menu="support">Support the project</a>
+        </div>
+      </details>
+    </nav><a class="brand-lockup header-brand-centered" href="/" aria-label="THE HUMAN EXPERIMENT home"><img src="/logo-human-crowd.webp" alt="" class="brand-mark"><span class="wordmark">THE HUMAN EXPERIMENT</span></a><div class="header-controls"><select id="page-language" aria-label="Language"><option value="en">English</option><option value="ru">Русский</option><option value="es">Español</option><option value="pt">Português</option><option value="zh">中文</option><option value="de">Deutsch</option><option value="ja">日本語</option><option value="fr">Français</option><option value="ar">العربية</option></select><a id="results-back" class="text-link" href="/" data-t="back">← Back to survey</a></div></header>
+  <main class="shell results-page">
+    <p class="eyebrow" data-t="eyebrow">THE COLLECTIVE PICTURE</p><h1 data-t="title">What did people choose?</h1>
+    <p class="lead" data-t="lead">Explore the overall statistics and read participants’ written responses.</p>
+    <nav class="results-stream-links" aria-label="Выбор результатов">
+      <a class="results-stream-link is-active" href="#statistics-section" data-results-stream="collective">
+        <span class="results-stream-kicker">01</span>
+        <span><strong>Коллективные решения</strong><small>Что люди решили бы о жизни другого человека</small></span>
+        <span class="results-stream-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="results-stream-link" href="#preference-results-title" data-results-stream="hypothetical">
+        <span class="results-stream-kicker">02</span>
+        <span><strong>Чего люди хотели бы для собственной жизни</strong><small>Личные желания и границы человека</small></span>
+        <span class="results-stream-arrow" aria-hidden="true">↗</span>
+      </a>
+    </nav>
+    <nav class="results-view-tabs" aria-label="Results views">
+      <button type="button" class="results-view-tab is-active" data-results-view="overview">Обзор</button>
+      <button type="button" class="results-view-tab" data-results-view="all">Все ответы</button>
+      <button type="button" class="results-view-tab" data-results-view="question">По вопросам</button>
+      <button type="button" class="results-view-tab" data-results-view="latest">Новые</button>
+      <button type="button" class="results-view-tab" data-results-view="popular">Популярные</button>
+      <button type="button" class="results-view-tab" data-results-view="unusual">Необычные</button>
+    </nav>
+    <div class="results-question-picker" hidden>
+      <label for="results-question-select">Выберите вопрос</label>
+      <select id="results-question-select">
+        <option value="q2">Что бы ты изменил в этом человеке в первую очередь?</option>
+        <option value="q3">Что бы ты сделал, если бы желания этого человека противоречили твоим?</option>
+        <option value="q4">Как, по твоему мнению, поступило бы большинство людей?</option>
+      </select>
+    </div>
+    <div id="results-status" class="status-panel" role="status" aria-live="polite" data-t="loading">Loading results…</div>
+    <section id="statistics-section" class="statistics-section">
+      <div class="results-stat-card stat-card"><span class="stat-label" data-t="valid">Valid responses</span><strong id="total-responses">0</strong><span class="stat-label" id="updated-at"></span></div>
+      <div class="section-heading"><div><p class="eyebrow" data-t="statsEyebrow">THE COLLECTIVE PICTURE</p><h2 data-t="statsTitle">Collective statistics</h2></div><span id="stats-state" class="status-chip"></span></div>
+      <div id="results-content" hidden>
+        <section class="result-section"><h3 data-t="q2">What would you change first?</h3><div id="chart-q2" class="bar-list"></div></section>
+        <section class="result-section"><h3 data-t="q3">When wishes conflict</h3><div id="chart-q3" class="bar-list"></div></section>
+        <section class="result-section"><h3 data-t="q4">What people think most others would do</h3><div id="chart-q4" class="bar-list"></div></section>
+        <p class="method-note" data-t="method">These are voluntary online responses, not a representative sample of the world's population. Percentages are calculated among answers submitted for each question.</p>
+      </div>
+    </section>
+
+    <section class="public-answers-section" aria-labelledby="answers-title">
+      <div class="section-heading"><div><p class="eyebrow" data-t="voicesEyebrow">VOICES OF PARTICIPANTS</p><h2 id="answers-title" data-voice="collectiveResultsTitle">Collective decisions: what do people think about someone else’s life?</h2><p class="section-intro" data-voice="collectiveResultsIntro">Responses to the main experiment. These are kept separate from personal hypothetical preferences.</p></div><span id="answer-total" class="answer-total">-</span></div>
+      <div class="answer-tools">
+        <label class="search-field"><span class="sr-only" data-t="searchLabel">Search answers</span><input id="answer-search" type="search" data-placeholder="search" placeholder="Search answers…"></label>
+        <label class="answer-number-jump"><span data-t="answerNumberLabel">Go to answer #</span><input id="answer-number-input" type="number" min="1" step="1" inputmode="numeric" aria-label="Answer number" placeholder="№"></label><button id="answer-number-go" class="subtle-button" type="button" data-t="goToAnswer">Go</button>
+        <label><span class="sr-only" data-t="topicLabel">Topic</span><select id="topic-filter"><option value="" data-t="allTopics">All topics</option><option value="character" data-topic="character">Character & habits</option><option value="appearance" data-topic="appearance">Appearance</option><option value="freedom" data-topic="freedom">Freedom & boundaries</option><option value="life" data-topic="life">Life & wellbeing</option><option value="relationships" data-topic="relationships">Relationships</option><option value="other" data-topic="other">Other</option></select></label>
+        <label class="date-filter-label"><span class="filter-caption" data-t="fromLabel">From date</span><input id="date-from" type="date" aria-label="From date"></label>
+        <label class="date-filter-label"><span class="filter-caption" data-t="toLabel">To date</span><input id="date-to" type="date" aria-label="To date"></label>
+        <button id="reset-filters" class="subtle-button" type="button" data-t="resetFilters">Reset filters</button>
+        <button id="all-participants" class="subtle-button" type="button" data-t="allParticipants" hidden>Show all participants</button>
+        <label><span class="sr-only" data-t="sortLabel">Sort answers</span><select id="answer-sort"><option value="newest" data-t="newest">Newest</option><option value="oldest" data-t="oldest">Oldest</option><option value="popular" data-t="popular">Popular</option><option value="random" data-t="random">Random</option><option value="unusual" data-t="unusual">Unusual</option></select></label>
+      </div>
+      <div class="answer-pagination-controls">
+        <label for="answers-per-page">Ответов на странице
+          <select id="answers-per-page">
+            <option value="10">10</option>
+            <option value="20" selected>20</option>
+            <option value="30">30</option>
+            <option value="50">50</option>
+            <option value="100">100</option>
+          </select>
+        </label>
+        <span id="answers-page-summary" class="answers-page-summary" aria-live="polite">Показаны ответы</span>
+      </div>
+      <div id="answers-status" class="status-panel" role="status" aria-live="polite" data-t="answersLoading">Loading answers…</div>
+      <div id="answer-list" class="answer-list"><div id="author-answer-collective" hidden></div></div>
+      <button id="show-more" class="show-more-button" type="button" hidden data-t="showMore">Show more</button>
+    </section>
+    <section class="public-answers-section hypothetical-answers-section" aria-labelledby="preference-results-title" hidden>
+      <div class="section-heading"><div><p class="eyebrow">ГИПОТЕТИЧЕСКИЕ ПРЕДПОЧТЕНИЯ</p><h2 id="preference-results-title" data-voice="resultsTitle">Чего люди хотели бы для собственной жизни?</h2><p class="section-intro" data-voice="resultsIntro">Отдельный поток личных предпочтений — не решений за чужую жизнь.</p></div></div>
+      <div class="status-panel hypothetical-data-notice">
+        Показываются только ответы, для которых участник отдельно разрешил публичное отображение. Этот поток не объединяется с коллективными ответами.
+      </div>
+      <div class="answer-tools hypothetical-answer-tools">
+        <label class="search-field"><span class="sr-only">Поиск по личным ответам</span><input id="hypothetical-search" type="search" placeholder="Поиск по ответам…"></label>
+        <label><span class="sr-only">Вопрос</span><select id="hypothetical-question-filter"><option value="">Все вопросы</option><option value="priority">1. Главный приоритет</option><option value="preserve">2. Что важно сохранить</option><option value="wishes">3. Как учитывать желания</option><option value="body">4. Изменения тела</option></select></label>
+        <label><span class="sr-only">Сортировка</span><select id="hypothetical-sort"><option value="latest">Сначала новые</option></select></label>
+        <label class="hypothetical-page-size">Ответов на странице <select id="hypothetical-page-size"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></label>
+      </div>
+      <p id="hypothetical-stats" class="method-note" role="status" aria-live="polite">Загрузка статистики…</p><div id="hypothetical-status" class="status-panel" role="status" aria-live="polite" hidden></div><div class="answer-list hypothetical-answer-list">
+        <div id="author-answer-hypothetical" hidden></div>
+        <article class="status-panel hypothetical-empty-state">
+          <h3 data-voice="emptyTitle">Личных ответов пока нет</h3>
+          <p data-voice="emptyText">Когда начнётся отдельный сбор ответов и появятся реальные данные, здесь будут карточки ответов, фильтры по пяти вопросам, сортировка и постраничная загрузка — по той же схеме, что и в коллективном потоке.</p>
+          <p data-voice="emptyNext">Этот прототип пока не собирает и не сохраняет ответы о личных предпочтениях.</p>
+          <a class="subtle-button" href="/preferences.html" data-voice="answer">Посмотреть вопросы о собственной жизни ↗</a>
+        </article>
+      </div>
+      <section class="ai-analysis-section hypothetical-ai-analysis-section" aria-labelledby="ai-analysis-hypothetical-title">
+        <div class="section-heading"><div><p class="eyebrow" data-ai="eyebrow">АНАЛИЗ ОТВЕТОВ</p><h2 id="ai-analysis-hypothetical-title" data-ai="title">Откройте новые закономерности в ответах</h2><p class="section-intro" data-ai="description">ИИ помогает исследовать ответы участников.</p></div></div>
+        <div class="ai-analysis-card">
+          <p data-ai="expansion">Анализ использует только ответы из раздела личных предпочтений.</p>
+          <form id="ai-analysis-hypothetical-form" class="ai-analysis-form" data-ai-stream="hypothetical">
+            <label for="ai-question-hypothetical" data-ai="questionLabel">Задайте вопрос об ответах участников</label>
+            <textarea id="ai-question-hypothetical" name="question" maxlength="300" rows="3" required data-ai-placeholder="questionPlaceholder" placeholder="Какие закономерности встречаются чаще всего?"></textarea>
+            <button id="ai-submit-hypothetical" class="submit-button" type="submit" data-ai="ask">Получить анализ</button>
+          </form>
+          <p id="ai-status-hypothetical" class="method-note" role="status" aria-live="polite" data-ai="initialStatus">Бесплатный ИИ-анализ ограничен одним запросом в сутки с одного подключения для этого раздела.</p>
+          <div id="ai-answer-hypothetical" class="ai-answer" hidden></div>
+        </div>
+      </section>
+    </section>
+    <p class="method-note"><a class="subtle-button" href="/methodology.html">О методике исследования ↗</a></p>
+    <section class="ai-analysis-section" aria-labelledby="ai-analysis-title">
+      <div class="section-heading"><div><p class="eyebrow" data-ai="eyebrow">AI INSIGHTS</p><h2 id="ai-analysis-title" data-ai="title">Explore the results with AI</h2><p class="section-intro" data-ai="description">AI can help identify patterns in participants’ answers from around the world. For now, AI analysis is limited while the project is in its early stages.</p></div></div>
+      <div class="ai-analysis-card">
+        <p data-ai="expansion">As the project grows, we hope to expand the depth and capabilities of AI-powered analysis.</p>
+        <form id="ai-analysis-form" class="ai-analysis-form">
+          <label for="ai-question" data-ai="questionLabel">Ask a question about the responses</label>
+          <textarea id="ai-question" name="question" maxlength="300" rows="3" required data-ai-placeholder="questionPlaceholder" placeholder="What patterns appear most often?"></textarea>
+          <button id="ai-submit" class="submit-button" type="submit" data-ai="ask">Ask AI</button>
+        </form>
+        <p id="ai-status" class="method-note" role="status" aria-live="polite" data-ai="initialStatus">AI analysis is limited per connection and depends on the platform limits and computing resources available to the project.</p>
+        <div id="ai-answer" class="ai-answer" hidden></div>
+        <p class="method-note" data-ai="support">Want to help us expand the research? You can support the project with a voluntary donation. Support may help fund future analysis capacity; it does not guarantee expanded access.</p>
+        <a class="subtle-button" href="mailto:mankindexperiment@gmail.com?subject=Support%20THE%20HUMAN%20EXPERIMENT" data-ai="donate">Support the experiment</a>
+      </div>
+    </section>
+  </main>
+  <footer class="footer"><a class="brand-lockup footer-brand" href="/" aria-label="THE HUMAN EXPERIMENT home"><img src="/logo-human-crowd.webp" alt="" class="brand-mark"><span class="wordmark">THE HUMAN EXPERIMENT</span></a><nav class="footer-links" aria-label="Project links"><a href="/goal.html" data-menu="goal">Goal of the experiment</a><a href="/privacy.html" data-menu="privacy">Privacy</a><a href="/results.html" data-menu="results">Results</a><a href="/preferences.html" data-menu="preferences">Hypothetical preferences</a><a href="/methodology.html" data-voice="explore">About the research methodology</a><button class="footer-share share-button" type="button" data-site-share data-menu="share">Share the experiment</button><a href="mailto:mankindexperiment@gmail.com?subject=Support%20THE%20HUMAN%20EXPERIMENT" data-menu="support">Support the project</a><button type="button" class="footer-contact-copy" data-contact-copy><span data-menu="contact">Contact</span>:&nbsp;<span>mankindexperiment@gmail.com</span></button></nav></footer>
+
+  <script>
+  (() => {
+    const tabs = [...document.querySelectorAll('[data-results-view]')];
+    const streamLinks = [...document.querySelectorAll('[data-results-stream]')];
+    const stats = document.querySelector('#statistics-section');
+    const collectiveAnswers = document.querySelector('.public-answers-section:not(.hypothetical-answers-section)');
+    const hypothetical = document.querySelector('.hypothetical-answers-section');
+    const ai = document.querySelector('.ai-analysis-section:not(.hypothetical-ai-analysis-section)');
+    const hypotheticalAI = document.querySelector('.hypothetical-ai-analysis-section');
+    const picker = document.querySelector('.results-question-picker');
+    const questionSelect = document.querySelector('#results-question-select');
+    const charts = ['q2','q3','q4'].map(q => document.querySelector('#chart-' + q)?.closest('.result-section'));
+    const hypotheticalTabs = [...document.querySelectorAll('[data-hypothetical-view]')];
+    let stream = 'hypothetical';
+    let view = 'overview';
+    const syncCollectiveSort = () => {
+      if (!['latest','popular','unusual'].includes(view)) return;
+      const sort = document.querySelector('#answer-sort');
+      const target = ({latest:'newest',popular:'popular',unusual:'unusual'})[view];
+      if (sort && sort.value !== target) {
+        sort.value = target;
+        sort.dispatchEvent(new Event('change'));
+      }
+    };
+    const render = () => {
+      const collective = stream === 'collective';
+      if (document.readyState !== 'loading') {
+        const language = document.documentElement.lang || 'en';
+        const collectiveWords = UI[language] || UI.en;
+        const preferenceWords = PREFERENCE_RESEARCH_UI[language] || PREFERENCE_RESEARCH_UI.en;
+        const eyebrow = document.querySelector('.results-page > .eyebrow');
+        const heading = document.querySelector('.results-page > h1');
+        const lead = document.querySelector('.results-page > .lead');
+        if (eyebrow) eyebrow.textContent = collective ? collectiveWords.eyebrow : preferenceWords.eyebrow;
+        if (heading) heading.textContent = collective ? collectiveWords.title : preferenceWords.resultsTitle;
+        if (lead) lead.textContent = collective ? collectiveWords.lead : preferenceWords.resultsIntro;
+        document.title = `${collective ? collectiveWords.answersTitle : preferenceWords.resultsTitle} - THE HUMAN EXPERIMENT`;
+      }
+      const overview = view === 'overview';
+      const question = view === 'question';
+      const list = ['all','latest','popular','unusual'].includes(view);
+      streamLinks.forEach(link => {
+        const active = link.dataset.resultsStream === stream;
+        link.classList.toggle('is-active', active);
+        link.setAttribute('aria-current', active ? 'page' : 'false');
+      });
+      tabs.forEach(tab => {
+        const active = tab.dataset.resultsView === view;
+        tab.classList.toggle('is-active', active);
+        tab.setAttribute('aria-pressed', String(active));
+      });
+      hypotheticalTabs.forEach(tab => {
+        const active = tab.dataset.hypotheticalView === view;
+        tab.classList.toggle('is-active', active);
+        tab.setAttribute('aria-pressed', String(active));
+      });
+      if (stats) stats.hidden = !collective || !(overview || question);
+      if (collectiveAnswers) collectiveAnswers.hidden = !collective || !(overview || list || question);
+      if (hypothetical) { hypothetical.hidden = collective; hypothetical.dataset.resultsView = view; }
+      if (ai) ai.hidden = !collective || !overview;
+      if (hypotheticalAI) hypotheticalAI.hidden = collective || !overview;
+      if (picker) picker.hidden = !collective || !question;
+      charts.forEach((chart,index) => {
+        if (chart) chart.hidden = !collective || (question && ['q2','q3','q4'][index] !== questionSelect?.value);
+      });
+      if (collective && overview) charts.forEach(chart => { if (chart) chart.hidden = false; });
+      const hypotheticalNotice = document.querySelector('.hypothetical-data-notice');
+      const hypotheticalEmpty = document.querySelector('.hypothetical-empty-state');
+      if (hypotheticalNotice) hypotheticalNotice.hidden = view !== 'overview';
+      if (hypotheticalEmpty) {
+        hypotheticalEmpty.hidden = view === 'overview';
+        const title = hypotheticalEmpty.querySelector('[data-voice="emptyTitle"]');
+        const text = hypotheticalEmpty.querySelector('[data-voice="emptyText"]');
+        const language = document.documentElement.lang || 'en';
+        const labelsByLanguage = {
+          en: {
+            all:['All answers','A complete list will appear here when real answers are collected.'],
+            question:['Answers by question','You will be able to choose a question and explore its answers once collection begins.'],
+            latest:['Latest answers','New answers will appear here after personal preferences collection begins.'],
+            popular:['Popular answers','Popularity will be based on real participant reactions.'],
+            unusual:['Unusual answers','Answers that stand out from the rest will appear here.']
+          },
+          ru: {
+            all:['Все ответы','Когда появятся реальные ответы, здесь будет полный список.'],
+            question:['Ответы по вопросам','После начала сбора здесь можно будет выбрать вопрос и посмотреть ответы на него.'],
+            latest:['Новые ответы','Новые ответы появятся здесь после начала сбора личных предпочтений.'],
+            popular:['Популярные ответы','Популярность будет определяться по реальным реакциям участников.'],
+            unusual:['Необычные ответы','Здесь будут отображаться ответы, которые выделяются на фоне остальных.']
+          },
+          es: {
+            all:['Todas las respuestas','Aquí aparecerá la lista completa cuando se recopilen respuestas reales.'],
+            question:['Respuestas por pregunta','Cuando comience la recopilación, podrás elegir una pregunta y explorar sus respuestas.'],
+            latest:['Respuestas recientes','Aquí aparecerán nuevas respuestas cuando comience la recopilación de preferencias personales.'],
+            popular:['Respuestas populares','La popularidad se basará en las reacciones reales de los participantes.'],
+            unusual:['Respuestas inusuales','Aquí aparecerán las respuestas que destaquen entre las demás.']
+          },
+          pt: {
+            all:['Todas as respostas','A lista completa aparecerá aqui quando forem recolhidas respostas reais.'],
+            question:['Respostas por pergunta','Quando a recolha começar, poderá escolher uma pergunta e explorar as respostas.'],
+            latest:['Respostas recentes','Novas respostas aparecerão aqui quando começar a recolha de preferências pessoais.'],
+            popular:['Respostas populares','A popularidade será determinada pelas reações reais dos participantes.'],
+            unusual:['Respostas incomuns','Aqui aparecerão as respostas que se destacam das restantes.']
+          },
+          zh: {
+            all:['全部回答','开始收集真实回答后，完整列表将在这里显示。'],
+            question:['按问题查看回答','开始收集后，你可以选择一个问题并查看相关回答。'],
+            latest:['最新回答','开始收集个人偏好后，新的回答将在这里显示。'],
+            popular:['热门回答','热门程度将根据参与者的真实反应确定。'],
+            unusual:['特别回答','这里将显示与其他回答明显不同的内容。']
+          },
+          de: {
+            all:['Alle Antworten','Sobald echte Antworten gesammelt werden, erscheint hier die vollständige Liste.'],
+            question:['Antworten nach Frage','Sobald die Erhebung beginnt, kannst du eine Frage auswählen und ihre Antworten ansehen.'],
+            latest:['Neueste Antworten','Hier erscheinen neue Antworten, sobald die Erhebung persönlicher Präferenzen beginnt.'],
+            popular:['Beliebte Antworten','Die Beliebtheit richtet sich nach echten Reaktionen der Teilnehmenden.'],
+            unusual:['Ungewöhnliche Antworten','Hier erscheinen Antworten, die sich von den anderen abheben.']
+          },
+          ja: {
+            all:['すべての回答','実際の回答の収集が始まると、ここに一覧が表示されます。'],
+            question:['質問別の回答','収集開始後、質問を選んで回答を確認できるようになります。'],
+            latest:['最新の回答','個人の好みの収集が始まると、新しい回答がここに表示されます。'],
+            popular:['人気の回答','人気は参加者による実際のリアクションに基づいて決まります。'],
+            unusual:['特徴的な回答','ほかの回答と異なる特徴のある回答がここに表示されます。']
+          },
+          fr: {
+            all:['Toutes les réponses','La liste complète apparaîtra ici lorsque de vraies réponses seront recueillies.'],
+            question:['Réponses par question','Lorsque la collecte commencera, vous pourrez choisir une question et consulter ses réponses.'],
+            latest:['Réponses récentes','Les nouvelles réponses apparaîtront ici lorsque la collecte des préférences personnelles commencera.'],
+            popular:['Réponses populaires','La popularité sera déterminée par les réactions réelles des participants.'],
+            unusual:['Réponses inhabituelles','Les réponses qui se distinguent des autres apparaîtront ici.']
+          },
+          ar: {
+            all:['جميع الإجابات','ستظهر القائمة الكاملة هنا عند جمع إجابات حقيقية.'],
+            question:['الإجابات حسب السؤال','عند بدء الجمع، ستتمكن من اختيار سؤال واستعراض إجاباته.'],
+            latest:['أحدث الإجابات','ستظهر الإجابات الجديدة هنا عند بدء جمع التفضيلات الشخصية.'],
+            popular:['الإجابات الشائعة','ستُحدَّد الشعبية بناءً على تفاعلات المشاركين الحقيقية.'],
+            unusual:['إجابات غير مألوفة','ستظهر هنا الإجابات التي تتميز عن غيرها.']
+          }
+        };
+        const labels = labelsByLanguage[language] || labelsByLanguage.en;
+        const pair = labels[view] || labels.all;
+        if (title) title.textContent = pair[0];
+        if (text) text.textContent = pair[1];
+      }
+      const tools = document.querySelector('.hypothetical-answer-tools');
+      if (tools) tools.hidden = view === 'overview';
+    };
+    document.addEventListener('results-language-changed', render);
+    streamLinks.forEach(link => link.addEventListener('click', event => {
+      event.preventDefault();
+      stream = link.dataset.resultsStream === 'hypothetical' ? 'hypothetical' : 'collective';
+      if (stream === 'collective') syncCollectiveSort();
+      render();
+      (stream === 'collective' ? stats : hypothetical)?.scrollIntoView({behavior:'smooth',block:'start'});
+    }));
+    tabs.forEach(tab => tab.addEventListener('click', () => {
+      view = tab.dataset.resultsView;
+      if (stream === 'collective') syncCollectiveSort();
+      render();
+    }));
+    hypotheticalTabs.forEach(tab => tab.addEventListener('click', () => {
+      view = tab.dataset.hypotheticalView;
+      render();
+    }));
+    questionSelect?.addEventListener('change', render);
+    render();
+  })();
+  </script>
+<script>
+(() => {
+  const section = document.querySelector('.hypothetical-answers-section');
+  if (!section) return;
+  const list = section.querySelector('.hypothetical-answer-list');
+  const empty = section.querySelector('.hypothetical-empty-state');
+  const status = section.querySelector('#hypothetical-status');
+  const stats = section.querySelector('#hypothetical-stats');
+  const search = section.querySelector('#hypothetical-search');
+  const question = section.querySelector('#hypothetical-question-filter');
+  const sort = section.querySelector('#hypothetical-sort');
+  const pageSize = section.querySelector('#hypothetical-page-size');
+  let offset = 0, total = 0, busy = false, requestId = 0, pendingLoad = false, pendingReset = false;
+  const labels = {
+    priority:{autonomy:'Свобода и самостоятельность',wellbeing:'Благополучие и безопасность',trust:'Доверие и ответственность',context:'Зависит от обстоятельств'},
+    preserve:{autonomy:'Право самостоятельно принимать решения',body:'Контроль над собственным телом',identity:'Личность и идентичность',safety:'Безопасность и физическое благополучие',voice:'Возможность быть услышанным'},
+    wishes:{ask:'Сначала спросить меня и выслушать ответ',limits:'Действовать в заранее обозначенных пределах',decide:'Оставить окончательное решение тому, кто получил власть',consent:'Получать моё согласие на существенные изменения'},
+    body:{consent:'Допускать изменения только с моего согласия',discuss:'Сначала обсуждать последствия и альтернативы',unimportant:'Это не главный вопрос по сравнению с другими приоритетами',context:'Зависит от конкретного изменения и обстоятельств'}
+  };
+  const names = {priority:'Главный приоритет',preserve:'Что важно сохранить',wishes:'Как учитывать желания',body:'Изменения тела'};
+  function node(tag, text, cls) { const el=document.createElement(tag); if(text!==undefined) el.textContent=text; if(cls) el.className=cls; return el; }
+  function renderAnswer(item) {
+    const article=node('article',undefined,'answer-card');
+    const header=node('div',undefined,'answer-card-header');
+    header.append(node('strong',item.pseudonym || 'Анонимный участник'));
+    header.append(node('time',item.createdAt ? new Date(item.createdAt).toLocaleDateString() : ''));
+    article.append(header);
+    for(const key of ['priority','preserve','wishes','body']) {
+      const raw=item.answers?.[key];
+      if(raw===undefined) continue;
+      const vals=(Array.isArray(raw)?raw:[raw]).map(v=>labels[key]?.[v] || String(v));
+      const p=node('p'); p.append(node('strong',names[key]+': '),document.createTextNode(vals.join(', '))); article.append(p);
+    }
+    if(item.comment) { const p=node('p',item.comment); p.className='answer-comment'; article.append(p); }
+    return article;
+  }
+  function rankingUnavailable() {
+    return ['popular','unusual'].includes(section.dataset.resultsView);
+  }
+  async function load(reset=true) {
+    if (rankingUnavailable()) {
+      requestId++;
+      offset=0;
+      list.querySelectorAll('article:not(.hypothetical-empty-state):not(.author-answer-card)').forEach(el=>el.remove());
+      if (empty) empty.hidden=true;
+      status.hidden=false;
+      status.textContent = section.dataset.resultsView === 'popular'
+        ? 'Популярность пока нельзя определить: реакции участников ещё не реализованы.'
+        : 'Выделять необычные ответы пока нельзя: алгоритм сравнения ответов ещё не реализован.';
+      const moreButton=section.querySelector('#hypothetical-load-more');
+      if(moreButton) moreButton.hidden=true;
+      return;
+    }
+    if(busy) { pendingLoad=true; pendingReset=pendingReset||reset; return; }
+    const thisRequest = ++requestId;
+    busy=true;
+    if(reset){offset=0; list.querySelectorAll('article:not(.hypothetical-empty-state):not(.author-answer-card)').forEach(el=>el.remove());}
+    if(empty) empty.hidden=true;
+    status.hidden=false; status.textContent='Загружаем реальные ответы…';
+    try {
+      const params=new URLSearchParams({limit:pageSize.value,offset:String(offset),sort:sort.value});
+      if(search.value.trim()) params.set('q',search.value.trim());
+      if(question.value) params.set('question',question.value);
+      const response=await fetch('/api/preferences/public?'+params.toString(),{headers:{Accept:'application/json'}});
+      const data=await response.json();
+      if (thisRequest !== requestId || rankingUnavailable()) return;
+      if(!response.ok || !data.ok) throw new Error('unavailable');
+      total=data.total;
+      data.answers.forEach(item=>list.append(renderAnswer(item)));
+      offset+=data.answers.length;
+      status.textContent=total ? 'Показано '+Math.min(offset,total)+' из '+total+' публичных ответов.' : 'Пока нет опубликованных ответов.';
+      const more=section.querySelector('#hypothetical-load-more');
+      if(more) more.hidden=offset>=total;
+      if(!total && empty) empty.hidden=false;
+    } catch {
+      if (thisRequest === requestId && !rankingUnavailable()) status.textContent='Не удалось загрузить ответы. Попробуйте позже.';
+    } finally {
+      busy=false;
+      if(pendingLoad && !rankingUnavailable()) {
+        const shouldReset=pendingReset;
+        pendingLoad=false; pendingReset=false;
+        load(shouldReset);
+      } else { pendingLoad=false; pendingReset=false; }
+    }
+  }
+  async function loadStats() {
+    try {
+      const response=await fetch('/api/preferences/stats',{headers:{Accept:'application/json'}});
+      const data=await response.json();
+      if(!response.ok || !data.ok) throw new Error('unavailable');
+      stats.textContent='Всего ответов в личном потоке: '+(Number(data.stats.total||0)+1)+' (включая авторский пример). Ответы участников: '+Number(data.stats.total||0)+'. Авторский пример не распределяется по вопросам.';
+    } catch { stats.textContent='Статистика личных предпочтений временно недоступна.'; }
+  }
+  const more=node('button','Показать ещё','show-more-button'); more.type='button'; more.id='hypothetical-load-more'; more.hidden=true; more.addEventListener('click',()=>load(false)); status.after(more);
+  let debounce;
+  search.addEventListener('input',()=>{clearTimeout(debounce);debounce=setTimeout(()=>load(true),250);});
+  [question,sort,pageSize].forEach(el=>el.addEventListener('change',()=>load(true)));
+  document.querySelectorAll('[data-results-stream="hypothetical"],[data-results-view]').forEach(el=>el.addEventListener('click',()=>{if(section.hidden)return;load(true);loadStats();}));
+  loadStats();
+  if(new URLSearchParams(location.search).get('stream')==='hypothetical') load(true);
+})();
+</script>
+
+</body></html>
