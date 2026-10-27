@@ -1249,3 +1249,13 @@
   .results-page .hypothetical-data-notice{margin:6px 0 12px}
   .results-page .hypothetical-ai-analysis-section{margin-top:16px;padding-top:14px}
 }
+
+
+/* Remove the orphaned status row above the personal-stream notice. */
+.results-page .hypothetical-answers-section>.section-heading{display:none}
+.results-page .hypothetical-answers-section{border-top:0;margin-top:4px}
+.results-page .hypothetical-data-notice{margin-top:8px}
+@media(max-width:760px){
+  .results-page .hypothetical-answers-section{margin-top:2px}
+  .results-page .hypothetical-data-notice{margin-top:6px}
+}
