@@ -116,7 +116,7 @@ test('hypothetical preferences prototype cannot submit a native form or send ans
   assert.doesNotMatch(html, /form\.elements\./);
   assert.doesNotMatch(html, /preference-question-6|name="use"/);
   assert.match(html, /id="preferences-consent" name="consent" value="yes" required/);
-  assert.match(html, /возможная рабочая версия сможет сопоставлять эти ответы с результатами основного опроса/);
+  assert.match(html, /Сейчас это прототип: ответы остаются в этом окне, не отправляются и не сохраняются/);
 
   assert.equal((html.match(/href="\/preferences\.html"[^>]*aria-current="page"/g) || []).length, 1);
 });
