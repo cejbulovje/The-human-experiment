@@ -429,6 +429,11 @@
     if (volunteerRoot) {
       volunteerRoot.replaceChildren(makeCard('volunteer', locale));
       volunteerRoot.hidden = false;
+      volunteerRoot.style.display = 'block';
+      const authorCard = volunteerRoot.querySelector('.author-answer-card');
+      if (authorCard) authorCard.hidden = false;
+      const emptyState = volunteerRoot.parentElement?.querySelector('.hypothetical-empty-state');
+      if (emptyState) emptyState.hidden = true;
     }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', render, { once: true });
