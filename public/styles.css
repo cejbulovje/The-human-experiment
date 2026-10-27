@@ -1259,3 +1259,15 @@
   .results-page .hypothetical-answers-section{margin-top:2px}
   .results-page .hypothetical-data-notice{margin-top:6px}
 }
+
+
+/* Explicitly suppress the personal-stream status badge; it duplicates the empty-state notice. */
+.results-page .hypothetical-answers-section > .section-heading,
+.results-page .hypothetical-answers-section > .section-heading .answer-total{
+  display:none !important;
+}
+.results-page .hypothetical-answers-section{
+  border-top:0 !important;
+  margin-top:0 !important;
+  padding-top:0 !important;
+}
