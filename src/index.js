@@ -260,25 +260,26 @@ export async function runAIWithLease(env,lockToken,messages,maxTokens,heartbeatI
 async function publicPreferences(request,env){
   if(!env.DB)return json({error:'not_configured'},503);
   const url=new URL(request.url);
-  const allowedSort=['latest','popular','unusual','newest'];
-  const sort=allowedSort.includes(url.searchParams.get('sort'))?url.searchParams.get('sort'):'latest';
+  const sort=url.searchParams.get('sort')||'latest';
+  if(!['latest','newest','popular','unusual'].includes(sort))return json({error:'invalid_sort'},400);
   const limit=Math.min(50,Math.max(1,Number.parseInt(url.searchParams.get('limit')||'20',10)||20));
   const offset=Math.max(0,Number.parseInt(url.searchParams.get('offset')||'0',10)||0);
-  const q=(url.searchParams.get('q')||'').trim().slice(0,100);
+  const q=(url.searchParams.get('q')||'').trim().slice(0,100).toLocaleLowerCase();
   const question=url.searchParams.get('question')||'';
   const questionKeys=['priority','preserve','wishes','body'];
   if(question&&!questionKeys.includes(question))return json({error:'invalid_question'},400);
   try{
-    const totalRow=await env.DB.prepare('SELECT COUNT(*) AS total FROM hypothetical_preferences WHERE public_consent=1').first();
-    const total=Number(totalRow?.total||0);
-    const rows=await env.DB.prepare(`SELECT id,language,answers_json,pseudonym,comment,created_at FROM hypothetical_preferences WHERE public_consent=1 AND (?='' OR pseudonym LIKE ? OR comment LIKE ? OR answers_json LIKE ?) AND (?='' OR answers_json LIKE ?) ORDER BY ${sort==='popular'?'created_at DESC':sort==='unusual'?'answers_json ASC':'created_at DESC'} LIMIT ? OFFSET ?`)
-      .bind(q,`%${q}%`,`%${q}%`,`%${q}%`,question,question?`%" ${question} "%`:'%',limit,offset).all();
-    const answers=(rows.results||[]).map(row=>({
+    const rows=await env.DB.prepare('SELECT id,language,answers_json,pseudonym,comment,created_at FROM hypothetical_preferences WHERE public_consent=1 ORDER BY created_at DESC,id DESC').all();
+    let answers=(rows.results||[]).map(row=>({
       id:Number(row.id),language:row.language,answers:JSON.parse(row.answers_json),
       pseudonym:row.pseudonym||null,comment:row.comment||'',createdAt:row.created_at
     }));
-    const stats=await env.DB.prepare('SELECT COUNT(*) AS total FROM hypothetical_preferences WHERE public_consent=1').first();
-    return json({ok:true,total:Number(stats?.total||0),limit,offset,sort,answers});
+    if(q)answers=answers.filter(item=>[item.pseudonym,item.comment,JSON.stringify(item.answers)].some(value=>String(value||'').toLocaleLowerCase().includes(q)));
+    if(question)answers=answers.filter(item=>Object.hasOwn(item.answers,question));
+    if(sort==='unusual')answers=answers.reverse();
+    // No reaction/voting data exists for this stream yet, so "popular" is currently newest-first.
+    const total=answers.length;
+    return json({ok:true,total,limit,offset,sort,answers:answers.slice(offset,offset+limit)});
   }catch{return json({error:'preferences_unavailable'},503);}
 }
 async function preferencesStats(env){
@@ -308,9 +309,9 @@ async function submitPreferences(request,env){
   const languages=['en','ru','es','pt','zh','de','ja','fr','ar'];
   const allowed={
     priority:['autonomy','wellbeing','trust','context'],
-    preserve:['autonomy','body_control','identity','safety','being_heard'],
-    wishes:['respect','negotiate','depends','override'],
-    body:['no_change','support_choice','limited_change','unsure']
+    preserve:['autonomy','body','identity','safety','voice'],
+    wishes:['ask','limits','decide','consent'],
+    body:['consent','discuss','unimportant','context']
   };
   if(!body||!languages.includes(body.language)||body.consentToStore!==true||body.publicConsent!==true||
     typeof body.aggregateConsent!=='boolean'||!body.answers||typeof body.answers!=='object'||Array.isArray(body.answers)||
