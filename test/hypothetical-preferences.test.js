@@ -82,7 +82,7 @@ test('hypothetical preferences migration is idempotent, validates fields, and st
     assert.equal(columns.find(column => column.name === 'delete_token_hash').notnull, 1);
 
     const insert = db.prepare('INSERT INTO hypothetical_preferences (language,answers_json,aggregate_consent,delete_token_hash,created_at) VALUES (?,?,?,?,?)');
-    insert.run('ru', JSON.stringify({priority:'autonomy',preserve:'identity',wishes:'respect',body:'no_change'}), 1, 'hash-example', '2026-10-23T00:00:00.000Z');
+    insert.run('ru', JSON.stringify({priority:'autonomy',preserve:['identity'],wishes:'ask',body:'consent'}), 1, 'hash-example', '2026-10-23T00:00:00.000Z');
     assert.equal(db.prepare('SELECT COUNT(*) AS n FROM hypothetical_preferences').get().n, 1);
 
     assert.throws(() => insert.run('xx', '{}', 1, 'hash-language', '2026-10-23T00:00:00.000Z'));
@@ -102,7 +102,7 @@ test('valid preference submission stores only a deletion-token hash and returns 
   t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({success:true}), {status:200,headers:{'content-type':'application/json'}}));
   const body = {
     language:'en',
-    answers:{priority:'autonomy',preserve:'identity',wishes:'respect',body:'no_change'},
+    answers:{priority:'autonomy',preserve:['identity'],wishes:'ask',body:'consent'},
     aggregateConsent:true,
     consentToStore:true,
     turnstileToken:'valid-test-token'
@@ -128,7 +128,7 @@ test('deletion token removes the matching preference and unknown token returns s
   t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({success:true}), {status:200,headers:{'content-type':'application/json'}}));
   const body = {
     language:'en',
-    answers:{priority:'autonomy',preserve:'identity',wishes:'respect',body:'no_change'},
+    answers:{priority:'autonomy',preserve:['identity'],wishes:'ask',body:'consent'},
     aggregateConsent:false,
     consentToStore:true,
     turnstileToken:'valid-test-token'
@@ -156,7 +156,7 @@ test('preference submission enforces the three-request rate limit per IP', async
   t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({success:true}), {status:200,headers:{'content-type':'application/json'}}));
   const body = {
     language:'en',
-    answers:{priority:'autonomy',preserve:'identity',wishes:'respect',body:'no_change'},
+    answers:{priority:'autonomy',preserve:['identity'],wishes:'ask',body:'consent'},
     aggregateConsent:true,
     consentToStore:true,
     turnstileToken:'valid-test-token'
@@ -187,7 +187,7 @@ test('preference deletion enforces the ten-request rate limit per IP', async t =
     headers:{'content-type':'application/json','CF-Connecting-IP':'192.0.2.15'},
     body:JSON.stringify({
       language:'en',
-      answers:{priority:'autonomy',preserve:'identity',wishes:'respect',body:'no_change'},
+      answers:{priority:'autonomy',preserve:['identity'],wishes:'ask',body:'consent'},
       aggregateConsent:true,
       consentToStore:true,
       turnstileToken:'valid-test-token'
@@ -216,7 +216,7 @@ test('preference submission rejects Turnstile failure without writing data', asy
   t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({success:false}), {status:200,headers:{'content-type':'application/json'}}));
   const response = await worker.fetch(new Request('https://example.test/api/preferences', {
     method:'POST',headers:{'content-type':'application/json','CF-Connecting-IP':'192.0.2.13'},
-    body:JSON.stringify({language:'en',answers:{priority:'autonomy',preserve:'identity',wishes:'respect',body:'no_change'},aggregateConsent:true,consentToStore:true,turnstileToken:'invalid-token'})
+    body:JSON.stringify({language:'en',answers:{priority:'autonomy',preserve:['identity'],wishes:'ask',body:'consent'},aggregateConsent:true,consentToStore:true,turnstileToken:'invalid-token'})
   }), {PREFERENCES_ENABLED:'true',DB:db,TURNSTILE_SECRET_KEY:'test-secret',RATE_LIMIT_SALT:'test-salt'});
   assert.equal(response.status,400);
   assert.deepEqual(await response.json(),{ok:false,error:'captcha_failed'});
@@ -236,7 +236,7 @@ test('hypothetical preferences endpoint stays disabled by default', async () => 
 test('hypothetical preferences requires affirmative storage consent and rejects unexpected answer values', async () => {
   const base = {
     language:'en',
-    answers:{priority:'autonomy',preserve:'identity',wishes:'respect',body:'no_change'},
+    answers:{priority:'autonomy',preserve:['identity'],wishes:'ask',body:'consent'},
     aggregateConsent:true,
     turnstileToken:'token'
   };
