@@ -257,6 +257,47 @@ export async function runAIWithLease(env,lockToken,messages,maxTokens,heartbeatI
   }
 }
 
+async function publicPreferences(request,env){
+  if(!env.DB)return json({error:'not_configured'},503);
+  const url=new URL(request.url);
+  const allowedSort=['latest','popular','unusual','newest'];
+  const sort=allowedSort.includes(url.searchParams.get('sort'))?url.searchParams.get('sort'):'latest';
+  const limit=Math.min(50,Math.max(1,Number.parseInt(url.searchParams.get('limit')||'20',10)||20));
+  const offset=Math.max(0,Number.parseInt(url.searchParams.get('offset')||'0',10)||0);
+  const q=(url.searchParams.get('q')||'').trim().slice(0,100);
+  const question=url.searchParams.get('question')||'';
+  const questionKeys=['priority','preserve','wishes','body'];
+  if(question&&!questionKeys.includes(question))return json({error:'invalid_question'},400);
+  try{
+    const totalRow=await env.DB.prepare('SELECT COUNT(*) AS total FROM hypothetical_preferences WHERE public_consent=1').first();
+    const total=Number(totalRow?.total||0);
+    const rows=await env.DB.prepare(`SELECT id,language,answers_json,pseudonym,comment,created_at FROM hypothetical_preferences WHERE public_consent=1 AND (?='' OR pseudonym LIKE ? OR comment LIKE ? OR answers_json LIKE ?) AND (?='' OR answers_json LIKE ?) ORDER BY ${sort==='popular'?'created_at DESC':sort==='unusual'?'answers_json ASC':'created_at DESC'} LIMIT ? OFFSET ?`)
+      .bind(q,`%${q}%`,`%${q}%`,`%${q}%`,question,question?`%" ${question} "%`:'%',limit,offset).all();
+    const answers=(rows.results||[]).map(row=>({
+      id:Number(row.id),language:row.language,answers:JSON.parse(row.answers_json),
+      pseudonym:row.pseudonym||null,comment:row.comment||'',createdAt:row.created_at
+    }));
+    const stats=await env.DB.prepare('SELECT COUNT(*) AS total FROM hypothetical_preferences WHERE public_consent=1').first();
+    return json({ok:true,total:Number(stats?.total||0),limit,offset,sort,answers});
+  }catch{return json({error:'preferences_unavailable'},503);}
+}
+async function preferencesStats(env){
+  if(!env.DB)return json({error:'not_configured'},503);
+  try{
+    const rows=await env.DB.prepare('SELECT answers_json,language FROM hypothetical_preferences WHERE public_consent=1').all();
+    const totals={total:0,languages:{},questions:{priority:{},preserve:{},wishes:{},body:{}}};
+    for(const row of rows.results||[]){
+      totals.total++;
+      totals.languages[row.language]=(totals.languages[row.language]||0)+1;
+      let answers;try{answers=JSON.parse(row.answers_json);}catch{continue;}
+      for(const key of Object.keys(totals.questions)){
+        const values=Array.isArray(answers[key])?answers[key]:[answers[key]];
+        for(const value of values){if(typeof value==='string')totals.questions[key][value]=(totals.questions[key][value]||0)+1;}
+      }
+    }
+    return json({ok:true,stats:totals});
+  }catch{return json({error:'preferences_unavailable'},503);}
+}
 async function submitPreferences(request,env){
   // This endpoint is deliberately disabled unless explicitly enabled in the environment.
   if(env.PREFERENCES_ENABLED!=='true')return json({ok:false,error:'preferences_disabled'},503);
@@ -271,11 +312,16 @@ async function submitPreferences(request,env){
     wishes:['respect','negotiate','depends','override'],
     body:['no_change','support_choice','limited_change','unsure']
   };
-  if(!body||!languages.includes(body.language)||body.consentToStore!==true||
+  if(!body||!languages.includes(body.language)||body.consentToStore!==true||body.publicConsent!==true||
     typeof body.aggregateConsent!=='boolean'||!body.answers||typeof body.answers!=='object'||Array.isArray(body.answers)||
     Object.keys(body.answers).length!==4||
-    Object.entries(allowed).some(([key,values])=>!values.includes(body.answers[key]))||
+    Object.entries(allowed).some(([key,values])=>key==='preserve'
+      ?(!Array.isArray(body.answers[key])||body.answers[key].some(value=>!values.includes(value)))
+      :!values.includes(body.answers[key]))||
     Object.keys(body.answers).some(key=>!Object.hasOwn(allowed,key))||
+    (body.pseudonym!==undefined&&typeof body.pseudonym!=='string')||
+    (body.comment!==undefined&&typeof body.comment!=='string')||
+    String(body.pseudonym||'').trim().length>60||String(body.comment||'').length>10000||
     typeof body.turnstileToken!=='string'||body.turnstileToken.length<1||body.turnstileToken.length>2048){
     return json({ok:false,error:'invalid_response'},400);
   }
@@ -291,8 +337,8 @@ async function submitPreferences(request,env){
     const deletionToken=crypto.randomUUID()+crypto.randomUUID();
     const deletionTokenHash=await sha256(deletionToken);
     await env.DB.prepare(`INSERT INTO hypothetical_preferences
-      (language,answers_json,aggregate_consent,delete_token_hash,created_at)
-      VALUES (?,?,?,?,?)`).bind(body.language,JSON.stringify(body.answers),body.aggregateConsent?1:0,deletionTokenHash,new Date().toISOString()).run();
+      (language,answers_json,aggregate_consent,delete_token_hash,created_at,pseudonym,comment,public_consent)
+      VALUES (?,?,?,?,?,?,?,1)`).bind(body.language,JSON.stringify(body.answers),body.aggregateConsent?1:0,deletionTokenHash,new Date().toISOString(),String(body.pseudonym||'').trim()||null,String(body.comment||'').trim()||null).run();
     return json({ok:true,deletionToken});
   }catch{return json({ok:false,error:'save_failed'},500);}
 }
@@ -316,6 +362,8 @@ export default {
     const url=new URL(request.url);
     if(url.pathname==='/api/submit'&&request.method==='POST')return submit(request,env);
     if(url.pathname==='/api/preferences'&&request.method==='POST')return submitPreferences(request,env);
+    if(url.pathname==='/api/preferences/public'&&request.method==='GET')return publicPreferences(request,env);
+    if(url.pathname==='/api/preferences/stats'&&request.method==='GET')return preferencesStats(env);
     if(url.pathname==='/api/preferences/delete'&&request.method==='POST')return deletePreferences(request,env);
 async function aiAnalysis(request,env){
   if(!env.DB||!env.AI||!env.RATE_LIMIT_SALT)return json({error:'ai_unavailable'},503);
