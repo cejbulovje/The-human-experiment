@@ -407,7 +407,7 @@
       const response=await fetch('/api/preferences/stats',{headers:{Accept:'application/json'}});
       const data=await response.json();
       if(!response.ok || !data.ok) throw new Error('unavailable');
-      stats.textContent='Всего публичных личных ответов: '+data.stats.total+'. Данные статистики относятся только к этому отдельному потоку.';
+      stats.textContent='Всего ответов в личном потоке: '+(Number(data.stats.total||0)+1)+' (включая авторский пример). Ответы участников: '+Number(data.stats.total||0)+'. Авторский пример не распределяется по вопросам.';
     } catch { stats.textContent='Статистика личных предпочтений временно недоступна.'; }
   }
   const more=node('button','Показать ещё','show-more-button'); more.type='button'; more.id='hypothetical-load-more'; more.hidden=true; more.addEventListener('click',()=>load(false)); status.after(more);
