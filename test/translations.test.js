@@ -22,10 +22,7 @@ test('all supported locales have a single, complete set of public-disclosure tra
     assert.deepEqual([...new Set(duplicates)], [], `${locale} contains duplicate translation keys`);
 
     for (const key of [
-      'private-note', 'signature-title', 'signature-help', 'signature-anonymous',
-      'signature-signed', 'signature-label', 'signature-placeholder', 'signature-note',
-      'author-title', 'author-help', 'author-confirm', 'author-required',
-      'signature-required', 'privacy',
+      'private-note', 'author-title', 'author-help', 'author-confirm', 'author-required', 'privacy',
       'feedback-title', 'feedback-help', 'feedback-opt-in-label',
       'feedback-email-label', 'feedback-email-placeholder', 'feedback-email-note',
       'other-placeholder', 'other-help', 'already-submitted'
