@@ -328,7 +328,7 @@
   const question = section.querySelector('#hypothetical-question-filter');
   const sort = section.querySelector('#hypothetical-sort');
   const pageSize = section.querySelector('#hypothetical-page-size');
-  let offset = 0, total = 0, busy = false, requestId = 0;
+  let offset = 0, total = 0, busy = false, requestId = 0, pendingLoad = false, pendingReset = false;
   const labels = {
     priority:{autonomy:'Свобода и самостоятельность',wellbeing:'Благополучие и безопасность',trust:'Доверие и ответственность',context:'Зависит от обстоятельств'},
     preserve:{autonomy:'Право самостоятельно принимать решения',body:'Контроль над собственным телом',identity:'Личность и идентичность',safety:'Безопасность и физическое благополучие',voice:'Возможность быть услышанным'},
@@ -369,7 +369,7 @@
       if(moreButton) moreButton.hidden=true;
       return;
     }
-    if(busy) return;
+    if(busy) { pendingLoad=true; pendingReset=pendingReset||reset; return; }
     const thisRequest = ++requestId;
     busy=true;
     if(reset){offset=0; list.querySelectorAll('article:not(.hypothetical-empty-state)').forEach(el=>el.remove());}
@@ -392,7 +392,14 @@
       if(!total && empty) empty.hidden=false;
     } catch {
       if (thisRequest === requestId && !rankingUnavailable()) status.textContent='Не удалось загрузить ответы. Попробуйте позже.';
-    } finally { busy=false; }
+    } finally {
+      busy=false;
+      if(pendingLoad && !rankingUnavailable()) {
+        const shouldReset=pendingReset;
+        pendingLoad=false; pendingReset=false;
+        load(shouldReset);
+      } else { pendingLoad=false; pendingReset=false; }
+    }
   }
   async function loadStats() {
     try {
