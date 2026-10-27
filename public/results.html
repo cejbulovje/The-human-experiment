@@ -328,7 +328,7 @@
   const question = section.querySelector('#hypothetical-question-filter');
   const sort = section.querySelector('#hypothetical-sort');
   const pageSize = section.querySelector('#hypothetical-page-size');
-  let offset = 0, total = 0, busy = false;
+  let offset = 0, total = 0, busy = false, requestId = 0;
   const labels = {
     priority:{autonomy:'Свобода и самостоятельность',wellbeing:'Благополучие и безопасность',trust:'Доверие и ответственность',context:'Зависит от обстоятельств'},
     preserve:{autonomy:'Право самостоятельно принимать решения',body:'Контроль над собственным телом',identity:'Личность и идентичность',safety:'Безопасность и физическое благополучие',voice:'Возможность быть услышанным'},
@@ -356,8 +356,8 @@
     return ['popular','unusual'].includes(section.dataset.resultsView);
   }
   async function load(reset=true) {
-    if(busy) return;
     if (rankingUnavailable()) {
+      requestId++;
       offset=0;
       list.querySelectorAll('article:not(.hypothetical-empty-state)').forEach(el=>el.remove());
       if (empty) empty.hidden=true;
@@ -369,6 +369,8 @@
       if(moreButton) moreButton.hidden=true;
       return;
     }
+    if(busy) return;
+    const thisRequest = ++requestId;
     busy=true;
     if(reset){offset=0; list.querySelectorAll('article:not(.hypothetical-empty-state)').forEach(el=>el.remove());}
     if(empty) empty.hidden=true;
@@ -379,6 +381,7 @@
       if(question.value) params.set('question',question.value);
       const response=await fetch('/api/preferences/public?'+params.toString(),{headers:{Accept:'application/json'}});
       const data=await response.json();
+      if (thisRequest !== requestId || rankingUnavailable()) return;
       if(!response.ok || !data.ok) throw new Error('unavailable');
       total=data.total;
       data.answers.forEach(item=>list.append(renderAnswer(item)));
@@ -388,7 +391,7 @@
       if(more) more.hidden=offset>=total;
       if(!total && empty) empty.hidden=false;
     } catch {
-      status.textContent='Не удалось загрузить ответы. Попробуйте позже.';
+      if (thisRequest === requestId && !rankingUnavailable()) status.textContent='Не удалось загрузить ответы. Попробуйте позже.';
     } finally { busy=false; }
   }
   async function loadStats() {
@@ -403,7 +406,7 @@
   let debounce;
   search.addEventListener('input',()=>{clearTimeout(debounce);debounce=setTimeout(()=>load(true),250);});
   [question,sort,pageSize].forEach(el=>el.addEventListener('change',()=>load(true)));
-  document.querySelectorAll('[data-results-stream="hypothetical"],[data-results-view]').forEach(el=>el.addEventListener('click',()=>{load(true);loadStats();}));
+  document.querySelectorAll('[data-results-stream="hypothetical"],[data-results-view]').forEach(el=>el.addEventListener('click',()=>{if(section.hidden)return;load(true);loadStats();}));
   loadStats();
   if(new URLSearchParams(location.search).get('stream')==='hypothetical') load(true);
 })();
