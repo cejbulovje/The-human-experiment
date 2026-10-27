@@ -5,6 +5,7 @@ import worker from '../src/index.js';
 import { readFileSync } from 'node:fs';
 
 const migration = readFileSync(new URL('../db/migrations/0010_hypothetical_preferences.sql', import.meta.url), 'utf8');
+const extensionMigration = readFileSync(new URL('../db/migrations/0012_hypothetical_preferences_public_fields.sql', import.meta.url), 'utf8');
 const schema = readFileSync(new URL('../db/schema.sql', import.meta.url), 'utf8');
 
 function createPreferencesDb() {
@@ -63,33 +64,42 @@ function preferencesSql(sql) {
   return sql.slice(start, end + 1).trim().replace(/\r\n/g, '\n');
 }
 
-test('schema.sql and migration define the same isolated preferences table and index', () => {
-  assert.equal(preferencesSql(schema), preferencesSql(migration));
+test('schema.sql includes the additive public fields while migration 0010 remains the legacy base', () => {
   assert.match(preferencesSql(schema), /delete_token_hash TEXT NOT NULL UNIQUE/);
   assert.match(preferencesSql(migration), /aggregate_consent INTEGER NOT NULL CHECK \(aggregate_consent IN \(0,1\)\)/);
+  assert.match(preferencesSql(schema), /comment TEXT/);
+  assert.match(preferencesSql(schema), /public_consent INTEGER NOT NULL DEFAULT 1 CHECK \(public_consent IN \(0,1\)\)/);
+  assert.match(extensionMigration, /ALTER TABLE hypothetical_preferences ADD COLUMN comment TEXT/);
+  assert.match(extensionMigration, /ALTER TABLE hypothetical_preferences ADD COLUMN public_consent INTEGER NOT NULL DEFAULT 1 CHECK \(public_consent IN \(0,1\)\)/);
 });
 
-test('hypothetical preferences migration is idempotent, validates fields, and stays isolated', () => {
+test('hypothetical preferences migrations preserve existing rows and validate fields', () => {
   const db = new DatabaseSync(':memory:');
   try {
     db.exec(migration);
-    db.exec(migration);
+    const insert = db.prepare('INSERT INTO hypothetical_preferences (language,answers_json,aggregate_consent,delete_token_hash,created_at) VALUES (?,?,?,?,?)');
+    insert.run('ru', JSON.stringify({priority:'autonomy',preserve:['identity'],wishes:'ask',body:'consent'}), 1, 'hash-existing', '2026-10-23T00:00:00.000Z');
+    db.exec(extensionMigration);
+    assert.throws(() => db.exec(extensionMigration), /duplicate column name/i);
+
     const table = db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='hypothetical_preferences'").get();
     assert.equal(table.name, 'hypothetical_preferences');
-
     const columns = db.prepare("PRAGMA table_info('hypothetical_preferences')").all();
-    assert.deepEqual(columns.map(column => column.name), ['id', 'language', 'answers_json', 'aggregate_consent', 'delete_token_hash', 'created_at']);
+    assert.deepEqual(columns.map(column => column.name), ['id', 'language', 'answers_json', 'aggregate_consent', 'delete_token_hash', 'created_at', 'comment', 'public_consent']);
     assert.equal(columns.find(column => column.name === 'delete_token_hash').notnull, 1);
-
-    const insert = db.prepare('INSERT INTO hypothetical_preferences (language,answers_json,aggregate_consent,delete_token_hash,created_at) VALUES (?,?,?,?,?)');
-    insert.run('ru', JSON.stringify({priority:'autonomy',preserve:['identity'],wishes:'ask',body:'consent'}), 1, 'hash-example', '2026-10-23T00:00:00.000Z');
+    assert.equal(columns.find(column => column.name === 'public_consent').notnull, 1);
     assert.equal(db.prepare('SELECT COUNT(*) AS n FROM hypothetical_preferences').get().n, 1);
+    const preserved = db.prepare('SELECT comment, public_consent FROM hypothetical_preferences WHERE delete_token_hash=?').get('hash-existing');
+    assert.equal(preserved.comment, null);
+    assert.equal(preserved.public_consent, 1);
 
+    const insertExtended = db.prepare('INSERT INTO hypothetical_preferences (language,answers_json,aggregate_consent,delete_token_hash,created_at,comment,public_consent) VALUES (?,?,?,?,?,?,?)');
+    insertExtended.run('en', '{}', 1, 'hash-new', '2026-10-23T00:00:00.000Z', 'example', 1);
     assert.throws(() => insert.run('xx', '{}', 1, 'hash-language', '2026-10-23T00:00:00.000Z'));
     assert.throws(() => insert.run('en', '{invalid-json', 1, 'hash-json', '2026-10-23T00:00:00.000Z'));
     assert.throws(() => insert.run('en', '{}', 2, 'hash-consent', '2026-10-23T00:00:00.000Z'));
-    assert.throws(() => insert.run('en', '{}', 1, 'hash-example', '2026-10-23T00:00:00.000Z'));
-
+    assert.throws(() => insert.run('en', '{}', 1, 'hash-existing', '2026-10-23T00:00:00.000Z'));
+    assert.throws(() => insertExtended.run('en', '{}', 1, 'hash-bad-consent', '2026-10-23T00:00:00.000Z', null, 2));
     assert.equal(db.prepare("SELECT COUNT(*) AS n FROM sqlite_master WHERE type='table' AND name='responses'").get().n, 0);
   } finally {
     db.close();
