@@ -206,7 +206,7 @@
       });
       if (stats) stats.hidden = !collective || !(overview || question);
       if (collectiveAnswers) collectiveAnswers.hidden = !collective || !(overview || list || question);
-      if (hypothetical) hypothetical.hidden = collective;
+      if (hypothetical) { hypothetical.hidden = collective; hypothetical.dataset.resultsView = view; }
       if (ai) ai.hidden = !collective || !overview;
       if (hypotheticalAI) hypotheticalAI.hidden = collective || !overview;
       if (picker) picker.hidden = !collective || !question;
@@ -352,8 +352,23 @@
     if(item.comment) { const p=node('p',item.comment); p.className='answer-comment'; article.append(p); }
     return article;
   }
+  function rankingUnavailable() {
+    return ['popular','unusual'].includes(section.dataset.resultsView);
+  }
   async function load(reset=true) {
     if(busy) return;
+    if (rankingUnavailable()) {
+      offset=0;
+      list.querySelectorAll('article:not(.hypothetical-empty-state)').forEach(el=>el.remove());
+      if (empty) empty.hidden=true;
+      status.hidden=false;
+      status.textContent = section.dataset.resultsView === 'popular'
+        ? 'Популярность пока нельзя определить: реакции участников ещё не реализованы.'
+        : 'Выделять необычные ответы пока нельзя: алгоритм сравнения ответов ещё не реализован.';
+      const moreButton=section.querySelector('#hypothetical-load-more');
+      if(moreButton) moreButton.hidden=true;
+      return;
+    }
     busy=true;
     if(reset){offset=0; list.querySelectorAll('article:not(.hypothetical-empty-state)').forEach(el=>el.remove());}
     if(empty) empty.hidden=true;
@@ -388,7 +403,7 @@
   let debounce;
   search.addEventListener('input',()=>{clearTimeout(debounce);debounce=setTimeout(()=>load(true),250);});
   [question,sort,pageSize].forEach(el=>el.addEventListener('change',()=>load(true)));
-  document.querySelectorAll('[data-results-stream="hypothetical"],[data-hypothetical-view]').forEach(el=>el.addEventListener('click',()=>{load(true);loadStats();}));
+  document.querySelectorAll('[data-results-stream="hypothetical"],[data-results-view]').forEach(el=>el.addEventListener('click',()=>{load(true);loadStats();}));
   loadStats();
   if(new URLSearchParams(location.search).get('stream')==='hypothetical') load(true);
 })();
