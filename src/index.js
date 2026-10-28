@@ -274,7 +274,7 @@ async function publicPreferences(request,env){
   const offset=Math.max(0,Number.parseInt(url.searchParams.get('offset')||'0',10)||0);
   const q=(url.searchParams.get('q')||'').trim().slice(0,100).toLocaleLowerCase();
   const question=url.searchParams.get('question')||'';
-  const questionKeys=['priority','preserve','wishes','body'];
+  const questionKeys=['scope','motivation','priority','preserve','wishes','body'];
   if(question&&!questionKeys.includes(question))return json({error:'invalid_question'},400);
   try{
     const rows=await env.DB.prepare('SELECT id,language,answers_json,comment,created_at FROM hypothetical_preferences ORDER BY created_at DESC,id DESC').all();
