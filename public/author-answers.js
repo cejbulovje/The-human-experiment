@@ -445,6 +445,76 @@
       }
     });
     card.append(top, toggle, full);
+
+    if (kind === 'volunteer') {
+      const ru = locale === 'ru';
+      const choices = document.createElement('div');
+      choices.className = 'answer-context author-questionnaire-choices';
+      const choicesTitle = document.createElement('strong');
+      choicesTitle.textContent = ru ? 'Выборы в опроснике' : 'Questionnaire choices';
+      choices.append(choicesTitle);
+      const selected = ru ? [
+        ['Главный приоритет', 'Свобода и самостоятельность'],
+        ['Что сохранить', 'Самостоятельность; контроль над телом; личность и идентичность'],
+        ['Как учитывать желания', 'Сначала спросить и выслушать'],
+        ['Изменения тела', 'Только с моего согласия']
+      ] : [
+        ['Main priority', 'Freedom and autonomy'],
+        ['What to preserve', 'Autonomy; control over the body; personality and identity'],
+        ['How to consider wishes', 'Ask and listen first'],
+        ['Body changes', 'Only with my consent']
+      ];
+      selected.forEach(([question, answer]) => {
+        const row = document.createElement('p');
+        const label = document.createElement('strong');
+        label.textContent = question + ': ';
+        row.append(label, document.createTextNode(answer));
+        choices.append(row);
+      });
+
+      const actions = document.createElement('div');
+      actions.className = 'answer-actions author-answer-actions';
+      const reaction = document.createElement('button');
+      reaction.type = 'button';
+      reaction.className = 'reaction-button';
+      reaction.disabled = true;
+      reaction.textContent = ru ? '♡ Интересная мысль · —' : '♡ Interesting thought · —';
+      reaction.title = ru ? 'Авторский пример не участвует в подсчёте реакций' : 'Reactions are not counted for the author example';
+
+      const otherAnswers = document.createElement('button');
+      otherAnswers.type = 'button';
+      otherAnswers.className = 'subtle-button';
+      otherAnswers.textContent = ru ? 'Посмотреть остальные ответы' : 'View other answers';
+      otherAnswers.addEventListener('click', () => {
+        const list = document.querySelector('.hypothetical-answer-list');
+        if (list) list.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+
+      const share = document.createElement('button');
+      share.type = 'button';
+      share.className = 'subtle-button';
+      share.textContent = ru ? 'Поделиться ответом' : 'Share answer';
+      share.addEventListener('click', async () => {
+        const url = new URL(window.location.href);
+        url.hash = 'author-answer-volunteer';
+        try {
+          await navigator.clipboard.writeText(url.toString());
+          share.textContent = ru ? 'Ссылка скопирована' : 'Link copied';
+        } catch {
+          window.location.hash = 'author-answer-volunteer';
+        }
+      });
+
+      const correction = document.createElement('button');
+      correction.type = 'button';
+      correction.className = 'subtle-button';
+      correction.textContent = ru ? 'Предложить исправление темы' : 'Suggest a topic correction';
+      correction.disabled = true;
+      correction.title = ru ? 'Для авторского примера тема не сохраняется как запись участника' : 'Topic suggestions are unavailable for the author example';
+
+      card.append(choices, actions);
+      actions.append(reaction, otherAnswers, share, correction);
+    }
     return card;
   }
 
