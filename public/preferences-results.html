@@ -617,7 +617,7 @@
 
     const choices = document.createElement('div');
     choices.className = 'answer-context author-questionnaire-choices';
-    choices.hidden = true;
+    choices.hidden = false;
     const choicesTitle = document.createElement('strong');
     choicesTitle.className = 'author-questionnaire-choices-title';
     choicesTitle.textContent = ru ? 'Мои дополнительные ответы' : 'My additional answers';
@@ -653,8 +653,8 @@
     const contextButton = document.createElement('button');
     contextButton.type = 'button';
     contextButton.className = 'subtle-button';
-    contextButton.textContent = ru ? 'Дополнительные ответы участника' : 'Participant’s additional answers';
-    contextButton.setAttribute('aria-expanded', 'false');
+    contextButton.textContent = ru ? 'Скрыть дополнительные ответы' : 'Hide additional answers';
+    contextButton.setAttribute('aria-expanded', 'true');
     contextButton.addEventListener('click', () => {
       choices.hidden = !choices.hidden;
       contextButton.textContent = choices.hidden
