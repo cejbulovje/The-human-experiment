@@ -1358,3 +1358,38 @@
   font-size: .76rem;
 }
 .preview-sample-answer .author-questionnaire-choices[hidden] { display: none !important; }
+
+
+/* Match demo questionnaire details to the author's numbered, readable answer panel. */
+.preview-sample-answer .author-questionnaire-choices {
+  padding: 16px 17px;
+}
+.preview-sample-answer .author-questionnaire-choices-title {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 1rem;
+}
+.preview-sample-answer .author-questionnaire-section {
+  margin-top: 12px;
+}
+.preview-sample-answer .author-questionnaire-question {
+  display: block;
+  margin-bottom: 3px;
+  line-height: 1.55;
+}
+.preview-sample-answer .author-questionnaire-answer-text {
+  margin: 0;
+  font-size: .92rem;
+  line-height: 1.6;
+}
+.preview-sample-answer .author-questionnaire-answer-list {
+  display: grid;
+  gap: 7px;
+  margin: 7px 0 0;
+  padding-left: 1.4rem;
+  font-size: .92rem;
+  line-height: 1.6;
+}
+.preview-sample-answer .author-questionnaire-answer-list li {
+  padding-left: 2px;
+}
