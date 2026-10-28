@@ -19,6 +19,9 @@
 .preference-page-switcher { margin-top:20px; }
 .hypothetical-answer-tools { margin-top:20px; }
 .hypothetical-answer-tools[hidden] { display:none !important; }
+/* The author example is a full-width pinned item in the personal stream, not one participant column. */
+.results-page .hypothetical-answer-list > #author-answer-hypothetical,
+.results-page .hypothetical-answer-list > .hypothetical-empty-state { grid-column: 1 / -1; }
 .hypothetical-question-control[hidden] { display:none !important; }
 .results-page > .eyebrow { margin-bottom:12px; }
 .results-page > h1 { font-size:clamp(2.2rem,6vw,4.25rem); line-height:1.06; letter-spacing:-.055em; margin:0 0 14px; max-width:780px; }
@@ -421,7 +424,7 @@
       status.textContent=total ? 'Показано '+Math.min(offset,total)+' из '+total+' публичных ответов.' : 'Пока нет опубликованных ответов.';
       const more=section.querySelector('#hypothetical-load-more');
       if(more) more.hidden=offset>=total;
-      if(!total && empty) empty.hidden=false;
+      if(empty) empty.hidden = section.dataset.resultsView === 'overview' || total > 0;
     } catch {
       if (thisRequest === requestId && !rankingUnavailable()) status.textContent='Не удалось загрузить ответы. Попробуйте позже.';
     } finally {
