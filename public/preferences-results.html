@@ -19,8 +19,8 @@
 .preference-page-switcher { margin-top:20px; }
 .hypothetical-answer-tools { margin-top:20px; }
 .hypothetical-answer-tools[hidden] { display:none !important; }
-/* The author example is a full-width pinned item in the personal stream, not one participant column. */
-.results-page .hypothetical-answer-list > #author-answer-hypothetical,
+/* Keep the author example in the same responsive card grid as other answers. */
+.results-page .hypothetical-answer-list > #author-answer-hypothetical { display:contents !important; }
 .results-page .hypothetical-answer-list > .hypothetical-empty-state { grid-column: 1 / -1; }
 .hypothetical-question-control[hidden] { display:none !important; }
 .hypothetical-empty-state[hidden] { display:none !important; }
