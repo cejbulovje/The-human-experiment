@@ -378,6 +378,10 @@
     toggle.textContent = words.show;
     toggle.setAttribute('aria-expanded', 'false');
 
+    const preview = document.createElement('p');
+    preview.className = 'author-answer-preview';
+    if (kind === 'volunteer') preview.textContent = paragraphs[0] || '';
+
     const full = document.createElement('div');
     full.className = 'author-answer-full';
     full.hidden = true;
@@ -386,9 +390,11 @@
     heading.textContent = title;
     const body = document.createElement('div');
     body.className = 'author-answer-body';
-    paragraphs.forEach((paragraph, index) => {
+    const expandedParagraphs = kind === 'volunteer' ? paragraphs.slice(1) : paragraphs;
+    expandedParagraphs.forEach((paragraph, index) => {
+      const sourceIndex = kind === 'volunteer' ? index + 1 : index;
       const p = document.createElement('p');
-      p.textContent = kind === 'volunteer' && index === 3 ? (volunteerParagraphTranslations[locale] || volunteerParagraphTranslations.en) : paragraph;
+      p.textContent = kind === 'volunteer' && sourceIndex === 3 ? (volunteerParagraphTranslations[locale] || volunteerParagraphTranslations.en) : paragraph;
       body.append(p);
     });
     const note = document.createElement('p');
@@ -444,7 +450,8 @@
         full.addEventListener('transitionend', finishClosing);
       }
     });
-    card.append(top, toggle, full);
+    if (kind === 'volunteer') card.append(top, preview, toggle, full);
+    else card.append(top, toggle, full);
 
     if (kind === 'collective') {
       const ru = locale === 'ru';
