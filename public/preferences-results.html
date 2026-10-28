@@ -422,6 +422,7 @@
       data.answers.forEach(item=>list.append(renderAnswer(item)));
       offset+=data.answers.length;
       status.textContent=total ? 'Показано '+Math.min(offset,total)+' из '+total+' публичных ответов.' : 'Пока нет опубликованных ответов.';
+      status.hidden = section.dataset.resultsView === 'overview' && total === 0;
       const more=section.querySelector('#hypothetical-load-more');
       if(more) more.hidden=offset>=total;
       if(empty) empty.hidden = section.dataset.resultsView === 'overview' || total > 0;
