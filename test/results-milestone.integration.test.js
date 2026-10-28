@@ -3,8 +3,9 @@ import assert from 'node:assert/strict';
 import worker from '../src/index.js';
 
 class MockD1 {
-  constructor(total) {
+  constructor(total, seedAuthor = false) {
     this.rows = Array.from({length: total}, (_, i) => ({is_public:1,q2:i%7,q3:i%5,q4:i%7}));
+    if (seedAuthor) this.rows.push({is_public:1,public_id:'author-answer-1',q2:3,q3:2,q4:5});
     this.snapshot = null;
     this.writes = 0;
   }
@@ -14,7 +15,7 @@ class MockD1 {
     return {
       bind(...args) { values = args; return this; },
       async first() {
-        if (sql.includes('COUNT(*) AS total FROM responses')) return {total: db.rows.filter(r=>r.is_public===1).length};
+        if (sql.includes('COUNT(*) AS total FROM responses')) return {total: db.rows.filter(r=>r.is_public===1 && (!sql.includes("public_id <> 'author-answer-1'") || r.public_id!=='author-answer-1')).length};
         if (sql.includes('FROM public_results_snapshot')) return db.snapshot ? {...db.snapshot} : null;
         throw new Error('Unexpected first SQL: '+sql);
       },
@@ -22,7 +23,7 @@ class MockD1 {
         const col = ['q2','q3','q4'].find(c => sql.includes('SELECT '+c+' AS choice'));
         if (!col) throw new Error('Unexpected all SQL: '+sql);
         const counts = new Map();
-        for (const row of db.rows) if (row.is_public===1 && row[col]!=null) counts.set(row[col],(counts.get(row[col])||0)+1);
+        for (const row of db.rows) if (row.is_public===1 && (!sql.includes("public_id <> 'author-answer-1'") || row.public_id!=='author-answer-1') && row[col]!=null) counts.set(row[col],(counts.get(row[col])||0)+1);
         return {results:[...counts].map(([choice,count])=>({choice,count}))};
       },
       async run() {
@@ -55,6 +56,14 @@ test('99 participant responses plus the author answer publish one snapshot',asyn
   assert.equal(q4.find(item=>item.label.includes('Not sure'))?.count,15);
   const timestamp=db.snapshot.updated_at; const second=await fetchResults(db);
   assert.equal(second.status,200); assert.equal(second.body.publishedThreshold,100); assert.equal(db.writes,1); assert.equal(db.snapshot.updated_at,timestamp);
+});
+test('a seeded author row is excluded before the static author contribution is added',async()=>{
+  const db=new MockD1(99,true); const {status,body}=await fetchResults(db);
+  assert.equal(status,200); assert.equal(body.unlocked,true); assert.equal(body.total,100);
+  const q2=JSON.parse(db.snapshot.q2), q3=JSON.parse(db.snapshot.q3), q4=JSON.parse(db.snapshot.q4);
+  assert.equal(q2.find(item=>item.label.includes('Everything I consider necessary'))?.count,15);
+  assert.equal(q3.find(item=>item.label.includes('Do what I wanted anyway'))?.count,21);
+  assert.equal(q4.find(item=>item.label.includes('Not sure'))?.count,15);
 });
 test('100 participant responses plus the author leave the published snapshot unchanged',async()=>{
   const db=new MockD1(99); await fetchResults(db); const old={...db.snapshot};
