@@ -1405,38 +1405,3 @@
 .preview-sample-answer .author-questionnaire-choices {
   margin-top: 14px;
 }
-
-
-/* Keep collective-stream questionnaire details consistent with personal-preference cards. */
-.answer-context.author-questionnaire-choices {
-  padding: 16px 17px;
-}
-.author-questionnaire-choices-title {
-  display: block;
-  margin-bottom: 10px;
-  font-size: 1rem;
-}
-.author-questionnaire-section {
-  margin-top: 12px;
-}
-.author-questionnaire-question {
-  display: block;
-  margin-bottom: 3px;
-  line-height: 1.55;
-}
-.author-questionnaire-answer-text {
-  margin: 0;
-  font-size: .92rem;
-  line-height: 1.6;
-}
-.author-questionnaire-answer-list {
-  display: grid;
-  gap: 7px;
-  margin: 7px 0 0;
-  padding-left: 1.4rem;
-  font-size: .92rem;
-  line-height: 1.6;
-}
-.author-questionnaire-answer-list li {
-  padding-left: 2px;
-}
