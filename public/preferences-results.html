@@ -619,15 +619,33 @@
     choices.className = 'answer-context author-questionnaire-choices';
     choices.hidden = true;
     const choicesTitle = document.createElement('strong');
-    choicesTitle.textContent = ru ? 'Выборы в опроснике' : 'Questionnaire choices';
+    choicesTitle.className = 'author-questionnaire-choices-title';
+    choicesTitle.textContent = ru ? 'Мои дополнительные ответы' : 'My additional answers';
     choices.append(choicesTitle);
-    item.choices.forEach(([question, answer]) => {
-      const row = document.createElement('div');
-      row.className = 'author-questionnaire-answer';
+    item.choices.forEach(([question, answer], questionIndex) => {
+      const section = document.createElement('section');
+      section.className = 'author-questionnaire-section';
       const label = document.createElement('strong');
-      label.textContent = question;
-      row.append(label, document.createTextNode(' ' + answer));
-      choices.append(row);
+      label.className = 'author-questionnaire-question';
+      label.textContent = (questionIndex + 1) + '. ' + question;
+      section.append(label);
+      const answers = String(answer || '').split(';').map(value => value.trim()).filter(Boolean);
+      if (answers.length > 1) {
+        const list = document.createElement('ul');
+        list.className = 'author-questionnaire-answer-list';
+        answers.forEach(value => {
+          const item = document.createElement('li');
+          item.textContent = value;
+          list.append(item);
+        });
+        section.append(list);
+      } else {
+        const value = document.createElement('p');
+        value.className = 'author-questionnaire-answer-text';
+        value.textContent = answers[0] || '—';
+        section.append(value);
+      }
+      choices.append(section);
     });
 
     const actions = document.createElement('div');
