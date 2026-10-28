@@ -615,7 +615,7 @@
   }
   function render() {
     fill(document.getElementById('answer-list'), 'collective');
-    fill(document.querySelector('.hypothetical-answer-list'), 'hypothetical');
+    /* Personal preferences have no participant responses yet: keep the honest empty state. */
   }
   document.addEventListener('DOMContentLoaded', render, { once: true });
   const observer = new MutationObserver(render);
