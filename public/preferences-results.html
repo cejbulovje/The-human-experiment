@@ -147,7 +147,7 @@
         <div id="author-answer-hypothetical" hidden></div>
         <article class="status-panel hypothetical-empty-state" hidden>
           <h3 data-voice="emptyTitle">Личных ответов пока нет</h3>
-          <p data-voice="emptyText">Когда начнётся отдельный сбор ответов и появятся реальные данные, здесь будут карточки ответов, фильтры по пяти вопросам, сортировка и постраничная загрузка — по той же схеме, что и в коллективном потоке.</p>
+          <p data-voice="emptyText">Когда начнётся отдельный сбор ответов и появятся реальные данные, здесь будут карточки ответов, фильтры по пяти вопросам, сортировка и постраничная загрузка – по той же схеме, что и в коллективном потоке.</p>
           <p data-voice="emptyNext">Этот прототип пока не собирает и не сохраняет ответы о личных предпочтениях.</p>
           <a class="subtle-button" href="/preferences.html" data-voice="answer">Посмотреть вопросы о собственной жизни ↗</a>
         </article>
@@ -642,7 +642,7 @@
       } else {
         const value = document.createElement('p');
         value.className = 'author-questionnaire-answer-text';
-        value.textContent = answers[0] || '—';
+        value.textContent = answers[0] || '–';
         section.append(value);
       }
       choices.append(section);
@@ -654,7 +654,7 @@
     reaction.type = 'button';
     reaction.className = 'reaction-button';
     reaction.disabled = true;
-    reaction.textContent = ru ? '♡ Интересная мысль · —' : '♡ Interesting thought · —';
+    reaction.textContent = ru ? '♡ Интересная мысль · –' : '♡ Interesting thought · –';
     reaction.title = ru
       ? 'Демонстрационный пример не участвует в подсчёте реакций'
       : 'Reactions are not counted for the demonstration sample';
