@@ -139,7 +139,7 @@
       </div>
       <div class="answer-tools hypothetical-answer-tools">
         <label class="search-field"><span class="sr-only">Поиск по личным ответам</span><input id="hypothetical-search" type="search" placeholder="Поиск по ответам…"></label>
-        <label class="hypothetical-question-control"><span class="sr-only">Вопрос</span><select id="hypothetical-question-filter"><option value="">Все вопросы</option><option value="priority">1. Главный приоритет</option><option value="preserve">2. Что важно сохранить</option><option value="wishes">3. Как учитывать желания</option><option value="body">4. Изменения тела</option></select></label>
+        <label class="hypothetical-question-control"><span class="sr-only">Вопрос</span><select id="hypothetical-question-filter"><option value="">Все вопросы</option><option value="scope">1. Что я позволю менять</option><option value="motivation">2. Почему я участвую</option></select></label>
         <label><span class="sr-only">Сортировка</span><select id="hypothetical-sort"><option value="latest">Сначала новые</option></select></label>
         <label class="hypothetical-page-size">Ответов на странице <select id="hypothetical-page-size"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></label>
       </div>
@@ -369,12 +369,14 @@
   const pageSize = section.querySelector('#hypothetical-page-size');
   let offset = 0, total = 0, busy = false, requestId = 0, pendingLoad = false, pendingReset = false;
   const labels = {
+    scope:{none:'Ничего не позволил бы менять',preapproved:'Только то, что заранее одобрил',veto:'Доверил бы выбор, сохранив право отказа',trust_conditions:'Доверил бы человечеству решать, сохранив несколько принципиальных условий',unlimited:'Разрешил бы любые изменения без ограничений',other:'Другое'},
+    motivation:{desires:'Узнать, чего люди на самом деле хотят',reality:'Увидеть человечество за пределами публичных образов и заявлений',hope:'Понять, есть ли у человечества надежда на лучшее будущее',similarity:'Узнать, насколько люди похожи в своих желаниях',understanding:'Проверить, способны ли люди учитывать желания друг друга',contribute:'Внести вклад в исследование человечества',curiosity:'Любопытство к эксперименту и его результатам',other:'Другое',none:'Ничто из перечисленного'},
     priority:{autonomy:'Свобода и самостоятельность',wellbeing:'Благополучие и безопасность',trust:'Доверие и ответственность',context:'Зависит от обстоятельств'},
     preserve:{autonomy:'Право самостоятельно принимать решения',body:'Контроль над собственным телом',identity:'Личность и идентичность',safety:'Безопасность и физическое благополучие',voice:'Возможность быть услышанным'},
     wishes:{ask:'Сначала спросить меня и выслушать ответ',limits:'Действовать в заранее обозначенных пределах',decide:'Оставить окончательное решение тому, кто получил власть',consent:'Получать моё согласие на существенные изменения'},
     body:{consent:'Допускать изменения только с моего согласия',discuss:'Сначала обсуждать последствия и альтернативы',unimportant:'Это не главный вопрос по сравнению с другими приоритетами',context:'Зависит от конкретного изменения и обстоятельств'}
   };
-  const names = {priority:'Главный приоритет',preserve:'Что важно сохранить',wishes:'Как учитывать желания',body:'Изменения тела'};
+  const names = {scope:'Что я позволю менять',motivation:'Почему я участвую',priority:'Главный приоритет',preserve:'Что важно сохранить',wishes:'Как учитывать желания',body:'Изменения тела'};
   function node(tag, text, cls) { const el=document.createElement(tag); if(text!==undefined) el.textContent=text; if(cls) el.className=cls; return el; }
   function renderAnswer(item) {
     const article=node('article',undefined,'answer-card');
@@ -382,7 +384,7 @@
     header.append(node('strong',item.pseudonym || 'Анонимный участник'));
     header.append(node('time',item.createdAt ? new Date(item.createdAt).toLocaleDateString() : ''));
     article.append(header);
-    for(const key of ['priority','preserve','wishes','body']) {
+    for(const key of ['scope','motivation','priority','preserve','wishes','body']) {
       const raw=item.answers?.[key];
       if(raw===undefined) continue;
       const vals=(Array.isArray(raw)?raw:[raw]).map(v=>labels[key]?.[v] || String(v));
