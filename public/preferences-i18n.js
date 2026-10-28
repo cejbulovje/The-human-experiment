@@ -24,6 +24,22 @@
   select.value = current;
   const isPreferences = Boolean(document.getElementById('preferences-form'));
   function setText(node, value) { if (node && value !== undefined) node.textContent = value; }
+  const questionnaire = {
+    ru: {
+      questions:["1. Что бы ты позволил человечеству изменить в себе?","2. Что побудило бы тебя стать добровольцем этого эксперимента?","3. Что бы ты позволил человечеству сделать с твоей жизнью, если бы доверил ему решать твою судьбу?"],
+      helpers:["Выбери один вариант.","Можно выбрать несколько вариантов.","Расскажи своими словами, на что ты был бы готов, а что для тебя было бы недопустимо."],
+      scope:["Ничего не позволил бы менять.","Позволил бы менять только то, что сам заранее одобрил.","Позволил бы им решать, что менять, но оставил бы за собой право отказать.","Доверил бы им самостоятельно решать, что менять.","Доверил бы им любые изменения без ограничений с моей стороны.","Другое."],
+      motivation:["Желание узнать, чего люди на самом деле хотят и о чём мечтают.","Желание увидеть, каким человечество является на самом деле, за пределами публичных образов и заявлений.","Желание понять, есть ли у человечества надежда на лучшее будущее или оно деградирует.","Желание узнать, насколько люди похожи друг на друга в своих желаниях, несмотря на различия.","Желание проверить, способны ли люди понимать и учитывать желания друг друга.","Желание внести собственный вклад в исследование человечества.","Любопытство к самому эксперименту и его результатам.","Другое.","Ничто из перечисленного не побудило бы меня стать добровольцем."],
+      free:"Напиши свой ответ…",summaryLabels:["Границы изменений","Мотивация","Свободный ответ"],noSelection:"Не выбрано"
+    },
+    en: {
+      questions:["1. What would you allow humanity to change about you?","2. What would motivate you to volunteer for this experiment?","3. What would you allow humanity to do with your life if you trusted it to decide your fate?"],
+      helpers:["Choose one option.","You may select more than one option.","In your own words, describe what you would be willing to accept and what would be unacceptable to you."],
+      scope:["I would not allow any changes.","I would allow only changes I had approved in advance.","I would let them decide what to change, while keeping the right to refuse.","I would trust them to decide independently what to change.","I would trust them with any changes without restrictions from me.","Other."],
+      motivation:["I want to learn what people really want and dream about.","I want to see what humanity is really like beyond public images and statements.","I want to understand whether humanity has hope for a better future or is degenerating.","I want to learn how similar people’s desires are despite their differences.","I want to find out whether people can understand and take one another’s wishes into account.","I want to contribute to the study of humanity.","Curiosity about the experiment and its results.","Other.","None of these would motivate me to volunteer."],
+      free:"Write your answer…",summaryLabels:["Limits of change","Motivation","Free response"],noSelection:"None selected"
+    }
+  };
   function apply() {
     const lang = select.value;
     const t = locales[lang] || locales.ru;
@@ -42,27 +58,22 @@
       const note = document.querySelector('.status-note');
       if (note) { note.innerHTML = '<strong></strong> ' + t.notice; setText(note.querySelector('strong'), t.noticeTitle); }
       setText(document.querySelector('.consent-option strong'), t.consent);
+      const q = questionnaire[lang] || questionnaire.en;
       const sections = [...document.querySelectorAll('.preference-question')];
       sections.forEach((section, i) => {
-        setText(section.querySelector('h2'), t.questions[i]);
-        setText(section.querySelector('p'), t.helpers[i]);
+        setText(section.querySelector('h2'), q.questions[i]);
+        const helper = section.querySelector('p:not(#comment-counter)');
+        if (helper) setText(helper, q.helpers[i]);
       });
-      const optionGroups = ['priority','preserve','wishes','body'];
-      optionGroups.forEach((name, groupIndex) => {
-        const labels = [...document.querySelectorAll('label.preference-option input[name="' + name + '"]')];
-        labels.forEach((input, i) => {
+      [['scope',q.scope],['motivation',q.motivation]].forEach(([name, values]) => {
+        [...document.querySelectorAll('input[name="' + name + '"]')].forEach((input,i) => {
           const span = input.parentElement.querySelector('span');
-          if (!span) return;
-          if (name === 'priority') {
-            const parts = t.priority[i].split('|');
-            span.innerHTML = '<strong></strong><br>';
-            setText(span.querySelector('strong'), parts[0]);
-            span.append(document.createTextNode(parts[1]));
-          } else setText(span, t[name][i]);
+          if (span && values[i]) setText(span, values[i]);
         });
       });
       const textarea = document.querySelector('textarea[name="comment"]');
-      if (textarea) textarea.placeholder = t.placeholder;
+      if (textarea) textarea.placeholder = q.free;
+      window.preferenceLocale = q;
       setText(document.getElementById('show-summary'), t.show);
       setText(document.getElementById('reset-form'), t.reset);
       setText(document.querySelector('#prototype-result h2'), t.summaryTitle);
