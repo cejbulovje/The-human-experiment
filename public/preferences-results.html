@@ -23,7 +23,6 @@
 .results-page .hypothetical-answer-list > #author-answer-hypothetical,
 .results-page .hypothetical-answer-list > .hypothetical-empty-state { grid-column: 1 / -1; }
 .hypothetical-question-control[hidden] { display:none !important; }
-.hypothetical-answers-section[data-results-view="overview"] .hypothetical-empty-state { display:none !important; }
 .results-page > .eyebrow { margin-bottom:12px; }
 .results-page > h1 { font-size:clamp(2.2rem,6vw,4.25rem); line-height:1.06; letter-spacing:-.055em; margin:0 0 14px; max-width:780px; }
 .results-page > .lead { max-width:690px; margin-bottom:24px; }
@@ -142,7 +141,7 @@
       </div>
       <p id="hypothetical-stats" class="method-note" role="status" aria-live="polite">Загрузка статистики…</p><div id="hypothetical-status" class="status-panel" role="status" aria-live="polite" hidden></div><div class="answer-list hypothetical-answer-list">
         <div id="author-answer-hypothetical" hidden></div>
-        <article class="status-panel hypothetical-empty-state">
+        <article class="status-panel hypothetical-empty-state" hidden>
           <h3 data-voice="emptyTitle">Личных ответов пока нет</h3>
           <p data-voice="emptyText">Когда начнётся отдельный сбор ответов и появятся реальные данные, здесь будут карточки ответов, фильтры по пяти вопросам, сортировка и постраничная загрузка — по той же схеме, что и в коллективном потоке.</p>
           <p data-voice="emptyNext">Этот прототип пока не собирает и не сохраняет ответы о личных предпочтениях.</p>
