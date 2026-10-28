@@ -486,7 +486,30 @@
       row.append(q, document.createTextNode(answer));
       choices.append(row);
     });
-    card.append(top, wrap, choices);
+    const actions = document.createElement('div');
+    actions.className = 'answer-actions';
+    const reaction = document.createElement('button');
+    reaction.type = 'button';
+    reaction.className = 'reaction-button';
+    reaction.disabled = true;
+    reaction.textContent = ru ? '♡ Интересная мысль · –' : '♡ Interesting thought · –';
+    reaction.title = ru ? 'Тестовый ответ не участвует в подсчёте реакций' : 'Reactions are not counted for sample answers';
+    const share = document.createElement('button');
+    share.type = 'button';
+    share.className = 'subtle-button';
+    share.textContent = ru ? 'Поделиться ответом' : 'Share answer';
+    share.addEventListener('click', async () => {
+      const url = new URL(window.location.href);
+      url.hash = 'sample-answer-' + kind + '-' + index;
+      try {
+        await navigator.clipboard.writeText(url.toString());
+        share.textContent = ru ? 'Ссылка скопирована' : 'Link copied';
+      } catch {
+        window.location.hash = url.hash;
+      }
+    });
+    actions.append(reaction, share);
+    card.append(top, wrap, choices, actions);
     return card;
   }
   function fill(list, kind) {
