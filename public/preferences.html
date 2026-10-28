@@ -72,7 +72,6 @@
           <label class="preference-option"><input type="radio" name="scope" value="none" required><span>Ничего не позволил бы менять.</span></label>
           <label class="preference-option"><input type="radio" name="scope" value="preapproved"><span>Позволил бы менять только то, что сам заранее одобрил.</span></label>
           <label class="preference-option"><input type="radio" name="scope" value="veto"><span>Позволил бы им решать, что менять, но оставил бы за собой право отказать.</span></label>
-          <label class="preference-option"><input type="radio" name="scope" value="trust"><span>Доверил бы им самостоятельно решать, что менять.</span></label>
           <label class="preference-option"><input type="radio" name="scope" value="trust_conditions"><span>Доверил бы человечеству самостоятельно решать, что менять, сохранив лишь несколько принципиальных условий.</span></label>
           <label class="preference-option"><input type="radio" name="scope" value="unlimited"><span>Доверил бы им любые изменения без ограничений с моей стороны.</span></label>
           <label class="preference-option"><input type="radio" name="scope" value="other"><span>Другое.</span></label>
@@ -134,7 +133,7 @@
       const firstInvalid = [...form.querySelectorAll('[required]')].find(field => !field.checkValidity());
       if (firstInvalid) { firstInvalid.reportValidity(); return; }
       const locale = window.preferenceLocale || {};
-      const scopeIndex = {none:0,preapproved:1,veto:2,trust:3,trust_conditions:4,unlimited:5,other:6}[selected('scope')[0]];
+      const scopeIndex = {none:0,preapproved:1,veto:2,trust_conditions:3,unlimited:4,other:5}[selected('scope')[0]];
       const motivationIndexes = {desires:0,reality:1,hope:2,similarity:3,understanding:4,contribute:5,curiosity:6,other:7,none:8};
       const scopeLabel = (locale.scope || [])[scopeIndex] || selected('scope')[0];
       const motivations = selected('motivation').map(value => (locale.motivation || [])[motivationIndexes[value]] || value);
