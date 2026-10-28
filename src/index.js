@@ -160,8 +160,6 @@ async function publicResponses(request,env){
   const requestedId=(url.searchParams.get('id')||'').trim().slice(0,100);
   const requestedNumberRaw=(url.searchParams.get('number')||'').trim();const requestedNumber=/^\d{1,9}$/.test(requestedNumberRaw)?Number(requestedNumberRaw):0;
   const search=(url.searchParams.get('q')||'').trim().slice(0,160);const topic=(url.searchParams.get('topic')||'').trim();const from=(url.searchParams.get('from')||'').slice(0,10);const to=(url.searchParams.get('to')||'').slice(0,10);const sort=url.searchParams.get('sort')||'newest';
-  const publicCountRow=await env.DB.prepare("SELECT COUNT(*) AS total FROM responses WHERE is_public=1 AND (public_id IS NULL OR public_id <> 'author-answer-1')").first();
-  const publicTotal=Number(publicCountRow?.total||0)+1;
   // The author card is rendered from author-answers.js; never return its seeded DB row as a duplicate.
   const clauses=["r.is_public=1", "(r.public_id IS NULL OR r.public_id <> 'author-answer-1')"];const binds=[];
   if(requestedNumber>0){clauses.push('r.answer_number=?');binds.push(requestedNumber);}
