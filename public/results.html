@@ -420,4 +420,88 @@
 })();
 </script>
 
+
+<script>
+/* Preview-only visual samples. They never call APIs or affect real counts/statistics. */
+(() => {
+  if (location.hostname !== 'experiment-hypothetical-preferences-protot-the-human-experiment.cejbulovje.workers.dev') return;
+  const samples = {
+    collective: [
+      ['Хочу, чтобы у человека была возможность учиться новому и менять профессию, если прежняя перестанет приносить удовлетворение.', 'Жизнь и благополучие', 'Участник · тестовый ответ 1'],
+      ['Я бы начал с безопасной и спокойной среды: без постоянного давления, угроз и необходимости каждый день бороться за базовые потребности.', 'Свобода и границы', 'Участник · тестовый ответ 2'],
+      ['Важно оставить человеку право не соглашаться с большинством. Помощь теряет смысл, если превращается в контроль.', 'Отношения', 'Участник · тестовый ответ 3'],
+      ['Я бы предложил несколько вариантов развития, объяснил их последствия и дал самому человеку выбрать тот, который ему ближе.', 'Характер и привычки', 'Участник · тестовый ответ 4']
+    ],
+    hypothetical: [
+      ['Для меня важнее всего иметь достаточно свободы, чтобы самому выбирать, как проводить время и на что тратить силы.', 'Свобода и границы', 'Участник · тестовый ответ 1'],
+      ['Я хотел бы жить ближе к природе, но при этом иметь доступ к хорошей медицине, образованию и интересным людям.', 'Жизнь и благополучие', 'Участник · тестовый ответ 2'],
+      ['Мне важно иметь несколько близких людей, с которыми можно быть собой и говорить честно, без необходимости постоянно что-то доказывать.', 'Отношения', 'Участник · тестовый ответ 3'],
+      ['Я бы выбрал работу, которая даёт ощущение смысла и оставляет достаточно времени для личной жизни.', 'Характер и привычки', 'Участник · тестовый ответ 4']
+    ]
+  };
+  const label = document.documentElement.lang === 'ru' ? 'ТЕСТОВЫЙ ОТВЕТ · НЕ УЧИТЫВАЕТСЯ В СТАТИСТИКЕ' : 'SAMPLE ANSWER · EXCLUDED FROM STATISTICS';
+  function makeSample(text, topic, signature, index) {
+    const card = document.createElement('article');
+    card.className = 'answer-card preview-sample-answer';
+    card.dataset.previewSample = String(index);
+    const top = document.createElement('div');
+    top.className = 'answer-card-top';
+    const code = document.createElement('span');
+    code.className = 'answer-code';
+    code.textContent = label;
+    top.append(code);
+    const preview = document.createElement('p');
+    preview.className = 'answer-text answer-preview';
+    preview.textContent = text;
+    const full = document.createElement('p');
+    full.className = 'answer-text answer-full-text';
+    full.hidden = true;
+    full.textContent = text;
+    const wrap = document.createElement('div');
+    wrap.className = 'answer-text-wrap';
+    const toggle = document.createElement('button');
+    toggle.type = 'button';
+    toggle.className = 'answer-expand-toggle';
+    toggle.textContent = 'Читать полностью';
+    toggle.setAttribute('aria-expanded', 'false');
+    toggle.addEventListener('click', () => {
+      const open = full.hidden;
+      full.hidden = !open;
+      preview.hidden = open;
+      toggle.textContent = open ? 'Свернуть ответ' : 'Читать полностью';
+      toggle.setAttribute('aria-expanded', String(open));
+    });
+    wrap.append(preview, full, toggle);
+    const meta = document.createElement('div');
+    meta.className = 'answer-meta';
+    const topicTag = document.createElement('span');
+    topicTag.className = 'topic-tag';
+    topicTag.textContent = topic;
+    const who = document.createElement('span');
+    who.className = 'answer-language';
+    who.textContent = signature;
+    meta.append(topicTag, who);
+    card.append(top, wrap, meta);
+    return card;
+  }
+  function fill(list, kind) {
+    if (!list) return;
+    const existing = [...list.querySelectorAll(':scope > .preview-sample-answer')];
+    if (existing.length === 4) return;
+    existing.forEach(card => card.remove());
+    samples[kind].forEach((item, index) => list.append(makeSample(item[0], item[1], item[2], index + 1)));
+    const empty = list.querySelector('.hypothetical-empty-state');
+    if (empty) empty.hidden = true;
+  }
+  function render() {
+    fill(document.getElementById('answer-list'), 'collective');
+    fill(document.querySelector('.hypothetical-answer-list'), 'hypothetical');
+  }
+  document.addEventListener('DOMContentLoaded', render, { once: true });
+  const observer = new MutationObserver(() => render());
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('#answer-list, .hypothetical-answer-list').forEach(list => observer.observe(list, { childList: true }));
+  }, { once: true });
+})();
+</script>
 </body></html>
