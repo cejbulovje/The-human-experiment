@@ -569,11 +569,23 @@
     code.textContent = ru ? 'ТЕСТОВЫЙ ОТВЕТ · НЕ УЧИТЫВАЕТСЯ В СТАТИСТИКЕ' : 'SAMPLE ANSWER · EXCLUDED FROM STATISTICS';
     top.append(code);
 
+    const preview = document.createElement('p');
+    preview.className = 'sample-answer-preview';
+    const fullText = String(item.text || '');
+    const previewLimit = 650;
+    let previewText = fullText;
+    if (previewText.length > previewLimit) {
+      const cut = previewText.lastIndexOf(' ', previewLimit);
+      previewText = previewText.slice(0, cut > 450 ? cut : previewLimit).trimEnd() + '…';
+    }
+    preview.textContent = previewText;
+
     const toggle = document.createElement('button');
     toggle.type = 'button';
-    toggle.className = 'author-answer-toggle';
+    toggle.className = 'author-answer-toggle sample-answer-expand';
     toggle.textContent = ru ? 'Показать полный ответ' : 'Read full answer';
     toggle.setAttribute('aria-expanded', 'false');
+    toggle.hidden = previewText === fullText;
 
     const full = document.createElement('div');
     full.className = 'author-answer-full';
@@ -584,7 +596,7 @@
     const body = document.createElement('div');
     body.className = 'author-answer-body';
     const paragraph = document.createElement('p');
-    paragraph.textContent = item.text;
+    paragraph.textContent = fullText;
     body.append(paragraph);
     const note = document.createElement('p');
     note.className = 'author-answer-note';
@@ -596,14 +608,16 @@
     toggle.addEventListener('click', () => {
       const open = full.hidden;
       full.hidden = !open;
+      preview.hidden = open;
       toggle.textContent = open
-        ? (ru ? 'Свернуть ответ' : 'Hide full answer')
+        ? (ru ? 'Свернуть ответ' : 'Collapse answer')
         : (ru ? 'Показать полный ответ' : 'Read full answer');
       toggle.setAttribute('aria-expanded', String(open));
     });
 
     const choices = document.createElement('div');
     choices.className = 'answer-context author-questionnaire-choices';
+    choices.hidden = true;
     const choicesTitle = document.createElement('strong');
     choicesTitle.textContent = ru ? 'Выборы в опроснике' : 'Questionnaire choices';
     choices.append(choicesTitle);
@@ -618,6 +632,19 @@
 
     const actions = document.createElement('div');
     actions.className = 'answer-actions author-answer-actions';
+    const contextButton = document.createElement('button');
+    contextButton.type = 'button';
+    contextButton.className = 'subtle-button';
+    contextButton.textContent = ru ? 'Дополнительные ответы участника' : 'Participant’s additional answers';
+    contextButton.setAttribute('aria-expanded', 'false');
+    contextButton.addEventListener('click', () => {
+      choices.hidden = !choices.hidden;
+      contextButton.textContent = choices.hidden
+        ? (ru ? 'Дополнительные ответы участника' : 'Participant’s additional answers')
+        : (ru ? 'Скрыть дополнительные ответы' : 'Hide additional answers');
+      contextButton.setAttribute('aria-expanded', String(!choices.hidden));
+    });
+
     const reaction = document.createElement('button');
     reaction.type = 'button';
     reaction.className = 'reaction-button';
@@ -642,8 +669,8 @@
       }
     });
 
-    card.append(top, toggle, full, choices, actions);
-    actions.append(reaction, share);
+    card.append(top, preview, toggle, full, actions, choices);
+    actions.append(contextButton, reaction, share);
     return card;
   }
   function fill(list, kind) {
