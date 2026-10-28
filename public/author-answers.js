@@ -479,7 +479,30 @@
         choices.append(row);
       });
 
-      card.append(choices);
+      const actions = document.createElement('div');
+      actions.className = 'answer-actions author-answer-actions';
+      const reaction = document.createElement('button');
+      reaction.type = 'button';
+      reaction.className = 'reaction-button';
+      reaction.disabled = true;
+      reaction.textContent = ru ? '♡ Интересная мысль · –' : '♡ Interesting thought · –';
+      reaction.title = ru ? 'Авторский ответ не участвует в подсчёте реакций' : 'Reactions are not counted for the author answer';
+      const share = document.createElement('button');
+      share.type = 'button';
+      share.className = 'subtle-button';
+      share.textContent = ru ? 'Поделиться ответом' : 'Share answer';
+      share.addEventListener('click', async () => {
+        const url = new URL(window.location.href);
+        url.hash = 'author-answer-1';
+        try {
+          await navigator.clipboard.writeText(url.toString());
+          share.textContent = ru ? 'Ссылка скопирована' : 'Link copied';
+        } catch {
+          window.location.hash = 'author-answer-1';
+        }
+      });
+      actions.append(reaction, share);
+      card.append(choices, actions);
     }
 
     if (kind === 'volunteer') {
