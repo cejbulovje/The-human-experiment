@@ -126,7 +126,8 @@ test('goal and privacy page text keys exist in every locale', () => {
 
 test('hypothetical-preferences page defines all translation fields for every locale', () => {
   const source = readFileSync(new URL('../public/preferences-i18n.js', import.meta.url), 'utf8');
-  const starts = [...source.matchAll(/^\s{4}(ru|en|es|pt|zh|de|ja|fr|ar): \{/gm)];
+  const localeSource = source.slice(0, source.indexOf('  const sharedKey'));
+  const starts = [...localeSource.matchAll(/^\s{4}(ru|en|es|pt|zh|de|ja|fr|ar): \{/gm)];
   assert.equal(starts.length, locales.length, 'preferences page must define all nine locales');
   const requiredKeys = [
     'name', 'dir', 'title', 'skip', 'resultLink', 'eyebrow', 'heading', 'lead', 'tag',
