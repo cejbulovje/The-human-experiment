@@ -1,5 +1,8 @@
 const CORS_HEADERS = { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff', 'x-frame-options': 'DENY', 'referrer-policy': 'strict-origin-when-cross-origin', 'permissions-policy': 'camera=(), microphone=(), geolocation=()' };
 const THRESHOLD = 100;
+const AUTHOR_COLLECTIVE_PUBLIC_ID = 'author-answer-1';
+const AUTHOR_COLLECTIVE_CHOICES = { q2: 3, q3: 2, q4: 5 };
+const AUTHOR_PERSONAL_ANSWERS = { scope: 'trust_conditions', motivation: ['reality', 'similarity', 'contribute', 'other'] };
 const OPTIONS = {
   q2: { en:['Appearance or body','Character or personality','Lifestyle or habits','Everything I consider necessary','I would change nothing','I would let them decide what to change','Other'], ru:['Внешность или тело','Характер или личность','Образ жизни или привычки','Всё, что посчитал бы нужным','Ничего не стал бы менять','Предоставил бы ему самому решать, что менять','Другое'] },
   q3: { en:['Respect their wishes','Try to reach an agreement','Do what I wanted anyway','It would depend on the situation','Other'], ru:['Уважал бы его желания','Попытался бы договориться','Всё равно поступил бы по-своему','Решение зависело бы от ситуации','Другое'] },
@@ -119,16 +122,22 @@ export function nextResultsThreshold(publishedThreshold=0){
 }
 async function results(env){
   if(!env.DB)return json({error:'not_configured'},503);
-  const totalRow=await env.DB.prepare('SELECT COUNT(*) AS total FROM responses WHERE is_public=1').first();
-  const total=Number(totalRow?.total||0);
+  const totalRow=await env.DB.prepare("SELECT COUNT(*) AS total FROM responses WHERE is_public=1 AND (public_id IS NULL OR public_id <> 'author-answer-1')").first();
+  const participantTotal=Number(totalRow?.total||0);
+  // The author's collective answer is always one valid response, whether or not the seed migration ran.
+  const total=participantTotal+1;
   if(total<THRESHOLD)return json({unlocked:false,total,threshold:THRESHOLD,remaining:THRESHOLD-total,teaser:true});
   let snapshot=await env.DB.prepare('SELECT published_threshold,total,updated_at,q2,q3,q4,answered FROM public_results_snapshot WHERE id=1').first();
   const publishedThreshold=Number(snapshot?.published_threshold||0);
   const reached=highestReachedResultsThreshold(total,publishedThreshold);
   if(reached>publishedThreshold){
     const getCounts=async(column,question)=>{
-      const rows=await env.DB.prepare(`SELECT ${column} AS choice, COUNT(*) AS count FROM responses WHERE is_public=1 AND ${column} IS NOT NULL GROUP BY ${column}`).all();
+      const rows=await env.DB.prepare(`SELECT ${column} AS choice, COUNT(*) AS count FROM responses WHERE is_public=1 AND (public_id IS NULL OR public_id <> 'author-answer-1') AND ${column} IS NOT NULL GROUP BY ${column}`).all();
       const counts=new Map((rows.results||[]).map(row=>[Number(row.choice),Number(row.count)]));
+      if(Object.hasOwn(AUTHOR_COLLECTIVE_CHOICES,column)){
+        const authorChoice=AUTHOR_COLLECTIVE_CHOICES[column];
+        counts.set(authorChoice,(counts.get(authorChoice)||0)+1);
+      }
       const en=OPTIONS[question].en;const ru=OPTIONS[question].ru;
       const items=en.map((label,index)=>({label:`${label} / ${ru[index]}`,count:counts.get(index)||0})).filter(item=>item.count>0);
       return {items,answered:items.reduce((sum,item)=>sum+item.count,0)};
@@ -151,10 +160,10 @@ async function publicResponses(request,env){
   const requestedId=(url.searchParams.get('id')||'').trim().slice(0,100);
   const requestedNumberRaw=(url.searchParams.get('number')||'').trim();const requestedNumber=/^\d{1,9}$/.test(requestedNumberRaw)?Number(requestedNumberRaw):0;
   const search=(url.searchParams.get('q')||'').trim().slice(0,160);const topic=(url.searchParams.get('topic')||'').trim();const from=(url.searchParams.get('from')||'').slice(0,10);const to=(url.searchParams.get('to')||'').slice(0,10);const sort=url.searchParams.get('sort')||'newest';
-  const publicCountRow=await env.DB.prepare('SELECT COUNT(*) AS total FROM responses WHERE is_public=1').first();
-  const publicTotal=Number(publicCountRow?.total||0);
-  const authorVisible=publicTotal>=THRESHOLD;
-  const clauses=["r.is_public=1"];if(!authorVisible)clauses.push("(r.public_id IS NULL OR r.public_id <> 'author-answer-1')");const binds=[];
+  const publicCountRow=await env.DB.prepare("SELECT COUNT(*) AS total FROM responses WHERE is_public=1 AND (public_id IS NULL OR public_id <> 'author-answer-1')").first();
+  const publicTotal=Number(publicCountRow?.total||0)+1;
+  // The author card is rendered from author-answers.js; never return its seeded DB row as a duplicate.
+  const clauses=["r.is_public=1", "(r.public_id IS NULL OR r.public_id <> 'author-answer-1')"];const binds=[];
   if(requestedNumber>0){clauses.push('r.answer_number=?');binds.push(requestedNumber);}
   if(requestedId){if(/^legacy-\d+$/.test(requestedId)){clauses.push('(r.public_id=? OR (r.public_id IS NULL AND r.id=?))');const legacyId=Number(requestedId.slice(7));binds.push(requestedId,legacyId);}else{clauses.push('r.public_id=?');binds.push(requestedId);}}
   const participantParam=url.searchParams.get('participant');const requestedParticipant=(participantParam||'').trim();
@@ -285,9 +294,9 @@ async function preferencesStats(env){
   if(!env.DB)return json({error:'not_configured'},503);
   try{
     const rows=await env.DB.prepare('SELECT answers_json,language FROM hypothetical_preferences').all();
-    const totals={total:0,languages:{},questions:{priority:{},preserve:{},wishes:{},body:{}}};
+    const totals={total:0,participantTotal:0,authorIncluded:true,unlocked:false,threshold:THRESHOLD,remaining:THRESHOLD,languages:{},questions:{priority:{},preserve:{},wishes:{},body:{},scope:{},motivation:{}}};
     for(const row of rows.results||[]){
-      totals.total++;
+      totals.participantTotal++;
       totals.languages[row.language]=(totals.languages[row.language]||0)+1;
       let answers;try{answers=JSON.parse(row.answers_json);}catch{continue;}
       for(const key of Object.keys(totals.questions)){
@@ -295,6 +304,13 @@ async function preferencesStats(env){
         for(const value of values){if(typeof value==='string')totals.questions[key][value]=(totals.questions[key][value]||0)+1;}
       }
     }
+    // Count the author's personal-preference answer and its actual selected questionnaire choices once.
+    totals.total=totals.participantTotal+1;
+    totals.languages.ru=(totals.languages.ru||0)+1;
+    totals.questions.scope[AUTHOR_PERSONAL_ANSWERS.scope]=(totals.questions.scope[AUTHOR_PERSONAL_ANSWERS.scope]||0)+1;
+    for(const value of AUTHOR_PERSONAL_ANSWERS.motivation){totals.questions.motivation[value]=(totals.questions.motivation[value]||0)+1;}
+    totals.unlocked=totals.total>=THRESHOLD;
+    totals.remaining=Math.max(0,THRESHOLD-totals.total);
     return json({ok:true,stats:totals});
   }catch{return json({error:'preferences_unavailable'},503);}
 }
