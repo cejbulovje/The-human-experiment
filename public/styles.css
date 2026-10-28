@@ -1341,3 +1341,20 @@
   .results-page .hypothetical-answer-tools{grid-template-columns:1fr}
   .results-page .hypothetical-answer-tools .search-field{grid-column:auto}
 }
+
+
+/* Keep written answers as the primary content; secondary questionnaire choices open on demand. */
+.answer-text-wrap .answer-preview,
+.preview-sample-answer .sample-answer-preview {
+  max-width: 72ch;
+  font-size: 1.04rem;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+.preview-sample-answer .sample-answer-preview { margin: 14px 0 8px; }
+.preview-sample-answer .sample-answer-expand {
+  min-height: 30px;
+  padding: 4px 9px;
+  font-size: .76rem;
+}
+.preview-sample-answer .author-questionnaire-choices[hidden] { display: none !important; }
