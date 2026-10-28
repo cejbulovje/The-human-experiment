@@ -138,7 +138,7 @@
       const scopeLabel = (locale.scope || [])[scopeIndex] || selected('scope')[0];
       const motivations = selected('motivation').map(value => (locale.motivation || [])[motivationIndexes[value]] || value);
       const headings = locale.summaryLabels || ['Границы изменений','Мотивация','Ответ'];
-      const lines = ['<strong>' + headings[0] + ':</strong> ' + scopeLabel, '<strong>' + headings[1] + ':</strong> ' + (motivations.length ? motivations.join(', ') : (locale.noSelection || '—'))];
+      const lines = ['<strong>' + headings[0] + ':</strong> ' + scopeLabel, '<strong>' + headings[1] + ':</strong> ' + (motivations.length ? motivations.join(', ') : (locale.noSelection || '–'))];
       const comment = commentField.value.trim();
       if (comment) lines.push('<strong>' + headings[2] + ':</strong> ' + comment.replace(/[&<>"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[char])));
       summary.innerHTML = lines.join('<br><br>');
