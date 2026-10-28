@@ -67,56 +67,35 @@
       <label class="preference-option consent-option"><input type="checkbox" id="preferences-consent" name="consent" value="yes" required><span><strong>Я понимаю, как предполагается использовать ответы, и согласен(на) участвовать в исследовании.</strong></span></label>
 
       <section class="preference-question">
-        <h2 id="preference-question-1">1. Что было бы для вас главным приоритетом?</h2>
-        <p>Выберите один вариант, наиболее близкий вашей позиции.</p>
-        <div class="preference-options" role="group" aria-labelledby="preference-question-1">
-          <label class="preference-option"><input type="radio" name="priority" value="autonomy" required><span><strong>Свобода и самостоятельность</strong><br>Сохранить возможность самому принимать решения.</span></label>
-          <label class="preference-option"><input type="radio" name="priority" value="wellbeing"><span><strong>Благополучие и безопасность</strong><br>Снизить страдания и повысить качество жизни.</span></label>
-          <label class="preference-option"><input type="radio" name="priority" value="trust"><span><strong>Доверие и ответственность</strong><br>Дать другим возможность помочь, но с понятными границами.</span></label>
-          <label class="preference-option"><input type="radio" name="priority" value="context"><span><strong>Зависит от обстоятельств</strong><br>Без конкретной ситуации нельзя выбрать один принцип.</span></label>
+        <h2 id="preference-question-1">1. Что бы ты позволил человечеству изменить в себе?</h2><p>Выбери один вариант.</p>
+        <div class="preference-options" role="radiogroup" aria-labelledby="preference-question-1">
+          <label class="preference-option"><input type="radio" name="scope" value="none" required><span>Ничего не позволил бы менять.</span></label>
+          <label class="preference-option"><input type="radio" name="scope" value="preapproved"><span>Позволил бы менять только то, что сам заранее одобрил.</span></label>
+          <label class="preference-option"><input type="radio" name="scope" value="veto"><span>Позволил бы им решать, что менять, но оставил бы за собой право отказать.</span></label>
+          <label class="preference-option"><input type="radio" name="scope" value="trust"><span>Доверил бы им самостоятельно решать, что менять.</span></label>
+          <label class="preference-option"><input type="radio" name="scope" value="unlimited"><span>Доверил бы им любые изменения без ограничений с моей стороны.</span></label>
+          <label class="preference-option"><input type="radio" name="scope" value="other"><span>Другое.</span></label>
         </div>
       </section>
-
       <section class="preference-question">
-        <h2 id="preference-question-2">2. Что особенно важно было бы сохранить?</h2>
-        <p>Можно выбрать несколько пунктов.</p>
+        <h2 id="preference-question-2">2. Что побудило бы тебя стать добровольцем этого эксперимента?</h2><p>Можно выбрать несколько вариантов.</p>
         <div class="preference-options" role="group" aria-labelledby="preference-question-2">
-          <label class="preference-option"><input type="checkbox" name="preserve" value="autonomy"><span>Право самостоятельно принимать решения</span></label>
-          <label class="preference-option"><input type="checkbox" name="preserve" value="body"><span>Контроль над собственным телом</span></label>
-          <label class="preference-option"><input type="checkbox" name="preserve" value="identity"><span>Личность и чувство собственной идентичности</span></label>
-          <label class="preference-option"><input type="checkbox" name="preserve" value="safety"><span>Безопасность и физическое благополучие</span></label>
-          <label class="preference-option"><input type="checkbox" name="preserve" value="voice"><span>Возможность быть услышанным</span></label>
+          <label class="preference-option"><input type="checkbox" name="motivation" value="desires"><span>Желание узнать, чего люди на самом деле хотят и о чём мечтают.</span></label>
+          <label class="preference-option"><input type="checkbox" name="motivation" value="reality"><span>Желание увидеть, каким человечество является на самом деле, за пределами публичных образов и заявлений.</span></label>
+          <label class="preference-option"><input type="checkbox" name="motivation" value="hope"><span>Желание понять, есть ли у человечества надежда на лучшее будущее или оно деградирует.</span></label>
+          <label class="preference-option"><input type="checkbox" name="motivation" value="similarity"><span>Желание узнать, насколько люди похожи друг на друга в своих желаниях, несмотря на различия.</span></label>
+          <label class="preference-option"><input type="checkbox" name="motivation" value="understanding"><span>Желание проверить, способны ли люди понимать и учитывать желания друг друга.</span></label>
+          <label class="preference-option"><input type="checkbox" name="motivation" value="contribute"><span>Желание внести собственный вклад в исследование человечества.</span></label>
+          <label class="preference-option"><input type="checkbox" name="motivation" value="curiosity"><span>Любопытство к самому эксперименту и его результатам.</span></label>
+          <label class="preference-option"><input type="checkbox" name="motivation" value="other"><span>Другое.</span></label>
+          <label class="preference-option"><input type="checkbox" name="motivation" value="none"><span>Ничто из перечисленного не побудило бы меня стать добровольцем.</span></label>
         </div>
       </section>
-
       <section class="preference-question">
-        <h2 id="preference-question-3">3. Как следовало бы учитывать ваши желания?</h2>
-        <div class="preference-options" role="group" aria-labelledby="preference-question-3">
-          <label class="preference-option"><input type="radio" name="wishes" value="ask" required><span>Сначала спросить меня и выслушать ответ.</span></label>
-          <label class="preference-option"><input type="radio" name="wishes" value="limits"><span>Действовать только в заранее обозначенных пределах.</span></label>
-          <label class="preference-option"><input type="radio" name="wishes" value="decide"><span>Оставить окончательное решение тому, кто получил власть.</span></label>
-          <label class="preference-option"><input type="radio" name="wishes" value="consent"><span>Получать моё согласие на существенные изменения.</span></label>
-        </div>
-      </section>
-
-      <section class="preference-question">
-        <h2 id="preference-question-4">4. Как следовало бы поступать с изменениями тела?</h2>
-        <div class="preference-options" role="group" aria-labelledby="preference-question-4">
-          <label class="preference-option"><input type="radio" name="body" value="consent" required><span>Допускать их только с моего согласия.</span></label>
-          <label class="preference-option"><input type="radio" name="body" value="discuss"><span>Сначала обсуждать последствия и возможные альтернативы.</span></label>
-          <label class="preference-option"><input type="radio" name="body" value="unimportant"><span>Для меня это не главный вопрос по сравнению с другими приоритетами.</span></label>
-          <label class="preference-option"><input type="radio" name="body" value="context"><span>Это зависит от конкретного изменения и обстоятельств.</span></label>
-        </div>
-      </section>
-
-      <section class="preference-question">
-        <h2 id="preference-question-5">5. Хотите добавить пояснение?</h2>
-        <p>Не указывайте имя, адрес, контакты или другие сведения, по которым можно установить вашу личность.</p>
-        <textarea name="comment" rows="4" maxlength="10000" placeholder="Необязательно" aria-describedby="comment-counter"></textarea>
+        <h2 id="preference-question-3">3. Что бы ты позволил человечеству сделать с твоей жизнью, если бы доверил ему решать твою судьбу?</h2><p>Расскажи своими словами, на что ты был бы готов, а что для тебя было бы недопустимо.</p>
+        <textarea name="comment" rows="5" maxlength="10000" placeholder="Напиши свой ответ…"></textarea>
         <p id="comment-counter" class="privacy-hint" aria-live="polite">0 / 10000</p>
       </section>
-
-
 
       <p class="privacy-hint" id="preferences-submit-status" role="status" aria-live="polite">Отправка отключена до настройки CAPTCHA и проверки конфигурации сервера. Сводка ниже формируется только в этом окне.</p>
       <div class="action-row">
@@ -139,45 +118,29 @@
     const form = document.getElementById('preferences-form');
     const result = document.getElementById('prototype-result');
     const summary = document.getElementById('result-summary');
-    const labels = {
-      priority: { autonomy:'Свобода и самостоятельность', wellbeing:'Благополучие и безопасность', trust:'Доверие и ответственность', context:'Зависит от обстоятельств' },
-      preserve: { autonomy:'Самостоятельность', body:'Контроль над телом', identity:'Личность и идентичность', safety:'Безопасность и благополучие', voice:'Быть услышанным' },
-      wishes: { ask:'Сначала спросить меня', limits:'Действовать в обозначенных пределах', decide:'Оставить решение другому', consent:'Получать согласие на существенные изменения' },
-      body: { consent:'Изменения тела только с согласия', discuss:'Сначала обсуждать последствия', unimportant:'Это не главный приоритет', context:'Зависит от обстоятельств' }
-    };
     const commentField = form.querySelector('textarea[name="comment"]');
     const commentCounter = document.getElementById('comment-counter');
     function updateCommentCounter() { commentCounter.textContent = commentField.value.length.toLocaleString() + ' / 10,000'; }
     commentField.addEventListener('input', updateCommentCounter);
-    function selected(name) {
-      return [...form.querySelectorAll('[name="' + name + '"]:checked')].map(el => el.value);
-    }
+    const motivationInputs = [...form.querySelectorAll('input[name="motivation"]')];
+    const noMotivation = motivationInputs.find(input => input.value === 'none');
+    motivationInputs.forEach(input => input.addEventListener('change', () => {
+      if (input === noMotivation && input.checked) motivationInputs.filter(item => item !== noMotivation).forEach(item => item.checked = false);
+      else if (input !== noMotivation && input.checked && noMotivation) noMotivation.checked = false;
+    }));
+    function selected(name) { return [...form.querySelectorAll('[name="' + name + '"]:checked')].map(el => el.value); }
     document.getElementById('show-summary').addEventListener('click', () => {
-      const requiredFields = [...form.querySelectorAll('[required]')];
-      const firstInvalid = requiredFields.find(field => !field.checkValidity());
-      if (firstInvalid) {
-        firstInvalid.reportValidity();
-        return;
-      }
-      const lines = [];
+      const firstInvalid = [...form.querySelectorAll('[required]')].find(field => !field.checkValidity());
+      if (firstInvalid) { firstInvalid.reportValidity(); return; }
       const locale = window.preferenceLocale || {};
-      const keys = ['priority','preserve','wishes','body'];
-      const indexes = {priority:{autonomy:0,wellbeing:1,trust:2,context:3},preserve:{autonomy:0,body:1,identity:2,safety:3,voice:4},wishes:{ask:0,limits:1,decide:2,consent:3},body:{consent:0,discuss:1,unimportant:2,context:3}};
-      for (const [labelIndex, key] of keys.entries()) {
-        const values = selected(key).map(value => {
-          const translated = locale[key];
-          const index = indexes[key][value];
-          if (translated && index !== undefined) return key === 'priority' ? translated[index].split('|')[0] : translated[index];
-          return labels[key][value] || value;
-        });
-        const heading = (locale.summaryLabels || ['Приоритет','Что сохранить','Учет желаний','Изменения тела'])[labelIndex];
-        lines.push('<strong>' + heading + ':</strong> ' + values.join(', '));
-      }
-      const comment = form.querySelector('textarea[name="comment"]').value.trim();
-      if (comment) {
-        const heading = (locale.summaryLabels || [])[4] || 'Пояснение';
-        lines.push('<strong>' + heading + ':</strong> ' + comment.replace(/[&<>"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[char])));
-      }
+      const scopeIndex = {none:0,preapproved:1,veto:2,trust:3,unlimited:4,other:5}[selected('scope')[0]];
+      const motivationIndexes = {desires:0,reality:1,hope:2,similarity:3,understanding:4,contribute:5,curiosity:6,other:7,none:8};
+      const scopeLabel = (locale.scope || [])[scopeIndex] || selected('scope')[0];
+      const motivations = selected('motivation').map(value => (locale.motivation || [])[motivationIndexes[value]] || value);
+      const headings = locale.summaryLabels || ['Границы изменений','Мотивация','Ответ'];
+      const lines = ['<strong>' + headings[0] + ':</strong> ' + scopeLabel, '<strong>' + headings[1] + ':</strong> ' + (motivations.length ? motivations.join(', ') : (locale.noSelection || '—'))];
+      const comment = commentField.value.trim();
+      if (comment) lines.push('<strong>' + headings[2] + ':</strong> ' + comment.replace(/[&<>"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[char])));
       summary.innerHTML = lines.join('<br><br>');
       result.hidden = false;
       result.scrollIntoView({behavior:'smooth',block:'start'});
