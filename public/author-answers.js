@@ -446,7 +446,7 @@
     });
     card.append(top, toggle, full);
 
-    if (kind === 'volunteer') {
+    if (kind === 'collective') {
       const ru = locale === 'ru';
       const choices = document.createElement('div');
       choices.className = 'answer-context author-questionnaire-choices';
@@ -472,6 +472,11 @@
         choices.append(row);
       });
 
+      card.append(choices);
+    }
+
+    if (kind === 'volunteer') {
+      const ru = locale === 'ru';
       const actions = document.createElement('div');
       actions.className = 'answer-actions author-answer-actions';
       const reaction = document.createElement('button');
