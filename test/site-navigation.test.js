@@ -112,7 +112,7 @@ test('hypothetical preferences prototype cannot submit a native form or send ans
   assert.equal((html.match(/class="preference-question"/g) || []).length, 3);
   assert.match(html, /<h2 id="preference-question-1">1\. Что бы ты позволил человечеству изменить в себе\?<\/h2>/);
   assert.match(html, /\.skip-link:focus\{[^}]*transform:translateY\(0\)/);
-  assert.match(html, /form\.querySelector\('textarea\[name="comment"\]'\)\.value\.trim\(\)/);
+  assert.match(html, /const comment = commentField\.value\.trim\(\)/);
   assert.doesNotMatch(html, /form\.elements\./);
   assert.doesNotMatch(html, /preference-question-6|name="use"/);
   assert.match(html, /id="preferences-consent" name="consent" value="yes" required/);
