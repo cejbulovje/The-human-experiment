@@ -380,7 +380,7 @@
 
     const preview = document.createElement('p');
     preview.className = 'author-answer-preview';
-    if (kind === 'volunteer') preview.textContent = paragraphs[0] || '';
+    preview.textContent = paragraphs[0] || '';
 
     const full = document.createElement('div');
     full.className = 'author-answer-full';
@@ -390,7 +390,7 @@
     heading.textContent = title;
     const body = document.createElement('div');
     body.className = 'author-answer-body';
-    const expandedParagraphs = kind === 'volunteer' ? paragraphs.slice(1) : paragraphs;
+    const expandedParagraphs = paragraphs.slice(1);
     expandedParagraphs.forEach((paragraph, index) => {
       const sourceIndex = kind === 'volunteer' ? index + 1 : index;
       const p = document.createElement('p');
@@ -450,15 +450,14 @@
         full.addEventListener('transitionend', finishClosing);
       }
     });
-    if (kind === 'volunteer') card.append(top, preview, toggle, full);
-    else card.append(top, toggle, full);
+    card.append(top, preview, toggle, full);
 
     if (kind === 'collective') {
       const ru = locale === 'ru';
       const choices = document.createElement('div');
       choices.className = 'answer-context author-questionnaire-choices';
       const choicesTitle = document.createElement('strong');
-      choicesTitle.textContent = ru ? 'Выборы в опроснике' : 'Questionnaire choices';
+      choicesTitle.textContent = ru ? 'Мои дополнительные ответы' : 'My additional answers';
       choices.append(choicesTitle);
       const selected = ru ? [
         ['02. Что бы ты изменил в первую очередь?', 'Всё, что посчитал бы нужным'],
