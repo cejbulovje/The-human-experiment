@@ -454,15 +454,15 @@
       choicesTitle.textContent = ru ? 'Выборы в опроснике' : 'Questionnaire choices';
       choices.append(choicesTitle);
       const selected = ru ? [
-        ['Главный приоритет', 'Свобода и самостоятельность'],
-        ['Что сохранить', 'Самостоятельность; контроль над телом; личность и идентичность'],
-        ['Как учитывать желания', 'Сначала спросить и выслушать'],
-        ['Изменения тела', 'Только с моего согласия']
+        ['02. Что бы ты изменил в первую очередь?', 'Всё, что посчитал бы нужным'],
+        ['03. Если желания человека противоречат твоим?', 'Всё равно поступил бы по-своему'],
+        ['04. Что выбрало бы большинство?', 'Затрудняюсь ответить'],
+        ['Пол', 'Другая идентичность']
       ] : [
-        ['Main priority', 'Freedom and autonomy'],
-        ['What to preserve', 'Autonomy; control over the body; personality and identity'],
-        ['How to consider wishes', 'Ask and listen first'],
-        ['Body changes', 'Only with my consent']
+        ['02. What would you change first?', 'Everything I considered necessary'],
+        ['03. If the person’s wishes conflicted with yours?', 'I would do what I wanted anyway'],
+        ['04. What would the majority choose?', 'Not sure'],
+        ['Gender', 'Another identity']
       ];
       selected.forEach(([question, answer]) => {
         const row = document.createElement('p');
