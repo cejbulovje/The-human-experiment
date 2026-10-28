@@ -122,6 +122,27 @@
 .site-menu-panel{position:absolute;inset-inline-start:0;top:calc(100% + 9px);width:min(250px,calc(100vw - 36px));padding:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 32px #20221f18;display:grid;gap:2px}
 .site-menu-panel a,.site-menu-panel button{display:block;width:100%;padding:10px 12px;border:0;border-radius:8px;background:transparent;color:var(--ink);font:inherit;font-size:.9rem;text-align:start;text-decoration:none;cursor:pointer}
 .site-menu-panel a:hover,.site-menu-panel button:hover{background:var(--accent-2)}
+/* Keep the shared dropdown menu fully styled above page content. */
+.topbar-centered .site-menu{position:relative;z-index:1000}
+.topbar-centered .site-menu-details{position:relative}
+.topbar-centered .site-menu-panel{
+  position:absolute;inset-inline-start:0;top:calc(100% + 9px);
+  display:grid;grid-template-columns:minmax(0,1fr);align-items:stretch;gap:2px;
+  width:min(270px,calc(100vw - 36px));padding:8px;
+  background:var(--card,#fffefa);border:1px solid var(--line,#deded6);
+  border-radius:14px;box-shadow:0 12px 32px #20221f18;z-index:1001;
+}
+.topbar-centered .site-menu-panel>a,
+.topbar-centered .site-menu-panel>button{
+  display:flex;align-items:center;justify-content:flex-start;
+  width:100%;min-height:44px;margin:0;padding:10px 12px;
+  border:0;border-radius:8px;background:transparent;
+  color:var(--ink,#20221f);font:inherit;font-size:.9rem;
+  line-height:1.35;text-align:start;text-decoration:none;white-space:normal;
+}
+.topbar-centered .site-menu-panel>a:hover,
+.topbar-centered .site-menu-panel>button:hover{background:var(--accent-2,#e8eee7)}
+
 [dir="rtl"] .site-menu-panel a,[dir="rtl"] .site-menu-panel button{text-align:right}
 @media(max-width:600px){.topbar-centered{padding:14px 16px;gap:8px;min-height:72px}.topbar-centered .header-brand-centered{gap:5px;max-width:calc(100% - 112px)}.topbar-centered .header-brand-centered .brand-mark{width:54px;height:54px}.topbar-centered .wordmark{font-size:1.125rem;letter-spacing:.08em}.topbar-centered .header-controls{gap:4px}.topbar-centered .header-controls .text-link{display:none}.topbar-centered .header-controls select{max-width:92px;padding:7px 6px;font-size:.75rem}.site-menu-trigger{width:36px;height:36px}}
 
