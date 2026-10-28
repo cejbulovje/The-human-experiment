@@ -594,6 +594,7 @@
       });
       volunteerActions.append(volunteerContextButton, volunteerReaction, volunteerShare);
       card.append(volunteerActions, choices);
+    }
     return card;
   }
 
