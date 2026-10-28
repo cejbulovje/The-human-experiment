@@ -563,11 +563,12 @@
       window.dispatchEvent(new CustomEvent('author-answer-rendered'));
     }
     if (volunteerRoot) {
-      // The author's experiment answer belongs only to collective results, never the personal-preferences stream.
-      volunteerRoot.replaceChildren();
-      volunteerRoot.hidden = true;
-      const emptyState = volunteerRoot.parentElement?.querySelector('.hypothetical-empty-state');
-      if (emptyState) emptyState.hidden = false;
+      volunteerRoot.replaceChildren(makeCard('volunteer', locale));
+      volunteerRoot.hidden = false;
+      const personalList = volunteerRoot.parentElement;
+      if (personalList && personalList.firstElementChild !== volunteerRoot) personalList.prepend(volunteerRoot);
+      const emptyState = personalList?.querySelector('.hypothetical-empty-state');
+      if (emptyState) emptyState.hidden = true;
     }
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', render, { once: true });
