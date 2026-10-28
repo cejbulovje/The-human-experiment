@@ -110,7 +110,7 @@ test('hypothetical preferences prototype cannot submit a native form or send ans
   assert.match(html, /class="skip-link" href="#main-content"/);
   assert.match(html, /<main id="main-content"/);
   assert.equal((html.match(/class="preference-question"/g) || []).length, 3);
-  assert.match(html, /<h2 id="preference-question-1">1\. Что было бы для вас главным приоритетом\?<\/h2>/);
+  assert.match(html, /<h2 id="preference-question-1">1\. Что бы ты позволил человечеству изменить в себе\?<\/h2>/);
   assert.match(html, /\.skip-link:focus\{[^}]*transform:translateY\(0\)/);
   assert.match(html, /form\.querySelector\('textarea\[name="comment"\]'\)\.value\.trim\(\)/);
   assert.doesNotMatch(html, /form\.elements\./);
