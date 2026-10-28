@@ -422,25 +422,26 @@
 
 
 <script>
-/* Preview-only visual samples. They never call APIs or affect real counts/statistics. */
+/* Preview-only sample responses: no API calls, DB writes, stats, or AI-analysis input. */
 (() => {
   if (location.hostname !== 'experiment-hypothetical-preferences-protot-the-human-experiment.cejbulovje.workers.dev') return;
   const samples = {
     collective: [
-      ['Хочу, чтобы у человека была возможность учиться новому и менять профессию, если прежняя перестанет приносить удовлетворение.', 'Жизнь и благополучие', 'Участник · тестовый ответ 1'],
-      ['Я бы начал с безопасной и спокойной среды: без постоянного давления, угроз и необходимости каждый день бороться за базовые потребности.', 'Свобода и границы', 'Участник · тестовый ответ 2'],
-      ['Важно оставить человеку право не соглашаться с большинством. Помощь теряет смысл, если превращается в контроль.', 'Отношения', 'Участник · тестовый ответ 3'],
-      ['Я бы предложил несколько вариантов развития, объяснил их последствия и дал самому человеку выбрать тот, который ему ближе.', 'Характер и привычки', 'Участник · тестовый ответ 4']
+      {text:'Я бы помог человеку получить образование и найти дело, которое ему действительно интересно. Но сначала спросил бы, чего хочет он сам.', choices:[['Что изменить первым','Образ жизни или привычки'],['Если желания расходятся','Попробовать договориться'],['Что выберет большинство','Помочь человеку и улучшить его жизнь']]},
+      {text:'Для меня важно, чтобы человек чувствовал себя в безопасности и мог сам решать, как ему жить. Помощь не должна превращаться в контроль.', choices:[['Что изменить первым','Я бы ничего не менял'],['Если желания расходятся','Уважать его желания'],['Что выберет большинство','Оставить человека таким, какой он есть']]},
+      {text:'Я бы предложил варианты, объяснил последствия и дал человеку время решить. Даже хорошая идея не должна навязываться силой.', choices:[['Что изменить первым','Позволить ему самому решить, что менять'],['Если желания расходятся','Попробовать договориться'],['Что выберет большинство','Предоставить человеку самому решать свою судьбу']]},
+      {text:'Если человек просит о помощи, я готов поддержать его. Но я не считаю, что большинство автоматически знает лучше самого человека.', choices:[['Что изменить первым','Характер или личность'],['Если желания расходятся','Уважать его желания'],['Что выберет большинство','Помочь человеку и улучшить его жизнь']]}
     ],
     hypothetical: [
-      ['Для меня важнее всего иметь достаточно свободы, чтобы самому выбирать, как проводить время и на что тратить силы.', 'Свобода и границы', 'Участник · тестовый ответ 1'],
-      ['Я хотел бы жить ближе к природе, но при этом иметь доступ к хорошей медицине, образованию и интересным людям.', 'Жизнь и благополучие', 'Участник · тестовый ответ 2'],
-      ['Мне важно иметь несколько близких людей, с которыми можно быть собой и говорить честно, без необходимости постоянно что-то доказывать.', 'Отношения', 'Участник · тестовый ответ 3'],
-      ['Я бы выбрал работу, которая даёт ощущение смысла и оставляет достаточно времени для личной жизни.', 'Характер и привычки', 'Участник · тестовый ответ 4']
+      {text:'Для меня главное — самому определять, как жить. Я готов принимать помощь, если сохраняю право отказаться и изменить своё решение.', choices:[['Главный приоритет','Свобода и самостоятельность'],['Что сохранить','Самостоятельность; контроль над телом; личность и идентичность'],['Как учитывать желания','Сначала спросить и выслушать'],['Изменения тела','Только с моего согласия']]},
+      {text:'Я хотел бы чувствовать себя в безопасности и иметь доступ к хорошей медицине, спокойной среде и базовым условиям для жизни.', choices:[['Главный приоритет','Благополучие и безопасность'],['Что сохранить','Безопасность и физическое благополучие; возможность быть услышанным'],['Как учитывать желания','Получать согласие на существенные изменения'],['Изменения тела','Сначала обсуждать последствия и альтернативы']]},
+      {text:'Мне важно, чтобы близкие могли поддерживать меня, но не решали за меня. Доверие возможно только при ясных границах.', choices:[['Главный приоритет','Доверие и ответственность'],['Что сохранить','Право самостоятельно принимать решения; возможность быть услышанным'],['Как учитывать желания','Действовать только в заранее обозначенных пределах'],['Изменения тела','Это зависит от конкретного изменения и обстоятельств']]},
+      {text:'Не думаю, что один принцип подходит на все случаи. Я бы хотел участвовать в обсуждении и понимать последствия каждого серьёзного решения.', choices:[['Главный приоритет','Зависит от обстоятельств'],['Что сохранить','Право самостоятельно принимать решения; контроль над телом; безопасность'],['Как учитывать желания','Сначала спросить и выслушать'],['Изменения тела','Сначала обсуждать последствия и альтернативы']]}
     ]
   };
-  const label = document.documentElement.lang === 'ru' ? 'ТЕСТОВЫЙ ОТВЕТ · НЕ УЧИТЫВАЕТСЯ В СТАТИСТИКЕ' : 'SAMPLE ANSWER · EXCLUDED FROM STATISTICS';
-  function makeSample(text, topic, signature, index) {
+  const ru = document.documentElement.lang === 'ru';
+  const demoLabel = ru ? 'ТЕСТОВЫЙ ОТВЕТ · НЕ УЧИТЫВАЕТСЯ В СТАТИСТИКЕ' : 'SAMPLE ANSWER · EXCLUDED FROM STATISTICS';
+  function makeSample(item, kind, index) {
     const card = document.createElement('article');
     card.className = 'answer-card preview-sample-answer';
     card.dataset.previewSample = String(index);
@@ -448,40 +449,45 @@
     top.className = 'answer-card-top';
     const code = document.createElement('span');
     code.className = 'answer-code';
-    code.textContent = label;
+    code.textContent = demoLabel;
     top.append(code);
     const preview = document.createElement('p');
     preview.className = 'answer-text answer-preview';
-    preview.textContent = text;
+    preview.textContent = item.text;
     const full = document.createElement('p');
     full.className = 'answer-text answer-full-text';
     full.hidden = true;
-    full.textContent = text;
+    full.textContent = item.text;
     const wrap = document.createElement('div');
     wrap.className = 'answer-text-wrap';
     const toggle = document.createElement('button');
     toggle.type = 'button';
     toggle.className = 'answer-expand-toggle';
-    toggle.textContent = 'Читать полностью';
+    toggle.textContent = ru ? 'Читать полностью' : 'Read full answer';
     toggle.setAttribute('aria-expanded', 'false');
     toggle.addEventListener('click', () => {
       const open = full.hidden;
       full.hidden = !open;
       preview.hidden = open;
-      toggle.textContent = open ? 'Свернуть ответ' : 'Читать полностью';
+      toggle.textContent = open ? (ru ? 'Свернуть ответ' : 'Collapse answer') : (ru ? 'Читать полностью' : 'Read full answer');
       toggle.setAttribute('aria-expanded', String(open));
     });
     wrap.append(preview, full, toggle);
-    const meta = document.createElement('div');
-    meta.className = 'answer-meta';
-    const topicTag = document.createElement('span');
-    topicTag.className = 'topic-tag';
-    topicTag.textContent = topic;
-    const who = document.createElement('span');
-    who.className = 'answer-language';
-    who.textContent = signature;
-    meta.append(topicTag, who);
-    card.append(top, wrap, meta);
+    const choices = document.createElement('div');
+    choices.className = 'preview-sample-choices';
+    choices.style.cssText = 'margin-top:14px;padding-top:12px;border-top:1px solid var(--line,#deded5);display:grid;gap:8px;font-size:.86em';
+    const heading = document.createElement('strong');
+    heading.textContent = ru ? 'Выборы в опроснике' : 'Questionnaire choices';
+    choices.append(heading);
+    item.choices.forEach(([question, answer]) => {
+      const row = document.createElement('p');
+      row.style.cssText = 'margin:0;line-height:1.45';
+      const q = document.createElement('strong');
+      q.textContent = question + ': ';
+      row.append(q, document.createTextNode(answer));
+      choices.append(row);
+    });
+    card.append(top, wrap, choices);
     return card;
   }
   function fill(list, kind) {
@@ -489,7 +495,7 @@
     const existing = [...list.querySelectorAll(':scope > .preview-sample-answer')];
     if (existing.length === 4) return;
     existing.forEach(card => card.remove());
-    samples[kind].forEach((item, index) => list.append(makeSample(item[0], item[1], item[2], index + 1)));
+    samples[kind].forEach((item, index) => list.append(makeSample(item, kind, index + 1)));
     const empty = list.querySelector('.hypothetical-empty-state');
     if (empty) empty.hidden = true;
   }
@@ -498,7 +504,7 @@
     fill(document.querySelector('.hypothetical-answer-list'), 'hypothetical');
   }
   document.addEventListener('DOMContentLoaded', render, { once: true });
-  const observer = new MutationObserver(() => render());
+  const observer = new MutationObserver(render);
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('#answer-list, .hypothetical-answer-list').forEach(list => observer.observe(list, { childList: true }));
   }, { once: true });
