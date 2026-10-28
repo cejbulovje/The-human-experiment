@@ -556,52 +556,67 @@
   const ru = document.documentElement.lang === 'ru';
   const demoLabel = ru ? 'ТЕСТОВЫЙ ОТВЕТ · НЕ УЧИТЫВАЕТСЯ В СТАТИСТИКЕ' : 'SAMPLE ANSWER · EXCLUDED FROM STATISTICS';
   function makeSample(item, kind, index) {
+    const locale = document.documentElement.lang || 'en';
+    const ru = locale === 'ru';
     const card = document.createElement('article');
-    card.className = 'answer-card preview-sample-answer';
+    card.className = 'answer-card author-answer-card preview-sample-answer';
     card.dataset.previewSample = String(index);
+
     const top = document.createElement('div');
     top.className = 'answer-card-top';
     const code = document.createElement('span');
     code.className = 'answer-code';
     code.textContent = demoLabel;
     top.append(code);
-    const preview = document.createElement('p');
-    preview.className = 'answer-text answer-preview';
-    preview.textContent = item.text;
-    const full = document.createElement('p');
-    full.className = 'answer-text answer-full-text';
-    full.hidden = true;
-    full.textContent = item.text;
-    const wrap = document.createElement('div');
-    wrap.className = 'answer-text-wrap';
+
     const toggle = document.createElement('button');
     toggle.type = 'button';
-    toggle.className = 'answer-expand-toggle';
-    toggle.textContent = ru ? 'Читать полностью' : 'Read full answer';
+    toggle.className = 'author-answer-toggle';
+    toggle.textContent = ru ? 'Показать полный ответ' : 'Read full answer';
     toggle.setAttribute('aria-expanded', 'false');
+
+    const full = document.createElement('div');
+    full.className = 'author-answer-full';
+    full.hidden = true;
+    const heading = document.createElement('h3');
+    heading.className = 'author-answer-title';
+    heading.textContent = (ru ? 'Демонстрационный ответ №' : 'Sample answer #') + index;
+    const body = document.createElement('div');
+    body.className = 'author-answer-body';
+    const paragraph = document.createElement('p');
+    paragraph.textContent = item.text;
+    body.append(paragraph);
+    const note = document.createElement('p');
+    note.className = 'author-answer-note';
+    note.textContent = ru
+      ? 'Демонстрационный пример. Не является ответом участника и не учитывается в статистике.'
+      : 'Demonstration sample. Not a participant response and excluded from statistics.';
+    full.append(heading, body, note);
+
     toggle.addEventListener('click', () => {
       const open = full.hidden;
       full.hidden = !open;
-      preview.hidden = open;
-      toggle.textContent = open ? (ru ? 'Свернуть ответ' : 'Collapse answer') : (ru ? 'Читать полностью' : 'Read full answer');
+      toggle.textContent = open
+        ? (ru ? 'Свернуть ответ' : 'Hide full answer')
+        : (ru ? 'Показать полный ответ' : 'Read full answer');
       toggle.setAttribute('aria-expanded', String(open));
     });
-    wrap.append(preview, full, toggle);
+
     const choices = document.createElement('div');
-    choices.className = 'preview-sample-choices';
-    choices.style.cssText = 'margin-top:14px;padding-top:12px;border-top:1px solid var(--line,#deded5);display:grid;gap:8px;font-size:.86em';
-    const heading = document.createElement('strong');
-    heading.textContent = ru ? 'Выборы в опроснике' : 'Questionnaire choices';
-    choices.append(heading);
+    choices.className = 'answer-context author-questionnaire-choices';
+    const choicesTitle = document.createElement('strong');
+    choicesTitle.textContent = ru ? 'Выборы в опроснике' : 'Questionnaire choices';
+    choices.append(choicesTitle);
     item.choices.forEach(([question, answer]) => {
-      const row = document.createElement('p');
-      row.style.cssText = 'margin:0;line-height:1.45';
-      const q = document.createElement('strong');
-      q.textContent = question + ': ';
-      row.append(q, document.createTextNode(answer));
+      const row = document.createElement('div');
+      row.className = 'author-questionnaire-answer';
+      const label = document.createElement('strong');
+      label.textContent = question;
+      row.append(label, document.createTextNode(' ' + answer));
       choices.append(row);
     });
-    card.append(top, wrap, choices);
+
+    card.append(top, toggle, full, choices);
     return card;
   }
   function fill(list, kind) {
@@ -615,7 +630,7 @@
   }
   function render() {
     fill(document.getElementById('answer-list'), 'collective');
-    /* Personal preferences have no participant responses yet: keep the honest empty state. */
+    fill(document.querySelector('.hypothetical-answer-list'), 'hypothetical');
   }
   document.addEventListener('DOMContentLoaded', render, { once: true });
   const observer = new MutationObserver(render);
