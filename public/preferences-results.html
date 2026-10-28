@@ -143,7 +143,7 @@
         <label><span class="sr-only">Сортировка</span><select id="hypothetical-sort"><option value="latest">Сначала новые</option></select></label>
         <label class="hypothetical-page-size">Ответов на странице <select id="hypothetical-page-size"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></label>
       </div>
-      <p id="hypothetical-stats" class="method-note" role="status" aria-live="polite">Загрузка статистики…</p><div id="hypothetical-status" class="status-panel" role="status" aria-live="polite" hidden></div><div class="answer-list hypothetical-answer-list">
+      <p id="hypothetical-stats" class="method-note" role="status" aria-live="polite">Загрузка статистики…</p><div id="hypothetical-statistics-breakdown" class="hypothetical-statistics-breakdown" hidden></div><div id="hypothetical-status" class="status-panel" role="status" aria-live="polite" hidden></div><div class="answer-list hypothetical-answer-list">
         <div id="author-answer-hypothetical" hidden></div>
         <article class="status-panel hypothetical-empty-state" hidden>
           <h3 data-voice="emptyTitle">Личных ответов пока нет</h3>
@@ -441,17 +441,86 @@
       } else { pendingLoad=false; pendingReset=false; }
     }
   }
+  function renderPersonalStatistics(data) {
+    const root=section.querySelector('#hypothetical-statistics-breakdown');
+    if(!root) return;
+    root.replaceChildren();
+    if(!data.unlocked){root.hidden=true;return;}
+    const ru=(document.documentElement.lang||'ru').toLowerCase().startsWith('ru');
+    const total=Math.max(1,Number(data.total||0));
+    const options={
+      scope:ru?[
+        ['none','Ничего не позволил бы менять.'],
+        ['preapproved','Позволил бы менять только то, что сам заранее одобрил.'],
+        ['veto','Позволил бы им решать, что менять, но оставил бы за собой право отказать.'],
+        ['trust_conditions','Доверил бы человечеству самостоятельно решать, что менять, сохранив лишь несколько принципиальных условий.'],
+        ['unlimited','Доверил бы им любые изменения без ограничений с моей стороны.'],
+        ['other','Другое.']
+      ]:[
+        ['none','I would allow no changes.'],
+        ['preapproved','Only changes I approved in advance.'],
+        ['veto','Let them choose changes, but keep the right to refuse.'],
+        ['trust_conditions','Trust humanity to decide, with a few fundamental conditions.'],
+        ['unlimited','Allow any changes without restrictions.'],
+        ['other','Other.']
+      ],
+      motivation:ru?[
+        ['desires','Узнать, чего люди на самом деле хотят и о чём мечтают.'],
+        ['reality','Увидеть человечество за пределами публичных образов и заявлений.'],
+        ['hope','Понять, есть ли у человечества надежда на лучшее будущее.'],
+        ['similarity','Узнать, насколько люди похожи в своих желаниях.'],
+        ['understanding','Проверить, способны ли люди учитывать желания друг друга.'],
+        ['contribute','Внести вклад в исследование человечества.'],
+        ['curiosity','Любопытство к эксперименту и его результатам.'],
+        ['other','Другое.'],
+        ['none','Ничто из перечисленного.']
+      ]:[
+        ['desires','Learn what people really want and dream about.'],
+        ['reality','See humanity beyond public images and statements.'],
+        ['hope','Find out whether humanity has hope for a better future.'],
+        ['similarity','Learn how similar people are in their wishes.'],
+        ['understanding','Test whether people can account for each other’s wishes.'],
+        ['contribute','Contribute to the study of humanity.'],
+        ['curiosity','Curiosity about the experiment and its results.'],
+        ['other','Other.'],
+        ['none','None of these.']
+      ]
+    };
+    const renderGroup=(title,key)=>{
+      const group=document.createElement('section');group.className='result-section';
+      const heading=document.createElement('h3');heading.textContent=title;group.append(heading);
+      const bars=document.createElement('div');bars.className='bar-list';
+      for(const [value,labelText] of options[key]){
+        const count=Number(data.questions?.[key]?.[value]||0);
+        const pct=Math.round(count/total*100);
+        const row=document.createElement('div');row.className='bar-row';
+        const label=document.createElement('div');label.className='bar-label';label.textContent=labelText;
+        const track=document.createElement('div');track.className='bar-track';
+        const fill=document.createElement('div');fill.className='bar-fill';fill.style.width=pct+'%';track.append(fill);
+        const valueLabel=document.createElement('div');valueLabel.className='bar-value';valueLabel.textContent=count.toLocaleString()+' · '+pct+'%';
+        row.append(label,track,valueLabel);bars.append(row);
+      }
+      group.append(bars);root.append(group);
+    };
+    renderGroup(ru?'1. Что бы ты позволил человечеству изменить в себе?':'1. What would you allow humanity to change about you?','scope');
+    renderGroup(ru?'2. Что могло бы побудить тебя участвовать?':'2. What might motivate you to participate?','motivation');
+    const note=document.createElement('p');note.className='method-note';note.textContent=ru?'В вопросе 2 можно выбрать несколько вариантов, поэтому проценты могут в сумме превышать 100%. Авторский ответ включён в число ответов и соответствующие варианты.':'Question 2 allows multiple selections, so percentages may add up to more than 100%. The author answer is included in the totals and corresponding choices.';
+    root.append(note);root.hidden=false;
+  }
   async function loadStats() {
     try {
       const response=await fetch('/api/preferences/stats',{headers:{Accept:'application/json'}});
       const data=await response.json();
       if(!response.ok || !data.ok) throw new Error('unavailable');
-      const total=Number(data.stats.total||0);
-      const participants=Number(data.stats.participantTotal||0);
-      const remaining=Number(data.stats.remaining||0);
-      stats.textContent=total<Number(data.stats.threshold||100)
-        ? 'Всего ответов в личном потоке: '+total+' / '+Number(data.stats.threshold||100)+' ('+remaining+' осталось). Ответы участников: '+participants+'. Авторский ответ № 1 включён в подсчёт; статистика откроется после достижения порога.'
+      const summary=data.stats;
+      const total=Number(summary.total||0);
+      const participants=Number(summary.participantTotal||0);
+      const threshold=Number(summary.threshold||100);
+      const remaining=Number(summary.remaining||0);
+      stats.textContent=total<threshold
+        ? 'Всего ответов в личном потоке: '+total+' / '+threshold+' ('+remaining+' осталось). Ответы участников: '+participants+'. Авторский ответ № 1 включён в подсчёт; распределение ответов откроется после достижения порога.'
         : 'Всего ответов в личном потоке: '+total+'. Ответы участников: '+participants+'. Авторский ответ № 1 включён в статистику.';
+      renderPersonalStatistics(summary);
     } catch { stats.textContent='Статистика личных предпочтений временно недоступна.'; }
   }
   const more=node('button','Показать ещё','show-more-button'); more.type='button'; more.id='hypothetical-load-more'; more.hidden=true; more.addEventListener('click',()=>load(false)); status.after(more);
