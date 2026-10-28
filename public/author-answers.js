@@ -483,11 +483,11 @@
       choicesTitle.textContent = ru ? 'Мои дополнительные ответы' : 'My additional answers';
       choices.append(choicesTitle);
       const selected = ru ? [
-        ['Что мне хотелось бы узнать о человечестве?', 'Мне бы было интересно узнать, какое человечество на самом деле, а не то, что показывают в СМИ. Узнать, есть ли надежда или оно деградирует.'],
-        ['Что могло бы побудить меня участвовать в эксперименте?', 'Желание узнать, чего люди на самом деле хотят и о чём мечтают; Желание увидеть, каким человечество является на самом деле, за пределами публичных образов и заявлений; Желание понять, есть ли у человечества надежда на лучшее будущее или оно деградирует.']
+        ['1. Что бы ты позволил человечеству изменить в себе?', 'Доверил бы человечеству самостоятельно решать, что менять, сохранив лишь несколько принципиальных условий.'],
+        ['2. Что могло бы побудить тебя участвовать в эксперименте?', 'Желание увидеть, каким человечество является на самом деле, за пределами публичных образов и заявлений; Желание узнать, насколько люди похожи друг на друга в своих желаниях, несмотря на различия; Желание внести собственный вклад в исследование человечества; Другое: желание узнать, смогут ли люди объединить общие интересы в таком эксперименте, исходя из личных предпочтений каждого, чтобы человечество увидело отражение себя в одном общем человеке.']
       ] : [
-        ['What would I like to learn about humanity?', 'I would like to learn what humanity is really like, beyond what the media shows. Whether there is hope, or whether humanity is declining.'],
-        ['What might motivate me to take part in the experiment?', 'To learn what people really want and dream about; to see what humanity is really like beyond public images and statements; to understand whether humanity has hope for a better future or is declining.']
+        ['1. What would you allow humanity to change about you?', 'I would trust humanity to decide for itself what to change, while preserving a few fundamental conditions.'],
+        ['2. What might motivate you to take part in the experiment?', 'To see what humanity is really like beyond public images and statements; to learn how similar people are in their desires despite their differences; to contribute to the study of humanity; Other: to find out whether people can unite around shared interests in this experiment, based on each person’s individual preferences, so humanity can see its own reflection in one shared person.']
       ];
       selected.forEach(([question, answer]) => {
         const row = document.createElement('p');
