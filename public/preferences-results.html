@@ -566,7 +566,7 @@
     top.className = 'answer-card-top';
     const code = document.createElement('span');
     code.className = 'answer-code';
-    code.textContent = demoLabel;
+    code.textContent = ru ? 'ТЕСТОВЫЙ ОТВЕТ · НЕ УЧИТЫВАЕТСЯ В СТАТИСТИКЕ' : 'SAMPLE ANSWER · EXCLUDED FROM STATISTICS';
     top.append(code);
 
     const toggle = document.createElement('button');
