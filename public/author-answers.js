@@ -380,7 +380,7 @@
 
     const preview = document.createElement('p');
     preview.className = 'author-answer-preview';
-    preview.textContent = paragraphs[0] || '';
+    if (kind === 'volunteer') preview.textContent = paragraphs[0] || '';
 
     const full = document.createElement('div');
     full.className = 'author-answer-full';
@@ -390,7 +390,7 @@
     heading.textContent = title;
     const body = document.createElement('div');
     body.className = 'author-answer-body';
-    const expandedParagraphs = paragraphs.slice(1);
+    const expandedParagraphs = kind === 'volunteer' ? paragraphs.slice(1) : paragraphs;
     expandedParagraphs.forEach((paragraph, index) => {
       const sourceIndex = kind === 'volunteer' ? index + 1 : index;
       const p = document.createElement('p');
@@ -450,14 +450,15 @@
         full.addEventListener('transitionend', finishClosing);
       }
     });
-    card.append(top, preview, toggle, full);
+    if (kind === 'volunteer') card.append(top, preview, toggle, full);
+    else card.append(top, toggle, full);
 
     if (kind === 'collective') {
       const ru = locale === 'ru';
       const choices = document.createElement('div');
       choices.className = 'answer-context author-questionnaire-choices';
       const choicesTitle = document.createElement('strong');
-      choicesTitle.textContent = ru ? 'Мои дополнительные ответы' : 'My additional answers';
+      choicesTitle.textContent = ru ? 'Выборы в опроснике' : 'Questionnaire choices';
       choices.append(choicesTitle);
       const selected = ru ? [
         ['02. Что бы ты изменил в первую очередь?', 'Всё, что посчитал бы нужным'],
@@ -478,41 +479,7 @@
         choices.append(row);
       });
 
-      const collectiveContextButton = document.createElement('button');
-      collectiveContextButton.type = 'button';
-      collectiveContextButton.className = 'subtle-button';
-      collectiveContextButton.textContent = ru ? 'Мои дополнительные ответы' : 'My additional answers';
-      choices.hidden = true;
-      collectiveContextButton.addEventListener('click', () => {
-        choices.hidden = !choices.hidden;
-        collectiveContextButton.textContent = choices.hidden
-          ? (ru ? 'Мои дополнительные ответы' : 'My additional answers')
-          : (ru ? 'Скрыть дополнительные ответы' : 'Hide additional answers');
-      });
-      const collectiveActions = document.createElement('div');
-      collectiveActions.className = 'answer-actions author-answer-actions';
-      const collectiveReaction = document.createElement('button');
-      collectiveReaction.type = 'button';
-      collectiveReaction.className = 'reaction-button';
-      collectiveReaction.disabled = true;
-      collectiveReaction.textContent = ru ? '♡ Интересная мысль · –' : '♡ Interesting thought · –';
-      collectiveReaction.title = ru ? 'Авторский пример не участвует в подсчёте реакций' : 'Reactions are not counted for the author example';
-      const collectiveShare = document.createElement('button');
-      collectiveShare.type = 'button';
-      collectiveShare.className = 'subtle-button';
-      collectiveShare.textContent = ru ? 'Поделиться ответом' : 'Share answer';
-      collectiveShare.addEventListener('click', async () => {
-        const url = new URL(window.location.href);
-        url.hash = 'author-answer-1';
-        try {
-          await navigator.clipboard.writeText(url.toString());
-          collectiveShare.textContent = ru ? 'Ссылка скопирована' : 'Link copied';
-        } catch {
-          window.location.hash = url.hash;
-        }
-      });
-      collectiveActions.append(collectiveContextButton, collectiveReaction, collectiveShare);
-      card.append(collectiveActions, choices);
+      card.append(choices);
     }
 
     if (kind === 'volunteer') {
@@ -559,41 +526,32 @@
         }
         choices.append(row);
       });
-      const volunteerContextButton = document.createElement('button');
-      volunteerContextButton.type = 'button';
-      volunteerContextButton.className = 'subtle-button';
-      volunteerContextButton.textContent = ru ? 'Мои дополнительные ответы' : 'My additional answers';
-      choices.hidden = true;
-      volunteerContextButton.addEventListener('click', () => {
-        choices.hidden = !choices.hidden;
-        volunteerContextButton.textContent = choices.hidden
-          ? (ru ? 'Мои дополнительные ответы' : 'My additional answers')
-          : (ru ? 'Скрыть дополнительные ответы' : 'Hide additional answers');
-      });
-      const volunteerActions = document.createElement('div');
-      volunteerActions.className = 'answer-actions author-answer-actions';
-      const volunteerReaction = document.createElement('button');
-      volunteerReaction.type = 'button';
-      volunteerReaction.className = 'reaction-button';
-      volunteerReaction.disabled = true;
-      volunteerReaction.textContent = ru ? '♡ Интересная мысль · –' : '♡ Interesting thought · –';
-      volunteerReaction.title = ru ? 'Авторский пример не участвует в подсчёте реакций' : 'Reactions are not counted for the author example';
-      const volunteerShare = document.createElement('button');
-      volunteerShare.type = 'button';
-      volunteerShare.className = 'subtle-button';
-      volunteerShare.textContent = ru ? 'Поделиться ответом' : 'Share answer';
-      volunteerShare.addEventListener('click', async () => {
+      const actions = document.createElement('div');
+      actions.className = 'answer-actions author-answer-actions';
+      const reaction = document.createElement('button');
+      reaction.type = 'button';
+      reaction.className = 'reaction-button';
+      reaction.disabled = true;
+      reaction.textContent = ru ? '♡ Интересная мысль · –' : '♡ Interesting thought · –';
+      reaction.title = ru ? 'Авторский пример не участвует в подсчёте реакций' : 'Reactions are not counted for the author example';
+
+      const share = document.createElement('button');
+      share.type = 'button';
+      share.className = 'subtle-button';
+      share.textContent = ru ? 'Поделиться ответом' : 'Share answer';
+      share.addEventListener('click', async () => {
         const url = new URL(window.location.href);
         url.hash = 'author-answer-volunteer';
         try {
           await navigator.clipboard.writeText(url.toString());
-          volunteerShare.textContent = ru ? 'Ссылка скопирована' : 'Link copied';
+          share.textContent = ru ? 'Ссылка скопирована' : 'Link copied';
         } catch {
-          window.location.hash = url.hash;
+          window.location.hash = 'author-answer-volunteer';
         }
       });
-      volunteerActions.append(volunteerContextButton, volunteerReaction, volunteerShare);
-      card.append(volunteerActions, choices);
+
+      card.append(choices, actions);
+      actions.append(reaction, share);
     }
     return card;
   }
