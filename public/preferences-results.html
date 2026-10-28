@@ -620,7 +620,7 @@
     choices.hidden = false;
     const choicesTitle = document.createElement('strong');
     choicesTitle.className = 'author-questionnaire-choices-title';
-    choicesTitle.textContent = ru ? 'Мои дополнительные ответы' : 'My additional answers';
+    choicesTitle.textContent = ru ? 'Дополнительные ответы участника' : 'Participant’s additional answers';
     choices.append(choicesTitle);
     item.choices.forEach(([question, answer], questionIndex) => {
       const section = document.createElement('section');
@@ -650,19 +650,6 @@
 
     const actions = document.createElement('div');
     actions.className = 'answer-actions author-answer-actions';
-    const contextButton = document.createElement('button');
-    contextButton.type = 'button';
-    contextButton.className = 'subtle-button';
-    contextButton.textContent = ru ? 'Скрыть дополнительные ответы' : 'Hide additional answers';
-    contextButton.setAttribute('aria-expanded', 'true');
-    contextButton.addEventListener('click', () => {
-      choices.hidden = !choices.hidden;
-      contextButton.textContent = choices.hidden
-        ? (ru ? 'Дополнительные ответы участника' : 'Participant’s additional answers')
-        : (ru ? 'Скрыть дополнительные ответы' : 'Hide additional answers');
-      contextButton.setAttribute('aria-expanded', String(!choices.hidden));
-    });
-
     const reaction = document.createElement('button');
     reaction.type = 'button';
     reaction.className = 'reaction-button';
@@ -687,8 +674,8 @@
       }
     });
 
-    card.append(top, preview, toggle, full, actions, choices);
-    actions.append(contextButton, reaction, share);
+    card.append(top, preview, toggle, full, choices, actions);
+    actions.append(reaction, share);
     return card;
   }
   function fill(list, kind) {
