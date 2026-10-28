@@ -245,6 +245,8 @@
       });
       if (collective && overview) charts.forEach(chart => { if (chart) chart.hidden = false; });
       const hypotheticalNotice = document.querySelector('.hypothetical-data-notice');
+      const hypotheticalQuestionControl = document.querySelector('.hypothetical-question-control');
+      if (hypotheticalQuestionControl) hypotheticalQuestionControl.hidden = view !== 'question';
       const hypotheticalEmpty = document.querySelector('.hypothetical-empty-state');
       if (hypotheticalNotice) hypotheticalNotice.hidden = view !== 'overview';
       if (hypotheticalEmpty) {
