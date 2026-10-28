@@ -528,15 +528,6 @@
       reaction.textContent = ru ? '♡ Интересная мысль · —' : '♡ Interesting thought · —';
       reaction.title = ru ? 'Авторский пример не участвует в подсчёте реакций' : 'Reactions are not counted for the author example';
 
-      const otherAnswers = document.createElement('button');
-      otherAnswers.type = 'button';
-      otherAnswers.className = 'subtle-button';
-      otherAnswers.textContent = ru ? 'Посмотреть остальные ответы' : 'View other answers';
-      otherAnswers.addEventListener('click', () => {
-        const list = document.querySelector('.hypothetical-answer-list');
-        if (list) list.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-
       const share = document.createElement('button');
       share.type = 'button';
       share.className = 'subtle-button';
@@ -552,15 +543,8 @@
         }
       });
 
-      const correction = document.createElement('button');
-      correction.type = 'button';
-      correction.className = 'subtle-button';
-      correction.textContent = ru ? 'Предложить исправление темы' : 'Suggest a topic correction';
-      correction.disabled = true;
-      correction.title = ru ? 'Для авторского примера тема не сохраняется как запись участника' : 'Topic suggestions are unavailable for the author example';
-
       card.append(choices, actions);
-      actions.append(reaction, otherAnswers, share, correction);
+      actions.append(reaction, share);
     }
     return card;
   }
