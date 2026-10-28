@@ -80,6 +80,8 @@
 .reaction-button:disabled,.show-more-button:disabled{opacity:.55;cursor:wait}
 .answer-context{margin-top:16px;padding:14px 16px;background:var(--accent-2);border-radius:12px;color:var(--ink)}
 .answer-context p{margin:6px 0;font-size:.88rem;line-height:1.55}
+.answer-context-choice-list{display:grid;gap:6px;margin:4px 0 10px;padding-left:1.35rem;font-size:.88rem;line-height:1.55}
+.answer-context-choice-list li{padding-left:3px}
 .show-more-button{display:block;margin:20px auto 0;padding:12px 24px;background:var(--card)}
 #show-more[hidden]{display:none!important}
 #answers-status:empty{display:none}
