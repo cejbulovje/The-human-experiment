@@ -1393,3 +1393,15 @@
 .preview-sample-answer .author-questionnaire-answer-list li {
   padding-left: 2px;
 }
+
+
+/* Personal author answer: keep the opening paragraph visible before expanding the rest. */
+.author-answer-preview {
+  margin: 14px 0 10px;
+  font-size: 1.02rem;
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+.preview-sample-answer .author-questionnaire-choices {
+  margin-top: 14px;
+}
