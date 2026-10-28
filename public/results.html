@@ -438,7 +438,14 @@
       {text:'Не думаю, что один принцип подходит на все случаи. Я бы хотел участвовать в обсуждении и понимать последствия каждого серьёзного решения.', choices:[['Главный приоритет','Зависит от обстоятельств'],['Что сохранить','Право самостоятельно принимать решения; контроль над телом; безопасность'],['Как учитывать желания','Сначала спросить и выслушать'],['Изменения тела','Сначала обсуждать последствия и альтернативы']]}
     ]
   };
-  const ru = document.documentElement.lang === 'ru';
+  const ru = (() => {
+    try {
+      const selectedLanguage = localStorage.getItem('human-experiment-language');
+      return String(selectedLanguage || document.documentElement.lang || 'en').toLowerCase().split('-')[0] === 'ru';
+    } catch {
+      return String(document.documentElement.lang || 'en').toLowerCase().split('-')[0] === 'ru';
+    }
+  })();
   const demoLabel = ru ? 'ТЕСТОВЫЙ ОТВЕТ · НЕ УЧИТЫВАЕТСЯ В СТАТИСТИКЕ' : 'SAMPLE ANSWER · EXCLUDED FROM STATISTICS';
   function makeSample(item, kind, index) {
     const card = document.createElement('article');
