@@ -694,7 +694,17 @@
           ];
       label.textContent = (questionIndex + 1) + '. ' + (kind === 'hypothetical' ? (personalQuestionLabels[questionIndex] || question) : question);
       section.append(label);
-      const answers = String(answer || '').split(';').map(value => value.trim()).filter(Boolean);
+      const personalAnswerTranslations = {
+        'Ничего не позволил бы менять.': 'I would not allow any changes.',
+        'Позволил бы менять только то, что сам заранее одобрил.': 'I would allow only changes I had approved in advance.',
+        'Доверил бы человечеству самостоятельно решать, что менять, сохранив лишь несколько принципиальных условий.': 'I would trust humanity to decide independently what to change, subject to a few fundamental conditions.',
+        'Желание узнать, чего люди на самом деле хотят и о чём мечтают.': 'I want to learn what people really want and dream about.',
+        'Желание проверить, способны ли люди понимать и учитывать желания друг друга.': 'I want to find out whether people can understand and take one another’s wishes into account.',
+        'Желание внести собственный вклад в исследование человечества.': 'I want to contribute to the study of humanity.',
+        'Любопытство к самому эксперименту и его результатам.': 'Curiosity about the experiment and its results.'
+      };
+      const answers = String(answer || '').split(';').map(value => value.trim()).filter(Boolean)
+        .map(value => kind === 'hypothetical' && !ru ? (personalAnswerTranslations[value] || value) : value);
       if (answers.length > 1) {
         const list = document.createElement('ul');
         list.className = 'author-questionnaire-answer-list';
