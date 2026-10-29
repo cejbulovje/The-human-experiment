@@ -1405,3 +1405,10 @@
 .preview-sample-answer .author-questionnaire-choices {
   margin-top: 14px;
 }
+
+
+/* Keep previous/next history navigation consistent in both answer streams. */
+.answer-history-controls{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin:12px 0 24px}
+.answer-history-controls button{min-width:132px}
+.answer-history-controls button[hidden]{display:none!important}
+@media(max-width:520px){.answer-history-controls{gap:8px}.answer-history-controls button{flex:1;min-width:0}}

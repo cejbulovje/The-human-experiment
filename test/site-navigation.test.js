@@ -197,3 +197,19 @@ test('results page separates collective answers from hypothetical preference ans
     }
   }
 });
+
+
+test('both answer streams expose backward and forward history navigation and newest-first defaults', () => {
+  const collectiveHtml = readFileSync(new URL('../public/results.html', import.meta.url), 'utf8');
+  const personalHtml = readFileSync(new URL('../public/preferences-results.html', import.meta.url), 'utf8');
+  const results = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
+  assert.match(collectiveHtml, /id="answers-previous"/);
+  assert.match(collectiveHtml, /id="show-more"/);
+  assert.match(results, /const sort=params.get\('sort'\)\|\|'newest'/);
+  assert.match(results, /loadAnswers\(true,Math\.max\(0,offset-pageSize\)\)/);
+  assert.match(results, /loadAnswers\(true,offset\)/);
+  assert.match(personalHtml, /id="hypothetical-sort"[\s\S]*?value="latest" selected/);
+  assert.match(personalHtml, /id='hypothetical-load-previous'/);
+  assert.match(personalHtml, /id='hypothetical-load-more'/);
+  assert.match(personalHtml, /fillPersonalPage\(Math\.max\(0, Number\(document\.querySelector\('\.hypothetical-answer-list'\)\?\.dataset\.testSamplesPage \|\| 0\) - 1\)\)/);
+});

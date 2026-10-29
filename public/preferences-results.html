@@ -140,7 +140,7 @@
       <div class="answer-tools hypothetical-answer-tools">
         <label class="search-field"><span class="sr-only">Поиск по личным ответам</span><input id="hypothetical-search" type="search" placeholder="Поиск по ответам…"></label>
         <label class="hypothetical-question-control"><span class="sr-only">Вопрос</span><select id="hypothetical-question-filter"><option value="">Все вопросы</option><option value="scope">1. Что я позволю менять</option><option value="motivation">2. Почему я участвую</option></select></label>
-        <label><span class="sr-only">Сортировка</span><select id="hypothetical-sort"><option value="latest">Сначала новые</option></select></label>
+        <label><span class="sr-only">Сортировка</span><select id="hypothetical-sort"><option value="latest" selected>Сначала новые</option></select></label>
         <label class="hypothetical-page-size">Ответов на странице <select id="hypothetical-page-size"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></label>
       </div>
       <p id="hypothetical-stats" class="method-note" role="status" aria-live="polite">Загрузка статистики…</p><div id="hypothetical-statistics-breakdown" class="hypothetical-statistics-breakdown" hidden></div><div id="hypothetical-status" class="status-panel" role="status" aria-live="polite" hidden></div><div class="answer-list hypothetical-answer-list">
@@ -396,7 +396,7 @@
   function rankingUnavailable() {
     return ['popular','unusual'].includes(section.dataset.resultsView);
   }
-  async function load(reset=true) {
+  async function load(reset=true,targetOffset=null) {
     if (rankingUnavailable()) {
       requestId++;
       offset=0;
@@ -413,7 +413,7 @@
     if(busy) { pendingLoad=true; pendingReset=pendingReset||reset; return; }
     const thisRequest = ++requestId;
     busy=true;
-    if(reset){offset=0; list.querySelectorAll('article:not(.hypothetical-empty-state):not(.author-answer-card)').forEach(el=>el.remove());}
+    if(reset){offset=targetOffset===null?0:Math.max(0,targetOffset); list.querySelectorAll('article:not(.hypothetical-empty-state):not(.author-answer-card)').forEach(el=>el.remove());}
     if(empty) empty.hidden=true;
     status.hidden=false; status.textContent='Загружаем реальные ответы…';
     try {
@@ -431,6 +431,8 @@
       status.hidden = section.dataset.resultsView === 'overview' && total === 0;
       const more=section.querySelector('#hypothetical-load-more');
       if(more) more.hidden=offset>=total;
+      const previous=section.querySelector('#hypothetical-load-previous');
+      if(previous) previous.hidden=offset===0;
       if(empty) empty.hidden = section.dataset.resultsView === 'overview' || total > 0;
     } catch {
       if (thisRequest === requestId && !rankingUnavailable()) status.textContent='Не удалось загрузить ответы. Попробуйте позже.';
@@ -543,7 +545,7 @@
       renderPersonalStatistics(summary);
     } catch { stats.textContent='Статистика личных предпочтений временно недоступна.'; }
   }
-  const more=node('button','Показать ещё','show-more-button'); more.type='button'; more.id='hypothetical-load-more'; more.hidden=true; more.addEventListener('click',()=>load(false)); status.after(more);
+  const historyControls=node('div'); historyControls.className='answer-history-controls'; const previous=node('button','← Предыдущие','subtle-button'); previous.type='button'; previous.id='hypothetical-load-previous'; previous.hidden=true; previous.addEventListener('click',()=>load(true,Math.max(0,offset-(Number(pageSize.value)||20)))); const more=node('button','Следующие →','show-more-button'); more.type='button'; more.id='hypothetical-load-more'; more.hidden=true; more.addEventListener('click',()=>load(true,offset)); historyControls.append(previous,more); status.after(historyControls);
   let debounce;
   search.addEventListener('input',()=>{clearTimeout(debounce);debounce=setTimeout(()=>load(true),250);});
   [question,sort,pageSize].forEach(el=>el.addEventListener('change',()=>load(true)));
@@ -723,7 +725,7 @@
     actions.append(reaction, share);
     return card;
   }
-  function fillPersonalPage(reset = true) {
+  function fillPersonalPage(page = 0) {
     const list = document.querySelector('.hypothetical-answer-list');
     if (!list) return;
     const authorRoot = document.getElementById('author-answer-hypothetical');
@@ -733,19 +735,19 @@
     }
     const pageSize = Number(document.getElementById('hypothetical-page-size')?.value) || 20;
     const more = document.getElementById('hypothetical-load-more');
-    let shown = Number(list.dataset.testSamplesShown || 0);
-    if (reset) {
-      list.querySelectorAll(':scope > .preview-sample-answer').forEach(card => card.remove());
-      shown = 0;
-    }
+    const shown = Math.max(0, Number(page) || 0) * pageSize;
+    list.querySelectorAll(':scope > .preview-sample-answer').forEach(card => card.remove());
     const next = Math.min(samples.hypothetical.length, shown + pageSize);
     for (let index = shown; index < next; index += 1) {
       list.append(makeSample(samples.hypothetical[index], 'hypothetical', index + 1));
     }
     list.dataset.testSamplesShown = String(next);
+    list.dataset.testSamplesPage = String(Math.floor(shown / pageSize));
+    const previous = document.getElementById('hypothetical-load-previous');
+    if (previous) previous.hidden = shown === 0;
     if (more) {
       more.hidden = next >= samples.hypothetical.length;
-      more.textContent = ru ? 'Показать ещё тестовые ответы' : 'Show more test answers';
+      more.textContent = ru ? 'Следующие →' : 'Next →';
     }
     const empty = list.querySelector('.hypothetical-empty-state');
     if (empty) empty.hidden = true;
@@ -753,15 +755,20 @@
   function render() {
     // Collective results already have paginated preview responses in results.js.
     // Do not append a second, unpaginated set of cards to that list.
-    fillPersonalPage(true);
+    fillPersonalPage(0);
   }
   document.addEventListener('DOMContentLoaded', render, { once: true });
   document.addEventListener('DOMContentLoaded', () => {
     const more = document.getElementById('hypothetical-load-more');
+    const previous = document.getElementById('hypothetical-load-previous');
     const pageSize = document.getElementById('hypothetical-page-size');
+    previous?.addEventListener('click', event => {
+      event.stopImmediatePropagation();
+      fillPersonalPage(Math.max(0, Number(document.querySelector('.hypothetical-answer-list')?.dataset.testSamplesPage || 0) - 1));
+    }, true);
     more?.addEventListener('click', event => {
       event.stopImmediatePropagation();
-      fillPersonalPage(false);
+      fillPersonalPage(Number(document.querySelector('.hypothetical-answer-list')?.dataset.testSamplesPage || 0) + 1);
     }, true);
     pageSize?.addEventListener('change', event => {
       event.stopImmediatePropagation();
