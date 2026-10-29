@@ -278,7 +278,7 @@ async function publicPreferences(request,env){
   if(question&&!questionKeys.includes(question))return json({error:'invalid_question'},400);
   try{
     const direction=sort==='oldest'?'ASC':'DESC';
-    const rows=await env.DB.prepare(`SELECT id,ROW_NUMBER() OVER (ORDER BY created_at ASC,id ASC)+1 AS answer_number,language,answers_json,comment,created_at FROM hypothetical_preferences ORDER BY created_at ${direction},id ${direction}`).all();
+    const rows=await env.DB.prepare(`SELECT id,ROW_NUMBER() OVER (ORDER BY created_at ASC,id ASC)+1 AS answer_number,language,answers_json,comment,created_at FROM hypothetical_preferences WHERE public_consent=1 ORDER BY created_at ${direction},id ${direction}`).all();
     let answers=(rows.results||[]).map(row=>({
       id:Number(row.id),answerNumber:Number(row.answer_number),language:row.language,answers:JSON.parse(row.answers_json),
       comment:row.comment||'',createdAt:row.created_at
@@ -292,7 +292,7 @@ async function publicPreferences(request,env){
 async function preferencesStats(env){
   if(!env.DB)return json({error:'not_configured'},503);
   try{
-    const rows=await env.DB.prepare('SELECT answers_json,language FROM hypothetical_preferences').all();
+    const rows=await env.DB.prepare('SELECT answers_json,language FROM hypothetical_preferences WHERE aggregate_consent=1').all();
     const totals={total:0,participantTotal:0,authorIncluded:true,unlocked:false,threshold:THRESHOLD,remaining:THRESHOLD,languages:{},questions:{priority:{},preserve:{},wishes:{},body:{},scope:{},motivation:{}}};
     for(const row of rows.results||[]){
       totals.participantTotal++;
@@ -327,7 +327,7 @@ async function submitPreferences(request,env){
     wishes:['ask','limits','decide','consent'],
     body:['consent','discuss','unimportant','context']
   };
-  if(!body||!languages.includes(body.language)||body.consentToStore!==true||!body.answers||typeof body.answers!=='object'||Array.isArray(body.answers)||
+  if(!body||!languages.includes(body.language)||body.consentToStore!==true||typeof body.aggregateConsent!=='boolean'||typeof body.publicConsent!=='boolean'||!body.answers||typeof body.answers!=='object'||Array.isArray(body.answers)||
     Object.keys(body.answers).length!==4||
     Object.entries(allowed).some(([key,values])=>key==='preserve'
       ?(!Array.isArray(body.answers[key])||body.answers[key].some(value=>!values.includes(value)))
@@ -351,7 +351,7 @@ String(body.comment||'').length>10000||
     const deletionTokenHash=await sha256(deletionToken);
     await env.DB.prepare(`INSERT INTO hypothetical_preferences
       (language,answers_json,aggregate_consent,delete_token_hash,created_at,comment,public_consent)
-      VALUES (?,?,?,?,?,?,1)`).bind(body.language,JSON.stringify(body.answers),1,deletionTokenHash,new Date().toISOString(),String(body.comment||'').trim()||null).run();
+      VALUES (?,?,?,?,?,?,?)`).bind(body.language,JSON.stringify(body.answers),body.aggregateConsent?1:0,deletionTokenHash,new Date().toISOString(),String(body.comment||'').trim()||null,body.publicConsent?1:0).run();
     return json({ok:true,deletionToken});
   }catch{return json({ok:false,error:'save_failed'},500);}
 }
@@ -384,7 +384,7 @@ async function aiAnalysis(request,env){
   if(parsed.error)return json({error:parsed.error},parsed.error==='too_large'?413:400);
   const question=typeof parsed.body?.question==='string'?parsed.body.question.trim():'';
   const stream=parsed.body?.stream==='hypothetical'?'hypothetical':'collective';
-  const memoryTable=stream==='hypothetical'?'ai_hypothetical_analysis_memory':'ai_analysis_memory';
+  const memoryTable=stream==='hypothetical'?'ai_hypothetical_analysis_memory_consent_v2':'ai_analysis_memory';
   if(question.length<3||question.length>300)return json({error:'invalid_question'},400);
   const ip=request.headers.get('CF-Connecting-IP')||'unknown';
   const ipHash=await sha256(`${env.RATE_LIMIT_SALT}:ai-daily:${ip}`);
@@ -398,6 +398,7 @@ async function aiAnalysis(request,env){
   try{
     await env.DB.prepare("CREATE TABLE IF NOT EXISTS ai_analysis_memory (id INTEGER PRIMARY KEY CHECK (id = 1), last_response_id INTEGER NOT NULL DEFAULT 0, summary TEXT NOT NULL DEFAULT '', response_count INTEGER NOT NULL DEFAULT 0, updated_at TEXT NOT NULL)").run();
     await env.DB.prepare("CREATE TABLE IF NOT EXISTS ai_hypothetical_analysis_memory (id INTEGER PRIMARY KEY CHECK (id = 1), last_response_id INTEGER NOT NULL DEFAULT 0, summary TEXT NOT NULL DEFAULT '', response_count INTEGER NOT NULL DEFAULT 0, updated_at TEXT NOT NULL)").run();
+    await env.DB.prepare("CREATE TABLE IF NOT EXISTS ai_hypothetical_analysis_memory_consent_v2 (id INTEGER PRIMARY KEY CHECK (id = 1), last_response_id INTEGER NOT NULL DEFAULT 0, summary TEXT NOT NULL DEFAULT '', response_count INTEGER NOT NULL DEFAULT 0, updated_at TEXT NOT NULL)").run();
     await env.DB.prepare("CREATE TABLE IF NOT EXISTS ai_analysis_lock (id INTEGER PRIMARY KEY CHECK (id = 1), token TEXT NOT NULL, expires_at TEXT NOT NULL)").run();
     const already=await env.DB.prepare('SELECT 1 AS used FROM ai_daily_visitors WHERE day=? AND ip_hash=? AND stream=?').bind(day,ipHash,stream).first();
     if(already)return json({error:'visitor_limit'},429);
@@ -412,7 +413,7 @@ async function aiAnalysis(request,env){
     let lastProcessedId=lastId;
     let processedCount=Number(memory?.response_count||0);
     const countRow=stream==='hypothetical'
-      ? await env.DB.prepare('SELECT COUNT(*) AS total FROM hypothetical_preferences WHERE id>?').bind(lastId).first()
+      ? await env.DB.prepare('SELECT COUNT(*) AS total FROM hypothetical_preferences WHERE aggregate_consent=1 AND id>?').bind(lastId).first()
       : await env.DB.prepare('SELECT COUNT(*) AS total FROM responses WHERE is_public=1 AND id>?').bind(lastId).first();
     const newCount=Number(countRow?.total||0);
     const batchSize=5;
@@ -425,7 +426,7 @@ async function aiAnalysis(request,env){
     let cursor=lastId;
     for(let n=0;n<batchCount;n++){
       const rows=stream==='hypothetical'
-        ? await env.DB.prepare("SELECT id,answers_json,language FROM hypothetical_preferences WHERE id>? ORDER BY id ASC LIMIT 5").bind(cursor).all()
+        ? await env.DB.prepare("SELECT id,answers_json,language FROM hypothetical_preferences WHERE aggregate_consent=1 AND id>? ORDER BY id ASC LIMIT 5").bind(cursor).all()
         : await env.DB.prepare("SELECT id,free_answer,signature,language,topic,q2,q3,q4 FROM responses WHERE is_public=1 AND id>? ORDER BY id ASC LIMIT 5").bind(cursor).all();
       const batch=(rows.results||[]).map(r=>stream==='hypothetical'
         ? ({id:Number(r.id),language:r.language,answers:JSON.parse(String(r.answers_json||'{}'))})
