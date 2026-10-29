@@ -135,6 +135,26 @@ test('valid preference submission stores only a deletion-token hash and returns 
   assert.deepEqual(JSON.parse(stored.answers_json),body.answers);
 });
 
+test('personal preference consent choices are stored independently when declined', async t => {
+  const db = createPreferencesDb();
+  t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({success:true}), {status:200,headers:{'content-type':'application/json'}}));
+  const body = {
+    language:'en',
+    answers:{priority:'autonomy',preserve:['identity'],wishes:'ask',body:'consent'},
+    consentToStore:true,
+    aggregateConsent:false,
+    publicConsent:false,
+    turnstileToken:'valid-test-token'
+  };
+  const response = await worker.fetch(new Request('https://example.test/api/preferences', {
+    method:'POST',headers:{'content-type':'application/json','CF-Connecting-IP':'192.0.2.13'},body:JSON.stringify(body)
+  }), {PREFERENCES_ENABLED:'true',DB:db,TURNSTILE_SECRET_KEY:'test-secret',RATE_LIMIT_SALT:'test-salt'});
+  assert.equal(response.status,200);
+  const stored = [...db.records.values()][0];
+  assert.equal(stored.aggregate_consent,0);
+  assert.equal(stored.public_consent,0);
+});
+
 test('deletion token removes the matching preference and unknown token returns same public response', async t => {
   const db = createPreferencesDb();
   t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({success:true}), {status:200,headers:{'content-type':'application/json'}}));
