@@ -294,7 +294,7 @@
         if (text) text.textContent = pair[1];
       }
       const tools = document.querySelector('.hypothetical-answer-tools');
-      if (tools) tools.hidden = view === 'overview';
+      if (tools) tools.hidden = false;
     };
     document.addEventListener('results-language-changed', render);
     streamLinks.forEach(link => link.addEventListener('click', event => {
@@ -593,7 +593,7 @@
   };
   function controls(kind) {
     return kind === 'collective'
-      ? { list: document.getElementById('answer-list'), search: document.getElementById('answer-search'), topic: document.getElementById('topic-filter'), size: document.getElementById('answers-per-page'), more: document.getElementById('show-more'), status: document.getElementById('answers-status'), total: document.getElementById('answer-total') }
+      ? { list: document.getElementById('answer-list'), search: document.getElementById('answer-search'), topic: document.getElementById('topic-filter'), size: document.getElementById('answers-per-page'), more: document.getElementById('show-more'), status: document.getElementById('answers-status'), total: null }
       : { list: document.querySelector('.hypothetical-answer-list'), search: document.getElementById('hypothetical-search'), topic: document.getElementById('hypothetical-question-filter'), size: document.getElementById('hypothetical-page-size'), more: null, status: document.getElementById('hypothetical-status'), total: document.getElementById('hypothetical-stats') };
   }
   function matchingSamples(kind) {
