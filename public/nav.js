@@ -250,4 +250,5 @@
   if (document.readyState === 'complete') applyLabels();
   else document.addEventListener('DOMContentLoaded', applyLabels, { once: true });
   document.querySelectorAll('#language, #page-language').forEach(picker => picker.addEventListener('change', applyLabels));
+  document.addEventListener('results-language-changed', applyLabels);
 })();
