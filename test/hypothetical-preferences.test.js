@@ -112,7 +112,7 @@ test('valid preference submission stores only a deletion-token hash and returns 
   t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({success:true}), {status:200,headers:{'content-type':'application/json'}}));
   const body = {
     language:'en',
-    answers:{priority:'autonomy',preserve:['identity'],wishes:'ask',body:'consent'},
+    answers:{scope:'trust_conditions',motivation:['reality','contribute']},
     aggregateConsent:true,
     consentToStore:true,
     publicConsent:true,
@@ -140,7 +140,7 @@ test('personal preference consent choices are stored independently when declined
   t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({success:true}), {status:200,headers:{'content-type':'application/json'}}));
   const body = {
     language:'en',
-    answers:{priority:'autonomy',preserve:['identity'],wishes:'ask',body:'consent'},
+    answers:{scope:'trust_conditions',motivation:['reality','contribute']},
     consentToStore:true,
     aggregateConsent:false,
     publicConsent:false,
@@ -160,7 +160,7 @@ test('deletion token removes the matching preference and unknown token returns s
   t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({success:true}), {status:200,headers:{'content-type':'application/json'}}));
   const body = {
     language:'en',
-    answers:{priority:'autonomy',preserve:['identity'],wishes:'ask',body:'consent'},
+    answers:{scope:'trust_conditions',motivation:['reality','contribute']},
     aggregateConsent:false,
     consentToStore:true,
     publicConsent:true,
@@ -189,7 +189,7 @@ test('preference submission enforces the three-request rate limit per IP', async
   t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({success:true}), {status:200,headers:{'content-type':'application/json'}}));
   const body = {
     language:'en',
-    answers:{priority:'autonomy',preserve:['identity'],wishes:'ask',body:'consent'},
+    answers:{scope:'trust_conditions',motivation:['reality','contribute']},
     aggregateConsent:true,
     consentToStore:true,
     publicConsent:true,
@@ -221,7 +221,7 @@ test('preference deletion enforces the ten-request rate limit per IP', async t =
     headers:{'content-type':'application/json','CF-Connecting-IP':'192.0.2.15'},
     body:JSON.stringify({
       language:'en',
-      answers:{priority:'autonomy',preserve:['identity'],wishes:'ask',body:'consent'},
+      answers:{scope:'trust_conditions',motivation:['reality','contribute']},
       aggregateConsent:true,
       consentToStore:true,
     publicConsent:true,
@@ -251,7 +251,7 @@ test('preference submission rejects Turnstile failure without writing data', asy
   t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({success:false}), {status:200,headers:{'content-type':'application/json'}}));
   const response = await worker.fetch(new Request('https://example.test/api/preferences', {
     method:'POST',headers:{'content-type':'application/json','CF-Connecting-IP':'192.0.2.13'},
-    body:JSON.stringify({language:'en',answers:{priority:'autonomy',preserve:['identity'],wishes:'ask',body:'consent'},aggregateConsent:true,consentToStore:true,
+    body:JSON.stringify({language:'en',answers:{scope:'trust_conditions',motivation:['reality','contribute']},aggregateConsent:true,consentToStore:true,
     publicConsent:true,turnstileToken:'invalid-token'})
   }), {PREFERENCES_ENABLED:'true',DB:db,TURNSTILE_SECRET_KEY:'test-secret',RATE_LIMIT_SALT:'test-salt'});
   assert.equal(response.status,400);
@@ -269,10 +269,10 @@ test('hypothetical preferences endpoint stays disabled by default', async () => 
   assert.deepEqual(await response.json(), {ok:false,error:'preferences_disabled'});
 });
 
-test('hypothetical preferences requires explicit independent consent choices and rejects unexpected answer values', async () => {
+test('hypothetical preferences requires explicit independent consent choices and validates current questionnaire values', async () => {
   const base = {
     language:'en',
-    answers:{priority:'autonomy',preserve:['identity'],wishes:'ask',body:'consent'},
+    answers:{scope:'trust_conditions',motivation:['reality','contribute']},
     aggregateConsent:true,
     publicConsent:true,
     turnstileToken:'token'
@@ -282,10 +282,11 @@ test('hypothetical preferences requires explicit independent consent choices and
     {...base, consentToStore:false},
     {...base, consentToStore:true, aggregateConsent:undefined},
     {...base, consentToStore:true, publicConsent:undefined},
-    {...base, consentToStore:true,
-    answers:{...base.answers, unexpected:'value'}},
-    {...base, consentToStore:true,
-    publicConsent:true, answers:{...base.answers, priority:'made-up'}}
+    {...base, consentToStore:true, answers:{...base.answers, unexpected:'value'}},
+    {...base, consentToStore:true, answers:{...base.answers, scope:'made-up'}},
+    {...base, consentToStore:true, answers:{...base.answers, motivation:['none','reality']}},
+    {...base, consentToStore:true, answers:{...base.answers, motivation:['reality','reality']}},
+    {...base, consentToStore:true, answers:{...base.answers, motivation:'reality'}}
   ]) {
     const response = await worker.fetch(new Request('https://example.test/api/preferences', {
       method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(body)
@@ -299,11 +300,13 @@ test('personal preference reads and AI analysis enforce separate publication and
   const source = readFileSync(new URL('../src/index.js', import.meta.url), 'utf8');
   assert.match(source, /FROM hypothetical_preferences WHERE public_consent=1 ORDER BY created_at/);
   assert.match(source, /SELECT answers_json,language FROM hypothetical_preferences WHERE aggregate_consent=1/);
-  assert.match(source, /COUNT\(\*\) AS total FROM hypothetical_preferences WHERE aggregate_consent=1 AND id>\?/);
-  assert.match(source, /SELECT id,answers_json,language FROM hypothetical_preferences WHERE aggregate_consent=1 AND id>\?/);
+  assert.match(source, /COUNT\(\*\) AS total FROM hypothetical_preferences WHERE aggregate_consent=1 AND json_type/);
+  assert.match(source, /SELECT id,answers_json,language FROM hypothetical_preferences WHERE aggregate_consent=1 AND json_type/);
   assert.match(source, /ai_hypothetical_analysis_memory_consent_v2/);
   assert.match(source, /body\.aggregateConsent\?1:0/);
   assert.match(source, /body\.publicConsent\?1:0/);
+  assert.match(source, /const questionKeys=\['scope','motivation'\]/);
+  assert.match(source, /questions:\{scope:\{\},motivation:\{\}\}/);
 });
 
 test('preferences endpoint rejects oversized request bodies before storage', async () => {
