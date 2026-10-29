@@ -70,7 +70,7 @@ function applyResultsViewLanguage(){
  const questionFilter=document.querySelector('#hypothetical-question-filter');
  if(questionFilter){const options={ '':'allQuestions',scope:'questionScope',motivation:'questionMotivation',priority:'priority',preserve:'preserve',wishes:'wishes',body:'body'};questionFilter.querySelectorAll('option').forEach(option=>{const key=options[option.value];if(key&&words[key])option.textContent=words[key];});const hiddenLabel=questionFilter.closest('label')?.querySelector('.sr-only');if(hiddenLabel)hiddenLabel.textContent=words.questionLabel;}
  const sort=document.querySelector('#hypothetical-sort');
- if(sort){const label=sort.closest('label')?.querySelector('.sr-only');if(label)label.textContent=words.sort;sort.querySelectorAll('option').forEach(option=>{if(option.value==='latest')option.textContent=words.newest;});}
+ if(sort){const label=sort.closest('label')?.querySelector('.sr-only');if(label)label.textContent=words.sort;sort.querySelectorAll('option').forEach(option=>{if(option.value==='latest')option.textContent=(UI[lang]||UI.en).newest;else if(option.value==='oldest')option.textContent=(UI[lang]||UI.en).oldest;});}
  const personalPageSize=document.querySelector('.hypothetical-page-size');
  if(personalPageSize){const select=personalPageSize.querySelector('select');personalPageSize.firstChild.textContent=words.pageSize+' ';if(select)personalPageSize.append(select);}
  const notice=document.querySelector('.hypothetical-data-notice');

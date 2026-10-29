@@ -267,8 +267,8 @@ export async function runAIWithLease(env,lockToken,messages,maxTokens,heartbeatI
 async function publicPreferences(request,env){
   if(!env.DB)return json({error:'not_configured'},503);
   const url=new URL(request.url);
-  const sort=url.searchParams.get('sort')||'latest';
-  if(!['latest','newest','popular','unusual'].includes(sort))return json({error:'invalid_sort'},400);
+  const sort=url.searchParams.get('sort')||'oldest';
+  if(!['latest','newest','oldest','popular','unusual'].includes(sort))return json({error:'invalid_sort'},400);
   if(['popular','unusual'].includes(sort))return json({error:'ranking_unavailable'},409);
   const limit=Math.min(50,Math.max(1,Number.parseInt(url.searchParams.get('limit')||'20',10)||20));
   const offset=Math.max(0,Number.parseInt(url.searchParams.get('offset')||'0',10)||0);
@@ -277,7 +277,8 @@ async function publicPreferences(request,env){
   const questionKeys=['scope','motivation','priority','preserve','wishes','body'];
   if(question&&!questionKeys.includes(question))return json({error:'invalid_question'},400);
   try{
-    const rows=await env.DB.prepare('SELECT id,language,answers_json,comment,created_at FROM hypothetical_preferences ORDER BY created_at DESC,id DESC').all();
+    const direction=sort==='oldest'?'ASC':'DESC';
+    const rows=await env.DB.prepare(`SELECT id,language,answers_json,comment,created_at FROM hypothetical_preferences ORDER BY created_at ${direction},id ${direction}`).all();
     let answers=(rows.results||[]).map(row=>({
       id:Number(row.id),language:row.language,answers:JSON.parse(row.answers_json),
       comment:row.comment||'',createdAt:row.created_at
