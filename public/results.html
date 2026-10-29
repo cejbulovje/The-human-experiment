@@ -448,59 +448,108 @@
   })();
   const demoLabel = ru ? 'ТЕСТОВЫЙ ОТВЕТ · НЕ УЧИТЫВАЕТСЯ В СТАТИСТИКЕ' : 'SAMPLE ANSWER · EXCLUDED FROM STATISTICS';
   function makeSample(item, kind, index) {
+    const locale = document.documentElement.lang || 'en';
+    const ru = locale === 'ru';
     const card = document.createElement('article');
-    card.className = 'answer-card preview-sample-answer';
+    card.className = 'answer-card author-answer-card preview-sample-answer';
     card.dataset.previewSample = String(index);
+
     const top = document.createElement('div');
     top.className = 'answer-card-top';
     const code = document.createElement('span');
     code.className = 'answer-code';
-    code.textContent = demoLabel;
+    code.textContent = ru ? 'ТЕСТОВЫЙ ОТВЕТ · НЕ УЧИТЫВАЕТСЯ В СТАТИСТИКЕ' : 'SAMPLE ANSWER · EXCLUDED FROM STATISTICS';
     top.append(code);
+
+    const fullText = String(item.text || '');
+    const previewLimit = 650;
+    let previewText = fullText;
+    if (previewText.length > previewLimit) {
+      const cut = previewText.lastIndexOf(' ', previewLimit);
+      previewText = previewText.slice(0, cut > 450 ? cut : previewLimit).trimEnd() + '…';
+    }
     const preview = document.createElement('p');
-    preview.className = 'answer-text answer-preview';
-    preview.textContent = item.text;
-    const full = document.createElement('p');
-    full.className = 'answer-text answer-full-text';
-    full.hidden = true;
-    full.textContent = item.text;
-    const wrap = document.createElement('div');
-    wrap.className = 'answer-text-wrap';
+    preview.className = 'sample-answer-preview';
+    preview.textContent = previewText;
+
     const toggle = document.createElement('button');
     toggle.type = 'button';
-    toggle.className = 'answer-expand-toggle';
-    toggle.textContent = ru ? 'Читать полностью' : 'Read full answer';
+    toggle.className = 'author-answer-toggle sample-answer-expand';
+    toggle.textContent = ru ? 'Показать полный ответ' : 'Read full answer';
     toggle.setAttribute('aria-expanded', 'false');
+    toggle.hidden = previewText === fullText;
+
+    const full = document.createElement('div');
+    full.className = 'author-answer-full';
+    full.hidden = true;
+    const fullHeading = document.createElement('h3');
+    fullHeading.className = 'author-answer-title';
+    fullHeading.textContent = (ru ? 'Демонстрационный ответ №' : 'Sample answer #') + index;
+    const body = document.createElement('div');
+    body.className = 'author-answer-body';
+    const paragraph = document.createElement('p');
+    paragraph.textContent = fullText;
+    body.append(paragraph);
+    const note = document.createElement('p');
+    note.className = 'author-answer-note';
+    note.textContent = ru
+      ? 'Демонстрационный пример. Не является ответом участника и не учитывается в статистике.'
+      : 'Demonstration sample. Not a participant response and excluded from statistics.';
+    full.append(fullHeading, body, note);
+
     toggle.addEventListener('click', () => {
       const open = full.hidden;
       full.hidden = !open;
       preview.hidden = open;
-      toggle.textContent = open ? (ru ? 'Свернуть ответ' : 'Collapse answer') : (ru ? 'Читать полностью' : 'Read full answer');
+      toggle.textContent = open
+        ? (ru ? 'Свернуть ответ' : 'Collapse answer')
+        : (ru ? 'Показать полный ответ' : 'Read full answer');
       toggle.setAttribute('aria-expanded', String(open));
     });
-    wrap.append(preview, full, toggle);
+
     const choices = document.createElement('div');
-    choices.className = 'preview-sample-choices';
-    choices.style.cssText = 'margin-top:14px;padding-top:12px;border-top:1px solid var(--line,#deded5);display:grid;gap:8px;font-size:.86em';
-    const heading = document.createElement('strong');
-    heading.textContent = ru ? 'Выборы в опроснике' : 'Questionnaire choices';
-    choices.append(heading);
+    choices.className = 'answer-context author-questionnaire-choices preview-sample-choices';
+    const choicesTitle = document.createElement('strong');
+    choicesTitle.className = 'author-questionnaire-choices-title';
+    choicesTitle.textContent = ru ? 'Выборы в опроснике' : 'Questionnaire choices';
+    choices.append(choicesTitle);
     item.choices.forEach(([question, answer]) => {
-      const row = document.createElement('p');
-      row.style.cssText = 'margin:0;line-height:1.45';
-      const q = document.createElement('strong');
-      q.textContent = question + ': ';
-      row.append(q, document.createTextNode(answer));
-      choices.append(row);
+      const section = document.createElement('section');
+      section.className = 'author-questionnaire-section';
+      const label = document.createElement('strong');
+      label.className = 'author-questionnaire-question';
+      label.textContent = question;
+      section.append(label);
+      const answers = String(answer || '').split(';').map(value => value.trim()).filter(Boolean);
+      if (answers.length > 1) {
+        const list = document.createElement('ul');
+        list.className = 'author-questionnaire-answer-list';
+        answers.forEach(value => {
+          const li = document.createElement('li');
+          li.textContent = value;
+          list.append(li);
+        });
+        section.append(list);
+      } else {
+        const value = document.createElement('p');
+        value.className = 'author-questionnaire-answer-text';
+        value.textContent = answers[0] || '–';
+        section.append(value);
+      }
+      choices.append(section);
     });
+
     const actions = document.createElement('div');
-    actions.className = 'answer-actions';
+    actions.className = 'answer-actions author-answer-actions';
     const reaction = document.createElement('button');
     reaction.type = 'button';
     reaction.className = 'reaction-button';
     reaction.disabled = true;
     reaction.textContent = ru ? '♡ Интересная мысль · –' : '♡ Interesting thought · –';
-    reaction.title = ru ? 'Тестовый ответ не участвует в подсчёте реакций' : 'Reactions are not counted for sample answers';
+    reaction.title = ru
+      ? 'Демонстрационный пример не участвует в подсчёте реакций'
+      : 'Reactions are not counted for the demonstration sample';
+
     const share = document.createElement('button');
     share.type = 'button';
     share.className = 'subtle-button';
@@ -515,8 +564,9 @@
         window.location.hash = url.hash;
       }
     });
+
     actions.append(reaction, share);
-    card.append(top, wrap, choices, actions);
+    card.append(top, preview, toggle, full, choices, actions);
     return card;
   }
   function fill(list, kind) {
