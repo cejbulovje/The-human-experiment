@@ -616,6 +616,13 @@
     code.textContent = ru ? '№ ' + (index + 1) + ' · ТЕСТОВЫЙ ОТВЕТ · НЕ УЧИТЫВАЕТСЯ В СТАТИСТИКЕ' : '# ' + (index + 1) + ' · SAMPLE ANSWER · EXCLUDED FROM STATISTICS';
     top.append(code);
 
+    const freeTextQuestion = document.createElement('section');
+    freeTextQuestion.className = 'author-questionnaire-section sample-free-text-question';
+    const freeTextLabel = document.createElement('strong');
+    freeTextLabel.className = 'author-questionnaire-question';
+    freeTextLabel.textContent = '3. Что бы ты позволил человечеству сделать с твоей жизнью, если бы доверил ему решать твою судьбу?';
+    freeTextQuestion.append(freeTextLabel);
+
     const preview = document.createElement('p');
     preview.className = 'sample-answer-preview';
     const fullText = String(item.text || '');
@@ -721,7 +728,11 @@
       }
     });
 
-    card.append(top, preview, toggle, full, choices, actions);
+    if (kind === 'hypothetical') {
+      card.append(top, freeTextQuestion, preview, toggle, full, choices, actions);
+    } else {
+      card.append(top, preview, toggle, full, choices, actions);
+    }
     actions.append(reaction, share);
     return card;
   }
