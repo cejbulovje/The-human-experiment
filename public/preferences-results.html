@@ -412,11 +412,117 @@
     body:{consent:'Допускать изменения только с моего согласия',discuss:'Сначала обсуждать последствия и альтернативы',unimportant:'Это не главный вопрос по сравнению с другими приоритетами',context:'Зависит от конкретного изменения и обстоятельств'}
   };
   const names = {scope:'Что я позволю менять',motivation:'Почему я участвую',priority:'Главный приоритет',preserve:'Что важно сохранить',wishes:'Как учитывать желания',body:'Изменения тела'};
+  const otherNamesByLanguage = {en:{priority:'Main priority',preserve:'What to preserve',wishes:'How wishes should be considered',body:'Bodily changes'},es:{priority:'Prioridad principal',preserve:'Qué preservar',wishes:'Cómo tener en cuenta los deseos',body:'Cambios corporales'},pt:{priority:'Prioridade principal',preserve:'O que preservar',wishes:'Como considerar os desejos',body:'Mudanças corporais'},zh:{priority:'首要考虑',preserve:'需要保留什么',wishes:'如何考虑个人意愿',body:'身体变化'},de:{priority:'Höchste Priorität',preserve:'Was bewahrt werden soll',wishes:'Wie Wünsche berücksichtigt werden sollen',body:'Körperliche Veränderungen'},ja:{priority:'最優先事項',preserve:'守りたいもの',wishes:'希望をどう考慮するか',body:'身体の変化'},fr:{priority:'Priorité principale',preserve:'Ce qu’il faut préserver',wishes:'Comment tenir compte des souhaits',body:'Modifications corporelles'},ar:{priority:'الأولوية الرئيسية',preserve:'ما يجب الحفاظ عليه',wishes:'كيفية مراعاة الرغبات',body:'التغييرات الجسدية'}};
+  const personalResultsMessages = {
+    en: {
+      anonymous:'Anonymous participant', loading:'Loading public answers…', shown:(shown,total)=>`Showing ${shown} of ${total} public answers.`, noAnswers:'No public answers yet.', loadError:'Could not load answers. Please try again later.',
+      popularUnavailable:'Popularity cannot be determined yet because participant reactions are not implemented.', unusualUnavailable:'Unusual answers cannot be identified yet because the comparison algorithm is not implemented.',
+      statsLoading:'Loading personal-preference statistics…', statsUnavailable:'Personal-preference statistics are temporarily unavailable.',
+      statsDemo:'TEST MODE: simulating 101 answers. Sample cards are not saved and are excluded from real statistics.',
+      statsLocked:(total,threshold,remaining,participants)=>`Total answers in the personal stream: ${total} / ${threshold} (${remaining} remaining). Participant answers: ${participants}. The author answer #1 is included in the count; distributions unlock when the threshold is reached.`,
+      statsOpen:(total,participants)=>`Total answers in the personal stream: ${total}. Participant answers: ${participants}. The author answer #1 is included in the statistics.`,
+      scopeTitle:'1. What would you allow humanity to change about you?', motivationTitle:'2. What might motivate you to take part?', multiNote:'Question 2 allows multiple selections, so percentages may add up to more than 100%. The author answer is included in the totals and corresponding choices.',
+      scope:['I would allow no changes.','Only changes I approved in advance.','Let them choose changes, but keep the right to refuse.','Trust humanity to decide, with a few fundamental conditions.','Allow any changes without restrictions.','Other.'],
+      motivation:['Learn what people really want and dream about.','See humanity beyond public images and statements.','Find out whether humanity has hope for a better future.','Learn how similar people are in their wishes.','Test whether people can account for each other’s wishes.','Contribute to the study of humanity.','Curiosity about the experiment and its results.','Other.','None of these.']
+    },
+    ru: {
+      anonymous:'Анонимный участник', loading:'Загружаем публичные ответы…', shown:(shown,total)=>`Показано ${shown} из ${total} публичных ответов.`, noAnswers:'Публичных ответов пока нет.', loadError:'Не удалось загрузить ответы. Попробуйте позже.',
+      popularUnavailable:'Популярность пока нельзя определить: реакции участников ещё не реализованы.', unusualUnavailable:'Выделять необычные ответы пока нельзя: алгоритм сравнения ответов ещё не реализован.',
+      statsLoading:'Загрузка статистики личных предпочтений…', statsUnavailable:'Статистика личных предпочтений временно недоступна.',
+      statsDemo:'ТЕСТОВЫЙ РЕЖИМ: имитация 101 ответа. Тестовые карточки не сохраняются и не входят в реальную статистику.',
+      statsLocked:(total,threshold,remaining,participants)=>`Всего ответов в личном потоке: ${total} / ${threshold} (осталось ${remaining}). Ответы участников: ${participants}. Авторский ответ № 1 включён в подсчёт; распределение откроется после достижения порога.`,
+      statsOpen:(total,participants)=>`Всего ответов в личном потоке: ${total}. Ответы участников: ${participants}. Авторский ответ № 1 включён в статистику.`,
+      scopeTitle:'1. Что бы ты позволил человечеству изменить в себе?', motivationTitle:'2. Что могло бы побудить тебя участвовать?', multiNote:'В вопросе 2 можно выбрать несколько вариантов, поэтому проценты могут в сумме превышать 100%. Авторский ответ включён в число ответов и соответствующие варианты.',
+      scope:['Ничего не позволил бы менять.','Позволил бы менять только то, что сам заранее одобрил.','Позволил бы им решать, что менять, но оставил бы за собой право отказать.','Доверил бы человечеству самостоятельно решать, что менять, сохранив лишь несколько принципиальных условий.','Доверил бы им любые изменения без ограничений с моей стороны.','Другое.'],
+      motivation:['Узнать, чего люди на самом деле хотят и о чём мечтают.','Увидеть человечество за пределами публичных образов и заявлений.','Понять, есть ли у человечества надежда на лучшее будущее.','Узнать, насколько люди похожи в своих желаниях.','Проверить, способны ли люди учитывать желания друг друга.','Внести вклад в исследование человечества.','Любопытство к эксперименту и его результатам.','Другое.','Ничто из перечисленного.']
+    },
+    es: {
+      anonymous:'Participante anónimo', loading:'Cargando respuestas públicas…', shown:(shown,total)=>`Se muestran ${shown} de ${total} respuestas públicas.`, noAnswers:'Todavía no hay respuestas públicas.', loadError:'No se pudieron cargar las respuestas. Inténtalo de nuevo más tarde.',
+      popularUnavailable:'Aún no se puede determinar la popularidad porque las reacciones de los participantes no están implementadas.', unusualUnavailable:'Aún no se pueden identificar respuestas inusuales porque el algoritmo de comparación no está implementado.',
+      statsLoading:'Cargando estadísticas de preferencias personales…', statsUnavailable:'Las estadísticas de preferencias personales no están disponibles temporalmente.',
+      statsDemo:'MODO DE PRUEBA: simulación de 101 respuestas. Las tarjetas de muestra no se guardan ni cuentan en las estadísticas reales.',
+      statsLocked:(total,threshold,remaining,participants)=>`Respuestas en el flujo personal: ${total} / ${threshold} (faltan ${remaining}). Respuestas de participantes: ${participants}. La respuesta del autor n.º 1 está incluida; la distribución se abrirá al alcanzar el umbral.`,
+      statsOpen:(total,participants)=>`Respuestas en el flujo personal: ${total}. Respuestas de participantes: ${participants}. La respuesta del autor n.º 1 está incluida en las estadísticas.`,
+      scopeTitle:'1. ¿Qué permitirías que la humanidad cambiara de ti?', motivationTitle:'2. ¿Qué podría motivarte a participar?', multiNote:'La pregunta 2 permite varias opciones, por lo que los porcentajes pueden superar el 100 %. La respuesta del autor está incluida en los totales y las opciones correspondientes.',
+      scope:['No permitiría ningún cambio.','Solo permitiría cambios aprobados de antemano.','Dejaría elegir los cambios, pero conservaría el derecho a rechazarlos.','Confiaría en la humanidad con algunas condiciones fundamentales.','Permitiría cualquier cambio sin restricciones.','Otro.'],
+      motivation:['Descubrir qué quiere y sueña realmente la gente.','Ver a la humanidad más allá de las imágenes y declaraciones públicas.','Saber si la humanidad tiene esperanza de un futuro mejor.','Descubrir cuánto se parecen las personas en sus deseos.','Comprobar si las personas pueden tener en cuenta los deseos de los demás.','Contribuir al estudio de la humanidad.','Curiosidad por el experimento y sus resultados.','Otro.','Ninguna de estas opciones.']
+    },
+    pt: {
+      anonymous:'Participante anônimo', loading:'Carregando respostas públicas…', shown:(shown,total)=>`Exibindo ${shown} de ${total} respostas públicas.`, noAnswers:'Ainda não há respostas públicas.', loadError:'Não foi possível carregar as respostas. Tente novamente mais tarde.',
+      popularUnavailable:'Ainda não é possível determinar a popularidade porque as reações dos participantes não foram implementadas.', unusualUnavailable:'Ainda não é possível identificar respostas incomuns porque o algoritmo de comparação não foi implementado.',
+      statsLoading:'Carregando estatísticas de preferências pessoais…', statsUnavailable:'As estatísticas de preferências pessoais estão temporariamente indisponíveis.',
+      statsDemo:'MODO DE TESTE: simulação de 101 respostas. Os cartões de exemplo não são salvos nem entram nas estatísticas reais.',
+      statsLocked:(total,threshold,remaining,participants)=>`Total de respostas no fluxo pessoal: ${total} / ${threshold} (faltam ${remaining}). Respostas de participantes: ${participants}. A resposta do autor nº 1 está incluída; a distribuição será liberada ao atingir o limite.`,
+      statsOpen:(total,participants)=>`Total de respostas no fluxo pessoal: ${total}. Respostas de participantes: ${participants}. A resposta do autor nº 1 está incluída nas estatísticas.`,
+      scopeTitle:'1. O que você permitiria que a humanidade mudasse em você?', motivationTitle:'2. O que poderia motivar você a participar?', multiNote:'A pergunta 2 permite várias seleções, então os percentuais podem ultrapassar 100%. A resposta do autor está incluída nos totais e nas opções correspondentes.',
+      scope:['Não permitiria nenhuma mudança.','Apenas mudanças aprovadas previamente.','Deixaria escolher as mudanças, mas manteria o direito de recusar.','Confiaria na humanidade com algumas condições fundamentais.','Permitiria quaisquer mudanças sem restrições.','Outro.'],
+      motivation:['Descobrir o que as pessoas realmente querem e sonham.','Ver a humanidade além das imagens e declarações públicas.','Descobrir se a humanidade tem esperança de um futuro melhor.','Saber o quanto as pessoas são parecidas em seus desejos.','Verificar se as pessoas conseguem considerar os desejos umas das outras.','Contribuir para o estudo da humanidade.','Curiosidade sobre o experimento e seus resultados.','Outro.','Nenhuma destas opções.']
+    },
+    zh: {
+      anonymous:'匿名参与者', loading:'正在加载公开回答…', shown:(shown,total)=>`正在显示 ${shown} / ${total} 条公开回答。`, noAnswers:'目前还没有公开回答。', loadError:'无法加载回答，请稍后重试。',
+      popularUnavailable:'尚无法判断回答的受欢迎程度，因为参与者反应功能尚未实现。', unusualUnavailable:'尚无法识别特别的回答，因为回答比较算法尚未实现。',
+      statsLoading:'正在加载个人偏好统计…', statsUnavailable:'个人偏好统计暂时无法使用。',
+      statsDemo:'测试模式：模拟 101 条回答。示例卡片不会保存，也不会计入真实统计。',
+      statsLocked:(total,threshold,remaining,participants)=>`个人回答总数：${total} / ${threshold}（还差 ${remaining} 条）。参与者回答：${participants}。作者回答 #1 已计入总数；达到门槛后将开放分布统计。`,
+      statsOpen:(total,participants)=>`个人回答总数：${total}。参与者回答：${participants}。作者回答 #1 已计入统计。`,
+      scopeTitle:'1. 你会允许人类改变你自身的哪些方面？', motivationTitle:'2. 什么可能促使你参与？', multiNote:'问题 2 可多选，因此百分比总和可能超过 100%。作者回答已计入总数及相应选项。',
+      scope:['我不允许任何改变。','只允许我事先批准的改变。','允许他们选择改变，但保留拒绝的权利。','在几项基本条件下信任人类自行决定。','允许不受限制的任何改变。','其他。'],
+      motivation:['了解人们真正想要什么、梦想什么。','了解公众形象和声明之外的真实人类。','了解人类是否仍对更美好的未来抱有希望。','了解人们的愿望有多相似。','检验人们是否能理解并考虑彼此的愿望。','为人类研究作出贡献。','对实验及其结果感到好奇。','其他。','以上都不是。']
+    },
+    de: {
+      anonymous:'Anonyme teilnehmende Person', loading:'Öffentliche Antworten werden geladen…', shown:(shown,total)=>`Es werden ${shown} von ${total} öffentlichen Antworten angezeigt.`, noAnswers:'Noch keine öffentlichen Antworten.', loadError:'Antworten konnten nicht geladen werden. Bitte versuche es später erneut.',
+      popularUnavailable:'Beliebtheit kann noch nicht ermittelt werden, da Reaktionen der Teilnehmenden noch nicht implementiert sind.', unusualUnavailable:'Ungewöhnliche Antworten können noch nicht erkannt werden, da der Vergleichsalgorithmus noch nicht implementiert ist.',
+      statsLoading:'Statistik persönlicher Präferenzen wird geladen…', statsUnavailable:'Die Statistik persönlicher Präferenzen ist vorübergehend nicht verfügbar.',
+      statsDemo:'TESTMODUS: 101 Antworten werden simuliert. Beispielkarten werden nicht gespeichert und zählen nicht zur echten Statistik.',
+      statsLocked:(total,threshold,remaining,participants)=>`Antworten im persönlichen Bereich: ${total} / ${threshold} (noch ${remaining}). Antworten von Teilnehmenden: ${participants}. Die Autorenantwort Nr. 1 ist enthalten; die Verteilung wird nach Erreichen des Schwellenwerts freigeschaltet.`,
+      statsOpen:(total,participants)=>`Antworten im persönlichen Bereich: ${total}. Antworten von Teilnehmenden: ${participants}. Die Autorenantwort Nr. 1 ist in der Statistik enthalten.`,
+      scopeTitle:'1. Was würdest du die Menschheit an dir verändern lassen?', motivationTitle:'2. Was könnte dich zur Teilnahme bewegen?', multiNote:'Bei Frage 2 sind mehrere Antworten möglich, daher kann die Summe der Prozentwerte über 100 % liegen. Die Autorenantwort ist in den Gesamtzahlen und den entsprechenden Optionen enthalten.',
+      scope:['Ich würde keine Änderungen erlauben.','Nur Änderungen, die ich vorher genehmigt habe.','Die Auswahl überlassen, aber das Recht auf Ablehnung behalten.','Der Menschheit mit einigen grundlegenden Bedingungen vertrauen.','Beliebige Änderungen ohne Einschränkungen erlauben.','Sonstiges.'],
+      motivation:['Herausfinden, was Menschen wirklich wollen und erträumen.','Die Menschheit jenseits öffentlicher Bilder und Aussagen sehen.','Herausfinden, ob die Menschheit auf eine bessere Zukunft hoffen kann.','Erfahren, wie ähnlich sich Menschen in ihren Wünschen sind.','Prüfen, ob Menschen die Wünsche anderer berücksichtigen können.','Zur Erforschung der Menschheit beitragen.','Neugier auf das Experiment und seine Ergebnisse.','Sonstiges.','Nichts davon.']
+    },
+    ja: {
+      anonymous:'匿名の参加者', loading:'公開回答を読み込み中…', shown:(shown,total)=>`${total}件中${shown}件の公開回答を表示しています。`, noAnswers:'公開回答はまだありません。', loadError:'回答を読み込めませんでした。後でもう一度お試しください。',
+      popularUnavailable:'参加者のリアクション機能がまだ実装されていないため、人気を判定できません。', unusualUnavailable:'回答を比較するアルゴリズムがまだ実装されていないため、特徴的な回答を判定できません。',
+      statsLoading:'個人の希望に関する統計を読み込み中…', statsUnavailable:'個人の希望に関する統計を一時的に利用できません。',
+      statsDemo:'テストモード：101件の回答をシミュレーションしています。サンプルカードは保存されず、実際の統計にも含まれません。',
+      statsLocked:(total,threshold,remaining,participants)=>`個人回答の合計：${total} / ${threshold}（残り${remaining}件）。参加者の回答：${participants}件。作者の回答 #1 は件数に含まれ、基準に達すると分布が公開されます。`,
+      statsOpen:(total,participants)=>`個人回答の合計：${total}件。参加者の回答：${participants}件。作者の回答 #1 は統計に含まれています。`,
+      scopeTitle:'1. 人類に自分の何を変えてもらいたいですか？', motivationTitle:'2. 参加する動機は何ですか？', multiNote:'質問2では複数選択できるため、割合の合計が100%を超える場合があります。作者の回答は合計と該当項目に含まれています。',
+      scope:['変更を一切認めない。','事前に自分が承認した変更のみ認める。','変更の選択を任せるが、拒否する権利は残す。','いくつかの基本条件を設けて人類に判断を任せる。','制限なくあらゆる変更を認める。','その他。'],
+      motivation:['人々が本当に望み、夢見ていることを知る。','公のイメージや発言を超えた人類の姿を見る。','人類がより良い未来を望めるかを知る。','人々の望みがどれほど似ているかを知る。','人々が互いの望みを理解し考慮できるか確かめる。','人類の研究に貢献する。','実験とその結果への好奇心。','その他。','どれにも当てはまらない。']
+    },
+    fr: {
+      anonymous:'Participant anonyme', loading:'Chargement des réponses publiques…', shown:(shown,total)=>`Affichage de ${shown} réponses publiques sur ${total}.`, noAnswers:'Aucune réponse publique pour le moment.', loadError:'Impossible de charger les réponses. Réessayez plus tard.',
+      popularUnavailable:'La popularité ne peut pas encore être déterminée, car les réactions des participants ne sont pas encore disponibles.', unusualUnavailable:'Les réponses inhabituelles ne peuvent pas encore être identifiées, car l’algorithme de comparaison n’est pas disponible.',
+      statsLoading:'Chargement des statistiques des préférences personnelles…', statsUnavailable:'Les statistiques des préférences personnelles sont temporairement indisponibles.',
+      statsDemo:'MODE TEST : simulation de 101 réponses. Les cartes de démonstration ne sont pas enregistrées et ne comptent pas dans les statistiques réelles.',
+      statsLocked:(total,threshold,remaining,participants)=>`Réponses dans le flux personnel : ${total} / ${threshold} (encore ${remaining}). Réponses des participants : ${participants}. La réponse de l’auteur n° 1 est incluse ; la répartition sera ouverte lorsque le seuil sera atteint.`,
+      statsOpen:(total,participants)=>`Réponses dans le flux personnel : ${total}. Réponses des participants : ${participants}. La réponse de l’auteur n° 1 est incluse dans les statistiques.`,
+      scopeTitle:'1. Que laisseriez-vous l’humanité changer chez vous ?', motivationTitle:'2. Qu’est-ce qui pourrait vous inciter à participer ?', multiNote:'La question 2 autorise plusieurs choix, les pourcentages peuvent donc dépasser 100 %. La réponse de l’auteur est incluse dans les totaux et les choix correspondants.',
+      scope:['Je n’autoriserais aucun changement.','Uniquement les changements approuvés à l’avance.','Laisser choisir les changements tout en gardant le droit de refuser.','Faire confiance à l’humanité avec quelques conditions fondamentales.','Autoriser tout changement sans restriction.','Autre.'],
+      motivation:['Découvrir ce que les gens veulent et rêvent vraiment.','Voir l’humanité au-delà des images et déclarations publiques.','Savoir si l’humanité peut espérer un avenir meilleur.','Découvrir à quel point les souhaits des gens se ressemblent.','Vérifier si les gens peuvent tenir compte des souhaits des autres.','Contribuer à l’étude de l’humanité.','Curiosité pour l’expérience et ses résultats.','Autre.','Aucune de ces réponses.']
+    },
+    ar: {
+      anonymous:'مشارك مجهول', loading:'جارٍ تحميل الإجابات العامة…', shown:(shown,total)=>`يتم عرض ${shown} من ${total} إجابة عامة.`, noAnswers:'لا توجد إجابات عامة بعد.', loadError:'تعذر تحميل الإجابات. حاول مرة أخرى لاحقًا.',
+      popularUnavailable:'لا يمكن تحديد الشعبية بعد لأن تفاعلات المشاركين لم تُنفذ بعد.', unusualUnavailable:'لا يمكن تحديد الإجابات غير المألوفة بعد لأن خوارزمية المقارنة لم تُنفذ بعد.',
+      statsLoading:'جارٍ تحميل إحصاءات التفضيلات الشخصية…', statsUnavailable:'إحصاءات التفضيلات الشخصية غير متاحة مؤقتًا.',
+      statsDemo:'وضع الاختبار: محاكاة 101 إجابة. لا تُحفظ البطاقات التجريبية ولا تدخل في الإحصاءات الفعلية.',
+      statsLocked:(total,threshold,remaining,participants)=>`إجمالي الإجابات في المسار الشخصي: ${total} / ${threshold} (المتبقي ${remaining}). إجابات المشاركين: ${participants}. إجابة صاحب المشروع رقم 1 محسوبة؛ وسيُفتح التوزيع عند بلوغ الحد.`,
+      statsOpen:(total,participants)=>`إجمالي الإجابات في المسار الشخصي: ${total}. إجابات المشاركين: ${participants}. إجابة صاحب المشروع رقم 1 مدرجة في الإحصاءات.`,
+      scopeTitle:'1. ما الذي تسمح للبشرية بتغييره فيك؟', motivationTitle:'2. ما الذي قد يدفعك إلى المشاركة؟', multiNote:'يسمح السؤال الثاني باختيارات متعددة، لذا قد يتجاوز مجموع النسب 100٪. إجابة صاحب المشروع مدرجة في الإجمالي والخيارات ذات الصلة.',
+      scope:['لن أسمح بأي تغييرات.','التغييرات التي وافقت عليها مسبقًا فقط.','أترك لهم اختيار التغييرات مع الاحتفاظ بحق الرفض.','أثق بالبشرية مع وضع بعض الشروط الأساسية.','أسمح بأي تغييرات دون قيود.','أخرى.'],
+      motivation:['معرفة ما يريده الناس ويحلمون به حقًا.','رؤية البشرية بعيدًا عن الصور والتصريحات العامة.','معرفة ما إذا كانت البشرية تأمل في مستقبل أفضل.','معرفة مدى تشابه رغبات الناس.','اختبار قدرة الناس على فهم رغبات بعضهم ومراعاتها.','المساهمة في دراسة البشرية.','الفضول بشأن التجربة ونتائجها.','أخرى.','لا شيء مما سبق.']
+    }
+  };
+  function personalMessages() {
+    const locale = (document.documentElement.lang || 'en').split('-')[0];
+    return personalResultsMessages[locale] || personalResultsMessages.en;
+  }
   function node(tag, text, cls) { const el=document.createElement(tag); if(text!==undefined) el.textContent=text; if(cls) el.className=cls; return el; }
   function renderAnswer(item) {
     const article=node('article',undefined,'answer-card');
     const header=node('div',undefined,'answer-card-header');
-    header.append(node('strong',item.pseudonym || 'Анонимный участник'));
+    header.append(node('strong',item.pseudonym || personalMessages().anonymous));
     header.append(node('time',item.createdAt ? new Date(item.createdAt).toLocaleDateString() : ''));
     article.append(header);
     for(const key of ['scope','motivation','priority','preserve','wishes','body']) {
@@ -438,9 +544,10 @@
       list.querySelectorAll('article:not(.hypothetical-empty-state):not(.author-answer-card)').forEach(el=>el.remove());
       if (empty) empty.hidden=true;
       status.hidden=false;
+      const messages = personalMessages();
       status.textContent = section.dataset.resultsView === 'popular'
-        ? 'Популярность пока нельзя определить: реакции участников ещё не реализованы.'
-        : 'Выделять необычные ответы пока нельзя: алгоритм сравнения ответов ещё не реализован.';
+        ? messages.popularUnavailable
+        : messages.unusualUnavailable;
       const moreButton=section.querySelector('#hypothetical-load-more');
       if(moreButton) moreButton.hidden=true;
       return;
@@ -450,7 +557,7 @@
     busy=true;
     if(reset){offset=targetOffset===null?0:Math.max(0,targetOffset); list.querySelectorAll('article:not(.hypothetical-empty-state):not(.author-answer-card)').forEach(el=>el.remove());}
     if(empty) empty.hidden=true;
-    status.hidden=false; status.textContent='Загружаем реальные ответы…';
+    status.hidden=false; status.textContent=personalMessages().loading;
     try {
       const params=new URLSearchParams({limit:pageSize.value,offset:String(offset),sort:sort.value});
       if(search.value.trim()) params.set('q',search.value.trim());
@@ -462,7 +569,8 @@
       total=data.total;
       data.answers.forEach(item=>list.append(renderAnswer(item)));
       offset+=data.answers.length;
-      status.textContent=total ? 'Показано '+Math.min(offset,total)+' из '+total+' публичных ответов.' : 'Пока нет опубликованных ответов.';
+      const messages = personalMessages();
+      status.textContent=total ? messages.shown(Math.min(offset,total).toLocaleString(document.documentElement.lang||'en'),total.toLocaleString(document.documentElement.lang||'en')) : messages.noAnswers;
       status.hidden = section.dataset.resultsView === 'overview' && total === 0;
       const more=section.querySelector('#hypothetical-load-more');
       if(more) more.hidden=offset>=total;
@@ -470,7 +578,7 @@
       if(previous) previous.hidden=offset===0;
       if(empty) empty.hidden = section.dataset.resultsView === 'overview' || total > 0;
     } catch {
-      if (thisRequest === requestId && !rankingUnavailable()) status.textContent='Не удалось загрузить ответы. Попробуйте позже.';
+      if (thisRequest === requestId && !rankingUnavailable()) status.textContent=personalMessages().loadError;
     } finally {
       busy=false;
       if(pendingLoad && !rankingUnavailable()) {
@@ -485,45 +593,13 @@
     if(!root) return;
     root.replaceChildren();
     if(!data.unlocked){root.hidden=true;return;}
-    const ru=(document.documentElement.lang||'ru').toLowerCase().startsWith('ru');
+    const messages = personalMessages();
+    const locale = (document.documentElement.lang || 'en').split('-')[0];
+    const ru = locale === 'ru';
     const total=Math.max(1,Number(data.total||0));
     const options={
-      scope:ru?[
-        ['none','Ничего не позволил бы менять.'],
-        ['preapproved','Позволил бы менять только то, что сам заранее одобрил.'],
-        ['veto','Позволил бы им решать, что менять, но оставил бы за собой право отказать.'],
-        ['trust_conditions','Доверил бы человечеству самостоятельно решать, что менять, сохранив лишь несколько принципиальных условий.'],
-        ['unlimited','Доверил бы им любые изменения без ограничений с моей стороны.'],
-        ['other','Другое.']
-      ]:[
-        ['none','I would allow no changes.'],
-        ['preapproved','Only changes I approved in advance.'],
-        ['veto','Let them choose changes, but keep the right to refuse.'],
-        ['trust_conditions','Trust humanity to decide, with a few fundamental conditions.'],
-        ['unlimited','Allow any changes without restrictions.'],
-        ['other','Other.']
-      ],
-      motivation:ru?[
-        ['desires','Узнать, чего люди на самом деле хотят и о чём мечтают.'],
-        ['reality','Увидеть человечество за пределами публичных образов и заявлений.'],
-        ['hope','Понять, есть ли у человечества надежда на лучшее будущее.'],
-        ['similarity','Узнать, насколько люди похожи в своих желаниях.'],
-        ['understanding','Проверить, способны ли люди учитывать желания друг друга.'],
-        ['contribute','Внести вклад в исследование человечества.'],
-        ['curiosity','Любопытство к эксперименту и его результатам.'],
-        ['other','Другое.'],
-        ['none','Ничто из перечисленного.']
-      ]:[
-        ['desires','Learn what people really want and dream about.'],
-        ['reality','See humanity beyond public images and statements.'],
-        ['hope','Find out whether humanity has hope for a better future.'],
-        ['similarity','Learn how similar people are in their wishes.'],
-        ['understanding','Test whether people can account for each other’s wishes.'],
-        ['contribute','Contribute to the study of humanity.'],
-        ['curiosity','Curiosity about the experiment and its results.'],
-        ['other','Other.'],
-        ['none','None of these.']
-      ]
+      scope: messages.scope.map((label,i)=>[['none','preapproved','veto','trust_conditions','unlimited','other'][i],label]),
+      motivation: messages.motivation.map((label,i)=>[['desires','reality','hope','similarity','understanding','contribute','curiosity','other','none'][i],label])
     };
     const renderGroup=(title,key)=>{
       const group=document.createElement('section');group.className='result-section';
@@ -541,9 +617,9 @@
       }
       group.append(bars);root.append(group);
     };
-    renderGroup(ru?'1. Что бы ты позволил человечеству изменить в себе?':'1. What would you allow humanity to change about you?','scope');
+    renderGroup(messages.scopeTitle,'scope');
     renderGroup(ru?'2. Что могло бы побудить тебя участвовать?':'2. What might motivate you to participate?','motivation');
-    const note=document.createElement('p');note.className='method-note';note.textContent=ru?'В вопросе 2 можно выбрать несколько вариантов, поэтому проценты могут в сумме превышать 100%. Авторский ответ включён в число ответов и соответствующие варианты.':'Question 2 allows multiple selections, so percentages may add up to more than 100%. The author answer is included in the totals and corresponding choices.';
+    const note=document.createElement('p');note.className='method-note';note.textContent=messages.multiNote;
     root.append(note);root.hidden=false;
   }
   async function loadStats() {
@@ -561,7 +637,7 @@
           motivation: {desires: 30, reality: 18, hope: 12, similarity: 24, understanding: 35, contribute: 28, curiosity: 32, other: 5, none: 4}
         }
       };
-      stats.textContent = 'ТЕСТОВЫЙ РЕЖИМ: имитация 101 ответа. Тестовые карточки не сохраняются и не входят в реальную статистику.';
+      stats.textContent = personalMessages().statsDemo;
       renderPersonalStatistics(summary);
       return;
     }
@@ -574,17 +650,20 @@
       const participants=Number(summary.participantTotal||0);
       const threshold=Number(summary.threshold||100);
       const remaining=Number(summary.remaining||0);
+      const messages = personalMessages();
+      const locale = document.documentElement.lang || 'en';
       stats.textContent=total<threshold
-        ? 'Всего ответов в личном потоке: '+total+' / '+threshold+' ('+remaining+' осталось). Ответы участников: '+participants+'. Авторский ответ № 1 включён в подсчёт; распределение ответов откроется после достижения порога.'
-        : 'Всего ответов в личном потоке: '+total+'. Ответы участников: '+participants+'. Авторский ответ № 1 включён в статистику.';
+        ? messages.statsLocked(total.toLocaleString(locale),threshold.toLocaleString(locale),remaining.toLocaleString(locale),participants.toLocaleString(locale))
+        : messages.statsOpen(total.toLocaleString(locale),participants.toLocaleString(locale));
       renderPersonalStatistics(summary);
-    } catch { stats.textContent='Статистика личных предпочтений временно недоступна.'; }
+    } catch { stats.textContent=personalMessages().statsUnavailable; }
   }
   const historyControls=node('div'); historyControls.className='answer-history-controls'; const previous=node('button','← Предыдущие','subtle-button'); previous.type='button'; previous.id='hypothetical-load-previous'; previous.hidden=true; previous.addEventListener('click',()=>load(true,Math.max(0,offset-(Number(pageSize.value)||20)))); const more=node('button','Следующие →','show-more-button'); more.type='button'; more.id='hypothetical-load-more'; more.hidden=true; more.addEventListener('click',()=>load(true,offset)); historyControls.append(previous,more); status.after(historyControls);
   let debounce;
   search.addEventListener('input',()=>{clearTimeout(debounce);debounce=setTimeout(()=>load(true),250);});
   [question,sort,pageSize].forEach(el=>el.addEventListener('change',()=>load(true)));
   document.querySelectorAll('[data-results-stream="hypothetical"],[data-results-view]').forEach(el=>el.addEventListener('click',()=>{if(section.hidden)return;load(true);loadStats();}));
+  stats.textContent = personalMessages().statsLoading;
   loadStats();
   load(true);
 })();
