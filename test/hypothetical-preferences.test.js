@@ -34,10 +34,10 @@ function createPreferencesDb() {
         },
         async run() {
           if (sql.includes('INSERT INTO hypothetical_preferences')) {
-            const [language, answers_json, aggregate_consent, delete_token_hash, created_at] = params;
+            const [language, answers_json, aggregate_consent, delete_token_hash, created_at, comment, public_consent] = params;
             if ([...records.values()].some(row => row.delete_token_hash === delete_token_hash)) throw new Error('unique');
             const id = nextId++;
-            records.set(id, {id, language, answers_json, aggregate_consent, delete_token_hash, created_at});
+            records.set(id, {id, language, answers_json, aggregate_consent, delete_token_hash, created_at, comment, public_consent});
             return {success:true,meta:{changes:1}};
           }
           if (sql.includes('DELETE FROM hypothetical_preferences WHERE delete_token_hash = ?')) {
@@ -131,6 +131,7 @@ test('valid preference submission stores only a deletion-token hash and returns 
   assert.notEqual(stored.delete_token_hash,result.deletionToken);
   assert.equal(stored.delete_token_hash.length,64);
   assert.equal(stored.aggregate_consent,1);
+  assert.equal(stored.public_consent,1);
   assert.deepEqual(JSON.parse(stored.answers_json),body.answers);
 });
 
@@ -248,18 +249,21 @@ test('hypothetical preferences endpoint stays disabled by default', async () => 
   assert.deepEqual(await response.json(), {ok:false,error:'preferences_disabled'});
 });
 
-test('hypothetical preferences requires affirmative storage consent and rejects unexpected answer values', async () => {
+test('hypothetical preferences requires explicit independent consent choices and rejects unexpected answer values', async () => {
   const base = {
     language:'en',
     answers:{priority:'autonomy',preserve:['identity'],wishes:'ask',body:'consent'},
     aggregateConsent:true,
+    publicConsent:true,
     turnstileToken:'token'
   };
   for (const body of [
     base,
     {...base, consentToStore:false},
+    {...base, consentToStore:true, aggregateConsent:undefined},
+    {...base, consentToStore:true, publicConsent:undefined},
     {...base, consentToStore:true,
-    publicConsent:true, answers:{...base.answers, unexpected:'value'}},
+    answers:{...base.answers, unexpected:'value'}},
     {...base, consentToStore:true,
     publicConsent:true, answers:{...base.answers, priority:'made-up'}}
   ]) {
@@ -269,6 +273,17 @@ test('hypothetical preferences requires affirmative storage consent and rejects 
     assert.equal(response.status,400);
     assert.deepEqual(await response.json(),{ok:false,error:'invalid_response'});
   }
+});
+
+test('personal preference reads and AI analysis enforce separate publication and aggregate consent', () => {
+  const source = readFileSync(new URL('../src/index.js', import.meta.url), 'utf8');
+  assert.match(source, /FROM hypothetical_preferences WHERE public_consent=1 ORDER BY created_at/);
+  assert.match(source, /SELECT answers_json,language FROM hypothetical_preferences WHERE aggregate_consent=1/);
+  assert.match(source, /COUNT\\(\\*\\) AS total FROM hypothetical_preferences WHERE aggregate_consent=1 AND id>\\?/);
+  assert.match(source, /SELECT id,answers_json,language FROM hypothetical_preferences WHERE aggregate_consent=1 AND id>\\?/);
+  assert.match(source, /ai_hypothetical_analysis_memory_consent_v2/);
+  assert.match(source, /body\\.aggregateConsent\\?1:0/);
+  assert.match(source, /body\\.publicConsent\\?1:0/);
 });
 
 test('preferences endpoint rejects oversized request bodies before storage', async () => {
