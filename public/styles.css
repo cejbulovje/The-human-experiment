@@ -1701,3 +1701,63 @@
   }
 }
 
+/* Shared answer-card system across collective and personal-preference streams. */
+.results-page .answer-card,
+.results-page .author-answer-card{
+  border-radius:16px;
+  border:1px solid var(--line);
+  overflow-wrap:anywhere;
+}
+.results-page .answer-card{
+  background:var(--card);
+  box-shadow:0 5px 18px #20221f06;
+  padding:var(--answer-card-padding);
+}
+.results-page .answer-card-top{
+  margin-bottom:12px;
+  align-items:flex-start;
+}
+.results-page .answer-code,
+.results-page .answer-date{
+  font-size:.78rem;
+  line-height:1.45;
+}
+.results-page .answer-text{
+  max-width:76ch;
+  line-height:1.75;
+}
+.results-page .answer-preview,
+.results-page .answer-full-text{
+  margin:0 0 12px;
+}
+.results-page .answer-meta{
+  justify-content:flex-start;
+  margin-top:14px;
+}
+.results-page .answer-actions{
+  margin-top:14px;
+  justify-content:flex-start;
+}
+.results-page .author-answer-card{
+  margin:0;
+  padding:var(--answer-card-padding);
+  border-radius:16px;
+  box-shadow:0 5px 18px #20221f06;
+}
+.results-page :is(#author-answer-collective,#author-answer-hypothetical) .author-answer-card{
+  border-color:color-mix(in srgb,var(--accent) 28%,var(--line));
+  background:linear-gradient(135deg,color-mix(in srgb,var(--accent-2) 42%,var(--card)) 0%,var(--card) 62%);
+}
+.results-page :is(#author-answer-collective,#author-answer-hypothetical) .author-answer-card:before{
+  width:3px;
+}
+@media(max-width:760px){
+  .results-page .answer-card,
+  .results-page .author-answer-card{
+    padding:var(--answer-card-padding);
+    border-radius:14px;
+  }
+  .results-page .answer-card-top{gap:8px}
+  .results-page .answer-text{line-height:1.68}
+}
+
