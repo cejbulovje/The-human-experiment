@@ -461,14 +461,14 @@
       choicesTitle.textContent = ru ? 'Выборы в опроснике' : 'Questionnaire choices';
       choices.append(choicesTitle);
       const selected = ru ? [
-        ['Что бы ты изменил в первую очередь?', 'Всё, что посчитал бы нужным'],
-        ['Если желания человека противоречат твоим?', 'Всё равно поступил бы по-своему'],
-        ['Что выбрало бы большинство?', 'Затрудняюсь ответить'],
+        ['Что бы вы изменили в первую очередь?', 'Всё, что посчитал бы нужным'],
+        ['Когда желания человека расходятся', 'Всё равно поступил бы по-своему'],
+        ['Как, по мнению людей, поступило бы большинство', 'Затрудняюсь ответить'],
         ['Пол', 'Другая идентичность']
       ] : [
         ['What would you change first?', 'Everything I considered necessary'],
-        ['If the person’s wishes conflicted with yours?', 'I would do what I wanted anyway'],
-        ['What would the majority choose?', 'Not sure'],
+        ['When the person’s wishes conflict', 'I would do what I wanted anyway'],
+        ['What do people think the majority would choose?', 'Not sure'],
         ['Gender', 'Another identity']
       ];
       selected.forEach(([question, answer]) => {
