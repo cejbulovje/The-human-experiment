@@ -813,11 +813,23 @@
       choices: collectiveBase.choices.map(([question, answer]) => [question, answer])
     });
   }
+  const sampleUiByLanguage = {
+    en:{sample:'SAMPLE ANSWER · EXCLUDED FROM STATISTICS',question3:'3. What would you allow humanity to do with your life if you trusted it to decide your fate?',read:'Read full answer',collapse:'Collapse answer',heading:'Sample answer #',note:'Demonstration sample. Not a participant response and excluded from statistics.',questionnaire:'Questionnaire answers',additional:'Participant’s additional answers',questions:['What would you allow humanity to change about you?','What might motivate you to take part in this experiment?'],reaction:'♡ Interesting thought · –',reactionTitle:'Reactions are not counted for the demonstration sample',share:'Share answer',copied:'Link copied',next:'Next →'},
+    ru:{sample:'ТЕСТОВЫЙ ОТВЕТ · НЕ УЧИТЫВАЕТСЯ В СТАТИСТИКЕ',question3:'3. Что бы ты позволил человечеству сделать с твоей жизнью, если бы доверил ему решать твою судьбу?',read:'Показать полный ответ',collapse:'Свернуть ответ',heading:'Демонстрационный ответ №',note:'Демонстрационный пример. Не является ответом участника и не учитывается в статистике.',questionnaire:'Ответы на вопросы анкеты',additional:'Дополнительные ответы участника',questions:['Что бы ты позволил человечеству изменить в себе?','Что могло бы побудить тебя участвовать в этом эксперименте?'],reaction:'♡ Интересная мысль · –',reactionTitle:'Демонстрационный пример не участвует в подсчёте реакций',share:'Поделиться ответом',copied:'Ссылка скопирована',next:'Следующие →'},
+    es:{sample:'RESPUESTA DE MUESTRA · EXCLUIDA DE LAS ESTADÍSTICAS',question3:'3. ¿Qué permitirías que la humanidad hiciera con tu vida si confiaras en que decidiera tu destino?',read:'Leer respuesta completa',collapse:'Contraer respuesta',heading:'Respuesta de muestra n.º ',note:'Ejemplo de demostración. No es una respuesta de participante y no cuenta en las estadísticas.',questionnaire:'Respuestas al cuestionario',additional:'Respuestas adicionales del participante',questions:['¿Qué permitirías que la humanidad cambiara de ti?','¿Qué podría motivarte a participar en este experimento?'],reaction:'♡ Idea interesante · –',reactionTitle:'Las reacciones no se cuentan para esta muestra de demostración',share:'Compartir respuesta',copied:'Enlace copiado',next:'Siguiente →'},
+    pt:{sample:'RESPOSTA DE EXEMPLO · EXCLUÍDA DAS ESTATÍSTICAS',question3:'3. O que você permitiria que a humanidade fizesse com sua vida se confiasse a ela a decisão do seu destino?',read:'Ler resposta completa',collapse:'Recolher resposta',heading:'Resposta de exemplo nº ',note:'Exemplo demonstrativo. Não é uma resposta de participante e não entra nas estatísticas.',questionnaire:'Respostas ao questionário',additional:'Respostas adicionais do participante',questions:['O que você permitiria que a humanidade mudasse em você?','O que poderia motivar você a participar deste experimento?'],reaction:'♡ Ideia interessante · –',reactionTitle:'As reações não são contabilizadas para este exemplo demonstrativo',share:'Compartilhar resposta',copied:'Link copiado',next:'Próxima →'},
+    zh:{sample:'示例回答 · 不计入统计',question3:'3. 如果你相信人类可以决定你的命运，你会允许人类如何改变你的生活？',read:'阅读完整回答',collapse:'收起回答',heading:'示例回答 #',note:'演示示例。不是参与者的回答，不计入统计。',questionnaire:'问卷回答',additional:'参与者的其他回答',questions:['你会允许人类改变你自身的哪些方面？','什么可能促使你参与这项实验？'],reaction:'♡ 有启发的想法 · –',reactionTitle:'此演示示例的反应不会计数',share:'分享回答',copied:'链接已复制',next:'下一页 →'},
+    de:{sample:'BEISPIELANTWORT · NICHT IN DER STATISTIK',question3:'3. Was würdest du die Menschheit mit deinem Leben machen lassen, wenn du ihr die Entscheidung über dein Schicksal anvertraust?',read:'Vollständige Antwort lesen',collapse:'Antwort einklappen',heading:'Beispielantwort Nr. ',note:'Demonstrationsbeispiel. Keine Teilnehmerantwort und nicht Teil der Statistik.',questionnaire:'Antworten auf den Fragebogen',additional:'Weitere Antworten der teilnehmenden Person',questions:['Was würdest du die Menschheit an dir verändern lassen?','Was könnte dich zur Teilnahme an diesem Experiment bewegen?'],reaction:'♡ Interessanter Gedanke · –',reactionTitle:'Reaktionen für dieses Demonstrationsbeispiel werden nicht gezählt',share:'Antwort teilen',copied:'Link kopiert',next:'Weiter →'},
+    ja:{sample:'サンプル回答 · 統計対象外',question3:'3. 人類があなたの運命を決めると信頼した場合、あなたの人生に何をすることを認めますか？',read:'回答全文を読む',collapse:'回答を閉じる',heading:'サンプル回答 #',note:'デモ用サンプルです。参加者の回答ではなく、統計にも含まれません。',questionnaire:'アンケートの回答',additional:'参加者の追加回答',questions:['人類に自分の何を変えてもらいたいですか？','この実験に参加する動機は何ですか？'],reaction:'♡ 興味深い考え · –',reactionTitle:'このデモ用サンプルのリアクションは集計されません',share:'回答を共有',copied:'リンクをコピーしました',next:'次へ →'},
+    fr:{sample:'RÉPONSE EXEMPLE · EXCLUE DES STATISTIQUES',question3:'3. Que laisseriez-vous l’humanité faire de votre vie si vous lui faisiez confiance pour décider de votre destin ?',read:'Lire la réponse complète',collapse:'Réduire la réponse',heading:'Réponse exemple n° ',note:'Exemple de démonstration. Ce n’est pas une réponse de participant et elle est exclue des statistiques.',questionnaire:'Réponses au questionnaire',additional:'Réponses supplémentaires du participant',questions:['Que laisseriez-vous l’humanité changer chez vous ?','Qu’est-ce qui pourrait vous inciter à participer à cette expérience ?'],reaction:'♡ Idée intéressante · –',reactionTitle:'Les réactions ne sont pas comptées pour cet exemple de démonstration',share:'Partager la réponse',copied:'Lien copié',next:'Suivant →'},
+    ar:{sample:'إجابة تجريبية · لا تدخل في الإحصاءات',question3:'3. ما الذي تسمح للبشرية بفعله في حياتك إذا وثقت بها لتقرر مصيرك؟',read:'قراءة الإجابة كاملة',collapse:'طي الإجابة',heading:'إجابة تجريبية رقم ',note:'مثال توضيحي. ليس إجابة مشارك ولا يدخل في الإحصاءات.',questionnaire:'إجابات الاستبيان',additional:'إجابات إضافية للمشارك',questions:['ما الذي تسمح للبشرية بتغييره فيك؟','ما الذي قد يدفعك للمشاركة في هذه التجربة؟'],reaction:'♡ فكرة مثيرة للاهتمام · –',reactionTitle:'لا تُحتسب التفاعلات لهذا المثال التوضيحي',share:'مشاركة الإجابة',copied:'تم نسخ الرابط',next:'التالي →'}
+  };
   const ru = document.documentElement.lang === 'ru';
-  const demoLabel = ru ? 'ТЕСТОВЫЙ ОТВЕТ · НЕ УЧИТЫВАЕТСЯ В СТАТИСТИКЕ' : 'SAMPLE ANSWER · EXCLUDED FROM STATISTICS';
+  const demoLabel = (sampleUiByLanguage[(document.documentElement.lang||'en').split('-')[0]]||sampleUiByLanguage.en).sample;
   function makeSample(item, kind, index) {
     const locale = document.documentElement.lang || 'en';
     const ru = locale === 'ru';
+    const ui = sampleUiByLanguage[locale.split('-')[0]] || sampleUiByLanguage.en;
     const card = document.createElement('article');
     card.className = 'answer-card author-answer-card preview-sample-answer';
     card.dataset.previewSample = String(index);
@@ -826,16 +838,14 @@
     top.className = 'answer-card-top';
     const code = document.createElement('span');
     code.className = 'answer-code';
-    code.textContent = ru ? '№ ' + (index + 1) + ' · ТЕСТОВЫЙ ОТВЕТ · НЕ УЧИТЫВАЕТСЯ В СТАТИСТИКЕ' : '# ' + (index + 1) + ' · SAMPLE ANSWER · EXCLUDED FROM STATISTICS';
+    code.textContent = (ru ? '№ ' : '# ') + (index + 1) + ' · ' + ui.sample;
     top.append(code);
 
     const freeTextQuestion = document.createElement('section');
     freeTextQuestion.className = 'author-questionnaire-section sample-free-text-question';
     const freeTextLabel = document.createElement('strong');
     freeTextLabel.className = 'author-questionnaire-question';
-    freeTextLabel.textContent = ru
-      ? '3. Что бы ты позволил человечеству сделать с твоей жизнью, если бы доверил ему решать твою судьбу?'
-      : '3. What would you allow humanity to do with your life if you trusted it to decide your fate?';
+    freeTextLabel.textContent = ui.question3;
     freeTextQuestion.append(freeTextLabel);
 
     const preview = document.createElement('p');
@@ -852,7 +862,7 @@
     const toggle = document.createElement('button');
     toggle.type = 'button';
     toggle.className = 'author-answer-toggle sample-answer-expand';
-    toggle.textContent = ru ? 'Показать полный ответ' : 'Read full answer';
+    toggle.textContent = ui.read;
     toggle.setAttribute('aria-expanded', 'false');
     toggle.hidden = previewText === fullText;
 
@@ -861,7 +871,7 @@
     full.hidden = true;
     const heading = document.createElement('h3');
     heading.className = 'author-answer-title';
-    heading.textContent = (ru ? 'Демонстрационный ответ №' : 'Sample answer #') + (index + 1);
+    heading.textContent = ui.heading + (index + 1);
     const body = document.createElement('div');
     body.className = 'author-answer-body';
     const paragraph = document.createElement('p');
@@ -869,9 +879,7 @@
     body.append(paragraph);
     const note = document.createElement('p');
     note.className = 'author-answer-note';
-    note.textContent = ru
-      ? 'Демонстрационный пример. Не является ответом участника и не учитывается в статистике.'
-      : 'Demonstration sample. Not a participant response and excluded from statistics.';
+    note.textContent = ui.note;
     full.append(heading, body, note);
 
     toggle.addEventListener('click', () => {
@@ -879,8 +887,8 @@
       full.hidden = !open;
       preview.hidden = open;
       toggle.textContent = open
-        ? (ru ? 'Свернуть ответ' : 'Collapse answer')
-        : (ru ? 'Показать полный ответ' : 'Read full answer');
+        ? ui.collapse
+        : ui.read;
       toggle.setAttribute('aria-expanded', String(open));
     });
 
@@ -889,22 +897,14 @@
     choices.hidden = false;
     const choicesTitle = document.createElement('strong');
     choicesTitle.className = 'author-questionnaire-choices-title';
-    choicesTitle.textContent = kind === 'hypothetical' ? (ru ? 'Ответы на вопросы анкеты' : 'Questionnaire answers') : (ru ? 'Дополнительные ответы участника' : 'Participant’s additional answers');
+    choicesTitle.textContent = kind === 'hypothetical' ? ui.questionnaire : ui.additional;
     choices.append(choicesTitle);
     item.choices.forEach(([question, answer], questionIndex) => {
       const section = document.createElement('section');
       section.className = 'author-questionnaire-section';
       const label = document.createElement('strong');
       label.className = 'author-questionnaire-question';
-      const personalQuestionLabels = ru
-        ? [
-            'Что бы ты позволил человечеству изменить в себе?',
-            'Что могло бы побудить тебя участвовать в этом эксперименте?'
-          ]
-        : [
-            'What would you allow humanity to change about you?',
-            'What might motivate you to take part in this experiment?'
-          ];
+      const personalQuestionLabels = ui.questions;
       label.textContent = (questionIndex + 1) + '. ' + (kind === 'hypothetical' ? (personalQuestionLabels[questionIndex] || question) : question);
       section.append(label);
       const personalAnswerTranslations = {
@@ -942,21 +942,19 @@
     reaction.type = 'button';
     reaction.className = 'reaction-button';
     reaction.disabled = true;
-    reaction.textContent = ru ? '♡ Интересная мысль · –' : '♡ Interesting thought · –';
-    reaction.title = ru
-      ? 'Демонстрационный пример не участвует в подсчёте реакций'
-      : 'Reactions are not counted for the demonstration sample';
+    reaction.textContent = ui.reaction;
+    reaction.title = ui.reactionTitle;
 
     const share = document.createElement('button');
     share.type = 'button';
     share.className = 'subtle-button';
-    share.textContent = ru ? 'Поделиться ответом' : 'Share answer';
+    share.textContent = ui.share;
     share.addEventListener('click', async () => {
       const url = new URL(window.location.href);
       url.hash = 'sample-answer-' + kind + '-' + index;
       try {
         await navigator.clipboard.writeText(url.toString());
-        share.textContent = ru ? 'Ссылка скопирована' : 'Link copied';
+        share.textContent = ui.copied;
       } catch {
         window.location.hash = url.hash;
       }
@@ -992,7 +990,7 @@
     if (previous) previous.hidden = shown === 0;
     if (more) {
       more.hidden = next >= samples.hypothetical.length;
-      more.textContent = ru ? 'Следующие →' : 'Next →';
+      more.textContent = (sampleUiByLanguage[(document.documentElement.lang||'en').split('-')[0]]||sampleUiByLanguage.en).next;
     }
     const empty = list.querySelector('.hypothetical-empty-state');
     if (empty) empty.hidden = true;
