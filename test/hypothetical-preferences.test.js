@@ -305,7 +305,7 @@ test('personal answer cards share the results feed header and stable numbering',
   assert.ok(page.includes('item.answerNumber ?? (Number(item.id)+1)'));
   assert.ok(!page.includes('answer-card-header'));
   const api = readFileSync(new URL('../src/index.js', import.meta.url), 'utf8');
-  assert.ok(api.includes('answerNumber:Number(row.id)+1'));
+  assert.ok(api.includes('answerNumber:Number(row.answer_number)'));
 });
 
 test('personal author answer is hidden outside the first results page', () => {
