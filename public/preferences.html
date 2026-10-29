@@ -30,6 +30,11 @@
     .prototype-result[hidden]{display:none}
     .action-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
     .status-note{padding:14px 16px;background:#f6f4ef;border-left:3px solid #777d6d;border-radius:8px}
+    .consent-group{display:grid;gap:10px;margin:18px 0 24px}
+    .preference-card button:disabled,.preference-card input:disabled{opacity:.55;cursor:not-allowed}
+    .deletion-token-field{display:grid;grid-template-columns:1fr;cursor:default}
+    .preference-card input[type="password"]{width:100%;padding:12px 14px;border:1px solid #c9cbc2;border-radius:10px;background:#fff;color:var(--ink);font:inherit}
+    #deletion-token-display{display:block;overflow-wrap:anywhere;padding:12px;background:#fff;border:1px solid #c9cbc2;border-radius:8px}
   </style>
 </head>
 <body>
@@ -63,8 +68,12 @@
     </section>
 
     <div id="preferences-form" class="preference-card">
-      <div class="status-note"><strong>Перед началом:</strong> Отправленные ответы будут публично отображаться без подписи автора и использоваться для анализа ИИ. Если вы сами укажете имя или другие личные сведения в тексте ответа или пояснении, они также могут стать публичными. Не указывайте данные, по которым не хотите быть узнаны. Сейчас это прототип: ответы остаются в этом окне, не отправляются и не сохраняются.</div>
-      <label class="preference-option consent-option"><input type="checkbox" id="preferences-consent" name="consent" value="yes" required><span><strong>Я понимаю, как предполагается использовать ответы, и согласен(на) участвовать в исследовании.</strong></span></label>
+      <div class="status-note"><strong data-pref-i18n="noticeTitle">Перед началом:</strong> <span data-pref-i18n="notice">Сейчас это прототип: ответы остаются в этом окне, не отправляются и не сохраняются.</span></div>
+      <div class="consent-group">
+        <label class="preference-option consent-option"><input type="checkbox" id="consent-store" name="consentToStore"><span><strong data-pref-i18n="consentStore"></strong></span></label>
+        <label class="preference-option consent-option"><input type="checkbox" id="consent-public" name="publicConsent"><span><strong data-pref-i18n="consentPublic"></strong></span></label>
+        <label class="preference-option consent-option"><input type="checkbox" id="consent-aggregate" name="aggregateConsent"><span><strong data-pref-i18n="consentAggregate"></strong></span></label>
+      </div>
 
       <section class="preference-question">
         <h2 id="preference-question-1">1. Что бы ты позволил человечеству изменить в себе?</h2><p>Выбери один вариант.</p>
@@ -97,7 +106,7 @@
         <p id="comment-counter" class="privacy-hint" aria-live="polite">0 / 10000</p>
       </section>
 
-      <p class="privacy-hint" id="preferences-submit-status" role="status" aria-live="polite">Отправка отключена до настройки CAPTCHA и проверки конфигурации сервера. Сводка ниже формируется только в этом окне.</p>
+      <p class="privacy-hint" id="preferences-submit-status" role="status" aria-live="polite" data-pref-i18n="saveDisabled"></p>
       <div class="action-row">
         <button type="button" id="show-summary">Посмотреть сводку ответа</button>
         <button type="button" class="secondary" id="reset-form">Очистить форму</button>
@@ -109,6 +118,19 @@
         <p><strong>Статус:</strong> гипотетический ответ для исследовательского прототипа.</p>
         <p>Ничего не отправлено и не сохранено. Сейчас мы только исследуем гипотезу и проверяем формат вопросов.</p>
         <div class="action-row"><button type="button" class="secondary" id="edit-response">Вернуться к ответу</button><a class="text-link" href="/results.html">Перейти к результатам ↗</a></div>
+      </section>
+      <section id="preferences-saved-confirmation" class="prototype-result" aria-live="polite" hidden>
+        <h2 data-pref-i18n="savedTitle"></h2>
+        <p data-pref-i18n="savedBody"></p>
+        <p><strong data-pref-i18n="deleteTokenLabel"></strong></p>
+        <code id="deletion-token-display"></code>
+      </section>
+      <section class="preference-question deletion-panel" aria-labelledby="delete-preferences-title">
+        <h2 id="delete-preferences-title" data-pref-i18n="deleteTitle"></h2>
+        <p data-pref-i18n="deleteBody"></p>
+        <label class="preference-option deletion-token-field"><span data-pref-i18n="deleteTokenLabel"></span><input type="password" id="deletion-token" autocomplete="off" disabled></label>
+        <button type="button" class="secondary" id="delete-preferences" disabled data-pref-i18n="deleteButton"></button>
+        <p class="privacy-hint" role="status" data-pref-i18n="deleteDisabled"></p>
       </section>
     </div>
   </main>
