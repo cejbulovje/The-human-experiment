@@ -421,7 +421,7 @@
   const question = section.querySelector('#hypothetical-question-filter');
   const sort = section.querySelector('#hypothetical-sort');
   const pageSize = section.querySelector('#hypothetical-page-size');
-  let offset = 0, total = 0, busy = false, requestId = 0, pendingLoad = false, pendingReset = false;
+  let offset = 0, currentPageStart = 0, total = 0, busy = false, requestId = 0, pendingLoad = false, pendingReset = false;
   const labels = {
     scope:{none:'Ничего не позволил бы менять',preapproved:'Только то, что заранее одобрил',veto:'Доверил бы выбор, сохранив право отказа',trust_conditions:'Доверил бы человечеству решать, сохранив несколько принципиальных условий',unlimited:'Разрешил бы любые изменения без ограничений',other:'Другое'},
     motivation:{desires:'Узнать, чего люди на самом деле хотят',reality:'Увидеть человечество за пределами публичных образов и заявлений',hope:'Понять, есть ли у человечества надежда на лучшее будущее',similarity:'Узнать, насколько люди похожи в своих желаниях',understanding:'Проверить, способны ли люди учитывать желания друг друга',contribute:'Внести вклад в исследование человечества',curiosity:'Любопытство к эксперименту и его результатам',other:'Другое',none:'Ничто из перечисленного'},
@@ -636,6 +636,16 @@
   function rankingUnavailable() {
     return ['popular','unusual'].includes(section.dataset.resultsView);
   }
+  function syncPersonalAuthorAnswerPage() {
+    const authorRoot = document.getElementById('author-answer-hypothetical');
+    if (!authorRoot) return;
+    const hidden = currentPageStart > 0;
+    authorRoot.hidden = hidden;
+    authorRoot.style.display = hidden ? 'none' : '';
+    const authorCard = authorRoot.querySelector('.author-answer-card');
+    if (authorCard) authorCard.hidden = hidden;
+  }
+  window.addEventListener('author-answer-rendered', syncPersonalAuthorAnswerPage);
   async function load(reset=true,targetOffset=null) {
     if (rankingUnavailable()) {
       requestId++;
@@ -654,7 +664,7 @@
     if(busy) { pendingLoad=true; pendingReset=pendingReset||reset; return; }
     const thisRequest = ++requestId;
     busy=true;
-    if(reset){offset=targetOffset===null?0:Math.max(0,targetOffset); list.querySelectorAll('article:not(.hypothetical-empty-state):not(.author-answer-card)').forEach(el=>el.remove());}
+    if(reset){offset=targetOffset===null?0:Math.max(0,targetOffset); currentPageStart=offset; syncPersonalAuthorAnswerPage(); list.querySelectorAll('article:not(.hypothetical-empty-state):not(.author-answer-card)').forEach(el=>el.remove());}
     if(empty) empty.hidden=true;
     status.hidden=false; status.textContent=personalMessages().loading;
     try {
@@ -666,6 +676,7 @@
       if (thisRequest !== requestId || rankingUnavailable()) return;
       if(!response.ok || !data.ok) throw new Error('unavailable');
       total=data.total;
+      syncPersonalAuthorAnswerPage();
       data.answers.forEach(item=>list.append(renderAnswer(item)));
       offset+=data.answers.length;
       const messages = personalMessages();
