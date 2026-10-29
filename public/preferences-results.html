@@ -676,7 +676,7 @@
     choices.hidden = false;
     const choicesTitle = document.createElement('strong');
     choicesTitle.className = 'author-questionnaire-choices-title';
-    choicesTitle.textContent = ru ? 'Дополнительные ответы участника' : 'Participant’s additional answers';
+    choicesTitle.textContent = kind === 'hypothetical' ? (ru ? 'Ответы на вопросы анкеты' : 'Questionnaire answers') : (ru ? 'Дополнительные ответы участника' : 'Participant’s additional answers');
     choices.append(choicesTitle);
     item.choices.forEach(([question, answer], questionIndex) => {
       const section = document.createElement('section');
@@ -731,7 +731,7 @@
     });
 
     if (kind === 'hypothetical') {
-      card.append(top, freeTextQuestion, preview, toggle, full, choices, actions);
+      card.append(top, choices, freeTextQuestion, preview, toggle, full, actions);
     } else {
       card.append(top, preview, toggle, full, choices, actions);
     }
