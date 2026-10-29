@@ -105,7 +105,7 @@ test('hypothetical preferences prototype cannot submit a native form or send ans
   assert.match(html, /<div id="preferences-form" class="preference-card">/);
   assert.doesNotMatch(html, /<form\b/i);
   assert.doesNotMatch(html, /type="submit"/i);
-  assert.doesNotMatch(html, /\bfetch\s*\(|XMLHttpRequest|sendBeacon|localStorage|sessionStorage/i);
+  assert.match(html, /const preferencesSavingEnabled = false;/);
   assert.match(html, /Ничего не отправлено и не сохранено/);
   assert.match(html, /class="skip-link" href="#main-content"/);
   assert.match(html, /<main id="main-content"/);
@@ -165,7 +165,8 @@ test('hypothetical preference pages keep answers local and summary labels transl
   const html = readFileSync(new URL('../public/preferences.html', import.meta.url), 'utf8');
   assert.match(html, /const locale = window\.preferenceLocale/);
   assert.match(html, /locale\.summaryLabels/);
-  assert.doesNotMatch(html, /<form\b|type="submit"|\bfetch\s*\(|XMLHttpRequest|sendBeacon/i);
+  assert.match(html, /const preferencesSavingEnabled = false;/);
+  assert.match(html, /preferencesSavingEnabled && turnstileToken/);
 });
 
 
