@@ -274,7 +274,7 @@ async function publicPreferences(request,env){
   const offset=Math.max(0,Number.parseInt(url.searchParams.get('offset')||'0',10)||0);
   const q=(url.searchParams.get('q')||'').trim().slice(0,100).toLocaleLowerCase();
   const question=url.searchParams.get('question')||'';
-  const questionKeys=['scope','motivation','priority','preserve','wishes','body'];
+  const questionKeys=['scope','motivation'];
   if(question&&!questionKeys.includes(question))return json({error:'invalid_question'},400);
   try{
     const direction=sort==='oldest'?'ASC':'DESC';
@@ -293,11 +293,12 @@ async function preferencesStats(env){
   if(!env.DB)return json({error:'not_configured'},503);
   try{
     const rows=await env.DB.prepare('SELECT answers_json,language FROM hypothetical_preferences WHERE aggregate_consent=1').all();
-    const totals={total:0,participantTotal:0,authorIncluded:true,unlocked:false,threshold:THRESHOLD,remaining:THRESHOLD,languages:{},questions:{priority:{},preserve:{},wishes:{},body:{},scope:{},motivation:{}}};
+    const totals={total:0,participantTotal:0,authorIncluded:true,unlocked:false,threshold:THRESHOLD,remaining:THRESHOLD,languages:{},questions:{scope:{},motivation:{}}};
     for(const row of rows.results||[]){
+      let answers;try{answers=JSON.parse(row.answers_json);}catch{continue;}
+      if(!answers||typeof answers.scope!=='string'||!Array.isArray(answers.motivation))continue;
       totals.participantTotal++;
       totals.languages[row.language]=(totals.languages[row.language]||0)+1;
-      let answers;try{answers=JSON.parse(row.answers_json);}catch{continue;}
       for(const key of Object.keys(totals.questions)){
         const values=Array.isArray(answers[key])?answers[key]:[answers[key]];
         for(const value of values){if(typeof value==='string')totals.questions[key][value]=(totals.questions[key][value]||0)+1;}
@@ -321,20 +322,18 @@ async function submitPreferences(request,env){
   if(parsed.error)return json({ok:false,error:parsed.error},parsed.error==='too_large'?413:400);
   const body=parsed.body;
   const languages=['en','ru','es','pt','zh','de','ja','fr','ar'];
-  const allowed={
-    priority:['autonomy','wellbeing','trust','context'],
-    preserve:['autonomy','body','identity','safety','voice'],
-    wishes:['ask','limits','decide','consent'],
-    body:['consent','discuss','unimportant','context']
-  };
-  if(!body||!languages.includes(body.language)||body.consentToStore!==true||typeof body.aggregateConsent!=='boolean'||typeof body.publicConsent!=='boolean'||!body.answers||typeof body.answers!=='object'||Array.isArray(body.answers)||
-    Object.keys(body.answers).length!==4||
-    Object.entries(allowed).some(([key,values])=>key==='preserve'
-      ?(!Array.isArray(body.answers[key])||body.answers[key].some(value=>!values.includes(value)))
-      :!values.includes(body.answers[key]))||
-    Object.keys(body.answers).some(key=>!Object.hasOwn(allowed,key))||
+  const scopeOptions=['none','preapproved','veto','trust_conditions','unlimited','other'];
+  const motivationOptions=['desires','reality','hope','similarity','understanding','contribute','curiosity','other','none'];
+  const answers=body?.answers;
+  const validAnswers=answers&&typeof answers==='object'&&!Array.isArray(answers)&&
+    Object.keys(answers).length===2&&Object.keys(answers).every(key=>key==='scope'||key==='motivation')&&
+    scopeOptions.includes(answers.scope)&&Array.isArray(answers.motivation)&&
+    answers.motivation.every(value=>motivationOptions.includes(value))&&
+    new Set(answers.motivation).size===answers.motivation.length&&
+    !(answers.motivation.includes('none')&&answers.motivation.length>1);
+  if(!body||!languages.includes(body.language)||body.consentToStore!==true||typeof body.aggregateConsent!=='boolean'||typeof body.publicConsent!=='boolean'||!validAnswers||
     (body.comment!==undefined&&typeof body.comment!=='string')||
-String(body.comment||'').length>10000||
+    String(body.comment||'').length>10000||
     typeof body.turnstileToken!=='string'||body.turnstileToken.length<1||body.turnstileToken.length>2048){
     return json({ok:false,error:'invalid_response'},400);
   }
@@ -413,7 +412,7 @@ async function aiAnalysis(request,env){
     let lastProcessedId=lastId;
     let processedCount=Number(memory?.response_count||0);
     const countRow=stream==='hypothetical'
-      ? await env.DB.prepare('SELECT COUNT(*) AS total FROM hypothetical_preferences WHERE aggregate_consent=1 AND id>?').bind(lastId).first()
+      ? await env.DB.prepare("SELECT COUNT(*) AS total FROM hypothetical_preferences WHERE aggregate_consent=1 AND json_type(answers_json,'$.scope')='text' AND json_type(answers_json,'$.motivation')='array' AND id>?").bind(lastId).first()
       : await env.DB.prepare('SELECT COUNT(*) AS total FROM responses WHERE is_public=1 AND id>?').bind(lastId).first();
     const newCount=Number(countRow?.total||0);
     const batchSize=5;
@@ -426,7 +425,7 @@ async function aiAnalysis(request,env){
     let cursor=lastId;
     for(let n=0;n<batchCount;n++){
       const rows=stream==='hypothetical'
-        ? await env.DB.prepare("SELECT id,answers_json,language FROM hypothetical_preferences WHERE aggregate_consent=1 AND id>? ORDER BY id ASC LIMIT 5").bind(cursor).all()
+        ? await env.DB.prepare("SELECT id,answers_json,language FROM hypothetical_preferences WHERE aggregate_consent=1 AND json_type(answers_json,'$.scope')='text' AND json_type(answers_json,'$.motivation')='array' AND id>? ORDER BY id ASC LIMIT 5").bind(cursor).all()
         : await env.DB.prepare("SELECT id,free_answer,signature,language,topic,q2,q3,q4 FROM responses WHERE is_public=1 AND id>? ORDER BY id ASC LIMIT 5").bind(cursor).all();
       const batch=(rows.results||[]).map(r=>stream==='hypothetical'
         ? ({id:Number(r.id),language:r.language,answers:JSON.parse(String(r.answers_json||'{}'))})
