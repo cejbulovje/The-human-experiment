@@ -723,24 +723,58 @@
     actions.append(reaction, share);
     return card;
   }
-  function fill(list, kind) {
+  function fillPersonalPage(reset = true) {
+    const list = document.querySelector('.hypothetical-answer-list');
     if (!list) return;
-    const existing = [...list.querySelectorAll(':scope > .preview-sample-answer')];
-    if (existing.length === samples[kind].length) return;
-    existing.forEach(card => card.remove());
-    samples[kind].forEach((item, index) => list.append(makeSample(item, kind, index + 1)));
+    const authorRoot = document.getElementById('author-answer-hypothetical');
+    if (authorRoot) {
+      authorRoot.hidden = false;
+      if (list.firstElementChild !== authorRoot) list.prepend(authorRoot);
+    }
+    const pageSize = Number(document.getElementById('hypothetical-page-size')?.value) || 20;
+    const more = document.getElementById('hypothetical-load-more');
+    let shown = Number(list.dataset.testSamplesShown || 0);
+    if (reset) {
+      list.querySelectorAll(':scope > .preview-sample-answer').forEach(card => card.remove());
+      shown = 0;
+    }
+    const next = Math.min(samples.hypothetical.length, shown + pageSize);
+    for (let index = shown; index < next; index += 1) {
+      list.append(makeSample(samples.hypothetical[index], 'hypothetical', index + 1));
+    }
+    list.dataset.testSamplesShown = String(next);
+    if (more) {
+      more.hidden = next >= samples.hypothetical.length;
+      more.textContent = ru ? 'Показать ещё тестовые ответы' : 'Show more test answers';
+    }
     const empty = list.querySelector('.hypothetical-empty-state');
     if (empty) empty.hidden = true;
   }
   function render() {
-    fill(document.getElementById('answer-list'), 'collective');
-    fill(document.querySelector('.hypothetical-answer-list'), 'hypothetical');
+    // Collective results already have paginated preview responses in results.js.
+    // Do not append a second, unpaginated set of cards to that list.
+    fillPersonalPage(true);
   }
   document.addEventListener('DOMContentLoaded', render, { once: true });
-  const observer = new MutationObserver(render);
   document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('#answer-list, .hypothetical-answer-list').forEach(list => observer.observe(list, { childList: true }));
+    const more = document.getElementById('hypothetical-load-more');
+    const pageSize = document.getElementById('hypothetical-page-size');
+    more?.addEventListener('click', event => {
+      event.stopImmediatePropagation();
+      fillPersonalPage(false);
+    }, true);
+    pageSize?.addEventListener('change', event => {
+      event.stopImmediatePropagation();
+      fillPersonalPage(true);
+    }, true);
+    const authorRoot = document.getElementById('author-answer-hypothetical');
+    if (authorRoot) {
+      authorRoot.hidden = false;
+      const list = authorRoot.parentElement;
+      if (list && list.firstElementChild !== authorRoot) list.prepend(authorRoot);
+    }
   }, { once: true });
+
 })();
 </script>
 </body></html>
