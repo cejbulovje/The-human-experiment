@@ -839,7 +839,7 @@
     fillPersonalPage(0);
   }
   document.addEventListener('DOMContentLoaded', render, { once: true });
-  document.addEventListener('human-experiment-language-change', () => {
+  document.addEventListener('results-language-changed', () => {
     const list = document.querySelector('.hypothetical-answer-list');
     const page = Math.max(0, Number(list?.dataset.testSamplesPage || 0));
     fillPersonalPage(page);
