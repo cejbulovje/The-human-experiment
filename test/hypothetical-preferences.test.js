@@ -368,7 +368,7 @@ test('personal preference reads and AI analysis enforce separate publication and
 test('preferences endpoint rejects oversized request bodies before storage', async () => {
   const response = await worker.fetch(new Request('https://example.test/api/preferences', {
     method:'POST',headers:{'content-type':'application/json'},
-    body:JSON.stringify({payload:'x'.repeat(5000)})
+    body:JSON.stringify({payload:'x'.repeat(13000)})
   }), {PREFERENCES_ENABLED:'true',DB:{},TURNSTILE_SECRET_KEY:'test-secret',RATE_LIMIT_SALT:'test-salt'});
   assert.equal(response.status,413);
   assert.deepEqual(await response.json(),{ok:false,error:'too_large'});
