@@ -1412,3 +1412,77 @@
 .answer-history-controls button{min-width:132px}
 .answer-history-controls button[hidden]{display:none!important}
 @media(max-width:520px){.answer-history-controls{gap:8px}.answer-history-controls button{flex:1;min-width:0}}
+
+/* THE HUMAN EXPERIMENT: shared layout foundations.
+   Keep these tokens as the single reference for the next incremental UX passes. */
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 40px;
+  --page-gutter: 24px;
+  --results-content-width: 960px;
+  --results-page-width: 1200px;
+  --answer-card-padding: 24px;
+  --answer-card-gap: 16px;
+}
+
+@media (max-width: 760px) {
+  :root {
+    --page-gutter: 16px;
+    --answer-card-padding: 16px;
+    --answer-card-gap: 12px;
+  }
+}
+
+/* Results streams: one readable column for long-form answers on every device. */
+.shell.results-page {
+  width: 100%;
+  max-width: var(--results-page-width);
+  padding-inline: var(--page-gutter);
+}
+
+.results-page .answer-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--answer-card-gap);
+  width: 100%;
+  max-width: var(--results-content-width);
+  margin-inline: auto;
+  align-items: start;
+}
+
+.results-page .answer-list > .answer-card,
+.results-page .answer-list > .author-answer-card,
+.results-page .answer-list > article {
+  min-width: 0;
+  width: 100%;
+}
+
+.results-page .answer-card {
+  padding: clamp(var(--answer-card-padding), 3vw, 28px);
+}
+
+.results-page .answer-pagination-controls {
+  gap: var(--space-3);
+  margin-block: var(--space-4) var(--space-3);
+}
+
+@media (max-width: 760px) {
+  .shell.results-page {
+    padding-top: 32px;
+    padding-bottom: 48px;
+  }
+
+  .results-page .answer-card {
+    padding: var(--answer-card-padding);
+  }
+
+  .results-page .answer-pagination-controls {
+    align-items: flex-start;
+  }
+}
+
