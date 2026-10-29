@@ -510,6 +510,24 @@
     root.append(note);root.hidden=false;
   }
   async function loadStats() {
+    const previewDemoMode = location.hostname === 'experiment-hypothetical-preferences-protot-the-human-experiment.cejbulovje.workers.dev'
+      && new URLSearchParams(location.search).get('demo') === '101';
+    if (previewDemoMode) {
+      const summary = {
+        unlocked: true,
+        total: 101,
+        participantTotal: 100,
+        threshold: 100,
+        remaining: 0,
+        questions: {
+          scope: {none: 15, preapproved: 22, veto: 18, trust_conditions: 25, unlimited: 12, other: 9},
+          motivation: {desires: 30, reality: 18, hope: 12, similarity: 24, understanding: 35, contribute: 28, curiosity: 32, other: 5, none: 4}
+        }
+      };
+      stats.textContent = 'ТЕСТОВЫЙ РЕЖИМ: имитация 101 ответа. Тестовые карточки не сохраняются и не входят в реальную статистику.';
+      renderPersonalStatistics(summary);
+      return;
+    }
     try {
       const response=await fetch('/api/preferences/stats',{headers:{Accept:'application/json'}});
       const data=await response.json();
@@ -566,11 +584,18 @@
     'Я бы оценивал не только предполагаемую пользу, но и то, насколько человек сам согласен на изменения.'
   ];
   const baseTestSamples = samples.hypothetical.slice();
+  const baseCollectiveSamples = samples.collective.slice();
   for (let testIndex = 0; testIndex < 100; testIndex += 1) {
-    const base = baseTestSamples[testIndex % baseTestSamples.length];
+    const text = extraTestTexts[testIndex % extraTestTexts.length] + ' (дополнительный тестовый вариант ' + (testIndex + 1) + ').';
+    const personalBase = baseTestSamples[testIndex % baseTestSamples.length];
     samples.hypothetical.push({
-      text: base.text + '\n\n' + extraTestTexts[testIndex % extraTestTexts.length] + ' (дополнительный тестовый вариант ' + (testIndex + 1) + ').',
-      choices: base.choices.map(([question, answer]) => [question, answer])
+      text: personalBase.text + '\n\n' + text,
+      choices: personalBase.choices.map(([question, answer]) => [question, answer])
+    });
+    const collectiveBase = baseCollectiveSamples[testIndex % baseCollectiveSamples.length];
+    samples.collective.push({
+      text: collectiveBase.text + '\n\n' + text,
+      choices: collectiveBase.choices.map(([question, answer]) => [question, answer])
     });
   }
   const ru = document.documentElement.lang === 'ru';
