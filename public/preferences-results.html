@@ -620,7 +620,9 @@
     freeTextQuestion.className = 'author-questionnaire-section sample-free-text-question';
     const freeTextLabel = document.createElement('strong');
     freeTextLabel.className = 'author-questionnaire-question';
-    freeTextLabel.textContent = '3. Что бы ты позволил человечеству сделать с твоей жизнью, если бы доверил ему решать твою судьбу?';
+    freeTextLabel.textContent = ru
+      ? '3. Что бы ты позволил человечеству сделать с твоей жизнью, если бы доверил ему решать твою судьбу?'
+      : '3. What would you allow humanity to do with your life if you entrusted it with deciding your fate?';
     freeTextQuestion.append(freeTextLabel);
 
     const preview = document.createElement('p');
