@@ -156,8 +156,10 @@
     const deleteButton = document.getElementById('delete-preferences');
     const savedConfirmation = document.getElementById('preferences-saved-confirmation');
     let turnstileToken = '';
+    // Keep collection disabled until the complete preview flow has been verified and explicitly enabled.
+    const preferencesSavingEnabled = false;
     function saveText(key, fallback) { return window.preferenceI18n?.locales?.[document.documentElement.lang]?.[key] || fallback; }
-    function syncSubmitButton() { submitButton.disabled = !(turnstileToken && storeConsent.checked && selected('scope').length === 1 && savedConfirmation.hidden); }
+    function syncSubmitButton() { submitButton.disabled = !(preferencesSavingEnabled && turnstileToken && storeConsent.checked && selected('scope').length === 1 && savedConfirmation.hidden); }
     window.onPreferenceTurnstileSuccess = token => { turnstileToken = token; submitStatus.textContent = ''; syncSubmitButton(); };
     window.onPreferenceTurnstileExpired = () => { turnstileToken = ''; submitStatus.textContent = saveText('saveError','Security check expired. Please try again.'); syncSubmitButton(); };
     [storeConsent, publicConsent, aggregateConsent, ...form.querySelectorAll('input[name="scope"]')].forEach(input => input.addEventListener('change', syncSubmitButton));
