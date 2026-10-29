@@ -176,10 +176,13 @@ test('deletion token removes the matching preference and unknown token returns s
     method:'POST',headers:{'content-type':'application/json','CF-Connecting-IP':'192.0.2.12'},body:JSON.stringify({deletionToken:token})
   });
   const deleted = await worker.fetch(deletionRequest(deletionToken),env);
+  const repeated = await worker.fetch(deletionRequest(deletionToken),env);
   const unknown = await worker.fetch(deletionRequest('f'.repeat(64)),env);
   assert.equal(deleted.status,200);
+  assert.equal(repeated.status,200);
   assert.equal(unknown.status,200);
   assert.deepEqual(await deleted.json(),{ok:true});
+  assert.deepEqual(await repeated.json(),{ok:true});
   assert.deepEqual(await unknown.json(),{ok:true});
   assert.equal(db.records.size,0);
 });
@@ -257,6 +260,59 @@ test('preference submission rejects Turnstile failure without writing data', asy
   assert.equal(response.status,400);
   assert.deepEqual(await response.json(),{ok:false,error:'captcha_failed'});
   assert.equal(db.records.size,0);
+});
+
+test('preference save database failure returns a controlled error and stores no record', async t => {
+  const db = createPreferencesDb();
+  const originalPrepare = db.prepare.bind(db);
+  db.prepare = sql => {
+    if (sql.includes('INSERT INTO hypothetical_preferences')) {
+      return { bind() { return { run: async () => { throw new Error('simulated database failure'); } }; } };
+    }
+    return originalPrepare(sql);
+  };
+  t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({success:true}), {status:200,headers:{'content-type':'application/json'}}));
+  const response = await worker.fetch(new Request('https://example.test/api/preferences', {
+    method:'POST', headers:{'content-type':'application/json','CF-Connecting-IP':'192.0.2.17'},
+    body:JSON.stringify({
+      language:'en',
+      answers:{scope:'trust_conditions',motivation:['reality','contribute']},
+      aggregateConsent:true, consentToStore:true, publicConsent:true, turnstileToken:'valid-test-token'
+    })
+  }), {PREFERENCES_ENABLED:'true',DB:db,TURNSTILE_SECRET_KEY:'test-secret',RATE_LIMIT_SALT:'test-salt'});
+  assert.equal(response.status,500);
+  assert.deepEqual(await response.json(),{ok:false,error:'save_failed'});
+  assert.equal(db.records.size,0);
+});
+
+test('preference deletion database failure returns a controlled error and preserves the record', async t => {
+  const db = createPreferencesDb();
+  t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({success:true}), {status:200,headers:{'content-type':'application/json'}}));
+  const env = {PREFERENCES_ENABLED:'true',DB:db,TURNSTILE_SECRET_KEY:'test-secret',RATE_LIMIT_SALT:'test-salt'};
+  const submitted = await worker.fetch(new Request('https://example.test/api/preferences', {
+    method:'POST', headers:{'content-type':'application/json','CF-Connecting-IP':'192.0.2.18'},
+    body:JSON.stringify({
+      language:'en',
+      answers:{scope:'trust_conditions',motivation:['reality','contribute']},
+      aggregateConsent:true, consentToStore:true, publicConsent:true, turnstileToken:'valid-test-token'
+    })
+  }),env);
+  assert.equal(submitted.status,200);
+  const {deletionToken} = await submitted.json();
+  const originalPrepare = db.prepare.bind(db);
+  db.prepare = sql => {
+    if (sql.includes('DELETE FROM hypothetical_preferences WHERE delete_token_hash = ?')) {
+      return { bind() { return { run: async () => { throw new Error('simulated database failure'); } }; } };
+    }
+    return originalPrepare(sql);
+  };
+  const response = await worker.fetch(new Request('https://example.test/api/preferences/delete', {
+    method:'POST', headers:{'content-type':'application/json','CF-Connecting-IP':'192.0.2.19'},
+    body:JSON.stringify({deletionToken})
+  }),env);
+  assert.equal(response.status,503);
+  assert.deepEqual(await response.json(),{ok:false,error:'delete_unavailable'});
+  assert.equal(db.records.size,1);
 });
 
 test('hypothetical preferences endpoint stays disabled by default', async () => {
