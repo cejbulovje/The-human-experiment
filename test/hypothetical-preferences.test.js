@@ -298,6 +298,14 @@ test('deletion endpoint rejects malformed tokens before database access', async 
   assert.deepEqual(await response.json(),{ok:false,error:'invalid_token'});
 });
 
+test('personal author answer is hidden outside the first results page', () => {
+  const page = readFileSync(new URL('../public/preferences-results.html', import.meta.url), 'utf8');
+  assert.match(page, /let offset = 0, currentPageStart = 0/);
+  assert.match(page, /function syncPersonalAuthorAnswerPage\(\)[\s\S]*?const hidden = currentPageStart > 0/);
+  assert.match(page, /window\.addEventListener\('author-answer-rendered', syncPersonalAuthorAnswerPage\)/);
+  assert.match(page, /currentPageStart=offset; syncPersonalAuthorAnswerPage\(\)/);
+});
+
 test('preferences and AI endpoint routes are inside fetch and AI dispatch precedes API fallback', async () => {
   const index = readFileSync(new URL('../src/index.js', import.meta.url), 'utf8');
   const fetchStart = index.indexOf('export default {');
