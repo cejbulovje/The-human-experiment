@@ -593,8 +593,8 @@
   };
   function controls(kind) {
     return kind === 'collective'
-      ? { list: document.getElementById('answer-list'), search: document.getElementById('answer-search'), topic: document.getElementById('topic-filter'), size: document.getElementById('answers-per-page'), more: document.getElementById('show-more'), status: document.getElementById('answers-status'), total: null }
-      : { list: document.querySelector('.hypothetical-answer-list'), search: document.getElementById('hypothetical-search'), topic: document.getElementById('hypothetical-question-filter'), size: document.getElementById('hypothetical-page-size'), more: null, status: document.getElementById('hypothetical-status'), total: document.getElementById('hypothetical-stats') };
+      ? { list: document.getElementById('answer-list'), search: document.getElementById('answer-search'), topic: document.getElementById('topic-filter'), size: document.getElementById('answers-per-page'), more: document.getElementById('demo-collective-load-more'), status: document.getElementById('answers-status'), total: null }
+      : { list: document.querySelector('.hypothetical-answer-list'), search: document.getElementById('hypothetical-search'), topic: document.getElementById('hypothetical-question-filter'), size: document.getElementById('hypothetical-page-size'), more: document.getElementById('demo-hypothetical-load-more'), status: document.getElementById('hypothetical-status'), total: document.getElementById('hypothetical-stats') };
   }
   function matchingSamples(kind) {
     const c = controls(kind);
@@ -690,8 +690,20 @@
       collectiveSize.append(option);
       collectiveSize.value = '20';
     }
-    const more = document.getElementById('show-more');
-    if (more) more.hidden = false;
+    const originalMore = document.getElementById('show-more');
+    if (originalMore) originalMore.hidden = true;
+    [
+      ['demo-collective-load-more', document.getElementById('answer-list')],
+      ['demo-hypothetical-load-more', document.querySelector('.hypothetical-answer-list')]
+    ].forEach(([id, list]) => {
+      if (!list || document.getElementById(id)) return;
+      const button = document.createElement('button');
+      button.id = id;
+      button.type = 'button';
+      button.className = 'show-more-button';
+      button.textContent = ru ? 'Показать ещё тестовые ответы' : 'Show more test answers';
+      list.after(button);
+    });
     bindDemoControls();
     render(true);
   }
