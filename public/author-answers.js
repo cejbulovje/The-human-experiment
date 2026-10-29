@@ -83,15 +83,15 @@
   };
 
   const labels = {
-    en: {author:'Experiment author’s answer', note:'Author’s example. Not an independent participant response; excluded from statistics.', number:'No. 1', show:"Read the full answer", hide:"Hide the full answer", collectiveTitle:"My choice: a person we are responsible for together", volunteerTitle:"If I were a volunteer"},
-    ru: {author:'Ответ автора эксперимента', note:'Авторский пример. Не является ответом независимого участника и не учитывается в статистике.', number:'№ 1', show:"Читать полный ответ", hide:"Скрыть полный ответ", collectiveTitle:"Мой выбор: человек, за которого мы отвечаем вместе", volunteerTitle:"Если бы я был добровольцем"},
-    es: {author:'Respuesta del autor del experimento', note:'Ejemplo del autor. No es una respuesta de un participante independiente y no cuenta para las estadísticas.', number:'N.º 1', show:"Leer la respuesta completa", hide:"Ocultar la respuesta completa", collectiveTitle:"Mi elección: una persona de la que somos responsables juntos", volunteerTitle:"Si yo fuera voluntario"},
-    pt: {author:'Resposta do autor do experimento', note:'Exemplo do autor. Não é uma resposta de participante independente e não entra nas estatísticas.', number:'N.º 1', show:"Ler a resposta completa", hide:"Ocultar a resposta completa", collectiveTitle:"Minha escolha: uma pessoa por quem somos responsáveis juntos", volunteerTitle:"Se eu fosse voluntário"},
-    zh: {author:'实验发起者的回答', note:'作者示例。不是独立参与者的回答，不计入统计。', number:'第 1 条', show:"阅读完整回答", hide:"收起完整回答", collectiveTitle:"我的选择：由我们共同负责的一个人", volunteerTitle:"如果我是志愿者"},
-    de: {author:'Antwort des Experimentautors', note:'Beispiel des Autors. Keine unabhängige Teilnehmerantwort und nicht Teil der Statistik.', number:'Nr. 1', show:"Vollständige Antwort lesen", hide:"Vollständige Antwort ausblenden", collectiveTitle:"Meine Wahl: ein Mensch, für den wir gemeinsam Verantwortung tragen", volunteerTitle:"Wenn ich freiwillig teilnehmen würde"},
-    ja: {author:'実験の発案者による回答', note:'発案者の例です。独立した参加者の回答ではなく、統計には含まれません。', number:'No. 1', show:"回答全文を読む", hide:"回答全文を閉じる", collectiveTitle:"私の選択：私たちが共に責任を担う一人の人", volunteerTitle:"もし私が参加者だったら"},
-    fr: {author:'Réponse de l’auteur de l’expérience', note:'Exemple de l’auteur. Ce n’est pas une réponse d’un participant indépendant et elle n’est pas comptabilisée.', number:'N° 1', show:"Lire la réponse complète", hide:"Masquer la réponse complète", collectiveTitle:"Mon choix : une personne dont nous sommes collectivement responsables", volunteerTitle:"Si j’étais volontaire"},
-    ar: {author:'إجابة صاحب فكرة التجربة', note:'مثال من صاحب الفكرة، وليس إجابة مشارك مستقل، ولا يُحتسب ضمن الإحصاءات.', number:'رقم 1', show:"قراءة الإجابة كاملة", hide:"إخفاء الإجابة كاملة", collectiveTitle:"اختياري: شخص نتحمل مسؤوليته معًا", volunteerTitle:"لو كنت متطوعًا"},
+    en: {author:'Experiment author’s answer', note:'Author’s example. Not an independent participant response; excluded from statistics.', number:'No. 1', show:"Read the full answer", hide:"Hide the full answer", collectiveTitle:"My choice: a person we are responsible for together", volunteerTitle:"If I were a volunteer", collectiveChoices:"Questionnaire choices", volunteerChoices:"My additional answers", reaction:"♡ Interesting thought · –", reactionCollectiveTitle:"Reactions are not counted for the author answer", reactionVolunteerTitle:"Reactions are not counted for the author example", share:"Share answer", copied:"Link copied"},
+    ru: {author:'Ответ автора эксперимента', note:'Авторский пример. Не является ответом независимого участника и не учитывается в статистике.', number:'№ 1', show:"Читать полный ответ", hide:"Скрыть полный ответ", collectiveTitle:"Мой выбор: человек, за которого мы отвечаем вместе", volunteerTitle:"Если бы я был добровольцем", collectiveChoices:"Выборы в опроснике", volunteerChoices:"Мои дополнительные ответы", reaction:"♡ Интересная мысль · –", reactionCollectiveTitle:"Авторский ответ не участвует в подсчёте реакций", reactionVolunteerTitle:"Авторский пример не участвует в подсчёте реакций", share:"Поделиться ответом", copied:"Ссылка скопирована"},
+    es: {author:'Respuesta del autor del experimento', note:'Ejemplo del autor. No es una respuesta de un participante independiente y no cuenta para las estadísticas.', number:'N.º 1', show:"Leer la respuesta completa", hide:"Ocultar la respuesta completa", collectiveTitle:"Mi elección: una persona de la que somos responsables juntos", volunteerTitle:"Si yo fuera voluntario", collectiveChoices:"Respuestas del cuestionario", volunteerChoices:"Mis respuestas adicionales", reaction:"♡ Idea interesante · –", reactionCollectiveTitle:"Las reacciones no se cuentan para la respuesta del autor", reactionVolunteerTitle:"Las reacciones no se cuentan para el ejemplo del autor", share:"Compartir respuesta", copied:"Enlace copiado"},
+    pt: {author:'Resposta do autor do experimento', note:'Exemplo do autor. Não é uma resposta de participante independente e não entra nas estatísticas.', number:'N.º 1', show:"Ler a resposta completa", hide:"Ocultar a resposta completa", collectiveTitle:"Minha escolha: uma pessoa por quem somos responsáveis juntos", volunteerTitle:"Se eu fosse voluntário", collectiveChoices:"Respostas do questionário", volunteerChoices:"Minhas respostas adicionais", reaction:"♡ Ideia interessante · –", reactionCollectiveTitle:"As reações não são contabilizadas para a resposta do autor", reactionVolunteerTitle:"As reações não são contabilizadas para o exemplo do autor", share:"Compartilhar resposta", copied:"Link copiado"},
+    zh: {author:'实验发起者的回答', note:'作者示例。不是独立参与者的回答，不计入统计。', number:'第 1 条', show:"阅读完整回答", hide:"收起完整回答", collectiveTitle:"我的选择：由我们共同负责的一个人", volunteerTitle:"如果我是志愿者", collectiveChoices:"问卷选择", volunteerChoices:"我的补充回答", reaction:"♡ 有意思的想法 · –", reactionCollectiveTitle:"作者的回答不计入反应统计", reactionVolunteerTitle:"作者示例不计入反应统计", share:"分享回答", copied:"链接已复制"},
+    de: {author:'Antwort des Experimentautors', note:'Beispiel des Autors. Keine unabhängige Teilnehmerantwort und nicht Teil der Statistik.', number:'Nr. 1', show:"Vollständige Antwort lesen", hide:"Vollständige Antwort ausblenden", collectiveTitle:"Meine Wahl: ein Mensch, für den wir gemeinsam Verantwortung tragen", volunteerTitle:"Wenn ich freiwillig teilnehmen würde", collectiveChoices:"Antworten im Fragebogen", volunteerChoices:"Meine zusätzlichen Antworten", reaction:"♡ Interessanter Gedanke · –", reactionCollectiveTitle:"Reaktionen auf die Antwort des Autors werden nicht gezählt", reactionVolunteerTitle:"Reaktionen auf das Beispiel des Autors werden nicht gezählt", share:"Antwort teilen", copied:"Link kopiert"},
+    ja: {author:'実験の発案者による回答', note:'発案者の例です。独立した参加者の回答ではなく、統計には含まれません。', number:'No. 1', show:"回答全文を読む", hide:"回答全文を閉じる", collectiveTitle:"私の選択：私たちが共に責任を担う一人の人", volunteerTitle:"もし私が参加者だったら", collectiveChoices:"アンケートでの選択", volunteerChoices:"追加の回答", reaction:"♡ 興味深い考え · –", reactionCollectiveTitle:"発案者の回答はリアクション数に含まれません", reactionVolunteerTitle:"発案者の例はリアクション数に含まれません", share:"回答を共有", copied:"リンクをコピーしました"},
+    fr: {author:'Réponse de l’auteur de l’expérience', note:'Exemple de l’auteur. Ce n’est pas une réponse d’un participant indépendant et elle n’est pas comptabilisée.', number:'N° 1', show:"Lire la réponse complète", hide:"Masquer la réponse complète", collectiveTitle:"Mon choix : une personne dont nous sommes collectivement responsables", volunteerTitle:"Si j’étais volontaire", collectiveChoices:"Choix dans le questionnaire", volunteerChoices:"Mes réponses supplémentaires", reaction:"♡ Idée intéressante · –", reactionCollectiveTitle:"Les réactions à la réponse de l’auteur ne sont pas comptabilisées", reactionVolunteerTitle:"Les réactions à l’exemple de l’auteur ne sont pas comptabilisées", share:"Partager la réponse", copied:"Lien copié"},
+    ar: {author:'إجابة صاحب فكرة التجربة', note:'مثال من صاحب الفكرة، وليس إجابة مشارك مستقل، ولا يُحتسب ضمن الإحصاءات.', number:'رقم 1', show:"قراءة الإجابة كاملة", hide:"إخفاء الإجابة كاملة", collectiveTitle:"اختياري: شخص نتحمل مسؤوليته معًا", volunteerTitle:"لو كنت متطوعًا", collectiveChoices:"اختيارات الاستبيان", volunteerChoices:"إجاباتي الإضافية", reaction:"♡ فكرة مثيرة للاهتمام · –", reactionCollectiveTitle:"لا تُحتسب التفاعلات مع إجابة صاحب الفكرة", reactionVolunteerTitle:"لا تُحتسب التفاعلات مع مثال صاحب الفكرة", share:"مشاركة الإجابة", copied:"تم نسخ الرابط"},
   };
 
 
@@ -454,11 +454,10 @@
     else card.append(top, toggle, full);
 
     if (kind === 'collective') {
-      const ru = locale === 'ru';
       const choices = document.createElement('div');
       choices.className = 'answer-context author-questionnaire-choices';
       const choicesTitle = document.createElement('strong');
-      choicesTitle.textContent = ru ? 'Выборы в опроснике' : 'Questionnaire choices';
+      choicesTitle.textContent = words.collectiveChoices;
       choices.append(choicesTitle);
       const selected = ru ? [
         ['Если бы ты мог изменить этого человека, что бы ты изменил в первую очередь?', 'Всё, что посчитал бы нужным'],
@@ -485,18 +484,18 @@
       reaction.type = 'button';
       reaction.className = 'reaction-button';
       reaction.disabled = true;
-      reaction.textContent = ru ? '♡ Интересная мысль · –' : '♡ Interesting thought · –';
-      reaction.title = ru ? 'Авторский ответ не участвует в подсчёте реакций' : 'Reactions are not counted for the author answer';
+      reaction.textContent = words.reaction;
+      reaction.title = words.reactionCollectiveTitle;
       const share = document.createElement('button');
       share.type = 'button';
       share.className = 'subtle-button';
-      share.textContent = ru ? 'Поделиться ответом' : 'Share answer';
+      share.textContent = words.share;
       share.addEventListener('click', async () => {
         const url = new URL(window.location.href);
         url.hash = 'author-answer-1';
         try {
           await navigator.clipboard.writeText(url.toString());
-          share.textContent = ru ? 'Ссылка скопирована' : 'Link copied';
+          share.textContent = words.copied;
         } catch {
           window.location.hash = 'author-answer-1';
         }
@@ -506,11 +505,10 @@
     }
 
     if (kind === 'volunteer') {
-      const ru = locale === 'ru';
       const choices = document.createElement('div');
       choices.className = 'answer-context author-questionnaire-choices';
       const choicesTitle = document.createElement('strong');
-      choicesTitle.textContent = ru ? 'Мои дополнительные ответы' : 'My additional answers';
+      choicesTitle.textContent = words.volunteerChoices;
       choices.append(choicesTitle);
       const selected = ru ? [
         ['1. Что бы ты позволил человечеству изменить в себе?', 'Доверил бы человечеству самостоятельно решать, что менять, сохранив лишь несколько принципиальных условий.'],
@@ -555,19 +553,19 @@
       reaction.type = 'button';
       reaction.className = 'reaction-button';
       reaction.disabled = true;
-      reaction.textContent = ru ? '♡ Интересная мысль · –' : '♡ Interesting thought · –';
-      reaction.title = ru ? 'Авторский пример не участвует в подсчёте реакций' : 'Reactions are not counted for the author example';
+      reaction.textContent = words.reaction;
+      reaction.title = words.reactionVolunteerTitle;
 
       const share = document.createElement('button');
       share.type = 'button';
       share.className = 'subtle-button';
-      share.textContent = ru ? 'Поделиться ответом' : 'Share answer';
+      share.textContent = words.share;
       share.addEventListener('click', async () => {
         const url = new URL(window.location.href);
         url.hash = 'author-answer-volunteer';
         try {
           await navigator.clipboard.writeText(url.toString());
-          share.textContent = ru ? 'Ссылка скопирована' : 'Link copied';
+          share.textContent = words.copied;
         } catch {
           window.location.hash = 'author-answer-volunteer';
         }
