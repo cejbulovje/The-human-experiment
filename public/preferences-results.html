@@ -804,6 +804,11 @@
     fillPersonalPage(0);
   }
   document.addEventListener('DOMContentLoaded', render, { once: true });
+  document.addEventListener('human-experiment-language-change', () => {
+    const list = document.querySelector('.hypothetical-answer-list');
+    const page = Math.max(0, Number(list?.dataset.testSamplesPage || 0));
+    fillPersonalPage(page);
+  });
   document.addEventListener('DOMContentLoaded', () => {
     const more = document.getElementById('hypothetical-load-more');
     const previous = document.getElementById('hypothetical-load-previous');
