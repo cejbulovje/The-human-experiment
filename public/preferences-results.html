@@ -522,7 +522,7 @@
     const article=node('article',undefined,'answer-card');
     const header=node('div',undefined,'answer-card-header');
     header.append(node('strong',item.pseudonym || personalMessages().anonymous));
-    header.append(node('time',item.createdAt ? new Date(item.createdAt).toLocaleDateString() : ''));
+    header.append(node('time',item.createdAt ? new Date(item.createdAt).toLocaleDateString(document.documentElement.lang || 'en') : ''));
     article.append(header);
     for(const key of ['scope','motivation','priority','preserve','wishes','body']) {
       const raw=item.answers?.[key];
