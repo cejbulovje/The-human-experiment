@@ -395,6 +395,8 @@ test('personal preferences consent UI wires Turnstile, consent-gated save/delete
   assert.ok(page.includes("fetch('/api/preferences'"));
   assert.ok(page.includes("fetch('/api/preferences/delete'"));
   assert.ok(page.includes('window.onPreferenceTurnstileSuccess'));
+  assert.ok(page.includes('const preferencesSavingEnabled = false;'));
+  assert.ok(page.includes('preferencesSavingEnabled && turnstileToken'));
   assert.ok(index.includes("if(env.PREFERENCES_ENABLED!=='true')return json({ok:false,error:'preferences_disabled'},503)"));
   assert.ok(index.includes('readJsonLimited(request,12000)'));
 });
