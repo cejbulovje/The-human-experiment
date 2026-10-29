@@ -585,7 +585,7 @@
   ];
   const baseTestSamples = samples.hypothetical.slice();
   const baseCollectiveSamples = samples.collective.slice();
-  for (let testIndex = 0; testIndex < 100; testIndex += 1) {
+  for (let testIndex = 0; testIndex < 97; testIndex += 1) {
     const text = extraTestTexts[testIndex % extraTestTexts.length] + ' (дополнительный тестовый вариант ' + (testIndex + 1) + ').';
     const personalBase = baseTestSamples[testIndex % baseTestSamples.length];
     samples.hypothetical.push({
@@ -611,7 +611,7 @@
     top.className = 'answer-card-top';
     const code = document.createElement('span');
     code.className = 'answer-code';
-    code.textContent = ru ? 'ТЕСТОВЫЙ ОТВЕТ · НЕ УЧИТЫВАЕТСЯ В СТАТИСТИКЕ' : 'SAMPLE ANSWER · EXCLUDED FROM STATISTICS';
+    code.textContent = ru ? '№ ' + (index + 1) + ' · ТЕСТОВЫЙ ОТВЕТ · НЕ УЧИТЫВАЕТСЯ В СТАТИСТИКЕ' : '# ' + (index + 1) + ' · SAMPLE ANSWER · EXCLUDED FROM STATISTICS';
     top.append(code);
 
     const preview = document.createElement('p');
@@ -637,7 +637,7 @@
     full.hidden = true;
     const heading = document.createElement('h3');
     heading.className = 'author-answer-title';
-    heading.textContent = (ru ? 'Демонстрационный ответ №' : 'Sample answer #') + index;
+    heading.textContent = (ru ? 'Демонстрационный ответ №' : 'Sample answer #') + (index + 1);
     const body = document.createElement('div');
     body.className = 'author-answer-body';
     const paragraph = document.createElement('p');
