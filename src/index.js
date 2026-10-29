@@ -318,7 +318,7 @@ async function submitPreferences(request,env){
   // This endpoint is deliberately disabled unless explicitly enabled in the environment.
   if(env.PREFERENCES_ENABLED!=='true')return json({ok:false,error:'preferences_disabled'},503);
   if(!env.DB||!env.TURNSTILE_SECRET_KEY||!env.RATE_LIMIT_SALT)return json({ok:false,error:'not_configured'},503);
-  const parsed=await readJsonLimited(request,4096);
+  const parsed=await readJsonLimited(request,12000);
   if(parsed.error)return json({ok:false,error:parsed.error},parsed.error==='too_large'?413:400);
   const body=parsed.body;
   const languages=['en','ru','es','pt','zh','de','ja','fr','ar'];

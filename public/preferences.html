@@ -9,6 +9,7 @@
   <link rel="stylesheet" href="/styles.css">
   <script src="/nav.js" defer></script>
   <script src="/preferences-i18n.js" defer></script>
+  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <style>
     .skip-link{position:absolute;top:8px;left:8px;z-index:1000;transform:translateY(-160%);padding:10px 14px;background:#fff;color:#20221f;border:2px solid #254c3b;border-radius:8px;font-weight:700}
     .skip-link:focus{transform:translateY(0);outline:3px solid #92b9a1;outline-offset:2px}
@@ -33,6 +34,8 @@
     .consent-group{display:grid;gap:10px;margin:18px 0 24px}
     .preference-card button:disabled,.preference-card input:disabled{opacity:.55;cursor:not-allowed}
     .deletion-token-field{display:grid;grid-template-columns:1fr;cursor:default}
+    .turnstile-wrap{margin:18px 0;min-height:65px}
+    #submit-preferences:disabled{opacity:.55;cursor:not-allowed}
     .preference-card input[type="password"]{width:100%;padding:12px 14px;border:1px solid #c9cbc2;border-radius:10px;background:#fff;color:var(--ink);font:inherit}
     #deletion-token-display{display:block;overflow-wrap:anywhere;padding:12px;background:#fff;border:1px solid #c9cbc2;border-radius:8px}
   </style>
@@ -106,8 +109,10 @@
         <p id="comment-counter" class="privacy-hint" aria-live="polite">0 / 10000</p>
       </section>
 
+      <div class="turnstile-wrap"><div class="cf-turnstile" id="preferences-turnstile" data-sitekey="0x4AAAAAAFXnc77nuap7FdMr" data-theme="light" data-callback="onPreferenceTurnstileSuccess" data-expired-callback="onPreferenceTurnstileExpired" data-error-callback="onPreferenceTurnstileExpired"></div></div>
       <p class="privacy-hint" id="preferences-submit-status" role="status" aria-live="polite" data-pref-i18n="saveDisabled"></p>
       <div class="action-row">
+        <button type="button" id="submit-preferences" disabled data-pref-i18n="saveButton">Сохранить мой ответ</button>
         <button type="button" id="show-summary">Посмотреть сводку ответа</button>
         <button type="button" class="secondary" id="reset-form">Очистить форму</button>
       </div>
@@ -142,6 +147,51 @@
     const summary = document.getElementById('result-summary');
     const commentField = form.querySelector('textarea[name="comment"]');
     const commentCounter = document.getElementById('comment-counter');
+    const submitButton = document.getElementById('submit-preferences');
+    const submitStatus = document.getElementById('preferences-submit-status');
+    const storeConsent = document.getElementById('consent-store');
+    const publicConsent = document.getElementById('consent-public');
+    const aggregateConsent = document.getElementById('consent-aggregate');
+    const deletionTokenField = document.getElementById('deletion-token');
+    const deleteButton = document.getElementById('delete-preferences');
+    const savedConfirmation = document.getElementById('preferences-saved-confirmation');
+    let turnstileToken = '';
+    function saveText(key, fallback) { return window.preferenceI18n?.locales?.[document.documentElement.lang]?.[key] || fallback; }
+    function syncSubmitButton() { submitButton.disabled = !(turnstileToken && storeConsent.checked && selected('scope').length === 1 && savedConfirmation.hidden); }
+    window.onPreferenceTurnstileSuccess = token => { turnstileToken = token; submitStatus.textContent = ''; syncSubmitButton(); };
+    window.onPreferenceTurnstileExpired = () => { turnstileToken = ''; submitStatus.textContent = saveText('saveError','Security check expired. Please try again.'); syncSubmitButton(); };
+    [storeConsent, publicConsent, aggregateConsent, ...form.querySelectorAll('input[name="scope"]')].forEach(input => input.addEventListener('change', syncSubmitButton));
+    submitButton.addEventListener('click', async () => {
+      syncSubmitButton(); if (submitButton.disabled) return;
+      submitButton.disabled = true; submitStatus.textContent = '';
+      const payload = {language:document.documentElement.lang,answers:{scope:selected('scope')[0],motivation:selected('motivation')},comment:commentField.value.trim(),consentToStore:storeConsent.checked,publicConsent:publicConsent.checked,aggregateConsent:aggregateConsent.checked,turnstileToken};
+      try {
+        const response = await fetch('/api/preferences',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
+        const data = await response.json();
+        if (!response.ok || data.ok !== true || typeof data.deletionToken !== 'string') {
+          submitStatus.textContent = data.error === 'preferences_disabled' ? saveText('saveDisabled','Saving is disabled. No answer was stored.') : saveText('saveError','Could not save the answer. No answer was stored. Please try again.');
+          turnstileToken = ''; if (window.turnstile) window.turnstile.reset('#preferences-turnstile'); syncSubmitButton(); return;
+        }
+        deletionTokenField.value = data.deletionToken; deletionTokenField.disabled = false; deleteButton.disabled = false;
+        document.getElementById('deletion-token-display').textContent = data.deletionToken;
+        savedConfirmation.hidden = false; submitStatus.textContent = saveText('savedTitle','Response saved.'); syncSubmitButton();
+        savedConfirmation.scrollIntoView({behavior:'smooth',block:'start'});
+      } catch {
+        submitStatus.textContent = saveText('saveError','Could not save the answer. No answer was stored. Please try again.');
+        turnstileToken = ''; if (window.turnstile) window.turnstile.reset('#preferences-turnstile'); syncSubmitButton();
+      }
+    });
+    deleteButton.addEventListener('click', async () => {
+      const token = deletionTokenField.value.trim(); if (!token || deleteButton.disabled) return; deleteButton.disabled = true;
+      try {
+        const response = await fetch('/api/preferences/delete',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({deletionToken:token})});
+        const data = await response.json();
+        if (!response.ok || data.ok !== true) { submitStatus.textContent = saveText('deleteDisabled','Deletion is unavailable right now.'); deleteButton.disabled = false; return; }
+        deletionTokenField.value = ''; deletionTokenField.disabled = true; savedConfirmation.hidden = true;
+        document.getElementById('deletion-token-display').textContent = ''; submitStatus.textContent = saveText('deleteSuccess','The deletion request was completed.');
+        turnstileToken = ''; if (window.turnstile) window.turnstile.reset('#preferences-turnstile'); syncSubmitButton();
+      } catch { submitStatus.textContent = saveText('deleteDisabled','Deletion is unavailable right now.'); deleteButton.disabled = false; }
+    });
     function updateCommentCounter() { commentCounter.textContent = commentField.value.length.toLocaleString() + ' / 10,000'; }
     commentField.addEventListener('input', updateCommentCounter);
     const motivationInputs = [...form.querySelectorAll('input[name="motivation"]')];
@@ -172,6 +222,7 @@
       commentField.value = '';
       updateCommentCounter();
       result.hidden = true;
+      turnstileToken = ''; if (window.turnstile) window.turnstile.reset('#preferences-turnstile'); syncSubmitButton();
     });
     document.getElementById('edit-response').addEventListener('click', () => {
       result.hidden = true;

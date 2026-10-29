@@ -374,9 +374,10 @@ test('preferences and AI endpoint routes are inside fetch and AI dispatch preced
   assert.equal((index.match(/url\.pathname==='\/api\/ai-analysis'/g) || []).length, 1);
 });
 
-test('personal preferences consent UI is separate, translated, and remains disabled in the prototype', () => {
+test('personal preferences consent UI wires Turnstile, consent-gated save/delete, and stays disabled by default', () => {
   const page = readFileSync(new URL('../public/preferences.html', import.meta.url), 'utf8');
   const translations = readFileSync(new URL('../public/preferences-i18n.js', import.meta.url), 'utf8');
+  const index = readFileSync(new URL('../src/index.js', import.meta.url), 'utf8');
   for (const id of ['consent-store', 'consent-public', 'consent-aggregate']) assert.ok(page.includes(`id="${id}"`));
   assert.match(page, /id="preferences-saved-confirmation"[^>]*hidden/);
   assert.match(page, /id="deletion-token"[^>]*disabled/);
@@ -385,10 +386,15 @@ test('personal preferences consent UI is separate, translated, and remains disab
   for (const lang of ['ru','en','es','pt','de','fr','ja','zh','ar']) {
     const line = translations.split(String.fromCharCode(10)).find(value => value.startsWith(`    ${lang}: {`));
     assert.ok(line, `missing locale ${lang}`);
-    for (const key of ['consentStore','consentPublic','consentAggregate','deleteTitle','deleteDisabled','savedTitle']) {
+    for (const key of ['consentStore','consentPublic','consentAggregate','deleteTitle','deleteDisabled','savedTitle','saveButton','savePrompt','saveError','deleteSuccess']) {
       assert.ok(line.includes(`${key}:`), `missing ${key} in ${lang}`);
     }
   }
-  assert.ok(!page.includes('fetch("/api/preferences"'));
-  assert.ok(!page.includes("fetch('/api/preferences'"));
+  assert.ok(page.includes('https://challenges.cloudflare.com/turnstile/v0/api.js'));
+  assert.ok(page.includes('data-sitekey="0x4AAAAAAFXnc77nuap7FdMr"'));
+  assert.ok(page.includes("fetch('/api/preferences'"));
+  assert.ok(page.includes("fetch('/api/preferences/delete'"));
+  assert.ok(page.includes('window.onPreferenceTurnstileSuccess'));
+  assert.ok(index.includes("if(env.PREFERENCES_ENABLED!=='true')return json({ok:false,error:'preferences_disabled'},503)"));
+  assert.ok(index.includes('readJsonLimited(request,12000)'));
 });
