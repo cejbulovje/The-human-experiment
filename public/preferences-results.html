@@ -683,7 +683,16 @@
       section.className = 'author-questionnaire-section';
       const label = document.createElement('strong');
       label.className = 'author-questionnaire-question';
-      label.textContent = (questionIndex + 1) + '. ' + question;
+      const personalQuestionLabels = ru
+        ? [
+            'Что бы ты позволил человечеству изменить в себе?',
+            'Что могло бы побудить тебя участвовать в этом эксперименте?'
+          ]
+        : [
+            'What would you allow humanity to change about you?',
+            'What might motivate you to take part in this experiment?'
+          ];
+      label.textContent = (questionIndex + 1) + '. ' + (kind === 'hypothetical' ? (personalQuestionLabels[questionIndex] || question) : question);
       section.append(label);
       const answers = String(answer || '').split(';').map(value => value.trim()).filter(Boolean);
       if (answers.length > 1) {
