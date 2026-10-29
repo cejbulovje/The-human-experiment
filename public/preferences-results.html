@@ -1011,8 +1011,15 @@
     for (let index = shown; index < next; index += 1) {
       list.append(makeSample(samples.hypothetical[index], 'hypothetical', index + 1));
     }
+    const currentPage = Math.floor(shown / pageSize);
+    if (authorRoot) {
+      const authorCard = authorRoot.querySelector('.author-answer-card');
+      authorRoot.hidden = currentPage > 0;
+      authorRoot.style.display = currentPage > 0 ? 'none' : '';
+      if (authorCard) authorCard.hidden = currentPage > 0;
+    }
     list.dataset.testSamplesShown = String(next);
-    list.dataset.testSamplesPage = String(Math.floor(shown / pageSize));
+    list.dataset.testSamplesPage = String(currentPage);
     const previous = document.getElementById('hypothetical-load-previous');
     if (previous) previous.hidden = shown === 0;
     if (more) {
@@ -1049,12 +1056,6 @@
       event.stopImmediatePropagation();
       fillPersonalPage(0);
     }, true);
-    const authorRoot = document.getElementById('author-answer-hypothetical');
-    if (authorRoot) {
-      authorRoot.hidden = false;
-      const list = authorRoot.parentElement;
-      if (list && list.firstElementChild !== authorRoot) list.prepend(authorRoot);
-    }
   }, { once: true });
 
 })();

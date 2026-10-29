@@ -173,11 +173,11 @@ async function publicResponses(request,env){
   if(url.searchParams.has('from')){if(validDate(from)){clauses.push('substr(r.created_at,1,10)>=?');binds.push(from);}else{clauses.push('1=0');}}
   if(url.searchParams.has('to')){if(validDate(to)){clauses.push('substr(r.created_at,1,10)<=?');binds.push(to);}else{clauses.push('1=0');}}
   const where=clauses.join(' AND ');
-  let order='r.created_at DESC';
-  if(sort==='oldest')order='r.created_at ASC';
+  let order='r.created_at DESC, r.id DESC';
+  if(sort==='oldest')order='r.created_at ASC, r.id ASC';
   else if(sort==='random')order='RANDOM()';
-  else if(sort==='popular')order='reaction_count DESC, r.created_at DESC';
-  else if(sort==='unusual')order='topic_frequency ASC, length(r.free_answer) DESC, r.created_at DESC';
+  else if(sort==='popular')order='reaction_count DESC, r.created_at DESC, r.id DESC';
+  else if(sort==='unusual')order='topic_frequency ASC, length(r.free_answer) DESC, r.created_at DESC, r.id DESC';
   const count=await env.DB.prepare(`SELECT COUNT(*) AS total FROM responses r WHERE ${where}`).bind(...binds).first();
   const rows=await env.DB.prepare(`SELECT r.id, r.public_id, r.participant_id, r.free_answer, r.language, r.topic, r.created_at, r.q2, r.q3, r.q4, r.q2_other, r.q3_other, r.q4_other, r.gender, r.signature,
     (SELECT COUNT(*) FROM response_reactions rr WHERE rr.response_id=r.id AND rr.reaction='interesting') AS reaction_count,
