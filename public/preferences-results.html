@@ -756,7 +756,16 @@
       renderPersonalStatistics(summary);
     } catch { stats.textContent=personalMessages().statsUnavailable; }
   }
-  const historyControls=node('div'); historyControls.className='answer-history-controls'; const previous=node('button','← Предыдущие','subtle-button'); previous.type='button'; previous.id='hypothetical-load-previous'; previous.hidden=true; previous.addEventListener('click',()=>load(true,Math.max(0,offset-(Number(pageSize.value)||20)))); const more=node('button','Следующие →','show-more-button'); more.type='button'; more.id='hypothetical-load-more'; more.hidden=true; more.addEventListener('click',()=>load(true,offset)); historyControls.append(previous,more); status.after(historyControls);
+  const historyLabels = {
+    en:['← Previous','Next →'],ru:['← Предыдущие','Следующие →'],es:['← Anteriores','Siguientes →'],pt:['← Anteriores','Próximas →'],zh:['← 上一页','下一页 →'],de:['← Zurück','Weiter →'],ja:['← 前へ','次へ →'],fr:['← Précédentes','Suivantes →'],ar:['← السابق','التالي →']
+  };
+  const updateHistoryLabels = () => {
+    const labels = historyLabels[(document.documentElement.lang || 'en').split('-')[0]] || historyLabels.en;
+    previous.textContent = labels[0];
+    more.textContent = labels[1];
+  };
+  const historyControls=node('div'); historyControls.className='answer-history-controls'; const previous=node('button',undefined,'subtle-button'); previous.type='button'; previous.id='hypothetical-load-previous'; previous.hidden=true; previous.addEventListener('click',()=>load(true,Math.max(0,offset-(Number(pageSize.value)||20)))); const more=node('button',undefined,'show-more-button'); more.type='button'; more.id='hypothetical-load-more'; more.hidden=true; more.addEventListener('click',()=>load(true,offset)); updateHistoryLabels(); historyControls.append(previous,more); status.after(historyControls);
+  document.addEventListener('results-language-changed', updateHistoryLabels);
   let debounce;
   search.addEventListener('input',()=>{clearTimeout(debounce);debounce=setTimeout(()=>load(true),250);});
   [question,sort,pageSize].forEach(el=>el.addEventListener('change',()=>load(true)));
