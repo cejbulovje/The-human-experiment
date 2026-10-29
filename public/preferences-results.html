@@ -411,7 +411,17 @@
     wishes:{ask:'Сначала спросить меня и выслушать ответ',limits:'Действовать в заранее обозначенных пределах',decide:'Оставить окончательное решение тому, кто получил власть',consent:'Получать моё согласие на существенные изменения'},
     body:{consent:'Допускать изменения только с моего согласия',discuss:'Сначала обсуждать последствия и альтернативы',unimportant:'Это не главный вопрос по сравнению с другими приоритетами',context:'Зависит от конкретного изменения и обстоятельств'}
   };
-  const names = {scope:'Что я позволю менять',motivation:'Почему я участвую',priority:'Главный приоритет',preserve:'Что важно сохранить',wishes:'Как учитывать желания',body:'Изменения тела'};
+  const namesByLanguage = {
+    en:['What I would allow to change','Why I am taking part','Main priority','What to preserve','How to consider my wishes','Body changes'],
+    ru:['Что я позволю менять','Почему я участвую','Главный приоритет','Что важно сохранить','Как учитывать желания','Изменения тела'],
+    es:['Qué permitiría cambiar','Por qué participo','Prioridad principal','Qué preservar','Cómo considerar mis deseos','Cambios corporales'],
+    pt:['O que permitiria mudar','Por que participo','Prioridade principal','O que preservar','Como considerar meus desejos','Mudanças corporais'],
+    zh:['我允许改变的内容','我参与的原因','首要优先事项','需要保留的内容','如何考虑我的意愿','身体变化'],
+    de:['Was ich ändern lassen würde','Warum ich teilnehme','Wichtigste Priorität','Was bewahrt werden soll','Wie meine Wünsche zählen','Körperliche Veränderungen'],
+    ja:['自分が変更を認めること','参加する理由','最優先事項','守りたいもの','希望の考慮方法','身体の変更'],
+    fr:['Ce que je laisserais changer','Pourquoi je participe','Priorité principale','Ce qu’il faut préserver','Comment considérer mes souhaits','Changements corporels'],
+    ar:['ما أسمح بتغييره','سبب مشاركتي','الأولوية الرئيسية','ما ينبغي الحفاظ عليه','كيفية مراعاة رغباتي','تغييرات الجسم']
+  };
   const personalResultsMessages = {
     en: {
       anonymous:'Anonymous participant', loading:'Loading public answers…', shown:(shown,total)=>`Showing ${shown} of ${total} public answers.`, noAnswers:'No public answers yet.', loadError:'Could not load answers. Please try again later.',
@@ -528,7 +538,7 @@
       const raw=item.answers?.[key];
       if(raw===undefined) continue;
       const vals=(Array.isArray(raw)?raw:[raw]).map(v=>labels[key]?.[v] || String(v));
-      const p=node('p'); p.append(node('strong',names[key]+': '),document.createTextNode(vals.join(', '))); article.append(p);
+      const p=node('p'); p.append(node('strong',(namesByLanguage[(document.documentElement.lang||'en').split('-')[0]]||namesByLanguage.en)[['scope','motivation','priority','preserve','wishes','body'].indexOf(key)]+': '),document.createTextNode(vals.join(', '))); article.append(p);
     }
     if(item.comment) { const p=node('p',item.comment); p.className='answer-comment'; article.append(p); }
     return article;
