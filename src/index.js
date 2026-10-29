@@ -278,9 +278,9 @@ async function publicPreferences(request,env){
   if(question&&!questionKeys.includes(question))return json({error:'invalid_question'},400);
   try{
     const direction=sort==='oldest'?'ASC':'DESC';
-    const rows=await env.DB.prepare(`SELECT id,language,answers_json,comment,created_at FROM hypothetical_preferences ORDER BY created_at ${direction},id ${direction}`).all();
+    const rows=await env.DB.prepare(`SELECT id,ROW_NUMBER() OVER (ORDER BY created_at ASC,id ASC)+1 AS answer_number,language,answers_json,comment,created_at FROM hypothetical_preferences ORDER BY created_at ${direction},id ${direction}`).all();
     let answers=(rows.results||[]).map(row=>({
-      id:Number(row.id),answerNumber:Number(row.id)+1,language:row.language,answers:JSON.parse(row.answers_json),
+      id:Number(row.id),answerNumber:Number(row.answer_number),language:row.language,answers:JSON.parse(row.answers_json),
       comment:row.comment||'',createdAt:row.created_at
     }));
     if(q)answers=answers.filter(item=>[item.comment,JSON.stringify(item.answers)].some(value=>String(value||'').toLocaleLowerCase().includes(q)));
