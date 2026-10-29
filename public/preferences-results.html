@@ -412,7 +412,6 @@
     body:{consent:'Допускать изменения только с моего согласия',discuss:'Сначала обсуждать последствия и альтернативы',unimportant:'Это не главный вопрос по сравнению с другими приоритетами',context:'Зависит от конкретного изменения и обстоятельств'}
   };
   const names = {scope:'Что я позволю менять',motivation:'Почему я участвую',priority:'Главный приоритет',preserve:'Что важно сохранить',wishes:'Как учитывать желания',body:'Изменения тела'};
-  const otherNamesByLanguage = {en:{priority:'Main priority',preserve:'What to preserve',wishes:'How wishes should be considered',body:'Bodily changes'},es:{priority:'Prioridad principal',preserve:'Qué preservar',wishes:'Cómo tener en cuenta los deseos',body:'Cambios corporales'},pt:{priority:'Prioridade principal',preserve:'O que preservar',wishes:'Como considerar os desejos',body:'Mudanças corporais'},zh:{priority:'首要考虑',preserve:'需要保留什么',wishes:'如何考虑个人意愿',body:'身体变化'},de:{priority:'Höchste Priorität',preserve:'Was bewahrt werden soll',wishes:'Wie Wünsche berücksichtigt werden sollen',body:'Körperliche Veränderungen'},ja:{priority:'最優先事項',preserve:'守りたいもの',wishes:'希望をどう考慮するか',body:'身体の変化'},fr:{priority:'Priorité principale',preserve:'Ce qu’il faut préserver',wishes:'Comment tenir compte des souhaits',body:'Modifications corporelles'},ar:{priority:'الأولوية الرئيسية',preserve:'ما يجب الحفاظ عليه',wishes:'كيفية مراعاة الرغبات',body:'التغييرات الجسدية'}};
   const personalResultsMessages = {
     en: {
       anonymous:'Anonymous participant', loading:'Loading public answers…', shown:(shown,total)=>`Showing ${shown} of ${total} public answers.`, noAnswers:'No public answers yet.', loadError:'Could not load answers. Please try again later.',
@@ -618,7 +617,7 @@
       group.append(bars);root.append(group);
     };
     renderGroup(messages.scopeTitle,'scope');
-    renderGroup(ru?'2. Что могло бы побудить тебя участвовать?':'2. What might motivate you to participate?','motivation');
+    renderGroup(messages.motivationTitle,'motivation');
     const note=document.createElement('p');note.className='method-note';note.textContent=messages.multiNote;
     root.append(note);root.hidden=false;
   }
@@ -666,6 +665,11 @@
   stats.textContent = personalMessages().statsLoading;
   loadStats();
   load(true);
+  document.addEventListener('results-language-changed', () => {
+    stats.textContent = personalMessages().statsLoading;
+    loadStats();
+    load(true);
+  });
 })();
 </script>
 
