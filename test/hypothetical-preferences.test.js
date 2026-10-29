@@ -298,6 +298,16 @@ test('deletion endpoint rejects malformed tokens before database access', async 
   assert.deepEqual(await response.json(),{ok:false,error:'invalid_token'});
 });
 
+test('personal answer cards share the results feed header and stable numbering', () => {
+  const page = readFileSync(new URL('../public/preferences-results.html', import.meta.url), 'utf8');
+  assert.ok(page.includes("const top=node('div',undefined,'answer-card-top')"));
+  assert.ok(page.includes("'answer-code'"));
+  assert.ok(page.includes('item.answerNumber ?? (Number(item.id)+1)'));
+  assert.ok(!page.includes('answer-card-header'));
+  const api = readFileSync(new URL('../src/index.js', import.meta.url), 'utf8');
+  assert.ok(api.includes('answerNumber:Number(row.id)+1'));
+});
+
 test('personal author answer is hidden outside the first results page', () => {
   const page = readFileSync(new URL('../public/preferences-results.html', import.meta.url), 'utf8');
   assert.match(page, /let offset = 0, currentPageStart = 0/);
