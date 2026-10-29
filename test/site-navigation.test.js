@@ -228,4 +228,7 @@ test('combined Results demo renders personal sample cards with participant styli
   assert.match(preview, /card\.className = 'answer-card preview-sample-answer'/);
   assert.match(preview, /card\.id = 'sample-answer-' \+ kind \+ '-' \+ index/);
   assert.match(preview, /card\.append\(top, freeTextQuestion, preview, toggle, full, choices, actions\)/);
+  const results = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
+  assert.match(results, /demoItems\('collective'\)\.filter\(item=>item\.answerNumber!==1\)/);
+  assert.match(results, /if\(currentPageStart>0\).*author-answer-card/);
 });
