@@ -587,21 +587,116 @@
     card.append(top, preview, toggle, full, choices, actions);
     return card;
   }
-  function fill(list, kind) {
+  const demoState = {
+    collective: { shown: 0, filtered: [] },
+    hypothetical: { shown: 0, filtered: [] }
+  };
+  function controls(kind) {
+    return kind === 'collective'
+      ? { list: document.getElementById('answer-list'), search: document.getElementById('answer-search'), topic: document.getElementById('topic-filter'), size: document.getElementById('answers-per-page'), more: document.getElementById('show-more'), status: document.getElementById('answers-status'), total: document.getElementById('answer-total') }
+      : { list: document.querySelector('.hypothetical-answer-list'), search: document.getElementById('hypothetical-search'), topic: document.getElementById('hypothetical-question-filter'), size: document.getElementById('hypothetical-page-size'), more: null, status: document.getElementById('hypothetical-status'), total: document.getElementById('hypothetical-stats') };
+  }
+  function matchingSamples(kind) {
+    const c = controls(kind);
+    const query = (c.search?.value || '').trim().toLocaleLowerCase();
+    const topic = c.topic?.value || '';
+    return samples[kind].map((item, index) => ({ item, index })).filter(({item}) => {
+      const searchable = [item.text, ...(item.choices || []).flat()].join(' ').toLocaleLowerCase();
+      const topicMatch = !topic || (item.choices || []).some(([question]) => {
+        const q = String(question).toLocaleLowerCase();
+        return q.includes(topic) || topic === 'q2' && /first|первую|приоритет|главн/i.test(q)
+          || topic === 'q3' && /conflict|расходятся|сохранить|желания/i.test(q)
+          || topic === 'q4' && /majority|большинство|другие/i.test(q);
+      });
+      return (!query || searchable.includes(query)) && topicMatch;
+    });
+  }
+  function fill(list, kind, reset = false) {
     if (!list) return;
-    const existing = [...list.querySelectorAll(':scope > .preview-sample-answer')];
-    if (existing.length === samples[kind].length) return;
-    existing.forEach(card => card.remove());
-    samples[kind].forEach((item, index) => list.append(makeSample(item, kind, index + 1)));
+    const c = controls(kind), state = demoState[kind];
+    if (reset) state.shown = 0;
+    state.filtered = matchingSamples(kind);
+    const pageSize = Math.max(1, Number(c.size?.value) || 20);
+    const visible = state.filtered.slice(0, Math.min(state.filtered.length, state.shown + pageSize));
+    const current = [...list.querySelectorAll(':scope > .preview-sample-answer')];
+    const currentKeys = current.map(card => Number(card.dataset.previewSample));
+    const expectedKeys = visible.map(entry => entry.index + 1);
+    if (currentKeys.length !== expectedKeys.length || currentKeys.some((value, index) => value !== expectedKeys[index])) {
+      current.forEach(card => card.remove());
+      visible.forEach(({item,index}) => list.append(makeSample(item, kind, index + 1)));
+    }
     const empty = list.querySelector('.hypothetical-empty-state');
     if (empty) empty.hidden = true;
+    if (kind === 'collective') {
+      const author = document.getElementById('author-answer-collective');
+      if (author && list.firstElementChild !== author) list.prepend(author);
+    } else {
+      const author = document.getElementById('author-answer-hypothetical');
+      if (author && list.firstElementChild !== author) list.prepend(author);
+    }
+    const remaining = Math.max(0, state.filtered.length - visible.length);
+    if (c.more) {
+      c.more.hidden = remaining === 0;
+      c.more.textContent = ru ? 'Показать ещё тестовые ответы' : 'Show more test answers';
+    }
+    if (c.status) {
+      c.status.hidden = true;
+      c.status.textContent = '';
+    }
+    if (c.total) {
+      c.total.textContent = kind === 'collective'
+        ? (ru ? 'Тестовые карточки: ' : 'Test cards: ') + state.filtered.length + (ru ? '. Не учитываются в статистике.' : '. Excluded from statistics.')
+        : (ru ? 'Тестовые карточки: ' : 'Test cards: ') + state.filtered.length + (ru ? '. Не учитываются в статистике.' : '. Excluded from statistics.');
+    }
   }
-  function render() {
-    fill(document.getElementById('answer-list'), 'collective');
-    fill(document.querySelector('.hypothetical-answer-list'), 'hypothetical');
+  function render(reset = false) {
+    fill(document.getElementById('answer-list'), 'collective', reset);
+    fill(document.querySelector('.hypothetical-answer-list'), 'hypothetical', reset);
   }
-  document.addEventListener('DOMContentLoaded', render, { once: true });
-  const observer = new MutationObserver(render);
+  function bindDemoControls() {
+    const bind = (kind) => {
+      const c = controls(kind);
+      c.search?.addEventListener('input', event => {
+        event.stopImmediatePropagation();
+        renderKind(kind, true);
+      }, true);
+      c.topic?.addEventListener('change', event => {
+        event.stopImmediatePropagation();
+        renderKind(kind, true);
+      }, true);
+      c.size?.addEventListener('change', event => {
+        event.stopImmediatePropagation();
+        renderKind(kind, true);
+      }, true);
+      c.more?.addEventListener('click', event => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+        demoState[kind].shown += Math.max(1, Number(c.size?.value) || 20);
+        renderKind(kind, false);
+      }, true);
+    };
+    bind('collective');
+    bind('hypothetical');
+  }
+  function renderKind(kind, reset) {
+    const c = controls(kind);
+    fill(c.list, kind, reset);
+  }
+  function setupDemoPagination() {
+    const collectiveSize = document.getElementById('answers-per-page');
+    if (collectiveSize && ![...collectiveSize.options].some(option => option.value === '20')) {
+      const option = document.createElement('option');
+      option.value = '20'; option.textContent = '20';
+      collectiveSize.append(option);
+      collectiveSize.value = '20';
+    }
+    const more = document.getElementById('show-more');
+    if (more) more.hidden = false;
+    bindDemoControls();
+    render(true);
+  }
+  document.addEventListener('DOMContentLoaded', setupDemoPagination, { once: true });
+  const observer = new MutationObserver(() => render(false));
   document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('#answer-list, .hypothetical-answer-list').forEach(list => observer.observe(list, { childList: true }));
   }, { once: true });
