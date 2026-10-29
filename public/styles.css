@@ -1761,3 +1761,11 @@
   .results-page .answer-text{line-height:1.68}
 }
 
+/* Final alignment: the author card shares the feed card geometry while retaining its subtle accent. */
+.results-page :is(#author-answer-collective,#author-answer-hypothetical) .author-answer-card{
+  margin:0;
+  padding:var(--answer-card-padding);
+  border-radius:16px;
+  box-shadow:0 5px 18px #20221f06;
+}
+
