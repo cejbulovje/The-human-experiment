@@ -605,7 +605,8 @@
   function node(tag, text, cls) { const el=document.createElement(tag); if(text!==undefined) el.textContent=text; if(cls) el.className=cls; return el; }
   function renderAnswer(item) {
     const article=node('article',undefined,'answer-card');
-    const header=node('div',undefined,'answer-card-header');
+    article.id = 'personal-answer-' + Number(item.id);
+    const top=node('div',undefined,'answer-card-top');
     const locale=(document.documentElement.lang||'en').split('-')[0];
     const messages=personalMessages();
     const translatedOptions=answerOptionsByLanguage[locale]||answerOptionsByLanguage.en;
@@ -621,9 +622,11 @@
     };
     const answerKeys=['scope','motivation','priority','preserve','wishes','body'];
     const translatedNames=namesByLanguage[locale]||namesByLanguage.en;
-    header.append(node('strong',item.pseudonym || messages.anonymous));
-    header.append(node('time',item.createdAt ? new Date(item.createdAt).toLocaleDateString(document.documentElement.lang || 'en') : ''));
-    article.append(header);
+    const code=node('span',(locale==='ru'?'№ ':'# ')+Number(item.answerNumber ?? (Number(item.id)+1))+' · '+(item.pseudonym || messages.anonymous),'answer-code');
+    const date=node('time',item.createdAt ? new Date(item.createdAt).toLocaleDateString(document.documentElement.lang || 'en',{year:'numeric',month:'short',day:'numeric'}) : '', 'answer-date');
+    if(item.createdAt) date.dateTime=item.createdAt;
+    top.append(code,date);
+    article.append(top);
     answerKeys.forEach((key,index)=>{
       const raw=item.answers?.[key];
       if(raw===undefined) return;
