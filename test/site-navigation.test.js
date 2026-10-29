@@ -115,7 +115,9 @@ test('hypothetical preferences prototype cannot submit a native form or send ans
   assert.match(html, /const comment = commentField\.value\.trim\(\)/);
   assert.doesNotMatch(html, /form\.elements\./);
   assert.doesNotMatch(html, /preference-question-6|name="use"/);
-  assert.match(html, /id="preferences-consent" name="consent" value="yes" required/);
+  assert.match(html, /id="consent-store" name="consentToStore"/);
+  assert.match(html, /id="consent-public" name="publicConsent"/);
+  assert.match(html, /id="consent-aggregate" name="aggregateConsent"/);
   assert.match(html, /Сейчас это прототип: ответы остаются в этом окне, не отправляются и не сохраняются/);
 
   assert.equal((html.match(/href="\/preferences\.html"[^>]*aria-current="page"/g) || []).length, 1);
