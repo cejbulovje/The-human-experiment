@@ -1486,3 +1486,155 @@
   }
 }
 
+/* Results page hierarchy: title first, stream choice second, tools and content after. */
+.results-page > .eyebrow {
+  margin: 0 0 var(--space-2);
+}
+
+.results-page > h1 {
+  max-width: 780px;
+  margin: 0 0 var(--space-3);
+  color: var(--ink);
+  font-size: clamp(2.25rem, 4.8vw, 3.75rem);
+  line-height: 1.06;
+  letter-spacing: -.045em;
+}
+
+.results-page > .lead {
+  max-width: 700px;
+  margin: 0 0 var(--space-5);
+  color: var(--muted);
+  font-size: 1.05rem;
+  line-height: 1.65;
+}
+
+.results-page .results-stream-links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+  margin: 0 0 var(--space-4);
+}
+
+.results-page .results-stream-link {
+  min-width: 0;
+  min-height: 76px;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+
+.results-page .results-stream-link strong {
+  font-size: .95rem;
+  line-height: 1.35;
+}
+
+.results-page .results-stream-link small {
+  line-height: 1.45;
+}
+
+.results-page .results-view-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0 0 var(--space-5);
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid var(--line);
+}
+
+.results-page .results-view-tab {
+  flex: 0 0 auto;
+}
+
+.results-page #results-status {
+  margin-block: var(--space-3) var(--space-4);
+}
+
+.results-page .statistics-section {
+  margin-top: var(--space-5);
+}
+
+.results-page .statistics-section > .section-heading,
+.results-page .public-answers-section > .section-heading {
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+}
+
+.results-page .statistics-section > .section-heading h2,
+.results-page .public-answers-section > .section-heading h2 {
+  color: var(--ink);
+  line-height: 1.2;
+}
+
+@media (min-width: 761px) {
+  .results-page > .eyebrow,
+  .results-page > h1,
+  .results-page > .lead {
+    max-width: calc(100% - 290px);
+  }
+
+  .results-page .results-stat-card {
+    top: 32px;
+    right: var(--page-gutter);
+    width: 250px;
+  }
+}
+
+@media (max-width: 760px) {
+  .results-page > h1 {
+    max-width: 100%;
+    font-size: clamp(2rem, 8vw, 2.65rem);
+    line-height: 1.08;
+    margin-bottom: var(--space-2);
+  }
+
+  .results-page > .lead {
+    max-width: 100%;
+    font-size: .95rem;
+    line-height: 1.55;
+    margin-bottom: var(--space-4);
+  }
+
+  .results-page .results-stream-links {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-2);
+    margin-bottom: var(--space-4);
+  }
+
+  .results-page .results-stream-link {
+    min-height: 0;
+    padding: var(--space-3);
+    align-items: center;
+  }
+
+  .results-page .results-stream-link strong {
+    font-size: .9rem;
+  }
+
+  .results-page .results-stream-link small {
+    font-size: .76rem;
+  }
+
+  .results-page .results-view-tabs {
+    gap: 6px;
+    margin-bottom: var(--space-4);
+    padding-bottom: var(--space-3);
+  }
+
+  .results-page .results-view-tab {
+    min-height: 36px;
+    padding: 8px 10px;
+    font-size: .78rem;
+  }
+
+  .results-page .statistics-section {
+    margin-top: var(--space-4);
+  }
+
+  .results-page .statistics-section > .section-heading,
+  .results-page .public-answers-section > .section-heading {
+    align-items: flex-start;
+    gap: var(--space-2);
+    margin-bottom: var(--space-3);
+  }
+}
+
