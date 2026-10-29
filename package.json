@@ -14,7 +14,7 @@
     "db:migrate:remote:signature": "wrangler d1 execute the-human-experiment --remote --file=./db/migrations/0003_optional_signature.sql",
     "db:migrate:local:other-answers": "wrangler d1 execute the-human-experiment --local --file=./db/migrations/0004_other_answers.sql",
     "db:migrate:remote:other-answers": "wrangler d1 execute the-human-experiment --remote --file=./db/migrations/0004_other_answers.sql",
-    "test": "node --check src/index.js && node --check public/app.js && node --check public/results.js && node --check public/author-answers.js && node --check public/privacy.js && node --test",
+    "test": "node --check src/index.js && node --check public/app.js && node --check public/results.js && node --check public/preferences-results-preview.js && node --check public/author-answers.js && node --check public/privacy.js && node --test",
     "db:migrate:local:participant-id": "wrangler d1 execute the-human-experiment --local --file=./db/migrations/0006_participant_id.sql",
     "db:migrate:remote:participant-id": "wrangler d1 execute the-human-experiment --remote --file=./db/migrations/0006_participant_id.sql",
     "db:migrate:local:unique-participant-id": "wrangler d1 execute the-human-experiment --local --file=./db/migrations/0011_unique_participant_id.sql",
