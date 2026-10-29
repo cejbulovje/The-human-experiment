@@ -1638,3 +1638,66 @@
   }
 }
 
+/* Results tools: group search, navigation, filters and reset actions. */
+.results-page .answer-tools{
+  grid-template-columns:minmax(0,1.6fr) minmax(0,1fr) minmax(0,1fr);
+  grid-template-areas:
+    "search search search"
+    "jump go topic"
+    "from to sort"
+    "reset reset participants";
+  align-items:end;
+  gap:12px;
+  padding:16px;
+  border:1px solid var(--line);
+  border-radius:16px;
+  background:color-mix(in srgb,var(--card) 72%,var(--paper));
+}
+.results-page .answer-tools .search-field{grid-area:search;grid-column:auto}
+.results-page .answer-tools .answer-number-jump{grid-area:jump;grid-column:auto}
+.results-page .answer-tools #answer-number-go{grid-area:go;grid-column:auto}
+.results-page .answer-tools>label:has(#topic-filter){grid-area:topic}
+.results-page .answer-tools .date-filter-label:has(#date-from){grid-area:from}
+.results-page .answer-tools .date-filter-label:has(#date-to){grid-area:to}
+.results-page .answer-tools>label:has(#answer-sort){grid-area:sort}
+.results-page .answer-tools #reset-filters{grid-area:reset;grid-column:auto;width:100%}
+.results-page .answer-tools #all-participants{grid-area:participants;grid-column:auto;width:100%}
+.results-page .answer-tools>label{display:flex;flex-direction:column;gap:5px}
+.results-page .answer-tools label>span:not(.sr-only){font-size:.78rem;color:var(--muted)}
+@media(max-width:760px){
+  .results-page .answer-tools{
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    grid-template-areas:
+      "search search"
+      "jump go"
+      "topic topic"
+      "from to"
+      "sort sort"
+      "reset participants";
+    gap:9px;
+    padding:12px;
+  }
+  .results-page .answer-tools .search-field{grid-column:auto}
+  .results-page .answer-tools .answer-number-jump{grid-column:auto}
+  .results-page .answer-tools #answer-number-go{grid-column:auto;width:100%}
+  .results-page .answer-tools #reset-filters,
+  .results-page .answer-tools #all-participants{grid-column:auto;width:100%;min-width:0}
+}
+@media(max-width:420px){
+  .results-page .answer-tools{
+    grid-template-columns:minmax(0,1fr);
+    grid-template-areas:
+      "search"
+      "jump"
+      "go"
+      "topic"
+      "from"
+      "to"
+      "sort"
+      "reset"
+      "participants";
+    gap:8px;
+    padding:10px;
+  }
+}
+
