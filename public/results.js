@@ -50,11 +50,11 @@ const RESULTS_VIEW_UI = {
 function applyResultsViewLanguage(){
  const words=RESULTS_VIEW_UI[lang]||RESULTS_VIEW_UI.en;
  document.querySelectorAll('[data-results-view]').forEach(el=>{const key=el.dataset.resultsView;if(words[key])el.textContent=words[key];});
- document.querySelectorAll('.results-stream-links').forEach(nav=>nav.setAttribute('aria-label',words.streams));
- document.querySelectorAll('.results-view-tabs').forEach(nav=>nav.setAttribute('aria-label',words.viewsAria));
+ document.querySelectorAll('.results-stream-links:not(.preference-page-switcher)').forEach(nav=>nav.setAttribute('aria-label',words.streams));
+ if(!document.querySelector('.preference-page-switcher'))document.querySelectorAll('.results-view-tabs').forEach(nav=>nav.setAttribute('aria-label',words.viewsAria));
  const answerNumber=document.querySelector('#answer-number-input');
  if(answerNumber)answerNumber.setAttribute('aria-label',words.answerNumberAria);
- const streamLinks=document.querySelectorAll('.results-stream-link');
+ const streamLinks=document.querySelectorAll('.results-stream-links:not(.preference-page-switcher) .results-stream-link');
  const streamKeys=[['streamCollective','streamCollectiveDesc'],['streamPersonal','streamPersonalDesc']];
  streamLinks.forEach((link,index)=>{const text=link.querySelector('span:nth-child(2)');if(!text)return;const strong=text.querySelector('strong');const small=text.querySelector('small');if(strong)strong.textContent=words[streamKeys[index]?.[0]]||strong.textContent;if(small)small.textContent=words[streamKeys[index]?.[1]]||small.textContent;});
  const picker=document.querySelector('label[for="results-question-select"]');
