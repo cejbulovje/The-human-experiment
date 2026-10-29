@@ -411,6 +411,62 @@
     wishes:{ask:'Сначала спросить меня и выслушать ответ',limits:'Действовать в заранее обозначенных пределах',decide:'Оставить окончательное решение тому, кто получил власть',consent:'Получать моё согласие на существенные изменения'},
     body:{consent:'Допускать изменения только с моего согласия',discuss:'Сначала обсуждать последствия и альтернативы',unimportant:'Это не главный вопрос по сравнению с другими приоритетами',context:'Зависит от конкретного изменения и обстоятельств'}
   };
+  const answerOptionsByLanguage = {
+    en: {
+      priority:{autonomy:'Freedom and independence',wellbeing:'Wellbeing and safety',trust:'Trust and responsibility',context:'Depends on the circumstances'},
+      preserve:{autonomy:'The right to make my own decisions',body:'Control over my own body',identity:'Personality and identity',safety:'Safety and physical wellbeing',voice:'The ability to be heard'},
+      wishes:{ask:'Ask me first and listen to my answer',limits:'Act within limits set in advance',decide:'Leave the final decision to whoever has the power',consent:'Get my consent for significant changes'},
+      body:{consent:'Allow changes only with my consent',discuss:'Discuss consequences and alternatives first',unimportant:'This is not the main issue compared with other priorities',context:'Depends on the specific change and circumstances'}
+    },
+    ru: {
+      priority:{autonomy:'Свобода и самостоятельность',wellbeing:'Благополучие и безопасность',trust:'Доверие и ответственность',context:'Зависит от обстоятельств'},
+      preserve:{autonomy:'Право самостоятельно принимать решения',body:'Контроль над собственным телом',identity:'Личность и идентичность',safety:'Безопасность и физическое благополучие',voice:'Возможность быть услышанным'},
+      wishes:{ask:'Сначала спросить меня и выслушать ответ',limits:'Действовать в заранее обозначенных пределах',decide:'Оставить окончательное решение тому, кто получил власть',consent:'Получать моё согласие на существенные изменения'},
+      body:{consent:'Допускать изменения только с моего согласия',discuss:'Сначала обсуждать последствия и альтернативы',unimportant:'Это не главный вопрос по сравнению с другими приоритетами',context:'Зависит от конкретного изменения и обстоятельств'}
+    },
+    es: {
+      priority:{autonomy:'Libertad e independencia',wellbeing:'Bienestar y seguridad',trust:'Confianza y responsabilidad',context:'Depende de las circunstancias'},
+      preserve:{autonomy:'Derecho a tomar mis propias decisiones',body:'Control sobre mi propio cuerpo',identity:'Personalidad e identidad',safety:'Seguridad y bienestar físico',voice:'Posibilidad de ser escuchado'},
+      wishes:{ask:'Preguntarme primero y escuchar mi respuesta',limits:'Actuar dentro de límites establecidos de antemano',decide:'Dejar la decisión final a quien tenga el poder',consent:'Obtener mi consentimiento para cambios importantes'},
+      body:{consent:'Permitir cambios solo con mi consentimiento',discuss:'Debatir primero las consecuencias y alternativas',unimportant:'No es el asunto principal frente a otras prioridades',context:'Depende del cambio concreto y las circunstancias'}
+    },
+    pt: {
+      priority:{autonomy:'Liberdade e autonomia',wellbeing:'Bem-estar e segurança',trust:'Confiança e responsabilidade',context:'Depende das circunstâncias'},
+      preserve:{autonomy:'Direito de tomar minhas próprias decisões',body:'Controle sobre meu próprio corpo',identity:'Personalidade e identidade',safety:'Segurança e bem-estar físico',voice:'Possibilidade de ser ouvido'},
+      wishes:{ask:'Perguntar primeiro e ouvir minha resposta',limits:'Agir dentro de limites definidos previamente',decide:'Deixar a decisão final com quem recebeu o poder',consent:'Obter meu consentimento para mudanças importantes'},
+      body:{consent:'Permitir mudanças somente com meu consentimento',discuss:'Discutir primeiro consequências e alternativas',unimportant:'Não é a questão principal diante de outras prioridades',context:'Depende da mudança específica e das circunstâncias'}
+    },
+    zh: {
+      priority:{autonomy:'自由与自主',wellbeing:'福祉与安全',trust:'信任与责任',context:'取决于具体情况'},
+      preserve:{autonomy:'自主作出决定的权利',body:'对自己身体的控制权',identity:'个性与身份认同',safety:'安全与身体健康',voice:'表达意见并被倾听的机会'},
+      wishes:{ask:'先询问我并听取我的回答',limits:'在预先设定的范围内行动',decide:'由获得权力的人作最终决定',consent:'重大改变须征得我的同意'},
+      body:{consent:'只有征得我同意才允许改变',discuss:'先讨论后果与替代方案',unimportant:'与其他优先事项相比，这不是首要问题',context:'取决于具体改变和情况'}
+    },
+    de: {
+      priority:{autonomy:'Freiheit und Selbstständigkeit',wellbeing:'Wohlbefinden und Sicherheit',trust:'Vertrauen und Verantwortung',context:'Hängt von den Umständen ab'},
+      preserve:{autonomy:'Das Recht, selbst Entscheidungen zu treffen',body:'Kontrolle über den eigenen Körper',identity:'Persönlichkeit und Identität',safety:'Sicherheit und körperliches Wohlbefinden',voice:'Die Möglichkeit, gehört zu werden'},
+      wishes:{ask:'Mich zuerst fragen und meine Antwort anhören',limits:'Innerhalb vorher festgelegter Grenzen handeln',decide:'Die endgültige Entscheidung der Person mit der Macht überlassen',consent:'Meine Zustimmung zu wesentlichen Änderungen einholen'},
+      body:{consent:'Änderungen nur mit meiner Zustimmung zulassen',discuss:'Zuerst Folgen und Alternativen besprechen',unimportant:'Im Vergleich zu anderen Prioritäten nicht die Hauptfrage',context:'Hängt von der konkreten Änderung und den Umständen ab'}
+    },
+    ja: {
+      priority:{autonomy:'自由と自立',wellbeing:'幸福と安全',trust:'信頼と責任',context:'状況による'},
+      preserve:{autonomy:'自分で決定する権利',body:'自分の身体を管理する権利',identity:'個性とアイデンティティ',safety:'安全と身体的な健康',voice:'意見を聞いてもらう機会'},
+      wishes:{ask:'まず私に尋ね、答えを聞く',limits:'あらかじめ定めた範囲内で行動する',decide:'権限を得た人に最終決定を委ねる',consent:'重要な変更には私の同意を得る'},
+      body:{consent:'私の同意がある場合に限り変更を認める',discuss:'まず結果と代替案を話し合う',unimportant:'他の優先事項と比べると主要な問題ではない',context:'具体的な変更と状況による'}
+    },
+    fr: {
+      priority:{autonomy:'Liberté et autonomie',wellbeing:'Bien-être et sécurité',trust:'Confiance et responsabilité',context:'Cela dépend des circonstances'},
+      preserve:{autonomy:'Le droit de prendre mes propres décisions',body:'Le contrôle de mon propre corps',identity:'Personnalité et identité',safety:'Sécurité et bien-être physique',voice:'La possibilité d’être entendu'},
+      wishes:{ask:'Me demander d’abord et écouter ma réponse',limits:'Agir dans des limites définies à l’avance',decide:'Laisser la décision finale à la personne qui détient le pouvoir',consent:'Obtenir mon consentement pour les changements importants'},
+      body:{consent:'N’autoriser les changements qu’avec mon consentement',discuss:'Discuter d’abord des conséquences et des alternatives',unimportant:'Ce n’est pas la question principale par rapport aux autres priorités',context:'Cela dépend du changement et des circonstances'}
+    },
+    ar: {
+      priority:{autonomy:'الحرية والاستقلالية',wellbeing:'الرفاه والسلامة',trust:'الثقة والمسؤولية',context:'يعتمد على الظروف'},
+      preserve:{autonomy:'الحق في اتخاذ قراراتي بنفسي',body:'التحكم في جسدي',identity:'الشخصية والهوية',safety:'السلامة والعافية الجسدية',voice:'إمكانية أن يُستمع إليّ'},
+      wishes:{ask:'سؤالي أولًا والاستماع إلى إجابتي',limits:'التصرف ضمن حدود محددة مسبقًا',decide:'ترك القرار النهائي لمن مُنح السلطة',consent:'الحصول على موافقتي على التغييرات المهمة'},
+      body:{consent:'السماح بالتغييرات بموافقتي فقط',discuss:'مناقشة العواقب والبدائل أولًا',unimportant:'ليست المسألة الرئيسية مقارنة بالأولويات الأخرى',context:'يعتمد على التغيير المحدد والظروف'}
+    }
+  };
   const namesByLanguage = {
     en:['What I would allow to change','Why I am taking part','Main priority','What to preserve','How to consider my wishes','Body changes'],
     ru:['Что я позволю менять','Почему я участвую','Главный приоритет','Что важно сохранить','Как учитывать желания','Изменения тела'],
@@ -531,15 +587,30 @@
   function renderAnswer(item) {
     const article=node('article',undefined,'answer-card');
     const header=node('div',undefined,'answer-card-header');
-    header.append(node('strong',item.pseudonym || personalMessages().anonymous));
+    const locale=(document.documentElement.lang||'en').split('-')[0];
+    const messages=personalMessages();
+    const translatedOptions=answerOptionsByLanguage[locale]||answerOptionsByLanguage.en;
+    const scopeKeys=['none','preapproved','veto','trust_conditions','unlimited','other'];
+    const motivationKeys=['desires','reality','hope','similarity','understanding','contribute','curiosity','other','none'];
+    const translatedLabels={
+      scope:Object.fromEntries(scopeKeys.map((key,index)=>[key,messages.scope[index]])),
+      motivation:Object.fromEntries(motivationKeys.map((key,index)=>[key,messages.motivation[index]])),
+      priority:translatedOptions.priority,
+      preserve:translatedOptions.preserve,
+      wishes:translatedOptions.wishes,
+      body:translatedOptions.body
+    };
+    const answerKeys=['scope','motivation','priority','preserve','wishes','body'];
+    const translatedNames=namesByLanguage[locale]||namesByLanguage.en;
+    header.append(node('strong',item.pseudonym || messages.anonymous));
     header.append(node('time',item.createdAt ? new Date(item.createdAt).toLocaleDateString(document.documentElement.lang || 'en') : ''));
     article.append(header);
-    for(const key of ['scope','motivation','priority','preserve','wishes','body']) {
+    answerKeys.forEach((key,index)=>{
       const raw=item.answers?.[key];
-      if(raw===undefined) continue;
-      const vals=(Array.isArray(raw)?raw:[raw]).map(v=>labels[key]?.[v] || String(v));
-      const p=node('p'); p.append(node('strong',(namesByLanguage[(document.documentElement.lang||'en').split('-')[0]]||namesByLanguage.en)[['scope','motivation','priority','preserve','wishes','body'].indexOf(key)]+': '),document.createTextNode(vals.join(', '))); article.append(p);
-    }
+      if(raw===undefined) return;
+      const vals=(Array.isArray(raw)?raw:[raw]).map(v=>translatedLabels[key]?.[v] || String(v));
+      const p=node('p'); p.append(node('strong',translatedNames[index]+': '),document.createTextNode(vals.join(', '))); article.append(p);
+    });
     if(item.comment) { const p=node('p',item.comment); p.className='answer-comment'; article.append(p); }
     return article;
   }
