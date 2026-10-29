@@ -568,9 +568,9 @@
       {text:'Если человек просит о помощи, я готов поддержать его. Но я не считаю, что большинство автоматически знает лучше самого человека.', choices:[['Что изменить первым','Характер или личность'],['Если желания расходятся','Уважать его желания'],['Что выберет большинство','Помочь человеку и улучшить его жизнь']]}
     ],
     hypothetical: [
-      {text:'Я бы позволил менять только то, что сам заранее одобрил. Мне важно сохранять возможность самому принимать решения и остановить изменения, если я передумаю.', choices:[['Что бы ты позволил человечеству изменить в себе?','Позволил бы менять только то, что сам заранее одобрил.'],['Что могло бы побудить тебя участвовать в этом эксперименте?','Желание узнать, чего люди на самом деле хотят и о чём мечтают.; Любопытство к самому эксперименту и его результатам.']]},
-      {text:'Я готов доверить человечеству самостоятельно решать, что менять, если заранее обозначены несколько принципиальных условий. Для меня важны безопасность, возможность отказаться от опасных действий и уважение к моему решению прекратить участие.', choices:[['Что бы ты позволил человечеству изменить в себе?','Доверил бы человечеству самостоятельно решать, что менять, сохранив лишь несколько принципиальных условий.'],['Что могло бы побудить тебя участвовать в этом эксперименте?','Желание проверить, способны ли люди понимать и учитывать желания друг друга.; Желание внести собственный вклад в исследование человечества.']]},
-      {text:'Я бы не позволил менять себя без моего согласия. Мне было бы интересно увидеть, насколько люди способны понимать желания друг друга, но моё участие не означало бы отказа от права решать за себя.', choices:[['Что бы ты позволил человечеству изменить в себе?','Ничего не позволил бы менять.'],['Что могло бы побудить тебя участвовать в этом эксперименте?','Желание проверить, способны ли люди понимать и учитывать желания друг друга.; Любопытство к самому эксперименту и его результатам.']]}
+      {text:'Я бы позволил менять только то, что сам заранее одобрил. Мне важно сохранять возможность самому принимать решения и остановить изменения, если я передумаю.', textEn:'I would allow only changes I had approved in advance. It is important to me to retain the ability to make my own decisions and stop the changes if I change my mind.', choices:[['Что бы ты позволил человечеству изменить в себе?','Позволил бы менять только то, что сам заранее одобрил.'],['Что могло бы побудить тебя участвовать в этом эксперименте?','Желание узнать, чего люди на самом деле хотят и о чём мечтают.; Любопытство к самому эксперименту и его результатам.']]},
+      {text:'Я готов доверить человечеству самостоятельно решать, что менять, если заранее обозначены несколько принципиальных условий. Для меня важны безопасность, возможность отказаться от опасных действий и уважение к моему решению прекратить участие.', textEn:'I am willing to trust humanity to decide independently what to change, provided a few fundamental conditions are set in advance. Safety, the ability to refuse dangerous actions, and respect for my decision to end participation are important to me.', choices:[['Что бы ты позволил человечеству изменить в себе?','Доверил бы человечеству самостоятельно решать, что менять, сохранив лишь несколько принципиальных условий.'],['Что могло бы побудить тебя участвовать в этом эксперименте?','Желание проверить, способны ли люди понимать и учитывать желания друг друга.; Желание внести собственный вклад в исследование человечества.']]},
+      {text:'Я бы не позволил менять себя без моего согласия. Мне было бы интересно увидеть, насколько люди способны понимать желания друг друга, но моё участие не означало бы отказа от права решать за себя.', textEn:'I would not allow changes to be made to me without my consent. I would be interested to see how well people can understand one another’s wishes, but taking part would not mean giving up my right to make my own decisions.', choices:[['Что бы ты позволил человечеству изменить в себе?','Ничего не позволил бы менять.'],['Что могло бы побудить тебя участвовать в этом эксперименте?','Желание проверить, способны ли люди понимать и учитывать желания друг друга.; Любопытство к самому эксперименту и его результатам.']]}
     ]
   };
   const extraTestTexts = [
@@ -585,13 +585,27 @@
     'Я бы предложил несколько вариантов, но окончательное решение оставил за самим человеком.',
     'Я бы оценивал не только предполагаемую пользу, но и то, насколько человек сам согласен на изменения.'
   ];
+  const extraTestTextsEn = [
+    'I would first listen to the person and then consider the available options together.',
+    'It is important to me that help takes a person’s wishes into account, not just other people’s ideas about what they need.',
+    'I would compare the consequences of each decision and leave the person the option to refuse.',
+    'I think it is important to balance care for a person with respect for their independence.',
+    'I would not make a decision for someone else before understanding their priorities and concerns.',
+    'Before major changes, I would want to discuss the risks, alternatives, and the option to stop the process.',
+    'I would support a decision that respects personal wishes and does not create unnecessary danger.',
+    'It is important to me that shared rules do not deprive people of a say in matters affecting their own lives.',
+    'I would offer several options, but leave the final decision to the person themselves.',
+    'I would consider not only the expected benefits, but also whether the person truly agrees to the changes.'
+  ];
   const baseTestSamples = samples.hypothetical.slice();
   const baseCollectiveSamples = samples.collective.slice();
   for (let testIndex = 0; testIndex < 97; testIndex += 1) {
     const text = extraTestTexts[testIndex % extraTestTexts.length] + ' (дополнительный тестовый вариант ' + (testIndex + 1) + ').';
+    const textEn = extraTestTextsEn[testIndex % extraTestTextsEn.length] + ' (additional test sample ' + (testIndex + 1) + ').';
     const personalBase = baseTestSamples[testIndex % baseTestSamples.length];
     samples.hypothetical.push({
       text: personalBase.text + '\n\n' + text,
+      textEn: personalBase.textEn + '\n\n' + textEn,
       choices: personalBase.choices.map(([question, answer]) => [question, answer])
     });
     const collectiveBase = baseCollectiveSamples[testIndex % baseCollectiveSamples.length];
@@ -627,7 +641,7 @@
 
     const preview = document.createElement('p');
     preview.className = 'sample-answer-preview';
-    const fullText = String(item.text || '');
+    const fullText = String(kind === 'hypothetical' && !ru ? (item.textEn || item.text || '') : (item.text || ''));
     const previewLimit = 650;
     let previewText = fullText;
     if (previewText.length > previewLimit) {
