@@ -203,13 +203,29 @@ test('both answer streams expose backward and forward history navigation and old
   const collectiveHtml = readFileSync(new URL('../public/results.html', import.meta.url), 'utf8');
   const personalHtml = readFileSync(new URL('../public/preferences-results.html', import.meta.url), 'utf8');
   const results = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
+  const preview = readFileSync(new URL('../public/preferences-results-preview.js', import.meta.url), 'utf8');
   assert.match(collectiveHtml, /id="answers-previous"/);
   assert.match(collectiveHtml, /id="show-more"/);
   assert.match(results, /const sort=params.get\('sort'\)\|\|'oldest'/);
   assert.match(results, /loadAnswers\(true,Math\.max\(0,offset-pageSize\)\)/);
   assert.match(results, /loadAnswers\(true,offset\)/);
   assert.match(personalHtml, /id="hypothetical-sort".*?value="oldest" selected/);
-  assert.match(personalHtml, /id="hypothetical-sort".*?value="oldest" selected/);
-  assert.match(personalHtml, /id="hypothetical-sort".*?value="oldest" selected/);
-  assert.match(personalHtml, /fillPersonalPage\(Math\.max\(0, Number\(document\.querySelector\('\.hypothetical-answer-list'\)\?\.dataset\.testSamplesPage \|\| 0\) - 1\)\)/);
+  assert.match(personalHtml, /id='hypothetical-load-previous'/);
+  assert.match(personalHtml, /id='hypothetical-load-more'/);
+  assert.match(preview, /fillPersonalPage\(Math\.max\(0, Number\(document\.querySelector\('\.hypothetical-answer-list'\)\?\.dataset\.testSamplesPage \|\| 0\) - 1\)\)/);
+});
+
+
+test('combined Results demo renders personal sample cards with participant styling and pagination', () => {
+  const resultsHtml = readFileSync(new URL('../public/results.html', import.meta.url), 'utf8');
+  const personalHtml = readFileSync(new URL('../public/preferences-results.html', import.meta.url), 'utf8');
+  const preview = readFileSync(new URL('../public/preferences-results-preview.js', import.meta.url), 'utf8');
+  assert.match(resultsHtml, /src="\/preferences-results-preview\.js"/);
+  assert.match(resultsHtml, /id="hypothetical-load-previous"/);
+  assert.match(resultsHtml, /id="hypothetical-load-more"/);
+  assert.match(personalHtml, /src="\/preferences-results-preview\.js"/);
+  assert.match(preview, /location\.pathname === '\/results\.html'.*demo.*101/);
+  assert.match(preview, /card\.className = 'answer-card preview-sample-answer'/);
+  assert.match(preview, /card\.id = 'sample-answer-' \+ kind \+ '-' \+ index/);
+  assert.match(preview, /card\.append\(top, freeTextQuestion, preview, toggle, full, choices, actions\)/);
 });
