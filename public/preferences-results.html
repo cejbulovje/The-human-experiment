@@ -273,6 +273,22 @@
           ar: {views:['نظرة عامة','جميع الإجابات','حسب السؤال','الأحدث','الأكثر شيوعًا','غير المألوفة'],switcher:['القرارات الجماعية','ما قد يقرره الناس بشأن حياة شخص آخر','التفضيلات الشخصية','ما يريده الناس لحياتهم'],searchLabel:'البحث في الإجابات الشخصية',searchPlaceholder:'البحث في الإجابات…',questionLabel:'السؤال',questions:['جميع الأسئلة','1. ما الذي أسمح بتغييره','2. لماذا أشارك'],sortLabel:'ترتيب',sortLatest:'الأحدث أولًا',pageSize:"الإجابات في كل صفحة",notice:'تُعرض فقط الإجابات التي وافق أصحابها بشكل منفصل على نشرها. هذا المسار منفصل عن الإجابات الجماعية.'}
         };
         const controls = controlsByLanguage[language] || controlsByLanguage.en;
+        const accessibilityByLanguage = {
+          en: {section:'Personal preferences',switcher:'Switch between result streams',views:'Personal answer views',answerNumber:'Answer number'},
+          ru: {section:'Личные предпочтения',switcher:'Переключение между потоками ответов',views:'Виды личных ответов',answerNumber:'Номер ответа'},
+          es: {section:'Preferencias personales',switcher:'Cambiar entre secciones de resultados',views:'Vistas de respuestas personales',answerNumber:'Número de respuesta'},
+          pt: {section:'Preferências pessoais',switcher:'Alternar entre fluxos de resultados',views:'Visualizações das respostas pessoais',answerNumber:'Número da resposta'},
+          zh: {section:'个人偏好',switcher:'切换结果类别',views:'个人回答视图',answerNumber:'回答编号'},
+          de: {section:'Persönliche Präferenzen',switcher:'Zwischen Ergebnisbereichen wechseln',views:'Ansichten persönlicher Antworten',answerNumber:'Antwortnummer'},
+          ja: {section:'個人の希望',switcher:'結果のセクションを切り替える',views:'個人回答の表示',answerNumber:'回答番号'},
+          fr: {section:'Préférences personnelles',switcher:'Changer de flux de résultats',views:'Vues des réponses personnelles',answerNumber:'Numéro de réponse'},
+          ar: {section:'التفضيلات الشخصية',switcher:'التبديل بين أقسام النتائج',views:'طرق عرض الإجابات الشخصية',answerNumber:'رقم الإجابة'}
+        };
+        const accessibility = accessibilityByLanguage[language] || accessibilityByLanguage.en;
+        document.querySelector('.hypothetical-answers-section')?.setAttribute('aria-label', accessibility.section);
+        document.querySelector('.preference-page-switcher')?.setAttribute('aria-label', accessibility.switcher);
+        document.querySelector('.results-view-tabs')?.setAttribute('aria-label', accessibility.views);
+        document.querySelector('#answer-number-input')?.setAttribute('aria-label', accessibility.answerNumber);
         document.querySelectorAll('[data-results-view]').forEach((el,i) => { if (controls.views[i]) el.textContent = controls.views[i]; });
         document.querySelectorAll('.preference-page-switcher .results-stream-link').forEach((el,i) => {
           const strong = el.querySelector('strong'), small = el.querySelector('small');
