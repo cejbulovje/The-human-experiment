@@ -279,11 +279,11 @@ test('personal preference reads and AI analysis enforce separate publication and
   const source = readFileSync(new URL('../src/index.js', import.meta.url), 'utf8');
   assert.match(source, /FROM hypothetical_preferences WHERE public_consent=1 ORDER BY created_at/);
   assert.match(source, /SELECT answers_json,language FROM hypothetical_preferences WHERE aggregate_consent=1/);
-  assert.match(source, /COUNT\\(\\*\\) AS total FROM hypothetical_preferences WHERE aggregate_consent=1 AND id>\\?/);
-  assert.match(source, /SELECT id,answers_json,language FROM hypothetical_preferences WHERE aggregate_consent=1 AND id>\\?/);
+  assert.match(source, /COUNT\(\*\) AS total FROM hypothetical_preferences WHERE aggregate_consent=1 AND id>\?/);
+  assert.match(source, /SELECT id,answers_json,language FROM hypothetical_preferences WHERE aggregate_consent=1 AND id>\?/);
   assert.match(source, /ai_hypothetical_analysis_memory_consent_v2/);
-  assert.match(source, /body\\.aggregateConsent\\?1:0/);
-  assert.match(source, /body\\.publicConsent\\?1:0/);
+  assert.match(source, /body\.aggregateConsent\?1:0/);
+  assert.match(source, /body\.publicConsent\?1:0/);
 });
 
 test('preferences endpoint rejects oversized request bodies before storage', async () => {
