@@ -186,7 +186,7 @@ async function loadLinkedAnswer(){
     requestAnimationFrame(()=>document.getElementById(`answer-${CSS.escape(item.id)}`)?.scrollIntoView({behavior:'smooth',block:'start'}));
   }catch{}
 }
-restoreFiltersFromUrl();applyLanguage();syncParticipantMode();if(!PERSONAL_RESULTS_PAGE){loadStats();if(DEMO_MODE){document.addEventListener('DOMContentLoaded',()=>{queueMicrotask(()=>loadAnswers(true).then(()=>loadLinkedAnswer()));},{once:true});}else{loadAnswers(true).then(()=>loadLinkedAnswer());}}
+populateQuestionFilter();restoreFiltersFromUrl();applyLanguage();syncParticipantMode();if(!PERSONAL_RESULTS_PAGE){loadStats();if(DEMO_MODE){document.addEventListener('DOMContentLoaded',()=>{queueMicrotask(()=>loadAnswers(true).then(()=>loadLinkedAnswer()));},{once:true});}else{loadAnswers(true).then(()=>loadLinkedAnswer());}}
 
 document.querySelectorAll('[id^="ai-analysis-"][id$="-form"],#ai-analysis-form').forEach(aiForm=>{
   const aiSuffix=aiForm.dataset.aiStream==='hypothetical'?'-hypothetical':'';
