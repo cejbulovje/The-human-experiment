@@ -456,7 +456,7 @@
       }
     });
     if (kind === 'volunteer') card.append(top, preview, toggle, full);
-    else card.append(top, toggle, full);
+    else card.append(top, preview, toggle, full);
 
     if (kind === 'collective') {
       const choices = document.createElement('div');
