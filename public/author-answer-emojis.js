@@ -27,7 +27,7 @@
     article.dataset.decorated = 'true';
   }
   document.addEventListener('DOMContentLoaded', decorate);
-  document.addEventListener('author-answer-rendered', decorate);
+  window.addEventListener('author-answer-rendered', decorate);
   document.getElementById('page-language')?.addEventListener('change', () => {
     const card = document.getElementById('author-answer-collective');
     const article = card?.querySelector('.author-answer-card');
