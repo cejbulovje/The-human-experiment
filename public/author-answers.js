@@ -380,7 +380,12 @@
 
     const preview = document.createElement('p');
     preview.className = 'author-answer-preview';
-    if (kind === 'volunteer') preview.textContent = paragraphs[0] || '';
+    if (kind === 'volunteer') {
+      preview.textContent = paragraphs[0] || '';
+    } else {
+      const intro = String(paragraphs[0] || '').trim();
+      preview.textContent = intro.length > 220 ? intro.slice(0, 217).trimEnd() + '…' : intro;
+    }
 
     const full = document.createElement('div');
     full.className = 'author-answer-full';
