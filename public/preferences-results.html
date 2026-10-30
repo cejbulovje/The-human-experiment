@@ -15,7 +15,7 @@
 .preference-page-switcher .results-stream-link.is-active { background:#075b49; color:#fff; }
 @media (max-width:640px) { .preference-page-switcher { grid-template-columns:1fr; } }
 
-.results-stream-links:not(.preference-page-switcher), #results-status, #statistics-section, .public-answers-section:not(.hypothetical-answers-section), .ai-analysis-section:not(.hypothetical-ai-analysis-section) { display:none !important; }
+.results-stream-links:not(.preference-page-switcher), #statistics-section, .public-answers-section:not(.hypothetical-answers-section), .ai-analysis-section:not(.hypothetical-ai-analysis-section) { display:none !important; }
 .preference-page-switcher { margin-top:20px; }
 .hypothetical-answer-tools { margin-top:20px; }
 .author-questionnaire-answer { margin:10px 0 0; font-size:.92rem; line-height:1.55; }
@@ -199,8 +199,7 @@
     const charts = ['q2','q3','q4'].map(q => document.querySelector('#chart-' + q)?.closest('.result-section'));
     const hypotheticalTabs = [...document.querySelectorAll('[data-hypothetical-view]')];
     let stream = 'hypothetical';
-    // This dedicated page should open on the personal answer feed, not the empty overview.
-    let view = ['/preferences-results.html', '/preferences-results'].includes(location.pathname.replace(/\/$/, '')) ? 'all' : 'overview';
+    let view = 'overview';
     const syncCollectiveSort = () => {
       if (!['latest','popular','unusual'].includes(view)) return;
       const sort = document.querySelector('#answer-sort');

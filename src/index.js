@@ -372,10 +372,6 @@ async function deletePreferences(request,env){
 export default {
   async fetch(request,env){
     const url=new URL(request.url);
-    if(request.method==='GET'&&['/preferences-results','/preferences-results/'].includes(url.pathname)){
-      url.pathname='/preferences-results.html';
-      return new Response(null,{status:302,headers:{location:url.toString(),'cache-control':'no-store'}});
-    }
     if(url.pathname==='/api/submit'&&request.method==='POST')return submit(request,env);
     if(url.pathname==='/api/preferences'&&request.method==='POST')return submitPreferences(request,env);
     if(url.pathname==='/api/preferences/public'&&request.method==='GET')return publicPreferences(request,env);
