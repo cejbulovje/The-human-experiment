@@ -126,7 +126,7 @@ let searchTimer;function resetSearch(){clearTimeout(searchTimer);searchTimer=set
 }
 function openHypotheticalAuthorAnswerOne(){
   const root=$('#author-answer-hypothetical');
-  const card=document.getElementById('answer-1');
+  const card=root?.querySelector('.author-answer-card');
   const full=card?.querySelector('.author-answer-full');
   const toggle=card?.querySelector('.author-answer-toggle');
   if(!root||!card||!full||!toggle)return false;
@@ -140,6 +140,7 @@ function openHypotheticalAuthorAnswerOne(){
 }
 async function loadLinkedAnswer(){
   if(location.hash==='#author-answer-1'){openCollectiveAuthorAnswerOne();return;}
+  if(location.hash==='#author-answer-volunteer'||location.hash==='#answer-1'){openHypotheticalAuthorAnswerOne();return;}
   const raw=location.hash.match(/^#answer-(.+)$/);
   if(!raw)return;
   let id=raw[1];
