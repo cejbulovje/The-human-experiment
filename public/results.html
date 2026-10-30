@@ -322,6 +322,9 @@
 (() => {
   const section = document.querySelector('.hypothetical-answers-section');
   if (!section) return;
+  const previewOnly = location.hostname === 'experiment-hypothetical-preferences-protot-the-human-experiment.cejbulovje.workers.dev'
+    && ['/results', '/results.html'].includes(location.pathname);
+  if (previewOnly) return;
   const list = section.querySelector('.hypothetical-answer-list');
   const empty = section.querySelector('.hypothetical-empty-state');
   const status = section.querySelector('#hypothetical-status');
