@@ -210,7 +210,7 @@ test('both answer streams expose backward and forward history navigation and old
   assert.match(collectiveHtml, /id="answers-previous"/);
   assert.match(collectiveHtml, /id="show-more"/);
   assert.match(results, /const sort=params.get\('sort'\)\|\|'oldest'/);
-  assert.match(results, /loadAnswers\(true,Math\.max\(0,offset-pageSize\)\)/);
+  assert.match(results, /loadAnswers\(true,Math\.max\(0,currentPageStart-pageSize\)\)/, 'previous navigation returns to the prior page start');
   assert.match(results, /loadAnswers\(true,offset\)/);
   assert.match(personalHtml, /id="hypothetical-sort".*?value="oldest" selected/);
   assert.match(personalHtml, /id='hypothetical-load-previous'/);
