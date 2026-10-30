@@ -233,7 +233,8 @@ test('personal preview sample cards remain isolated to the personal results page
   assert.match(results, /const demoSamples=\[/, 'collective demo answers use questionnaire-aligned examples');
   assert.match(results, /context:\{q2:sample\.q2,q3:sample\.q3,q4:sample\.q4\}/, 'demo choice context uses the selected questionnaire options');
   assert.doesNotMatch(results, /context:\{q2:'life',q3:'relationships',q4:'freedom'\}/, 'demo context must not show internal topic IDs as questionnaire answers');
-  assert.match(results, /const isLastPage=currentPageStart\+pageSize>=answerTotal/);\n  assert.match(results, /if\(!isLastPage\).*author-answer-card/);
+  assert.match(results, /const isLastPage=currentPageStart\+pageSize>=answerTotal/);
+  assert.match(results, /if\(!isLastPage\).*author-answer-card/);
 });
 
 
@@ -271,7 +272,8 @@ test('dedicated personal results page opens on the answer feed instead of the ov
 test('collective author answer remains visible while public statistics are locked', () => {
   const results = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
   assert.match(results, /const unlocked=root\?\.dataset\.resultsUnlocked==='true'\|\|CREATOR_PREVIEW/);
-  assert.match(results, /if\(!root\|\|!list\)return;const card=root\.querySelector\('\.author-answer-card'\)/);\n  assert.match(results, /if\(!isLastPage\).*card\.hidden=true/);
+  assert.match(results, /if\(!root\|\|!list\)return;const card=root\.querySelector\('\.author-answer-card'\)/);
+  assert.match(results, /if\(!isLastPage\).*card\.hidden=true/);
   assert.doesNotMatch(results, /if\(!unlocked\|\|!root\)return/);
 });
 
