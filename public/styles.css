@@ -1776,3 +1776,27 @@
     border-radius:14px;
   }
 }
+
+
+/* Author examples use the same quiet card treatment as participant answers. */
+.results-page :is(#author-answer-collective,#author-answer-hypothetical) .author-answer-card {
+  padding: var(--answer-card-padding, 16px);
+  margin: 0;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--card);
+  box-shadow: none;
+  overflow: visible;
+}
+.results-page :is(#author-answer-collective,#author-answer-hypothetical) .author-answer-card::before {
+  content: none;
+}
+.results-page :is(#author-answer-collective,#author-answer-hypothetical) .author-answer-toggle {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--accent);
+}
+.results-page :is(#author-answer-collective,#author-answer-hypothetical) .author-answer-intro {
+  font-size: inherit;
+  line-height: inherit;
+}
