@@ -142,7 +142,9 @@ async function results(env){
   let snapshot=await env.DB.prepare('SELECT published_threshold,total,updated_at,q2,q3,q4,answered FROM public_results_snapshot WHERE id=1').first();
   const publishedThreshold=Number(snapshot?.published_threshold||0);
   const reached=highestReachedResultsThreshold(total,publishedThreshold);
-  const snapshotInvalid=Boolean(snapshot)&&!snapshotHasValidQuestionLabels(snapshot);\n  if(reached>publishedThreshold||snapshotInvalid){\n    const targetThreshold=Math.max(reached,publishedThreshold);
+  const snapshotInvalid=Boolean(snapshot)&&!snapshotHasValidQuestionLabels(snapshot);
+  if(reached>publishedThreshold||snapshotInvalid){
+    const targetThreshold=Math.max(reached,publishedThreshold);
     const getCounts=async(column,question)=>{
       const rows=await env.DB.prepare(`SELECT ${column} AS choice, COUNT(*) AS count FROM responses WHERE is_public=1 AND (public_id IS NULL OR public_id <> 'author-answer-1') AND ${column} IS NOT NULL GROUP BY ${column}`).all();
       const counts=new Map((rows.results||[]).map(row=>[Number(row.choice),Number(row.count)]));
