@@ -251,3 +251,12 @@ test('preview result samples use one real paginated renderer in both streams', (
   assert.match(personal, /question\?\.addEventListener\('change'/);
   assert.match(personal, /const next = Math\.min\(orderedSamples\.length, shown \+ pageSize\)/, 'personal cards are sliced to one page');
 });
+
+
+test('dedicated personal results page opens on the answer feed instead of the overview', () => {
+  const html = readFileSync(new URL('../public/preferences-results.html', import.meta.url), 'utf8');
+  assert.match(html, /class="results-view-tab is-active" data-results-view="all"/);
+  assert.doesNotMatch(html, /class="results-view-tab is-active" data-results-view="overview"/);
+  assert.match(html, /let view = 'all';/);
+  assert.match(html, /if \(hypotheticalEmpty\) \{[\s\S]*?hypotheticalEmpty\.hidden = view === 'overview';/);
+});
