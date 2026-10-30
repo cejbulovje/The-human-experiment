@@ -292,4 +292,5 @@ test('personal results page shares the top-level stream switcher and does not st
   assert.equal((personal.match(/class="results-stream-links preference-page-switcher"/g) || []).length, 1, 'switcher appears once at the top of the personal page');
   assert.match(results, /const PERSONAL_RESULTS_PAGE=\/\^\\\/preferences-results/);
   assert.match(results, /if\(!PERSONAL_RESULTS_PAGE\)\{loadStats\(\);/);
+  assert.match(personal, /#results-status, #statistics-section/);
 });
