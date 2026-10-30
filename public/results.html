@@ -298,6 +298,8 @@
     };
     document.addEventListener('results-language-changed', render);
     streamLinks.forEach(link => link.addEventListener('click', event => {
+      const targetUrl = new URL(link.href, location.href);
+      if (targetUrl.pathname !== location.pathname) return;
       event.preventDefault();
       stream = link.dataset.resultsStream === 'hypothetical' ? 'hypothetical' : 'collective';
       if (stream === 'collective') syncCollectiveSort();
