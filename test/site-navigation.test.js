@@ -234,7 +234,7 @@ test('personal preview sample cards remain isolated to the personal results page
   assert.match(results, /context:\{q2:sample\.q2,q3:sample\.q3,q4:sample\.q4\}/, 'demo choice context uses the selected questionnaire options');
   assert.doesNotMatch(results, /context:\{q2:'life',q3:'relationships',q4:'freedom'\}/, 'demo context must not show internal topic IDs as questionnaire answers');
   assert.match(results, /const isLastPage=currentPageStart\+pageSize>=answerTotal/);
-  assert.match(results, /if\(!isLastPage\).*author-answer-card/);
+  assert.match(results, /if\(!isLastPage\).*card\.hidden=true/);
 });
 
 
