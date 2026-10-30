@@ -618,14 +618,18 @@
     const shortcut = event.target.closest('.author-answer-shortcut');
     if (!shortcut) return;
     const targetId = shortcut.getAttribute('href')?.slice(1);
-    const card = targetId && document.getElementById(targetId);
-    const root = targetId === 'answer-1' ? document.getElementById('author-answer-hypothetical') : card;
-    const answerCard = targetId === 'answer-1' ? card : root?.querySelector('.author-answer-card');
+    const personalAuthor = targetId === 'answer-1' || targetId === 'author-answer-volunteer';
+    const root = personalAuthor
+      ? document.getElementById('author-answer-hypothetical')
+      : (targetId === 'author-answer-1' ? document.getElementById('author-answer-collective') : document.getElementById(targetId));
+    const answerCard = personalAuthor
+      ? root?.querySelector('.author-answer-card')
+      : (root?.matches('.author-answer-card') ? root : root?.querySelector('.author-answer-card'));
     const full = answerCard?.querySelector('.author-answer-full');
     const toggle = answerCard?.querySelector('.author-answer-toggle');
-    if (!root || !full || !toggle) return;
+    if (!root || !answerCard || !full || !toggle) return;
     event.preventDefault();
-    if (targetId === 'answer-1') history.replaceState({}, '', '#answer-1');
+    if (personalAuthor) history.replaceState({}, '', '#author-answer-volunteer');
     root.hidden = false;
     answerCard.hidden = false;
     full.hidden = false;
@@ -633,6 +637,6 @@
     const lang = document.getElementById('page-language')?.value || 'en';
     const words = labels[lang] || labels.en;
     toggle.textContent = words.hide || 'Hide the full answer';
-    root.scrollIntoView({behavior:'smooth', block:'start'});
+    answerCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 })();
