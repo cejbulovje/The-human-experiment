@@ -251,3 +251,10 @@ test('preview result samples use one real paginated renderer in both streams', (
   assert.match(personal, /question\?\.addEventListener\('change'/);
   assert.match(personal, /const next = Math\.min\(orderedSamples\.length, shown \+ pageSize\)/, 'personal cards are sliced to one page');
 });
+
+
+test('dedicated personal results page opens the answer feed and hides collective loading state', () => {
+  const personalHtml = readFileSync(new URL('../public/preferences-results.html', import.meta.url), 'utf8');
+  assert.match(personalHtml, /#results-status[^}]*display:none !important/, 'collective loading status must not remain visible on the personal page');
+  assert.match(personalHtml, /let view = location\.pathname === '\/preferences-results\.html' \? 'all' : 'overview'/, 'personal results should open directly to answers');
+});
