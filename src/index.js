@@ -169,7 +169,7 @@ async function publicResponses(request,env){
   if(search){clauses.push('r.free_answer LIKE ? ESCAPE char(92)');binds.push(`%${search.replace(/[\\%_]/g,match=>'\\'+match)}%`);}
   const allowedTopics=['character','appearance','freedom','life','relationships','other'];
   if(topic){if(allowedTopics.includes(topic)){clauses.push('r.topic=?');binds.push(topic);}else{clauses.push('1=0');}}
-  if(choice){const match=/^(q2|q3|q4):(\\d+)$/.exec(choice);const limits={q2:7,q3:5,q4:7};if(match&&Number(match[2])<limits[match[1]]){clauses.push('r.'+match[1]+'=?');binds.push(Number(match[2]));}else{clauses.push('1=0');}}
+  if(choice){const match=/^(q2|q3|q4):(\d+)$/.exec(choice);const limits={q2:7,q3:5,q4:7};if(match&&Number(match[2])<limits[match[1]]){clauses.push('r.'+match[1]+'=?');binds.push(Number(match[2]));}else{clauses.push('1=0');}}
   const validDate=value=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const date=new Date(value+'T00:00:00.000Z');return !Number.isNaN(date.getTime())&&date.toISOString().slice(0,10)===value;};
   if(url.searchParams.has('from')){if(validDate(from)){clauses.push('substr(r.created_at,1,10)>=?');binds.push(from);}else{clauses.push('1=0');}}
   if(url.searchParams.has('to')){if(validDate(to)){clauses.push('substr(r.created_at,1,10)<=?');binds.push(to);}else{clauses.push('1=0');}}
