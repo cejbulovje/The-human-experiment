@@ -200,7 +200,7 @@
     const hypotheticalTabs = [...document.querySelectorAll('[data-hypothetical-view]')];
     let stream = 'hypothetical';
     // This dedicated page should open on the personal answer feed, not the empty overview.
-    let view = location.pathname === '/preferences-results.html' ? 'all' : 'overview';
+    let view = ['/preferences-results.html', '/preferences-results'].includes(location.pathname.replace(/\/$/, '')) ? 'all' : 'overview';
     const syncCollectiveSort = () => {
       if (!['latest','popular','unusual'].includes(view)) return;
       const sort = document.querySelector('#answer-sort');
