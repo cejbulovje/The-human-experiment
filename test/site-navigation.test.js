@@ -240,6 +240,13 @@ test('combined Results demo renders personal sample cards with participant styli
 });
 
 
+test('author collective answer shows a short intro before its expandable full text', () => {
+  const answers = readFileSync(new URL('../public/author-answers.js', import.meta.url), 'utf8');
+  assert.match(answers, /const intro = String\(paragraphs\[0\] \|\| ''\)\.trim\(\)/);
+  assert.match(answers, /intro\.length > 220 \? intro\.slice\(0, 217\)\.trimEnd\(\) \+ '…' : intro/);
+  assert.match(answers, /toggle\.addEventListener\('click'/);
+});
+
 test('preview result samples use one real paginated renderer in both streams', () => {
   const html = readFileSync(new URL('../public/results.html', import.meta.url), 'utf8');
   const results = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
