@@ -233,6 +233,9 @@ test('combined Results demo renders personal sample cards with participant styli
   assert.match(preview, /card\.append\(top, freeTextQuestion, preview, toggle, full, choices, actions\)/);
   const results = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
   assert.match(results, /demoItems\('collective'\)\.filter\(item=>item\.answerNumber!==1\)/);
+  assert.match(results, /const demoSamples=\[/, 'collective demo answers use questionnaire-aligned examples');
+  assert.match(results, /context:\{q2:sample\.q2,q3:sample\.q3,q4:sample\.q4\}/, 'demo choice context uses the selected questionnaire options');
+  assert.doesNotMatch(results, /context:\{q2:'life',q3:'relationships',q4:'freedom'\}/, 'demo context must not show internal topic IDs as questionnaire answers');
   assert.match(results, /if\(currentPageStart>0\).*author-answer-card/);
 });
 
