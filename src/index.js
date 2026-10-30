@@ -120,6 +120,18 @@ export function highestReachedResultsThreshold(total,publishedThreshold=0){
 export function nextResultsThreshold(publishedThreshold=0){
   return resultThresholdsThrough(Math.max(publishedThreshold*10,1000)).find(value=>value>publishedThreshold)||publishedThreshold*10;
 }
+function snapshotHasValidQuestionLabels(snapshot){
+  if(!snapshot)return false;
+  try{
+    for(const question of ['q2','q3','q4']){
+      const items=JSON.parse(snapshot[question]);
+      if(!Array.isArray(items))return false;
+      const validLabels=new Set(OPTIONS[question].en.map((label,index)=>`${label} / ${OPTIONS[question].ru[index]}`));
+      if(items.some(item=>!item||!validLabels.has(item.label)||!Number.isFinite(Number(item.count))||Number(item.count)<0))return false;
+    }
+    return true;
+  }catch{return false;}
+}
 async function results(env){
   if(!env.DB)return json({error:'not_configured'},503);
   const totalRow=await env.DB.prepare("SELECT COUNT(*) AS total FROM responses WHERE is_public=1 AND (public_id IS NULL OR public_id <> 'author-answer-1')").first();
@@ -130,7 +142,7 @@ async function results(env){
   let snapshot=await env.DB.prepare('SELECT published_threshold,total,updated_at,q2,q3,q4,answered FROM public_results_snapshot WHERE id=1').first();
   const publishedThreshold=Number(snapshot?.published_threshold||0);
   const reached=highestReachedResultsThreshold(total,publishedThreshold);
-  if(reached>publishedThreshold){
+  const snapshotInvalid=Boolean(snapshot)&&!snapshotHasValidQuestionLabels(snapshot);\n  if(reached>publishedThreshold||snapshotInvalid){\n    const targetThreshold=Math.max(reached,publishedThreshold);
     const getCounts=async(column,question)=>{
       const rows=await env.DB.prepare(`SELECT ${column} AS choice, COUNT(*) AS count FROM responses WHERE is_public=1 AND (public_id IS NULL OR public_id <> 'author-answer-1') AND ${column} IS NOT NULL GROUP BY ${column}`).all();
       const counts=new Map((rows.results||[]).map(row=>[Number(row.choice),Number(row.count)]));
@@ -147,7 +159,7 @@ async function results(env){
     await env.DB.prepare(`INSERT INTO public_results_snapshot (id,published_threshold,total,updated_at,q2,q3,q4,answered)
       VALUES (1,?,?,?,?,?,?,?)
       ON CONFLICT(id) DO UPDATE SET published_threshold=excluded.published_threshold,total=excluded.total,updated_at=excluded.updated_at,q2=excluded.q2,q3=excluded.q3,q4=excluded.q4,answered=excluded.answered
-      WHERE excluded.published_threshold>public_results_snapshot.published_threshold`).bind(reached,total,updatedAt,JSON.stringify(q2.items),JSON.stringify(q3.items),JSON.stringify(q4.items),JSON.stringify({q2:q2.answered,q3:q3.answered,q4:q4.answered})).run();
+      WHERE excluded.published_threshold>=public_results_snapshot.published_threshold`).bind(targetThreshold,total,updatedAt,JSON.stringify(q2.items),JSON.stringify(q3.items),JSON.stringify(q4.items),JSON.stringify({q2:q2.answered,q3:q3.answered,q4:q4.answered})).run();
     snapshot=await env.DB.prepare('SELECT published_threshold,total,updated_at,q2,q3,q4,answered FROM public_results_snapshot WHERE id=1').first();
   }
   if(!snapshot||Number(snapshot.published_threshold)<THRESHOLD)return json({unlocked:false,total,threshold:THRESHOLD,remaining:THRESHOLD-total,teaser:true});
