@@ -190,7 +190,7 @@ async function publicResponses(request,env){
   const where=clauses.join(' AND ');
   let order='r.created_at DESC, r.id DESC';
   if(sort==='oldest')order='r.created_at ASC, r.id ASC';
-  else if(sort==='random')order='RANDOM()';
+  else if(sort==='random'){const rawShuffle=url.searchParams.get('shuffle');const parsedShuffle=rawShuffle&&/^\\d{1,10}$/.test(rawShuffle)?Number(rawShuffle):0;const shuffleSeed=Number.isSafeInteger(parsedShuffle)&&parsedShuffle>0&&parsedShuffle<=2147483646?parsedShuffle:1;const shuffleMultiplier=(shuffleSeed%1000002)+1;binds.push(shuffleMultiplier,shuffleSeed);order='((r.id * ? + ?) % 2147483647), r.id ASC';}
   else if(sort==='popular')order='reaction_count DESC, r.created_at DESC, r.id DESC';
   else if(sort==='unusual')order='topic_frequency ASC, length(r.free_answer) DESC, r.created_at DESC, r.id DESC';
   const count=await env.DB.prepare(`SELECT COUNT(*) AS total FROM responses r WHERE ${where}`).bind(...binds).first();
