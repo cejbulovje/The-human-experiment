@@ -139,10 +139,21 @@ let searchTimer;function resetSearch(){clearTimeout(searchTimer);searchTimer=set
   const full=card?.querySelector('.author-answer-full');
   const toggle=card?.querySelector('.author-answer-toggle');
   if(!root||!card||!full||!toggle)return false;
-  root.hidden=false;card.hidden=false;full.hidden=false;
-  toggle.setAttribute('aria-expanded','true');
+
+  // Navigating to answer #1 should reveal the styled author card, not expand
+  // its legacy full-text section automatically.
+  root.hidden=false;
+  root.style.display='block';
+  card.hidden=false;
+  full.hidden=true;
+  full.style.maxHeight='';
+  full.style.opacity='';
+  full.style.overflow='';
+  full.style.transition='';
+  toggle.setAttribute('aria-expanded','false');
+
   const labels={ru:{show:'Читать полный ответ',hide:'Свернуть ответ'},en:{show:'Read the full answer',hide:'Collapse answer'},es:{show:'Leer la respuesta completa',hide:'Contraer respuesta'},pt:{show:'Ler a resposta completa',hide:'Recolher resposta'},zh:{show:'阅读完整回答',hide:'收起回答'},de:{show:'Vollständige Antwort lesen',hide:'Antwort einklappen'},ja:{show:'回答全文を読む',hide:'回答を折りたたむ'},fr:{show:'Lire la réponse complète',hide:'Réduire la réponse'},ar:{show:'قراءة الإجابة كاملة',hide:'طي الإجابة'}};
-  toggle.textContent=(labels[lang]||labels.en).hide;
+  toggle.textContent=(labels[lang]||labels.en).show;
   $('#answers-status').hidden=true;
   requestAnimationFrame(()=>card.scrollIntoView({behavior:'smooth',block:'start'}));
   return true;
