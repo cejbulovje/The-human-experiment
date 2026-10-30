@@ -159,7 +159,7 @@ async function publicResponses(request,env){
   const url=new URL(request.url);const rawLimit=url.searchParams.get('limit');const parsedLimit=rawLimit===null||rawLimit===''?12:Number(rawLimit);const limit=Number.isSafeInteger(parsedLimit)?Math.max(1,Math.min(30,parsedLimit)):12;const rawOffset=url.searchParams.get('offset');const parsedOffset=rawOffset===null||rawOffset===''?0:Number(rawOffset);const offset=Number.isSafeInteger(parsedOffset)?Math.max(0,Math.min(1000000,parsedOffset)):0;
   const requestedId=(url.searchParams.get('id')||'').trim().slice(0,100);
   const requestedNumberRaw=(url.searchParams.get('number')||'').trim();const requestedNumber=/^\d{1,9}$/.test(requestedNumberRaw)?Number(requestedNumberRaw):0;
-  const search=(url.searchParams.get('q')||'').trim().slice(0,160);const topic=(url.searchParams.get('topic')||'').trim();const from=(url.searchParams.get('from')||'').slice(0,10);const to=(url.searchParams.get('to')||'').slice(0,10);const sort=url.searchParams.get('sort')||'newest';
+  const search=(url.searchParams.get('q')||'').trim().slice(0,160);const topic=(url.searchParams.get('topic')||'').trim();const choice=(url.searchParams.get('choice')||'').trim();const from=(url.searchParams.get('from')||'').slice(0,10);const to=(url.searchParams.get('to')||'').slice(0,10);const sort=url.searchParams.get('sort')||'newest';
   // The author card is rendered from author-answers.js; never return its seeded DB row as a duplicate.
   const clauses=["r.is_public=1", "(r.public_id IS NULL OR r.public_id <> 'author-answer-1')"];const binds=[];
   if(requestedNumber>0){clauses.push('r.answer_number=?');binds.push(requestedNumber);}
@@ -169,6 +169,7 @@ async function publicResponses(request,env){
   if(search){clauses.push('r.free_answer LIKE ? ESCAPE char(92)');binds.push(`%${search.replace(/[\\%_]/g,match=>'\\'+match)}%`);}
   const allowedTopics=['character','appearance','freedom','life','relationships','other'];
   if(topic){if(allowedTopics.includes(topic)){clauses.push('r.topic=?');binds.push(topic);}else{clauses.push('1=0');}}
+  if(choice){const match=/^(q2|q3|q4):(\\d+)$/.exec(choice);const limits={q2:7,q3:5,q4:7};if(match&&Number(match[2])<limits[match[1]]){clauses.push('r.'+match[1]+'=?');binds.push(Number(match[2]));}else{clauses.push('1=0');}}
   const validDate=value=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(value))return false;const date=new Date(value+'T00:00:00.000Z');return !Number.isNaN(date.getTime())&&date.toISOString().slice(0,10)===value;};
   if(url.searchParams.has('from')){if(validDate(from)){clauses.push('substr(r.created_at,1,10)>=?');binds.push(from);}else{clauses.push('1=0');}}
   if(url.searchParams.has('to')){if(validDate(to)){clauses.push('substr(r.created_at,1,10)<=?');binds.push(to);}else{clauses.push('1=0');}}
@@ -198,6 +199,7 @@ async function publicResponses(request,env){
     publicCode: String(row.public_id || row.id).slice(0, 8).toUpperCase(),
     answerNumber: Number(row.answer_number),
     reactionCount: Number(row.reaction_count || 0),
+    choices: { q2: Number(row.q2), q3: Number(row.q3), q4: Number(row.q4) },
     context: {
       q2: `${OPTIONS.q2.en[row.q2] || ''} / ${OPTIONS.q2.ru[row.q2] || ''}`,
       q3: `${OPTIONS.q3.en[row.q3] || ''} / ${OPTIONS.q3.ru[row.q3] || ''}`,
