@@ -270,3 +270,10 @@ test('dedicated personal results page opens on the answer feed instead of the ov
   assert.match(html, /let view = 'all';/);
   assert.match(html, /if \(hypotheticalEmpty\) \{[\s\S]*?hypotheticalEmpty\.hidden = view === 'overview';/);
 });
+
+test('collective author answer remains visible while public statistics are locked', () => {
+  const results = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
+  assert.match(results, /const unlocked=root\?\.dataset\.resultsUnlocked==='true'\|\|CREATOR_PREVIEW/);
+  assert.match(results, /if\(!root\)return;if\(!list\)return;const card=root\.querySelector\('\.author-answer-card'\)/);
+  assert.doesNotMatch(results, /if\(!unlocked\|\|!root\)return/);
+});
