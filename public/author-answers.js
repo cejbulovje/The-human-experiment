@@ -464,7 +464,7 @@
       const choicesTitle = document.createElement('strong');
       choicesTitle.textContent = words.collectiveChoices;
       choices.append(choicesTitle);
-      const selected = ru ? [
+      const selected = locale === 'ru' ? [
         ['Если бы ты мог изменить этого человека, что бы ты изменил в первую очередь?', 'Всё, что посчитал бы нужным'],
         ['Если бы желания этого человека противоречили твоим, как бы ты поступил?', 'Всё равно поступил бы по-своему'],
         ['Как ты думаешь, чего захотело бы большинство людей в такой ситуации?', 'Затрудняюсь ответить'],
@@ -515,7 +515,7 @@
       const choicesTitle = document.createElement('strong');
       choicesTitle.textContent = words.volunteerChoices;
       choices.append(choicesTitle);
-      const selected = ru ? [
+      const selected = locale === 'ru' ? [
         ['1. Что бы ты позволил человечеству изменить в себе?', 'Доверил бы человечеству самостоятельно решать, что менять, сохранив лишь несколько принципиальных условий.'],
         ['2. Что могло бы побудить тебя участвовать в эксперименте?', [
           'Желание увидеть, каким человечество является на самом деле, за пределами публичных образов и заявлений.',
