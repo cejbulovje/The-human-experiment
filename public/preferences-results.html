@@ -127,8 +127,8 @@
         </a>
       </nav>
     <nav class="results-view-tabs" aria-label="Results views">
-      <button type="button" class="results-view-tab is-active" data-results-view="overview">Обзор</button>
-      <button type="button" class="results-view-tab" data-results-view="all">Все ответы</button>
+      <button type="button" class="results-view-tab" data-results-view="overview">Обзор</button>
+      <button type="button" class="results-view-tab is-active" data-results-view="all">Все ответы</button>
       <button type="button" class="results-view-tab" data-results-view="question">По вопросам</button>
       <button type="button" class="results-view-tab" data-results-view="latest">Новые</button>
       <button type="button" class="results-view-tab" data-results-view="popular">Популярные</button>
@@ -199,7 +199,7 @@
     const charts = ['q2','q3','q4'].map(q => document.querySelector('#chart-' + q)?.closest('.result-section'));
     const hypotheticalTabs = [...document.querySelectorAll('[data-hypothetical-view]')];
     let stream = 'hypothetical';
-    let view = 'overview';
+    let view = 'all';
     const syncCollectiveSort = () => {
       if (!['latest','popular','unusual'].includes(view)) return;
       const sort = document.querySelector('#answer-sort');
