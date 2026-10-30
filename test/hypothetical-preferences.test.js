@@ -70,6 +70,8 @@ test('schema.sql includes the additive public fields while migration 0010 remain
   assert.match(preferencesSql(migration), /aggregate_consent INTEGER NOT NULL CHECK \(aggregate_consent IN \(0,1\)\)/);
   assert.match(preferencesSql(schema), /comment TEXT/);
   assert.match(preferencesSql(schema), /public_consent INTEGER NOT NULL DEFAULT 1 CHECK \(public_consent IN \(0,1\)\)/);
+  assert.match(preferencesSql(schema), /pseudonym TEXT CHECK \(pseudonym IS NULL OR length\(pseudonym\) <= 60\)/);
+  assert.match(schema, /CREATE INDEX IF NOT EXISTS idx_hypothetical_preferences_public_created\s+ON hypothetical_preferences\(public_consent, created_at\)/);
   assert.match(extensionMigration, /ALTER TABLE hypothetical_preferences ADD COLUMN comment TEXT/);
   assert.match(extensionMigration, /ALTER TABLE hypothetical_preferences ADD COLUMN public_consent INTEGER NOT NULL DEFAULT 1 CHECK \(public_consent IN \(0,1\)\)/);
   assert.match(publicPreferencesMigration, /ADD COLUMN pseudonym TEXT CHECK \(pseudonym IS NULL OR length\(pseudonym\) <= 60\)/);
