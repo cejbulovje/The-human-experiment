@@ -277,3 +277,9 @@ test('collective author answer remains visible while public statistics are locke
   assert.match(results, /if\(!root\)return;if\(!list\)return;const card=root\.querySelector\('\.author-answer-card'\)/);
   assert.doesNotMatch(results, /if\(!unlocked\|\|!root\)return/);
 });
+
+test('personal preview initializes even when loaded after DOMContentLoaded', () => {
+  const personal = readFileSync(new URL('../public/preferences-results-preview.js', import.meta.url), 'utf8');
+  assert.match(personal, /if \(document\.readyState === 'loading'\) \{[\s\S]*?document\.addEventListener\('DOMContentLoaded', initializePreview, \{ once: true \}\);[\s\S]*?\} else \{\s*initializePreview\(\);\s*\}/);
+  assert.match(personal, /function initializePreview\(\) \{\s*render\(\);/);
+});
