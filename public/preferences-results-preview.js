@@ -226,11 +226,24 @@
     const shown = Math.max(0, Number(page) || 0) * pageSize;
     list.querySelectorAll(':scope > .preview-sample-answer').forEach(card => card.remove());
     const sort = document.getElementById('hypothetical-sort')?.value || 'oldest';
-    const orderedSamples = sort === 'latest' ? [...samples.hypothetical].reverse() : samples.hypothetical;
+    const query = (document.getElementById('hypothetical-search')?.value || '').trim().toLocaleLowerCase();
+    const question = document.getElementById('hypothetical-question-filter')?.value || '';
+    const matching = samples.hypothetical.map((item, index) => ({ item, index })).filter(({ item }) => {
+      const searchable = [item.text, ...(item.choices || []).flat()].join(' ').toLocaleLowerCase();
+      const questionMatches = !question || (item.choices || []).some(([label]) => {
+        const value = String(label).toLocaleLowerCase();
+        return question === 'priority' && /priority|приоритет|главн/i.test(value)
+          || question === 'preserve' && /preserve|сохран|важно/i.test(value)
+          || question === 'wishes' && /wish|желан|учитывать/i.test(value)
+          || question === 'body' && /body|тел|изменени/i.test(value);
+      });
+      return (!query || searchable.includes(query)) && questionMatches;
+    });
+    const orderedSamples = sort === 'latest' ? matching.slice().reverse() : matching;
     const next = Math.min(orderedSamples.length, shown + pageSize);
     for (let index = shown; index < next; index += 1) {
-      const answerNumber = sort === 'latest' ? samples.hypothetical.length - index + 1 : index + 2;
-      list.append(makeSample(orderedSamples[index], 'hypothetical', answerNumber - 1));
+      const entry = orderedSamples[index];
+      list.append(makeSample(entry.item, 'hypothetical', entry.index + 1));
     }
     const currentPage = Math.floor(shown / pageSize);
     if (authorRoot) {
@@ -266,7 +279,17 @@
     const previous = document.getElementById('hypothetical-load-previous');
     const pageSize = document.getElementById('hypothetical-page-size');
     const sort = document.getElementById('hypothetical-sort');
+    const search = document.getElementById('hypothetical-search');
+    const question = document.getElementById('hypothetical-question-filter');
     sort?.addEventListener('change', event => {
+      event.stopImmediatePropagation();
+      fillPersonalPage(0);
+    }, true);
+    search?.addEventListener('input', event => {
+      event.stopImmediatePropagation();
+      fillPersonalPage(0);
+    }, true);
+    question?.addEventListener('change', event => {
       event.stopImmediatePropagation();
       fillPersonalPage(0);
     }, true);
