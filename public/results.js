@@ -186,7 +186,7 @@ async function loadLinkedAnswer(){
     requestAnimationFrame(()=>document.getElementById(`answer-${CSS.escape(item.id)}`)?.scrollIntoView({behavior:'smooth',block:'start'}));
   }catch{}
 }
-populateQuestionFilter();restoreFiltersFromUrl();$('#answer-sort').value='newest';applyLanguage();syncParticipantMode();if(!PERSONAL_RESULTS_PAGE){loadStats();if(DEMO_MODE){document.addEventListener('DOMContentLoaded',()=>{queueMicrotask(()=>loadAnswers(true,window.__resultsInitialOffset||0).then(()=>loadLinkedAnswer()));},{once:true});}else{loadAnswers(true,window.__resultsInitialOffset||0).then(()=>loadLinkedAnswer());}}
+populateQuestionFilter();restoreFiltersFromUrl();applyLanguage();syncParticipantMode();if(!PERSONAL_RESULTS_PAGE){loadStats();if(DEMO_MODE){document.addEventListener('DOMContentLoaded',()=>{queueMicrotask(()=>loadAnswers(true,window.__resultsInitialOffset||0).then(()=>loadLinkedAnswer()));},{once:true});}else{loadAnswers(true,window.__resultsInitialOffset||0).then(()=>loadLinkedAnswer());}}
 
 document.querySelectorAll('[id^="ai-analysis-"][id$="-form"],#ai-analysis-form').forEach(aiForm=>{
   const aiSuffix=aiForm.dataset.aiStream==='hypothetical'?'-hypothetical':'';
