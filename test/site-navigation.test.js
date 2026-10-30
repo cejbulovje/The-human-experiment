@@ -219,20 +219,17 @@ test('both answer streams expose backward and forward history navigation and new
 });
 
 
-test('combined Results demo renders personal sample cards with participant styling and pagination', () => {
+test('personal preview sample cards remain isolated to the personal results page', () => {
   const resultsHtml = readFileSync(new URL('../public/results.html', import.meta.url), 'utf8');
   const personalHtml = readFileSync(new URL('../public/preferences-results.html', import.meta.url), 'utf8');
   const preview = readFileSync(new URL('../public/preferences-results-preview.js', import.meta.url), 'utf8');
-  assert.match(resultsHtml, /src="\/preferences-results-preview\.js"/);
-  assert.match(resultsHtml, /id="hypothetical-load-previous"/);
-  assert.match(resultsHtml, /id="hypothetical-load-more"/);
+  assert.doesNotMatch(resultsHtml, /src="\/preferences-results-preview\.js"/);
+  assert.doesNotMatch(resultsHtml, /id="hypothetical-load-(?:previous|more)"/);
   assert.match(personalHtml, /src="\/preferences-results-preview\.js"/);
-  assert.match(preview, /location\.pathname === '\/results\.html'.*demo.*101/);
   assert.match(preview, /card\.className = 'answer-card preview-sample-answer'/);
   assert.match(preview, /card\.id = 'sample-answer-' \+ kind \+ '-' \+ index/);
   assert.match(preview, /card\.append\(top, freeTextQuestion, preview, toggle, full, choices, actions\)/);
   const results = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
-  assert.match(results, /demoItems\('collective'\)\.filter\(item=>item\.answerNumber!==1\)/);
   assert.match(results, /const demoSamples=\[/, 'collective demo answers use questionnaire-aligned examples');
   assert.match(results, /context:\{q2:sample\.q2,q3:sample\.q3,q4:sample\.q4\}/, 'demo choice context uses the selected questionnaire options');
   assert.doesNotMatch(results, /context:\{q2:'life',q3:'relationships',q4:'freedom'\}/, 'demo context must not show internal topic IDs as questionnaire answers');
