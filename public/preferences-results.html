@@ -53,16 +53,16 @@
   <main class="shell results-page">
     <p class="eyebrow" data-voice="eyebrow">ГИПОТЕТИЧЕСКИЕ ПРЕДПОЧТЕНИЯ</p><h1 data-voice="resultsTitle">Чего люди хотели бы для собственной жизни?</h1>
     <p class="lead" data-voice="resultsIntro">Отдельная лента ответов о собственных желаниях человека, а не о решениях за чужую жизнь.</p>
-    <nav class="results-stream-links" aria-label="Выбор результатов">
-      <a class="results-stream-link is-active" href="#statistics-section" data-results-stream="collective">
+    <nav class="results-stream-links preference-page-switcher" aria-label="Выбор результатов">
+      <a class="results-stream-link" href="/results.html" data-results-stream="collective">
         <span class="results-stream-kicker">01</span>
         <span><strong>Коллективные решения</strong><small>Что люди решили бы о жизни другого человека</small></span>
         <span class="results-stream-arrow" aria-hidden="true">↗</span>
       </a>
-      <a class="results-stream-link" href="#preference-results-title" data-results-stream="hypothetical">
+      <a class="results-stream-link is-active" href="/preferences-results.html" data-results-stream="hypothetical" aria-current="page">
         <span class="results-stream-kicker">02</span>
         <span><strong>Чего люди хотели бы для собственной жизни</strong><small>Личные желания и границы человека</small></span>
-        <span class="results-stream-arrow" aria-hidden="true">↗</span>
+        <span class="results-stream-arrow" aria-hidden="true">✓</span>
       </a>
     </nav>
     <div class="results-question-picker" hidden>
@@ -114,18 +114,7 @@
       <button id="show-more" class="show-more-button" type="button" hidden data-t="showMore">Show more</button>
     </section>
     <section class="public-answers-section hypothetical-answers-section" aria-label="Личные предпочтения" hidden>
-      <nav class="results-stream-links preference-page-switcher" aria-label="Переключение между голосованиями">
-        <a class="results-stream-link" href="/results.html">
-          <span class="results-stream-kicker">01</span>
-          <span><strong>Коллективные решения</strong><small>Что люди решили бы о жизни другого человека</small></span>
-          <span class="results-stream-arrow" aria-hidden="true">↗</span>
-        </a>
-        <a class="results-stream-link is-active" href="/preferences-results.html" aria-current="page">
-          <span class="results-stream-kicker">02</span>
-          <span><strong>Личные предпочтения</strong><small>Чего люди хотели бы для собственной жизни</small></span>
-          <span class="results-stream-arrow" aria-hidden="true">✓</span>
-        </a>
-      </nav>
+      
     <nav class="results-view-tabs" aria-label="Results views">
       <button type="button" class="results-view-tab" data-results-view="overview">Обзор</button>
       <button type="button" class="results-view-tab is-active" data-results-view="all">Все ответы</button>

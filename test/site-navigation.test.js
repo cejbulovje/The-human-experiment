@@ -280,3 +280,16 @@ test('personal preview initializes even when loaded after DOMContentLoaded', () 
   assert.match(personal, /if \(document\.readyState === 'loading'\) \{[\s\S]*?document\.addEventListener\('DOMContentLoaded', initializePreview, \{ once: true \}\);[\s\S]*?\} else \{\s*initializePreview\(\);\s*\}/);
   assert.match(personal, /function initializePreview\(\) \{\s*render\(\);/);
 });
+
+
+test('personal results page shares the top-level stream switcher and does not start collective API loading', () => {
+  const personal = readFileSync(new URL('../public/preferences-results.html', import.meta.url), 'utf8');
+  const results = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
+  const navStart = personal.indexOf('class="results-stream-links preference-page-switcher"');
+  const nav = personal.slice(navStart, personal.indexOf('</nav>', navStart));
+  assert.match(nav, /href="\/results\.html" data-results-stream="collective"/);
+  assert.match(nav, /href="\/preferences-results\.html" data-results-stream="hypothetical" aria-current="page"/);
+  assert.equal((personal.match(/class="results-stream-links preference-page-switcher"/g) || []).length, 1, 'switcher appears once at the top of the personal page');
+  assert.match(results, /const PERSONAL_RESULTS_PAGE=\/\^\\\/preferences-results/);
+  assert.match(results, /if\(!PERSONAL_RESULTS_PAGE\)\{loadStats\(\);/);
+});
