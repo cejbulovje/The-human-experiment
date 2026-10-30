@@ -45,7 +45,7 @@ function populateQuestionFilter(){
 }
 function selectedChoice(item,value){
  if(!value)return true;
- const match=/^(q2|q3|q4):(\\d+)$/.exec(value);
+ const match=/^(q2|q3|q4):(\d+)$/.exec(value);
  if(!match)return false;
  return Number(item.choices?.[match[1]])===Number(match[2]);
 }
