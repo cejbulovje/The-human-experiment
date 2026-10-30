@@ -93,7 +93,10 @@ CREATE TABLE IF NOT EXISTS hypothetical_preferences (
   delete_token_hash TEXT NOT NULL UNIQUE,
   created_at TEXT NOT NULL,
   comment TEXT,
-  public_consent INTEGER NOT NULL DEFAULT 1 CHECK (public_consent IN (0,1))
+  public_consent INTEGER NOT NULL DEFAULT 1 CHECK (public_consent IN (0,1)),
+  pseudonym TEXT CHECK (pseudonym IS NULL OR length(pseudonym) <= 60)
 );
 CREATE INDEX IF NOT EXISTS idx_hypothetical_preferences_created_at
   ON hypothetical_preferences(created_at);
+CREATE INDEX IF NOT EXISTS idx_hypothetical_preferences_public_created
+  ON hypothetical_preferences(public_consent, created_at);
