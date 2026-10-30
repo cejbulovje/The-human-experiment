@@ -611,6 +611,7 @@
       if (emptyState) emptyState.hidden = true;
     }
   }
+  window.__renderAuthorAnswers = render;
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', render, { once: true });
   else render();
   document.getElementById('page-language')?.addEventListener('change', render);
