@@ -5,14 +5,14 @@
   };
   function decorate() {
     const card = document.getElementById('author-answer-collective');
-    if (!card || card.dataset.decorated === 'true') return;
+    if (!card) return;
     const article = card.querySelector('.author-answer-card');
-    if (!article) return;
+    if (!article || article.dataset.decorated === 'true') return;
     const lang = document.getElementById('page-language')?.value || 'en';
     const locale = lang === 'ru' ? 'ru' : 'en';
     const heading = article.querySelector('.author-answer-title');
     if (heading && !heading.textContent.startsWith('🌍')) heading.textContent = '🌍 ' + heading.textContent;
-    if (heading) {
+    if (heading && !article.querySelector('.author-answer-intro')) {
       const intro = document.createElement('p');
       intro.className = 'author-answer-intro';
       intro.textContent = introText[locale];
@@ -24,12 +24,14 @@
       const emoji = emojis[i];
       if (emoji && !p.textContent.endsWith(emoji)) p.textContent += ' ' + emoji;
     });
-    card.dataset.decorated = 'true';
+    article.dataset.decorated = 'true';
   }
   document.addEventListener('DOMContentLoaded', decorate);
+  document.addEventListener('author-answer-rendered', decorate);
   document.getElementById('page-language')?.addEventListener('change', () => {
     const card = document.getElementById('author-answer-collective');
-    if (card) card.dataset.decorated = 'false';
+    const article = card?.querySelector('.author-answer-card');
+    if (article) article.dataset.decorated = 'false';
     decorate();
   });
 })();
