@@ -271,13 +271,14 @@
     // Do not append a second, unpaginated set of cards to that list.
     fillPersonalPage(0);
   }
-  document.addEventListener('DOMContentLoaded', render, { once: true });
-  document.addEventListener('results-language-changed', () => {
-    const list = document.querySelector('.hypothetical-answer-list');
-    const page = Math.max(0, Number(list?.dataset.testSamplesPage || 0));
-    fillPersonalPage(page);
-  });
-  document.addEventListener('DOMContentLoaded', () => {
+  function initializePreview() {
+    render();
+    document.addEventListener('results-language-changed', () => {
+      const list = document.querySelector('.hypothetical-answer-list');
+      const page = Math.max(0, Number(list?.dataset.testSamplesPage || 0));
+      fillPersonalPage(page);
+    });
+
     const more = document.getElementById('hypothetical-load-more');
     const previous = document.getElementById('hypothetical-load-previous');
     const pageSize = document.getElementById('hypothetical-page-size');
@@ -308,6 +309,12 @@
       event.stopImmediatePropagation();
       fillPersonalPage(0);
     }, true);
-  }, { once: true });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializePreview, { once: true });
+  } else {
+    initializePreview();
+  }
 
 })();
