@@ -253,6 +253,13 @@ test('preview result samples use one real paginated renderer in both streams', (
 });
 
 
+test('extensionless personal results URLs redirect to the canonical HTML asset', () => {
+  const worker = readFileSync(new URL('../src/index.js', import.meta.url), 'utf8');
+  assert.match(worker, /request\.method==='GET'&&\['\/preferences-results','\/preferences-results\/'\]\.includes\(url\.pathname\)/);
+  assert.match(worker, /url\.pathname='\/preferences-results\.html'/);
+  assert.match(worker, /status:302,headers:\{location:url\.toString\(\),'cache-control':'no-store'\}/);
+});
+
 test('dedicated personal results page opens the answer feed and hides collective loading state', () => {
   const personalHtml = readFileSync(new URL('../public/preferences-results.html', import.meta.url), 'utf8');
   assert.match(personalHtml, /#results-status[^}]*display:none !important/, 'collective loading status must not remain visible on the personal page');
