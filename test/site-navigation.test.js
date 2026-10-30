@@ -235,3 +235,19 @@ test('combined Results demo renders personal sample cards with participant styli
   assert.match(results, /demoItems\('collective'\)\.filter\(item=>item\.answerNumber!==1\)/);
   assert.match(results, /if\(currentPageStart>0\).*author-answer-card/);
 });
+
+
+test('preview result samples use one real paginated renderer in both streams', () => {
+  const html = readFileSync(new URL('../public/results.html', import.meta.url), 'utf8');
+  const results = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
+  const personal = readFileSync(new URL('../public/preferences-results-preview.js', import.meta.url), 'utf8');
+  assert.doesNotMatch(html, /demo-collective-load-more|demo-hypothetical-load-more/, 'legacy append-only demo controls are removed');
+  assert.match(results, /const DEMO_MODE=.*CREATOR_PREVIEW.*\['\/results','\/results\.html'\]/, 'collective preview uses its normal page navigation on the preview route');
+  assert.match(results, /all\.slice\(requestOffset,requestOffset\+pageSize\)/, 'collective cards are sliced to one page');
+  assert.match(personal, /const query = \(document\.getElementById\('hypothetical-search'\)/, 'personal search filters sample cards');
+  assert.match(personal, /const question = document\.getElementById\('hypothetical-question-filter'\)/, 'personal question filter is applied');
+  assert.match(personal, /const orderedSamples = sort === 'latest' \? matching\.slice\(\)\.reverse\(\) : matching/);
+  assert.match(personal, /search\?\.addEventListener\('input'/);
+  assert.match(personal, /question\?\.addEventListener\('change'/);
+  assert.match(personal, /const next = Math\.min\(orderedSamples\.length, shown \+ pageSize\)/, 'personal cards are sliced to one page');
+});
