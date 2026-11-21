@@ -380,6 +380,8 @@
     bars('scope',scope,(item,label)=>item.scope===label);
     bars('motivation',motives,(item,label)=>item.motives.includes(label));
     const list=section.querySelector('.hypothetical-answer-list');
+    const authorAnswer=section.querySelector('#author-answer-hypothetical');
+    if(authorAnswer){authorAnswer.hidden=true;authorAnswer.style.display='none';}
     const cards=document.createElement('div');cards.className='answer-list';list.before(cards);
     const status=section.querySelector('#hypothetical-status');
     const search=section.querySelector('#hypothetical-search');
