@@ -436,7 +436,7 @@
       const card=document.getElementById('hypothetical-demo-'+value);
       card?.focus();card?.scrollIntoView({block:'center'});
     });
-    document.querySelectorAll('[data-results-view]').forEach(el=>el.addEventListener('click',resetPage));
+    document.querySelectorAll('.results-view-tab[data-results-view]').forEach(el=>el.addEventListener('click',resetPage));
     document.querySelector('#hypothetical-question-select')?.addEventListener('change',resetPage);
     renderDemo();
     return;
@@ -575,7 +575,7 @@
   let debounce;
   search.addEventListener('input',()=>{clearTimeout(debounce);debounce=setTimeout(()=>load(true),250);});
   [question,sort,pageSize].forEach(el=>el.addEventListener('change',()=>load(true)));
-  document.querySelectorAll('[data-results-stream="hypothetical"],[data-results-view]').forEach(el=>el.addEventListener('click',()=>{if(section.hidden)return;load(true);loadStats();}));
+  document.querySelectorAll('[data-results-stream="hypothetical"],.results-view-tab[data-results-view]').forEach(el=>el.addEventListener('click',()=>{if(section.hidden)return;load(true);loadStats();}));
   document.addEventListener('results-language-changed', () => {
     if (!section.hidden) { load(true); loadStats(); }
   });
