@@ -351,7 +351,57 @@
   if (!section) return;
   const previewOnly = location.hostname === 'experiment-hypothetical-preferences-protot-the-human-experiment.cejbulovje.workers.dev'
     && ['/results', '/results.html'].includes(location.pathname);
-  if (previewOnly) return;
+  if (previewOnly) {
+    const scope=['Ничего не менять','Только заранее одобренное','С правом отказа','Доверие с условиями','Без ограничений','Другое'];
+    const motives=['Узнать желания людей','Увидеть человечество как оно есть','Понять перспективы человечества','Узнать, насколько люди похожи','Проверить взаимопонимание','Внести вклад','Любопытство','Другое','Ничто из перечисленного'];
+    const comments=['Я хотел бы сохранить право самому решать, какие изменения допустимы.','Сначала я бы попросил объяснить последствия каждого решения.','Для меня важны доверие, уважение и возможность отказаться.','Я бы согласился на помощь, если мои желания действительно учитывают.'];
+    const samples=Array.from({length:101},(_,i)=>({n:i+1,scope:scope[i%6],motives:[motives[i%9],motives[(i+3)%9]],comment:comments[i%4]}));
+    const notice=section.querySelector('.hypothetical-data-notice');
+    notice.textContent='ТЕСТОВЫЙ РЕЖИМ: 101 искусственный ответ для проверки оформления. Настоящие ответы пока не собираются.';
+    section.querySelector('#hypothetical-total').textContent='101';
+    section.querySelector('#hypothetical-stats').textContent='Показаны искусственные ответы. Данные не записаны в базу.';
+    section.querySelector('.hypothetical-empty-state')?.remove();
+    function bars(key,labels,contains){
+      const card=section.querySelector('[data-hypothetical-question="'+key+'"]');
+      card.querySelector('.method-note')?.remove();
+      const list=document.createElement('div');list.className='bar-list';
+      labels.forEach(label=>{
+        const count=samples.filter(item=>contains(item,label)).length;
+        const row=document.createElement('div');row.className='bar-row';
+        const name=document.createElement('div');name.className='bar-label';name.textContent=label;
+        const value=document.createElement('div');value.className='bar-value';value.textContent=count+' · '+Math.round(count/101*100)+'%';
+        const track=document.createElement('div');track.className='bar-track';
+        const fill=document.createElement('div');fill.className='bar-fill';fill.style.width=Math.round(count/101*100)+'%';
+        track.append(fill);row.append(name,value,track);list.append(row);
+      });card.append(list);
+    }
+    bars('scope',scope,(item,label)=>item.scope===label);
+    bars('motivation',motives,(item,label)=>item.motives.includes(label));
+    const list=section.querySelector('.hypothetical-answer-list');
+    const cards=document.createElement('div');cards.className='answer-list';list.after(cards);
+    const status=section.querySelector('#hypothetical-status');
+    const search=section.querySelector('#hypothetical-search');
+    const filter=section.querySelector('#hypothetical-question-filter');
+    const sort=section.querySelector('#hypothetical-sort');
+    const size=section.querySelector('#hypothetical-page-size');
+    function renderDemo(){
+      const term=search.value.trim().toLowerCase();
+      let rows=samples.filter(item=>[item.scope,...item.motives,item.comment].join(' ').toLowerCase().includes(term));
+      if(sort.value==='latest')rows.reverse();
+      cards.replaceChildren();
+      rows.slice(0,Number(size.value)||20).forEach(item=>{
+        const card=document.createElement('article');card.className='answer-card preview-sample-answer';
+        const heading=document.createElement('strong');heading.textContent='№ '+item.n+' · Участник '+item.n+' · DEMO-'+String(item.n).padStart(3,'0');card.append(heading);
+        const parts={scope:'Границы изменений: '+item.scope,motivation:'Мотивация участия: '+item.motives.join(', '),comment:item.comment};
+        Object.entries(parts).forEach(([key,value])=>{if(filter.value&&filter.value!==key)return;const p=document.createElement('p');p.textContent=value;card.append(p)});
+        cards.append(card);
+      });
+      status.hidden=false;status.textContent='Показано '+Math.min(rows.length,Number(size.value)||20)+' из '+rows.length+' тестовых ответов';
+    }
+    [search,filter,sort,size].forEach(el=>el.addEventListener(el===search?'input':'change',renderDemo));
+    renderDemo();
+    return;
+  }
   const list = section.querySelector('.hypothetical-answer-list');
   const empty = section.querySelector('.hypothetical-empty-state');
   const status = section.querySelector('#hypothetical-status');
