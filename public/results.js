@@ -72,7 +72,7 @@ const RESULTS_VIEW_UI = {
 };
 function applyResultsViewLanguage(){
  const words=RESULTS_VIEW_UI[lang]||RESULTS_VIEW_UI.en;
- document.querySelectorAll('[data-results-view]').forEach(el=>{const key=el.dataset.resultsView;if(words[key])el.textContent=words[key];});
+ document.querySelectorAll('.results-view-tab[data-results-view]').forEach(el=>{const key=el.dataset.resultsView;if(words[key])el.textContent=words[key];});
  document.querySelectorAll('.results-stream-links:not(.preference-page-switcher)').forEach(nav=>nav.setAttribute('aria-label',words.streams));
  if(!document.querySelector('.preference-page-switcher'))document.querySelectorAll('.results-view-tabs').forEach(nav=>nav.setAttribute('aria-label',words.viewsAria));
  const answerNumber=document.querySelector('#answer-number-input');
