@@ -381,6 +381,7 @@
     bars('motivation',motives,(item,label)=>item.motives.includes(label));
     const list=section.querySelector('.hypothetical-answer-list');
     const authorAnswer=section.querySelector('#author-answer-hypothetical');
+    const answersList=section.querySelector('.hypothetical-answer-list');
     
     const cards=document.createElement('div');cards.className='answer-list';list.before(cards);
     const status=section.querySelector('#hypothetical-status');
@@ -409,9 +410,13 @@
       if(sort.value==='latest')rows.reverse();
       cards.replaceChildren();
       const limit=Number(size.value)||20;
-      const start=page*limit;
-      const visible=rows.slice(start,start+limit);
-      controls.hidden=false;previous.hidden=page===0;next.hidden=start+limit>=rows.length;
+      const authorCard=authorAnswer?.querySelector('.author-answer-card');
+      const firstPageOffset=page===0&&authorCard?1:0;
+      const start=page===0?0:(page*limit-1);
+      const visible=rows.slice(start,start+limit-firstPageOffset);
+      controls.hidden=false;previous.hidden=page===0;next.hidden=start+visible.length>=rows.length;
+      if(page===0&&authorCard){cards.append(authorCard);authorAnswer.hidden=true;}
+      else if(authorAnswer&&answersList){answersList.prepend(authorAnswer);authorAnswer.hidden=true;}
       visible.forEach(item=>{
         const card=document.createElement('article');card.className='answer-card preview-sample-answer';card.id='hypothetical-demo-'+item.n;card.tabIndex=-1;
         const heading=document.createElement('strong');heading.textContent='№ '+item.n+' · Участник '+item.n+' · DEMO-'+String(item.n).padStart(3,'0');card.append(heading);
@@ -419,7 +424,7 @@
         Object.entries(parts).forEach(([key,value])=>{if(filter.value&&filter.value!==key)return;const p=document.createElement('p');p.textContent=value;card.append(p)});
         cards.append(card);
       });
-      status.hidden=false;status.textContent='Показано '+visible.length+' из '+rows.length+' тестовых ответов';
+      status.hidden=false;status.textContent='Показано '+(visible.length+(page===0&&authorCard?1:0))+' из '+(rows.length+(authorCard?1:0))+' ответов';
     }
     const resetPage=()=>{page=0;renderDemo();};
     [search,filter,sort,size].forEach(el=>el.addEventListener(el===search?'input':'change',resetPage));
