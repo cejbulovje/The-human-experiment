@@ -283,14 +283,14 @@ export async function runAIWithLease(env,lockToken,messages,maxTokens,heartbeatI
 async function publicPreferences(request,env){
   if(!env.DB)return json({error:'not_configured'},503);
   const url=new URL(request.url);
-  const sort=url.searchParams.get('sort')||'oldest';
+  const sort=url.searchParams.get('sort')||'latest';
   if(!['latest','newest','oldest','popular','unusual'].includes(sort))return json({error:'invalid_sort'},400);
   if(['popular','unusual'].includes(sort))return json({error:'ranking_unavailable'},409);
   const limit=Math.min(50,Math.max(1,Number.parseInt(url.searchParams.get('limit')||'20',10)||20));
   const offset=Math.max(0,Number.parseInt(url.searchParams.get('offset')||'0',10)||0);
   const q=(url.searchParams.get('q')||'').trim().slice(0,100).toLocaleLowerCase();
   const question=url.searchParams.get('question')||'';
-  const questionKeys=['scope','motivation'];
+  const questionKeys=['scope','motivation','comment'];
   if(question&&!questionKeys.includes(question))return json({error:'invalid_question'},400);
   try{
     const direction=sort==='oldest'?'ASC':'DESC';
@@ -300,7 +300,7 @@ async function publicPreferences(request,env){
       comment:row.comment||'',createdAt:row.created_at
     }));
     if(q)answers=answers.filter(item=>[item.comment,JSON.stringify(item.answers)].some(value=>String(value||'').toLocaleLowerCase().includes(q)));
-    if(question)answers=answers.filter(item=>Object.hasOwn(item.answers,question));
+    if(question)answers=answers.filter(item=>question==='comment'?Boolean(item.comment.trim()):Object.hasOwn(item.answers,question));
     const total=answers.length;
     return json({ok:true,total,limit,offset,sort,answers:answers.slice(offset,offset+limit)});
   }catch{return json({error:'preferences_unavailable'},503);}
