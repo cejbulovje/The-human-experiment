@@ -455,7 +455,7 @@
     });
     document.querySelectorAll('.results-view-tab[data-results-view]').forEach(el=>el.addEventListener('click',resetPage));
     document.querySelector('#hypothetical-question-select')?.addEventListener('change',resetPage);
-    window.addEventListener('author-answer-rendered',renderDemo);
+    window.addEventListener('author-answer-rendered',()=>queueMicrotask(renderDemo));
     renderDemo();
     return;
   }
