@@ -162,7 +162,7 @@
     const questionSelect = document.querySelector('#results-question-select');
     const charts = ['q2','q3','q4'].map(q => document.querySelector('#chart-' + q)?.closest('.result-section'));
     const hypotheticalTabs = [...document.querySelectorAll('[data-hypothetical-view]')];
-    let stream = 'collective';
+    let stream = location.hash === '#hypothetical-answers' ? 'hypothetical' : 'collective';
     let view = 'overview';
     const syncCollectiveSort = () => {
       if (!['latest','popular','unusual'].includes(view)) return;
@@ -302,6 +302,7 @@
       if (targetUrl.pathname !== location.pathname) return;
       event.preventDefault();
       stream = link.dataset.resultsStream === 'hypothetical' ? 'hypothetical' : 'collective';
+      history.replaceState(null, '', link.getAttribute('href'));
       if (stream === 'collective') syncCollectiveSort();
       render();
       (stream === 'collective' ? stats : hypothetical)?.scrollIntoView({behavior:'smooth',block:'start'});
