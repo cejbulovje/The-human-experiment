@@ -144,7 +144,7 @@ test('valid preference submission stores only a deletion-token hash and returns 
   assert.deepEqual(JSON.parse(stored.answers_json),body.answers);
 });
 
-test('personal preference consent choices are stored independently when declined', async t => {
+test('personal response is public when aggregate analysis is declined', async t => {
   const db = createPreferencesDb();
   t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({success:true}), {status:200,headers:{'content-type':'application/json'}}));
   const body = {
@@ -152,7 +152,7 @@ test('personal preference consent choices are stored independently when declined
     answers:{scope:'trust_conditions',motivation:['reality','contribute']},
     consentToStore:true,
     aggregateConsent:false,
-    publicConsent:false,
+    publicConsent:true,
     turnstileToken:'valid-test-token'
   };
   const response = await worker.fetch(new Request('https://example.test/api/preferences', {
@@ -161,7 +161,7 @@ test('personal preference consent choices are stored independently when declined
   assert.equal(response.status,200);
   const stored = [...db.records.values()][0];
   assert.equal(stored.aggregate_consent,0);
-  assert.equal(stored.public_consent,0);
+  assert.equal(stored.public_consent,1);
 });
 
 test('deletion token removes the matching preference and unknown token returns same public response', async t => {
@@ -271,6 +271,94 @@ test('preference submission rejects Turnstile failure without writing data', asy
   assert.equal(db.records.size,0);
 });
 
+test('collective response and optional email commit together or roll back together', async t => {
+  const db = new DatabaseSync(':memory:');
+  t.after(() => db.close());
+  db.exec(schema);
+  t.mock.method(globalThis, 'fetch', async () => Response.json({success:true}));
+  const DB = {
+    prepare(sql) {
+      const statement=db.prepare(sql);
+      let args=[];
+      return {
+        bind(...values) { args=values; return this; },
+        run() { return {meta:statement.run(...args)}; },
+        first() { return statement.get(...args); },
+        all() { return {results:statement.all(...args)}; }
+      };
+    },
+    batch(statements) {
+      db.exec('BEGIN');
+      try {
+        const results=statements.map(statement => statement.run());
+        db.exec('COMMIT');
+        return results;
+      } catch (error) {
+        db.exec('ROLLBACK');
+        throw error;
+      }
+    }
+  };
+  const submit = participantId => worker.fetch(new Request('https://example.test/api/submit', {
+    method:'POST', headers:{'content-type':'application/json'},
+    body:JSON.stringify({language:'en',freeAnswer:'Test response',q2:0,q3:0,q4:0,
+      authorConfirmed:true,turnstileToken:'test',participantId,feedbackEmail:'test@example.invalid'})
+  }), {DB,TURNSTILE_SECRET_KEY:'test',RATE_LIMIT_SALT:'test'});
+  db.exec("CREATE TRIGGER reject_contact BEFORE INSERT ON feedback_contacts BEGIN SELECT RAISE(FAIL, 'contact failure'); END");
+  assert.equal((await submit(crypto.randomUUID())).status,500);
+  assert.equal(db.prepare('SELECT count(*) AS n FROM responses').get().n,0);
+  assert.equal(db.prepare('SELECT count(*) AS n FROM feedback_contacts').get().n,0);
+  db.exec('DROP TRIGGER reject_contact');
+  assert.equal((await submit(crypto.randomUUID())).status,200);
+  assert.equal(db.prepare('SELECT count(*) AS n FROM responses').get().n,1);
+  assert.equal(db.prepare('SELECT count(*) AS n FROM feedback_contacts').get().n,1);
+});
+
+test('retry after a lost confirmation preserves one row per form and recovers the personal deletion token', async t => {
+  const db = new DatabaseSync(':memory:');
+  t.after(() => db.close());
+  db.exec(schema);
+  t.mock.method(globalThis, 'fetch', async () => Response.json({success:true}));
+  const env = {
+    PREFERENCES_ENABLED:'true', TURNSTILE_SECRET_KEY:'test', RATE_LIMIT_SALT:'test',
+    DB:{prepare(sql) {
+      const statement = db.prepare(sql);
+      let args = [];
+      return {
+        bind(...values) { args = values; return this; },
+        run() { return {meta:statement.run(...args)}; },
+        first() { return statement.get(...args); },
+        all() { return {results:statement.all(...args)}; }
+      };
+    }}
+  };
+  const post = (path, data) => worker.fetch(new Request('https://example.test/api/' + path, {
+    method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(data)
+  }), env);
+  const main = {language:'en',participantId:crypto.randomUUID(),freeAnswer:'Local retry test',
+    q2:0,q3:0,q4:0,authorConfirmed:true,turnstileToken:'test'};
+  assert.equal((await post('submit',main)).status,200);
+  const repeatedMain = await post('submit',main);
+  assert.equal(repeatedMain.status,409);
+  assert.equal((await repeatedMain.json()).error,'already_submitted');
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM responses').get().n,1);
+
+  const personal = {language:'en',submissionKey:crypto.randomUUID(),answers:{scope:'veto',motivation:[]},
+    comment:'Original',consentToStore:true,publicConsent:true,aggregateConsent:false,turnstileToken:'test'};
+  const first = await post('preferences',personal);
+  const retry = await post('preferences',personal);
+  assert.equal(first.status,200);
+  assert.equal(retry.status,200);
+  const {deletionToken} = await retry.json();
+  assert.equal(deletionToken,(await first.json()).deletionToken);
+  const changed = await post('preferences',{...personal,comment:'Changed'});
+  assert.equal(changed.status,409);
+  assert.deepEqual(await changed.json(),{ok:false,error:'submission_changed',deletionToken});
+  assert.deepEqual(db.prepare('SELECT comment FROM hypothetical_preferences').all().map(row => row.comment),['Original']);
+  assert.equal((await post('preferences/delete',{deletionToken})).status,200);
+  assert.equal(db.prepare('SELECT COUNT(*) AS n FROM hypothetical_preferences').get().n,0);
+});
+
 test('preference save database failure returns a controlled error and stores no record', async t => {
   const db = createPreferencesDb();
   const originalPrepare = db.prepare.bind(db);
@@ -346,6 +434,7 @@ test('hypothetical preferences requires explicit independent consent choices and
     base,
     {...base, consentToStore:false},
     {...base, consentToStore:true, aggregateConsent:undefined},
+    {...base, consentToStore:true, publicConsent:false},
     {...base, consentToStore:true, publicConsent:undefined},
     {...base, consentToStore:true, answers:{...base.answers, unexpected:'value'}},
     {...base, consentToStore:true, answers:{...base.answers, scope:'made-up'}},
@@ -369,8 +458,8 @@ test('personal preference reads and AI analysis enforce separate publication and
   assert.match(source, /SELECT id,answers_json,language FROM hypothetical_preferences WHERE aggregate_consent=1 AND json_type/);
   assert.match(source, /ai_hypothetical_analysis_memory_consent_v2/);
   assert.match(source, /body\.aggregateConsent\?1:0/);
-  assert.match(source, /body\.publicConsent\?1:0/);
-  assert.match(source, /const questionKeys=\['scope','motivation'\]/);
+  assert.match(source, /body\.publicConsent!==true/);
+  assert.match(source, /const questionKeys=\['scope','motivation','comment'\]/);
   assert.match(source, /questions:\{scope:\{\},motivation:\{\}\}/);
 });
 
@@ -381,6 +470,33 @@ test('preferences endpoint rejects oversized request bodies before storage', asy
   }), {PREFERENCES_ENABLED:'true',DB:{},TURNSTILE_SECRET_KEY:'test-secret',RATE_LIMIT_SALT:'test-salt'});
   assert.equal(response.status,413);
   assert.deepEqual(await response.json(),{ok:false,error:'too_large'});
+});
+
+test('publication and aggregate consent select independent sets of personal answers', async () => {
+  const db = new DatabaseSync(':memory:');
+  db.exec(`CREATE TABLE hypothetical_preferences (
+    id INTEGER PRIMARY KEY, language TEXT, answers_json TEXT, comment TEXT,
+    created_at TEXT, public_consent INTEGER, aggregate_consent INTEGER
+  )`);
+  const insert = db.prepare('INSERT INTO hypothetical_preferences VALUES (?, ?, ?, ?, ?, ?, ?)');
+  for (const [id, publication, aggregate] of [[1,1,0],[2,0,1],[3,1,1],[4,0,0]]) {
+    insert.run(id, 'en', JSON.stringify({scope:'none',motivation:[]}), `answer-${id}`, '2026-10-01', publication, aggregate);
+  }
+  const env = {DB:{prepare(sql){return {all(){return {results:db.prepare(sql).all()};}};}}};
+  try {
+    const response = await worker.fetch(new Request('https://example.test/api/preferences/public'), env);
+    assert.equal(response.status, 200);
+    const publicAnswers = await response.json();
+    assert.deepEqual(publicAnswers.answers.map(item => item.id).sort(), [1,3]);
+    const statsResponse = await worker.fetch(new Request('https://example.test/api/preferences/stats'), env);
+    assert.equal(statsResponse.status, 200);
+    const {stats} = await statsResponse.json();
+    assert.equal(stats.participantTotal, 2);
+    assert.equal(stats.questions.scope.none, 2);
+    const aiResponse = await worker.fetch(new Request('https://example.test/api/ai-analysis', {method:'POST'}), {});
+    assert.equal(aiResponse.status, 503);
+    assert.deepEqual(await aiResponse.json(), {error:'ai_unavailable'});
+  } finally { db.close(); }
 });
 
 test('deletion endpoint stays disabled by default', async () => {
@@ -411,12 +527,12 @@ test('personal answer cards share the results feed header and stable numbering',
   assert.ok(api.includes('answerNumber:Number(row.answer_number)'));
 });
 
-test('personal author answer is hidden outside the first results page', () => {
+test('personal author answer follows the requested sort order', () => {
   const page = readFileSync(new URL('../public/preferences-results.html', import.meta.url), 'utf8');
   assert.match(page, /let offset = 0, currentPageStart = 0/);
-  assert.match(page, /function syncPersonalAuthorAnswerPage\(\)[\s\S]*?const hidden = currentPageStart > 0/);
+  assert.match(page, /function syncPersonalAuthorAnswerPage\(\)[\s\S]*?const hidden = hasFilter \|\| !authorPage/);
   assert.match(page, /window\.addEventListener\('author-answer-rendered', syncPersonalAuthorAnswerPage\)/);
-  assert.match(page, /currentPageStart=offset; syncPersonalAuthorAnswerPage\(\)/);
+  assert.match(page, /currentPageStart \+ \(Number\(pageSize.value\) \|\| 20\) >= total/);
 });
 
 test('preferences and AI endpoint routes are inside fetch and AI dispatch precedes API fallback', async () => {
@@ -461,7 +577,7 @@ test('personal preferences consent UI wires Turnstile, consent-gated save/delete
   assert.ok(page.includes("fetch('/api/preferences/delete'"));
   assert.ok(page.includes('window.onPreferenceTurnstileSuccess'));
   assert.ok(page.includes('const preferencesSavingEnabled = false;'));
-  assert.ok(page.includes('preferencesSavingEnabled && turnstileToken'));
+  assert.ok(page.includes('preferencesSavingEnabled && turnstileToken && storeConsent.checked && publicConsent.checked'));
   assert.ok(index.includes("if(env.PREFERENCES_ENABLED!=='true')return json({ok:false,error:'preferences_disabled'},503)"));
   assert.ok(index.includes('readJsonLimited(request,12000)'));
 });

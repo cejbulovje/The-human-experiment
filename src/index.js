@@ -81,15 +81,18 @@ async function submit(request,env){
     const topic=classifyTopic(body.freeAnswer);
     let saved;
     try{
-      saved=await env.DB.prepare('INSERT INTO responses (language, free_answer, q2, q3, q4, q2_other, q3_other, q4_other, gender, created_at, public_id, is_public, topic, signature, participant_id) SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ? WHERE ? IS NULL OR NOT EXISTS (SELECT 1 FROM responses WHERE participant_id = ?)').bind(body.language,body.freeAnswer.trim(),body.q2,body.q3,body.q4,q2Other,q3Other,q4Other,body.gender??null,new Date().toISOString(),publicId,topic,signature||null,participantId,participantId,participantId).run();
+      const responseInsert=env.DB.prepare('INSERT INTO responses (language, free_answer, q2, q3, q4, q2_other, q3_other, q4_other, gender, created_at, public_id, is_public, topic, signature, participant_id) SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ? WHERE ? IS NULL OR NOT EXISTS (SELECT 1 FROM responses WHERE participant_id = ?)').bind(body.language,body.freeAnswer.trim(),body.q2,body.q3,body.q4,q2Other,q3Other,q4Other,body.gender??null,new Date().toISOString(),publicId,topic,signature||null,participantId,participantId,participantId);
+      if (feedbackEmail) {
+        const contactInsert=env.DB.prepare('INSERT INTO feedback_contacts (public_id,email,created_at) SELECT ?,?,? WHERE EXISTS (SELECT 1 FROM responses WHERE public_id=?)').bind(publicId,feedbackEmail,new Date().toISOString(),publicId);
+        [saved]=await env.DB.batch([responseInsert,contactInsert]);
+      } else {
+        saved=await responseInsert.run();
+      }
     }catch(error){
       if(participantId&&/UNIQUE constraint failed: responses\.participant_id/i.test(String(error?.message||error)))return json({ok:false,error:'already_submitted'},409);
       throw error;
     }
     if(participantId&&Number(saved.meta?.changes||0)===0)return json({ok:false,error:'already_submitted'},409);
-    if(feedbackEmail){
-      await env.DB.prepare('INSERT INTO feedback_contacts (public_id,email,created_at) VALUES (?,?,?)').bind(publicId,feedbackEmail,new Date().toISOString()).run();
-    }
     // Publish a new snapshot immediately when a milestone is crossed; a snapshot failure must not invalidate a saved response.
     try{await results(env);}catch{}
     return json({ok:true});
@@ -170,7 +173,7 @@ async function results(env){
 }
 async function publicResponses(request,env){
   if(!env.DB)return json({error:'not_configured'},503);
-  const url=new URL(request.url);const rawLimit=url.searchParams.get('limit');const parsedLimit=rawLimit===null||rawLimit===''?12:Number(rawLimit);const limit=Number.isSafeInteger(parsedLimit)?Math.max(1,Math.min(30,parsedLimit)):12;const rawOffset=url.searchParams.get('offset');const parsedOffset=rawOffset===null||rawOffset===''?0:Number(rawOffset);const offset=Number.isSafeInteger(parsedOffset)?Math.max(0,Math.min(1000000,parsedOffset)):0;
+  const url=new URL(request.url);const rawLimit=url.searchParams.get('limit');const parsedLimit=rawLimit===null||rawLimit===''?12:Number(rawLimit);const limit=Number.isSafeInteger(parsedLimit)?Math.max(1,Math.min(100,parsedLimit)):12;const rawOffset=url.searchParams.get('offset');const parsedOffset=rawOffset===null||rawOffset===''?0:Number(rawOffset);const offset=Number.isSafeInteger(parsedOffset)?Math.max(0,Math.min(1000000,parsedOffset)):0;
   const requestedId=(url.searchParams.get('id')||'').trim().slice(0,100);
   const requestedNumberRaw=(url.searchParams.get('number')||'').trim();const requestedNumber=/^\d{1,9}$/.test(requestedNumberRaw)?Number(requestedNumberRaw):0;
   const search=(url.searchParams.get('q')||'').trim().slice(0,160);const topic=(url.searchParams.get('topic')||'').trim();const choice=(url.searchParams.get('choice')||'').trim();const from=(url.searchParams.get('from')||'').slice(0,10);const to=(url.searchParams.get('to')||'').slice(0,10);const sort=url.searchParams.get('sort')||'newest';
@@ -188,9 +191,10 @@ async function publicResponses(request,env){
   if(url.searchParams.has('from')){if(validDate(from)){clauses.push('substr(r.created_at,1,10)>=?');binds.push(from);}else{clauses.push('1=0');}}
   if(url.searchParams.has('to')){if(validDate(to)){clauses.push('substr(r.created_at,1,10)<=?');binds.push(to);}else{clauses.push('1=0');}}
   const where=clauses.join(' AND ');
+  const orderBinds=[];
   let order='r.created_at DESC, r.id DESC';
   if(sort==='oldest')order='r.created_at ASC, r.id ASC';
-  else if(sort==='random'){const rawShuffle=url.searchParams.get('shuffle');const parsedShuffle=rawShuffle&&/^\d{1,10}$/.test(rawShuffle)?Number(rawShuffle):0;const shuffleSeed=Number.isSafeInteger(parsedShuffle)&&parsedShuffle>0&&parsedShuffle<=2147483646?parsedShuffle:1;const shuffleMultiplier=(shuffleSeed%1000002)+1;binds.push(shuffleMultiplier,shuffleSeed);order='((r.id * ? + ?) % 2147483647), r.id ASC';}
+  else if(sort==='random'){const rawShuffle=url.searchParams.get('shuffle');const parsedShuffle=rawShuffle&&/^\d{1,10}$/.test(rawShuffle)?Number(rawShuffle):0;const shuffleSeed=Number.isSafeInteger(parsedShuffle)&&parsedShuffle>0&&parsedShuffle<=2147483646?parsedShuffle:1;const shuffleMultiplier=(shuffleSeed%1000002)+1;orderBinds.push(shuffleMultiplier,shuffleSeed);order='((r.id * ? + ?) % 2147483647), r.id ASC';}
   else if(sort==='popular')order='reaction_count DESC, r.created_at DESC, r.id DESC';
   else if(sort==='unusual')order='topic_frequency ASC, length(r.free_answer) DESC, r.created_at DESC, r.id DESC';
   const count=await env.DB.prepare(`SELECT COUNT(*) AS total FROM responses r WHERE ${where}`).bind(...binds).first();
@@ -198,7 +202,7 @@ async function publicResponses(request,env){
     (SELECT COUNT(*) FROM response_reactions rr WHERE rr.response_id=r.id AND rr.reaction='interesting') AS reaction_count,
     r.answer_number AS answer_number,
     (SELECT COUNT(*) FROM responses r2 WHERE r2.is_public=1 AND r2.topic=r.topic) AS topic_frequency
-    FROM responses r WHERE ${where} ORDER BY ${order} LIMIT ? OFFSET ?`).bind(...binds,limit,offset).all();
+    FROM responses r WHERE ${where} ORDER BY ${order} LIMIT ? OFFSET ?`).bind(...binds,...orderBinds,limit,offset).all();
   const topics={character:'Character & habits',appearance:'Appearance',freedom:'Freedom & boundaries',life:'Life & wellbeing',relationships:'Relationships',other:'Other'};
   const items = (rows.results || []).map((row) => ({
     id: row.public_id || `legacy-${row.id}`,
@@ -347,7 +351,7 @@ async function submitPreferences(request,env){
     answers.motivation.every(value=>motivationOptions.includes(value))&&
     new Set(answers.motivation).size===answers.motivation.length&&
     !(answers.motivation.includes('none')&&answers.motivation.length>1);
-  if(!body||!languages.includes(body.language)||body.consentToStore!==true||typeof body.aggregateConsent!=='boolean'||typeof body.publicConsent!=='boolean'||!validAnswers||
+  if(!body||(body.submissionKey!==undefined && (typeof body.submissionKey!=='string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(body.submissionKey)))||!languages.includes(body.language)||body.consentToStore!==true||typeof body.aggregateConsent!=='boolean'||body.publicConsent!==true||!validAnswers||
     (body.comment!==undefined&&typeof body.comment!=='string')||
     String(body.comment||'').length>10000||
     typeof body.turnstileToken!=='string'||body.turnstileToken.length<1||body.turnstileToken.length>2048){
@@ -362,11 +366,20 @@ async function submitPreferences(request,env){
   if(!allowedByRate)return json({ok:false,error:'rate_limited'},429);
   try{
     // Return this one-time recovery credential to the participant; store only its hash.
-    const deletionToken=crypto.randomUUID()+crypto.randomUUID();
+    const deletionToken = body.submissionKey
+      ? await sha256(JSON.stringify(['preferences-retry-v1', env.RATE_LIMIT_SALT, body.submissionKey]))
+      : crypto.randomUUID()+crypto.randomUUID();
     const deletionTokenHash=await sha256(deletionToken);
-    await env.DB.prepare(`INSERT INTO hypothetical_preferences
+    const inserted = await env.DB.prepare(`INSERT INTO hypothetical_preferences
       (language,answers_json,aggregate_consent,delete_token_hash,created_at,comment,public_consent)
-      VALUES (?,?,?,?,?,?,?)`).bind(body.language,JSON.stringify(body.answers),body.aggregateConsent?1:0,deletionTokenHash,new Date().toISOString(),String(body.comment||'').trim()||null,body.publicConsent?1:0).run();
+      VALUES (?,?,?,?,?,?,?) ON CONFLICT(delete_token_hash) DO NOTHING`).bind(body.language,JSON.stringify(body.answers),body.aggregateConsent?1:0,deletionTokenHash,new Date().toISOString(),String(body.comment||'').trim()||null,1).run();
+    if (body.submissionKey && inserted.meta?.changes === 0) {
+      const previous = await env.DB.prepare('SELECT language, answers_json, comment, aggregate_consent FROM hypothetical_preferences WHERE delete_token_hash=?').bind(deletionTokenHash).first();
+      if (!previous || previous.language !== body.language || previous.answers_json !== JSON.stringify(body.answers) ||
+          (previous.comment || '') !== (body.comment || '').trim() || previous.aggregate_consent !== Number(body.aggregateConsent)) {
+        return json({ok:false,error:'submission_changed',deletionToken},409);
+      }
+    }
     return json({ok:true,deletionToken});
   }catch{return json({ok:false,error:'save_failed'},500);}
 }
@@ -385,14 +398,6 @@ async function deletePreferences(request,env){
     return json({ok:true});
   }catch{return json({ok:false,error:'delete_unavailable'},503);}
 }
-export default {
-  async fetch(request,env){
-    const url=new URL(request.url);
-    if(url.pathname==='/api/submit'&&request.method==='POST')return submit(request,env);
-    if(url.pathname==='/api/preferences'&&request.method==='POST')return submitPreferences(request,env);
-    if(url.pathname==='/api/preferences/public'&&request.method==='GET')return publicPreferences(request,env);
-    if(url.pathname==='/api/preferences/stats'&&request.method==='GET')return preferencesStats(env);
-    if(url.pathname==='/api/preferences/delete'&&request.method==='POST')return deletePreferences(request,env);
 async function aiAnalysis(request,env){
   if(!env.DB||!env.AI||!env.RATE_LIMIT_SALT)return json({error:'ai_unavailable'},503);
   const parsed=await readJsonLimited(request,2048);
@@ -486,6 +491,15 @@ async function aiAnalysis(request,env){
     }
   }
 }
+
+export default {
+  async fetch(request,env){
+    const url=new URL(request.url);
+    if(url.pathname==='/api/submit'&&request.method==='POST')return submit(request,env);
+    if(url.pathname==='/api/preferences'&&request.method==='POST')return submitPreferences(request,env);
+    if(url.pathname==='/api/preferences/public'&&request.method==='GET')return publicPreferences(request,env);
+    if(url.pathname==='/api/preferences/stats'&&request.method==='GET')return preferencesStats(env);
+    if(url.pathname==='/api/preferences/delete'&&request.method==='POST')return deletePreferences(request,env);
     if(url.pathname==='/api/results'&&request.method==='GET'){
       try{return await results(env);}catch{return json({error:'results_unavailable'},503);}
     }

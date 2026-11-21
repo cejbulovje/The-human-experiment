@@ -1,4 +1,5 @@
 import test from 'node:test';
+import { runInNewContext } from 'node:vm';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 
@@ -84,8 +85,7 @@ test('results-page AI and hypothetical-preferences dictionaries are complete in 
   for (const dictionaryName of ['OPEN_DATA_UI', 'AI_ANALYSIS_UI', 'PREFERENCE_RESEARCH_UI']) {
     const line = results.split('\n').find(candidate => candidate.startsWith('const ' + dictionaryName + '='));
     assert.ok(line, dictionaryName + ' dictionary must exist');
-    const json = line.slice(('const ' + dictionaryName + '=').length).replace(/;$/, '');
-    const dictionary = JSON.parse(json);
+    const dictionary = JSON.parse(JSON.stringify(runInNewContext(line + ';' + dictionaryName)));
     assert.deepEqual(Object.keys(dictionary).sort(), [...locales].sort(), dictionaryName + ' must define all nine locales');
     const keys = Object.keys(dictionary.en);
     for (const locale of locales) {
@@ -93,8 +93,8 @@ test('results-page AI and hypothetical-preferences dictionaries are complete in 
         dictionaryName + ' keys must match English for ' + locale);
     }
   }
-  const aiKeys = new Set(Object.keys(JSON.parse(results.split('\n').find(line => line.startsWith('const AI_ANALYSIS_UI=')).slice('const AI_ANALYSIS_UI='.length).replace(/;$/, '')).en));
-  const preferenceKeys = new Set(Object.keys(JSON.parse(results.split('\n').find(line => line.startsWith('const PREFERENCE_RESEARCH_UI=')).slice('const PREFERENCE_RESEARCH_UI='.length).replace(/;$/, '')).en));
+  const aiKeys = new Set(Object.keys(JSON.parse(results.split('\n').find(line => line.startsWith('const AI_ANALYSIS_UI=')).slice('const AI_ANALYSIS_UI='.length).trim().replace(/;$/, '')).en));
+  const preferenceKeys = new Set(Object.keys(JSON.parse(results.split('\n').find(line => line.startsWith('const PREFERENCE_RESEARCH_UI=')).slice('const PREFERENCE_RESEARCH_UI='.length).trim().replace(/;$/, '')).en));
   for (const key of new Set([...html.matchAll(/data-ai(?:-placeholder)?="([^"]+)"/g)].map(match => match[1]))) {
     assert.ok(aiKeys.has(key), 'missing AI results translation key: ' + key);
   }

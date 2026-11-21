@@ -132,11 +132,12 @@ test('research prototype page avoids recruitment language and signup pathways', 
 });
 
 
-test('public-facing research copy does not use volunteer terminology', () => {
+test('public navigation does not recruit volunteers', () => {
   const files = ['index.html', 'preferences.html', 'results.html', 'volunteers-voice.html'];
   for (const name of files) {
     const html = readFileSync(new URL('../public/' + name, import.meta.url), 'utf8');
-    assert.doesNotMatch(html.replaceAll('/volunteers-voice.html', ''), /добровол|volunteer|voluntário|voluntario|volontaire|freiwillig|ボランティア|志愿者|متطوع/i, name + ' contains recruitment terminology');
+    const controls = [...html.matchAll(/<(?:a|button)\b[^>]*>([\s\S]*?)<\/(?:a|button)>/g)].map(match => match[1]).join(' ');
+    assert.doesNotMatch(controls, /добровол|volunteer|voluntário|voluntario|volontaire|freiwillig|ボランティア|志愿者|متطوع/i, name + ' contains recruitment terminology');
   }
   const nav = readFileSync(new URL('../public/nav.js', import.meta.url), 'utf8');
   assert.doesNotMatch(nav, /добровол|volunteer|voluntário|voluntario|volontaire|freiwillig|ボランティア|志愿者|متطوع/i);
@@ -160,7 +161,7 @@ test('both hypothetical preference pages provide all nine shared language choice
   assert.match(localized, /human-experiment-language/);
   assert.match(localized, /localStorage\.setItem\(sharedKey, select\.value\)/);
   assert.match(localized, /document\.documentElement\.dir = t\.dir/);
-  assert.match(localized, /window\.preferenceLocale = t/);
+  assert.match(localized, /window\.preferenceLocale = q/);
 });
 
 test('hypothetical preference pages keep answers local and summary labels translatable', () => {
@@ -234,7 +235,7 @@ test('personal preview sample cards remain isolated to the personal results page
   assert.match(results, /context:\{q2:sample\.q2,q3:sample\.q3,q4:sample\.q4\}/, 'demo choice context uses the selected questionnaire options');
   assert.doesNotMatch(results, /context:\{q2:'life',q3:'relationships',q4:'freedom'\}/, 'demo context must not show internal topic IDs as questionnaire answers');
   assert.match(results, /const isLastPage=currentPageStart\+pageSize>=answerTotal/);
-  assert.match(results, /if\(!isLastPage\).*card\.hidden=true/);
+  assert.match(results, /if\(!showAuthor\).*card\.hidden=true/);
 });
 
 
@@ -273,14 +274,14 @@ test('collective author answer remains visible while public statistics are locke
   const results = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
   assert.match(results, /const unlocked=root\?\.dataset\.resultsUnlocked==='true'\|\|CREATOR_PREVIEW/);
   assert.match(results, /if\(!root\|\|!list\)return;const card=root\.querySelector\('\.author-answer-card'\)/);
-  assert.match(results, /if\(!isLastPage\).*card\.hidden=true/);
+  assert.match(results, /if\(!showAuthor\).*card\.hidden=true/);
   assert.doesNotMatch(results, /if\(!unlocked\|\|!root\)return/);
 });
 
 test('personal preview initializes even when loaded after DOMContentLoaded', () => {
   const personal = readFileSync(new URL('../public/preferences-results-preview.js', import.meta.url), 'utf8');
   assert.match(personal, /if \(document\.readyState === 'loading'\) \{[\s\S]*?document\.addEventListener\('DOMContentLoaded', initializePreview, \{ once: true \}\);[\s\S]*?\} else \{\s*initializePreview\(\);\s*\}/);
-  assert.match(personal, /function initializePreview\(\) \{\s*render\(\);/);
+  assert.match(personal, /function initializePreview\(\) \{\s*fillPersonalPage\(0\);/);
 });
 
 

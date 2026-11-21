@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import worker from '../src/index.js';
 
-function makeEnv({ seed = true } = {}) {
+function makeEnv({ seed = true, extraResponses = 0 } = {}) {
   const db = new DatabaseSync(':memory:');
   db.exec(`
     CREATE TABLE responses (
@@ -52,6 +52,12 @@ function makeEnv({ seed = true } = {}) {
       (NULL, NULL, 'Legacy public response', 'en', 'life', '2026-10-05T10:00:00.000Z', 1, 1, 1, 1);
   `);
   if (!seed) db.exec('DELETE FROM responses');
+  const insert = db.prepare(`INSERT INTO responses
+    (public_id, free_answer, language, topic, created_at, q2, q3, q4, is_public)
+    VALUES (?, ?, 'en', 'freedom', '2026-10-06T10:00:00.000Z', 1, 1, 1, 1)`);
+  for (let index = 0; index < extraResponses; index++) {
+    insert.run(`extra-${index}`, `Additional response ${index}`);
+  }
   const DB = {
     prepare(sql) {
       let values = [];
@@ -221,5 +227,47 @@ test('public catalog never returns private rows in list results', async () => {
     assert.equal(result.total, 4);
     assert.ok(result.items.every(item => item.id !== 'private-1'));
     assert.ok(result.items.every(item => !item.answer.includes('private hidden')));
+  } finally { close(); }
+});
+
+test('random sorting preserves filtered totals and stable pagination', async () => {
+  const { env, close } = makeEnv();
+  try {
+    for (const filter of ['', '&q=improve&choice=q2:1&from=2026-10-01&to=2026-10-02']) {
+      const query = '/api/public-responses?sort=random&shuffle=1729' + filter;
+      const all = await get(query + '&limit=30', env);
+      const first = await get(query + '&limit=1&offset=0', env);
+      const second = await get(query + '&limit=1&offset=1', env);
+      assert.equal(all.total, filter ? 2 : 4);
+      assert.equal(first.total, all.total);
+      assert.equal(second.total, all.total);
+      assert.deepEqual([...first.items, ...second.items].map(item => item.id), all.items.slice(0, 2).map(item => item.id));
+      assert.ok(all.items.every(item => item.id !== 'private-1'));
+      assert.equal(first.hasMore, true);
+    }
+    await get('/api/public-responses?sort=random', env);
+  } finally { close(); }
+});
+
+test('every offered page size returns complete pages without gaps or duplicates', async () => {
+  const { env, close } = makeEnv({ extraResponses: 110 });
+  try {
+    const expected = await get('/api/public-responses?sort=oldest&limit=100', env);
+    assert.equal(expected.items.length, 100);
+    for (const size of [10, 20, 30, 50, 100]) {
+      const ids = [];
+      for (let offset = 0; offset < 114; offset += size) {
+        const page = await get(`/api/public-responses?sort=oldest&limit=${size}&offset=${offset}`, env);
+        assert.equal(page.limit, size);
+        assert.equal(page.total, 114);
+        assert.equal(page.items.length, Math.min(size, 114 - offset));
+        assert.equal(page.hasMore, offset + size < 114);
+        ids.push(...page.items.map(item => item.id));
+      }
+      assert.equal(ids.length, 114);
+      assert.equal(new Set(ids).size, 114);
+      assert.deepEqual(ids.slice(0, 100), expected.items.map(item => item.id));
+    }
+    assert.equal((await get('/api/public-responses?limit=1000', env)).limit, 100);
   } finally { close(); }
 });

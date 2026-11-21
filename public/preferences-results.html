@@ -176,7 +176,7 @@
 
   <script>
   (() => {
-    const tabs = [...document.querySelectorAll('[data-results-view]')];
+    const tabs = [...document.querySelectorAll('button[data-results-view]')];
     const streamLinks = [...document.querySelectorAll('[data-results-stream]')];
     const stats = document.querySelector('#statistics-section');
     const collectiveAnswers = document.querySelector('.public-answers-section:not(.hypothetical-answers-section)');
@@ -278,7 +278,7 @@
         document.querySelector('.preference-page-switcher')?.setAttribute('aria-label', accessibility.switcher);
         document.querySelector('.results-view-tabs')?.setAttribute('aria-label', accessibility.views);
         document.querySelector('#answer-number-input')?.setAttribute('aria-label', accessibility.answerNumber);
-        document.querySelectorAll('[data-results-view]').forEach((el,i) => { if (controls.views[i]) el.textContent = controls.views[i]; });
+        document.querySelectorAll('button[data-results-view]').forEach((el,i) => { if (controls.views[i]) el.textContent = controls.views[i]; });
         document.querySelectorAll('.preference-page-switcher .results-stream-link').forEach((el,i) => {
           const strong = el.querySelector('strong'), small = el.querySelector('small');
           const offset = i * 2;
@@ -397,9 +397,11 @@
       render();
     }));
     questionSelect?.addEventListener('change', render);
-    render();
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', render, { once: true });
+    else render();
   })();
   </script>
+<script src="/preferences-results-preview.js"></script>
 <script>
 (() => {
   const section = document.querySelector('.hypothetical-answers-section');
@@ -620,7 +622,7 @@
     article.append(top);
     answerKeys.forEach((key,index)=>{
       const raw=item.answers?.[key];
-      if(raw===undefined) return;
+      if(raw == null || raw === '' || (Array.isArray(raw) && raw.length === 0)) return;
       const vals=(Array.isArray(raw)?raw:[raw]).map(v=>translatedLabels[key]?.[v] || String(v));
       const p=node('p'); p.append(node('strong',translatedNames[index]+': '),document.createTextNode(vals.join(', '))); article.append(p);
     });
@@ -633,7 +635,11 @@
   function syncPersonalAuthorAnswerPage() {
     const authorRoot = document.getElementById('author-answer-hypothetical');
     if (!authorRoot) return;
-    const hidden = currentPageStart > 0;
+    const hasFilter = Boolean(search.value.trim() || question.value);
+    const authorPage = sort.value === 'oldest'
+      ? currentPageStart === 0
+      : currentPageStart + (Number(pageSize.value) || 20) >= total;
+    const hidden = hasFilter || !authorPage;
     authorRoot.hidden = hidden;
     authorRoot.style.display = hidden ? 'none' : '';
     const authorCard = authorRoot.querySelector('.author-answer-card');
@@ -653,13 +659,18 @@
         : messages.unusualUnavailable;
       const moreButton=section.querySelector('#hypothetical-load-more');
       if(moreButton) moreButton.hidden=true;
+      const previousButton=section.querySelector('#hypothetical-load-previous');
+      if(previousButton) previousButton.hidden=true;
       return;
     }
-    if(busy) { pendingLoad=true; pendingReset=pendingReset||reset; return; }
+    if (window.renderPersonalPreviewPage) { window.renderPersonalPreviewPage(0); return; }
+    if(busy) { requestId++; pendingLoad=true; pendingReset=pendingReset||reset; return; }
     const thisRequest = ++requestId;
     busy=true;
-    if(reset){offset=targetOffset===null?0:Math.max(0,targetOffset); currentPageStart=offset; syncPersonalAuthorAnswerPage(); list.querySelectorAll('article:not(.hypothetical-empty-state):not(.author-answer-card)').forEach(el=>el.remove());}
+    if(reset){offset=targetOffset===null?0:Math.max(0,targetOffset); currentPageStart=offset; const authorRoot=document.getElementById('author-answer-hypothetical'); if(authorRoot) authorRoot.hidden=true; list.querySelectorAll('article:not(.hypothetical-empty-state):not(.author-answer-card)').forEach(el=>el.remove());}
     if(empty) empty.hidden=true;
+    section.querySelector('#hypothetical-load-more').hidden=true;
+    section.querySelector('#hypothetical-load-previous').hidden=true;
     status.hidden=false; status.textContent=personalMessages().loading;
     try {
       const params=new URLSearchParams({limit:pageSize.value,offset:String(offset),sort:sort.value});
@@ -672,15 +683,30 @@
       total=data.total;
       syncPersonalAuthorAnswerPage();
       data.answers.forEach(item=>list.append(renderAnswer(item)));
+      const authorRoot=document.getElementById('author-answer-hypothetical');
+      if(authorRoot && sort.value === 'latest') list.append(authorRoot);
+      else if(authorRoot) list.prepend(authorRoot);
       offset+=data.answers.length;
       const messages = personalMessages();
-      status.textContent=total ? messages.shown(Math.min(offset,total).toLocaleString(document.documentElement.lang||'en'),total.toLocaleString(document.documentElement.lang||'en')) : messages.noAnswers;
+      const format = new Intl.NumberFormat(document.documentElement.lang || 'en');
+      const range = data.answers.length
+        ? currentPageStart + 1 === offset ? format.format(offset) : [format.format(currentPageStart + 1), format.format(offset)].join('–')
+        : format.format(0);
+      const noMatches = {
+        en:'No answers match the selected search or question.', ru:'По выбранным условиям ответы не найдены.',
+        es:'No se encontraron respuestas para estos criterios.', pt:'Nenhuma resposta encontrada para estes critérios.',
+        zh:'没有符合条件的回答。', de:'Keine Antworten für diese Auswahl gefunden.',
+        ja:'条件に一致する回答はありません。', fr:'Aucune réponse ne correspond à ces critères.',
+        ar:'لم يتم العثور على إجابات تطابق المعايير.'
+      };
+      const filtered = Boolean(search.value.trim() || question.value);
+      status.textContent = total ? messages.shown(range, format.format(total)) :
+        filtered ? (noMatches[(document.documentElement.lang || 'en').split('-')[0]] || noMatches.en) : messages.noAnswers;
       status.hidden = section.dataset.resultsView === 'overview' && total === 0;
       const more=section.querySelector('#hypothetical-load-more');
       if(more) more.hidden=offset>=total;
       const previous=section.querySelector('#hypothetical-load-previous');
-      if(previous) previous.hidden=offset===0;
-      if(empty) empty.hidden = section.dataset.resultsView === 'overview' || total > 0;
+      if(previous) previous.hidden=currentPageStart===0;
     } catch {
       if (thisRequest === requestId && !rankingUnavailable()) status.textContent=personalMessages().loadError;
     } finally {
@@ -770,12 +796,12 @@
     previous.textContent = labels[0];
     more.textContent = labels[1];
   };
-  const historyControls=node('div'); historyControls.className='answer-history-controls'; const previous=node('button',undefined,'subtle-button'); previous.type='button'; previous.id='hypothetical-load-previous'; previous.hidden=true; previous.addEventListener('click',()=>load(true,Math.max(0,offset-(Number(pageSize.value)||20)))); const more=node('button',undefined,'show-more-button'); more.type='button'; more.id='hypothetical-load-more'; more.hidden=true; more.addEventListener('click',()=>load(true,offset)); updateHistoryLabels(); historyControls.append(previous,more); status.after(historyControls);
+  const historyControls=node('div'); historyControls.className='answer-history-controls'; const previous=node('button',undefined,'subtle-button'); previous.type='button'; previous.id='hypothetical-load-previous'; previous.hidden=true; previous.addEventListener('click',()=>load(true,Math.max(0,currentPageStart-(Number(pageSize.value)||20)))); const more=node('button',undefined,'show-more-button'); more.type='button'; more.id='hypothetical-load-more'; more.hidden=true; more.addEventListener('click',()=>load(true,offset)); updateHistoryLabels(); historyControls.append(previous,more); status.after(historyControls);
   document.addEventListener('results-language-changed', updateHistoryLabels);
   let debounce;
   search.addEventListener('input',()=>{clearTimeout(debounce);debounce=setTimeout(()=>load(true),250);});
   [question,sort,pageSize].forEach(el=>el.addEventListener('change',()=>load(true)));
-  document.querySelectorAll('[data-results-stream="hypothetical"],[data-results-view]').forEach(el=>el.addEventListener('click',()=>{if(section.hidden)return;load(true);loadStats();}));
+  document.querySelectorAll('[data-results-stream="hypothetical"],button[data-results-view]').forEach(el=>el.addEventListener('click',()=>{if(section.hidden)return;load(true);loadStats();}));
   stats.textContent = personalMessages().statsLoading;
   loadStats();
   load(true);
@@ -788,5 +814,5 @@
 </script>
 
 
-<script src="/preferences-results-preview.js"></script>
+
 </body></html>

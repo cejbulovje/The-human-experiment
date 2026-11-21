@@ -70,6 +70,19 @@
   };
   const ru = document.documentElement.lang === 'ru';
   const demoLabel = (sampleUiByLanguage[(document.documentElement.lang||'en').split('-')[0]]||sampleUiByLanguage.en).sample;
+  const personalAnswerTranslations = {
+    'Ничего не позволил бы менять.': 'I would not allow any changes.',
+    'Позволил бы менять только то, что сам заранее одобрил.': 'I would allow only changes I had approved in advance.',
+    'Доверил бы человечеству самостоятельно решать, что менять, сохранив лишь несколько принципиальных условий.': 'I would trust humanity to decide independently what to change, subject to a few fundamental conditions.',
+    'Желание узнать, чего люди на самом деле хотят и о чём мечтают.': 'I want to learn what people really want and dream about.',
+    'Желание проверить, способны ли люди понимать и учитывать желания друг друга.': 'I want to find out whether people can understand and take one another’s wishes into account.',
+    'Желание внести собственный вклад в исследование человечества.': 'I want to contribute to the study of humanity.',
+    'Любопытство к самому эксперименту и его результатам.': 'Curiosity about the experiment and its results.'
+  };
+  function answerValues(answer, translate) {
+    return String(answer || '').split(';').map(value => value.trim()).filter(Boolean)
+      .map(value => translate ? (personalAnswerTranslations[value] || value) : value);
+  }
   function makeSample(item, kind, index) {
     const locale = document.documentElement.lang || 'en';
     const ru = locale === 'ru';
@@ -152,17 +165,7 @@
       const personalQuestionLabels = ui.questions;
       label.textContent = (questionIndex + 1) + '. ' + (kind === 'hypothetical' ? (personalQuestionLabels[questionIndex] || question) : question);
       section.append(label);
-      const personalAnswerTranslations = {
-        'Ничего не позволил бы менять.': 'I would not allow any changes.',
-        'Позволил бы менять только то, что сам заранее одобрил.': 'I would allow only changes I had approved in advance.',
-        'Доверил бы человечеству самостоятельно решать, что менять, сохранив лишь несколько принципиальных условий.': 'I would trust humanity to decide independently what to change, subject to a few fundamental conditions.',
-        'Желание узнать, чего люди на самом деле хотят и о чём мечтают.': 'I want to learn what people really want and dream about.',
-        'Желание проверить, способны ли люди понимать и учитывать желания друг друга.': 'I want to find out whether people can understand and take one another’s wishes into account.',
-        'Желание внести собственный вклад в исследование человечества.': 'I want to contribute to the study of humanity.',
-        'Любопытство к самому эксперименту и его результатам.': 'Curiosity about the experiment and its results.'
-      };
-      const answers = String(answer || '').split(';').map(value => value.trim()).filter(Boolean)
-        .map(value => kind === 'hypothetical' && !ru ? (personalAnswerTranslations[value] || value) : value);
+      const answers = answerValues(answer, kind === 'hypothetical' && !ru);
       if (answers.length > 1) {
         const list = document.createElement('ul');
         list.className = 'author-questionnaire-answer-list';
@@ -228,21 +231,21 @@
     const sort = document.getElementById('hypothetical-sort')?.value || 'oldest';
     const query = (document.getElementById('hypothetical-search')?.value || '').trim().toLocaleLowerCase();
     const question = document.getElementById('hypothetical-question-filter')?.value || '';
+    const locale = (document.documentElement.lang || 'en').split('-')[0];
+    const ui = sampleUiByLanguage[locale] || sampleUiByLanguage.en;
+    const questionIndex = ['scope', 'motivation'].indexOf(question);
     const matching = samples.hypothetical.map((item, index) => ({ item, index })).filter(({ item }) => {
-      const searchable = [item.text, ...(item.choices || []).flat()].join(' ').toLocaleLowerCase();
-      const questionMatches = !question || (item.choices || []).some(([label]) => {
-        const value = String(label).toLocaleLowerCase();
-        return question === 'priority' && /priority|приоритет|главн/i.test(value)
-          || question === 'preserve' && /preserve|сохран|важно/i.test(value)
-          || question === 'wishes' && /wish|желан|учитывать/i.test(value)
-          || question === 'body' && /body|тел|изменени/i.test(value);
-      });
-      return (!query || searchable.includes(query)) && questionMatches;
+      if (question && !item.choices[questionIndex]?.[1]) return false;
+      if (!query) return true;
+      const displayedText = locale === 'ru' ? item.text : item.textEn || item.text;
+      const choices = item.choices.flatMap(([label, answer], index) => [
+        ui.questions[index] || label, ...answerValues(answer, locale !== 'ru')
+      ]);
+      return [displayedText, ...choices].join(' ').toLocaleLowerCase().includes(query);
     });
     const orderedSamples = sort === 'latest' ? matching.slice().reverse() : matching;
-    const ui = sampleUiByLanguage[(document.documentElement.lang || 'en').split('-')[0]] || sampleUiByLanguage.en;
-    const stats = document.getElementById('hypothetical-stats');
-    if (stats) stats.textContent = ui.samplesStatus.replace('{count}', String(matching.length));
+    const status = document.getElementById('hypothetical-status');
+    if (status) { status.hidden = false; status.textContent = ui.samplesStatus.replace('{count}', String(matching.length)); }
     const next = Math.min(orderedSamples.length, shown + pageSize);
     for (let index = shown; index < next; index += 1) {
       const entry = orderedSamples[index];
@@ -251,34 +254,28 @@
     const currentPage = Math.floor(shown / pageSize);
     if (authorRoot) {
       const authorCard = authorRoot.querySelector('.author-answer-card');
-      authorRoot.hidden = currentPage > 0;
-      authorRoot.style.display = currentPage > 0 ? 'none' : '';
-      if (authorCard) authorCard.hidden = currentPage > 0;
+      const hideAuthor = Boolean(query || question) ||
+        (sort === 'latest' ? next < orderedSamples.length : currentPage > 0);
+      authorRoot.hidden = hideAuthor;
+      authorRoot.style.display = hideAuthor ? 'none' : '';
+      if (authorCard) authorCard.hidden = hideAuthor;
+      if (sort === 'latest') list.append(authorRoot);
+      else list.prepend(authorRoot);
     }
     list.dataset.testSamplesShown = String(next);
     list.dataset.testSamplesPage = String(currentPage);
     const previous = document.getElementById('hypothetical-load-previous');
     if (previous) { previous.hidden = shown === 0; previous.textContent = (sampleUiByLanguage[(document.documentElement.lang||'en').split('-')[0]]||sampleUiByLanguage.en).previous; }
     if (more) {
-      more.hidden = next >= samples.hypothetical.length;
+      more.hidden = next >= orderedSamples.length;
       more.textContent = (sampleUiByLanguage[(document.documentElement.lang||'en').split('-')[0]]||sampleUiByLanguage.en).next;
     }
     const empty = list.querySelector('.hypothetical-empty-state');
     if (empty) empty.hidden = true;
   }
-  function render() {
-    // Collective results already have paginated preview responses in results.js.
-    // Do not append a second, unpaginated set of cards to that list.
-    fillPersonalPage(0);
-  }
+  window.renderPersonalPreviewPage = fillPersonalPage;
   function initializePreview() {
-    render();
-    document.addEventListener('results-language-changed', () => {
-      const list = document.querySelector('.hypothetical-answer-list');
-      const page = Math.max(0, Number(list?.dataset.testSamplesPage || 0));
-      fillPersonalPage(page);
-    });
-
+    fillPersonalPage(0);
     const more = document.getElementById('hypothetical-load-more');
     const previous = document.getElementById('hypothetical-load-previous');
     const pageSize = document.getElementById('hypothetical-page-size');

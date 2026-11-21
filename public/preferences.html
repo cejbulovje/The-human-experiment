@@ -74,7 +74,7 @@
       <div class="status-note"><strong data-pref-i18n="noticeTitle">Перед началом:</strong> <span data-pref-i18n="notice">Сейчас это прототип: ответы остаются в этом окне, не отправляются и не сохраняются.</span></div>
       <div class="consent-group">
         <label class="preference-option consent-option"><input type="checkbox" id="consent-store" name="consentToStore"><span><strong data-pref-i18n="consentStore"></strong></span></label>
-        <label class="preference-option consent-option"><input type="checkbox" id="consent-public" name="publicConsent"><span><strong data-pref-i18n="consentPublic"></strong></span></label>
+        <label class="preference-option consent-option"><input type="checkbox" id="consent-public" name="publicConsent" required><span><strong data-pref-i18n="consentPublic"></strong></span></label>
         <label class="preference-option consent-option"><input type="checkbox" id="consent-aggregate" name="aggregateConsent"><span><strong data-pref-i18n="consentAggregate"></strong></span></label>
       </div>
 
@@ -135,7 +135,8 @@
         <p data-pref-i18n="deleteBody"></p>
         <label class="preference-option deletion-token-field"><span data-pref-i18n="deleteTokenLabel"></span><input type="password" id="deletion-token" autocomplete="off" disabled></label>
         <button type="button" class="secondary" id="delete-preferences" disabled data-pref-i18n="deleteButton"></button>
-        <p class="privacy-hint" role="status" data-pref-i18n="deleteDisabled"></p>
+        <p class="privacy-hint" data-pref-i18n="deleteDisabled"></p>
+        <p id="deletion-status" role="status"></p>
       </section>
     </div>
   </main>
@@ -156,43 +157,71 @@
     const deleteButton = document.getElementById('delete-preferences');
     const savedConfirmation = document.getElementById('preferences-saved-confirmation');
     let turnstileToken = '';
+    let saving = false;
+    let submissionKey;
+    const pendingKey = 'human-experiment-pending-preference';
+    try { submissionKey = sessionStorage.getItem(pendingKey); } catch {}
     // Keep collection disabled until the complete preview flow has been verified and explicitly enabled.
     const preferencesSavingEnabled = false;
+    const deleteStatus = document.getElementById('deletion-status');
+    let deleting = false;
+    function syncDeleteButton() {
+      const length = deletionTokenField.value.trim().length;
+      deleteButton.disabled = !preferencesSavingEnabled || deleting || length < 60 || length > 100;
+    }
+    deletionTokenField.disabled = !preferencesSavingEnabled;
+    deletionTokenField.addEventListener('input', syncDeleteButton);
+    if (preferencesSavingEnabled) {
+      form.querySelector('[data-pref-i18n="deleteDisabled"]').hidden = true;
+      form.querySelector('[data-pref-i18n="deleteBody"]').hidden = true;
+    }
     function saveText(key, fallback) { return window.preferenceI18n?.locales?.[document.documentElement.lang]?.[key] || fallback; }
-    function syncSubmitButton() { submitButton.disabled = !(preferencesSavingEnabled && turnstileToken && storeConsent.checked && selected('scope').length === 1 && savedConfirmation.hidden); }
+    function syncSubmitButton() { submitButton.disabled = saving || !(preferencesSavingEnabled && turnstileToken && storeConsent.checked && publicConsent.checked && selected('scope').length === 1 && savedConfirmation.hidden); }
     window.onPreferenceTurnstileSuccess = token => { turnstileToken = token; submitStatus.textContent = ''; syncSubmitButton(); };
     window.onPreferenceTurnstileExpired = () => { turnstileToken = ''; submitStatus.textContent = saveText('saveError','Security check expired. Please try again.'); syncSubmitButton(); };
     [storeConsent, publicConsent, aggregateConsent, ...form.querySelectorAll('input[name="scope"]')].forEach(input => input.addEventListener('change', syncSubmitButton));
     submitButton.addEventListener('click', async () => {
       syncSubmitButton(); if (submitButton.disabled) return;
-      submitButton.disabled = true; submitStatus.textContent = '';
-      const payload = {language:document.documentElement.lang,answers:{scope:selected('scope')[0],motivation:selected('motivation')},comment:commentField.value.trim(),consentToStore:storeConsent.checked,publicConsent:publicConsent.checked,aggregateConsent:aggregateConsent.checked,turnstileToken};
+      submissionKey ??= crypto.randomUUID();
+      try { sessionStorage.setItem(pendingKey, submissionKey); } catch {}
+      saving = true; submitButton.disabled = true; submitStatus.textContent = '';
+      const payload = {submissionKey,language:document.documentElement.lang,answers:{scope:selected('scope')[0],motivation:selected('motivation')},comment:commentField.value.trim(),consentToStore:storeConsent.checked,publicConsent:publicConsent.checked,aggregateConsent:aggregateConsent.checked,turnstileToken};
       try {
         const response = await fetch('/api/preferences',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
         const data = await response.json();
-        if (!response.ok || data.ok !== true || typeof data.deletionToken !== 'string') {
-          submitStatus.textContent = data.error === 'preferences_disabled' ? saveText('saveDisabled','Saving is disabled. No answer was stored.') : saveText('saveError','Could not save the answer. No answer was stored. Please try again.');
+        const originalSaved = response.status === 409 && data.error === 'submission_changed';
+        if ((!originalSaved && (!response.ok || data.ok !== true)) || typeof data.deletionToken !== 'string') {
+          submitStatus.textContent = data.error === 'preferences_disabled' ? saveText('saveDisabled','Saving is disabled. No answer was stored.') : saveText('saveError','Saving could not be confirmed. Please try again.');
           turnstileToken = ''; if (window.turnstile) window.turnstile.reset('#preferences-turnstile'); syncSubmitButton(); return;
         }
         deletionTokenField.value = data.deletionToken; deletionTokenField.disabled = false; deleteButton.disabled = false;
         document.getElementById('deletion-token-display').textContent = data.deletionToken;
-        savedConfirmation.hidden = false; submitStatus.textContent = saveText('savedTitle','Response saved.'); syncSubmitButton();
+        savedConfirmation.hidden = false; submitStatus.textContent = originalSaved ? saveText('retryChanged','Your original answer was saved. Changes in the retry were not applied.') : saveText('savedTitle','Response saved.'); syncSubmitButton();
         savedConfirmation.scrollIntoView({behavior:'smooth',block:'start'});
       } catch {
-        submitStatus.textContent = saveText('saveError','Could not save the answer. No answer was stored. Please try again.');
+        submitStatus.textContent = saveText('saveError','Saving could not be confirmed. Please try again.');
         turnstileToken = ''; if (window.turnstile) window.turnstile.reset('#preferences-turnstile'); syncSubmitButton();
-      }
+      } finally { saving = false; syncSubmitButton(); }
     });
     deleteButton.addEventListener('click', async () => {
-      const token = deletionTokenField.value.trim(); if (!token || deleteButton.disabled) return; deleteButton.disabled = true;
+      const token = deletionTokenField.value.trim(); if (deleteButton.disabled) return;
+      deleting = true; syncDeleteButton(); deleteStatus.textContent = '';
       try {
         const response = await fetch('/api/preferences/delete',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({deletionToken:token})});
         const data = await response.json();
-        if (!response.ok || data.ok !== true) { submitStatus.textContent = saveText('deleteDisabled','Deletion is unavailable right now.'); deleteButton.disabled = false; return; }
-        deletionTokenField.value = ''; deletionTokenField.disabled = true; savedConfirmation.hidden = true;
-        document.getElementById('deletion-token-display').textContent = ''; submitStatus.textContent = saveText('deleteSuccess','The deletion request was completed.');
-        turnstileToken = ''; if (window.turnstile) window.turnstile.reset('#preferences-turnstile'); syncSubmitButton();
-      } catch { submitStatus.textContent = saveText('deleteDisabled','Deletion is unavailable right now.'); deleteButton.disabled = false; }
+        if (!response.ok || data.ok !== true) throw new Error('delete_failed');
+        const display = document.getElementById('deletion-token-display');
+        if (display.textContent === token) {
+          submissionKey = undefined;
+          try { sessionStorage.removeItem(pendingKey); } catch {}
+          display.textContent = ''; savedConfirmation.hidden = true; submitStatus.textContent = '';
+          turnstileToken = ''; if (window.turnstile) window.turnstile.reset('#preferences-turnstile'); syncSubmitButton();
+        }
+        deletionTokenField.value = '';
+        deleteStatus.textContent = saveText('deleteSuccess','The deletion request was completed.');
+      } catch {
+        deleteStatus.textContent = saveText('deleteError','Deletion could not be confirmed. Please try again.');
+      } finally { deleting = false; syncDeleteButton(); }
     });
     function updateCommentCounter() { commentCounter.textContent = commentField.value.length.toLocaleString() + ' / 10,000'; }
     commentField.addEventListener('input', updateCommentCounter);

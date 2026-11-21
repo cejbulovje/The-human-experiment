@@ -976,9 +976,24 @@ if (!translations[savedLanguage]) {
   savedLanguage = detected || 'en';
 }
 renderLanguage(savedLanguage);
-function getParticipantId(){try{let id=localStorage.getItem('human-experiment-participant-id');if(!/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id||'')){id=crypto.randomUUID();localStorage.setItem('human-experiment-participant-id',id);}return id;}catch{return crypto.randomUUID();}}
+let pageParticipantId;
+function getParticipantId() {
+  if (pageParticipantId) return pageParticipantId;
+  const key = 'human-experiment-participant-id';
+  try {
+    const stored = localStorage.getItem(key);
+    if (/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(stored || '')) {
+      pageParticipantId = stored;
+    }
+  } catch {}
+  if (!pageParticipantId) {
+    pageParticipantId = crypto.randomUUID();
+    try { localStorage.setItem(key, pageParticipantId); } catch {}
+  }
+  return pageParticipantId;
+}
 form.addEventListener('submit',async event=>{
-  event.preventDefault(); const lang=activeLanguage; const t=translations[lang];
+  event.preventDefault(); if(submitButton.disabled)return; const lang=activeLanguage; const t=translations[lang];
   status.className='form-status'; status.textContent='';
   if(!form.reportValidity()){status.textContent=t.required;status.className='form-status error';return;}
   if(!turnstileToken){status.textContent=t.captchaMissing;status.className='form-status error';return;}
