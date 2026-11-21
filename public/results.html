@@ -385,6 +385,12 @@
     const sort=section.querySelector('#hypothetical-sort');
     const size=section.querySelector('#hypothetical-page-size');
     function renderDemo(){
+      if (['popular','unusual'].includes(section.dataset.resultsView)) {
+        cards.replaceChildren();
+        status.hidden=false;
+        status.textContent='Популярность и необычность тестовых ответов пока не определяются.';
+        return;
+      }
       const term=search.value.trim().toLowerCase();
       let rows=samples.filter(item=>[item.scope,...item.motives,item.comment].join(' ').toLowerCase().includes(term));
       if(sort.value==='latest')rows.reverse();
@@ -399,6 +405,8 @@
       status.hidden=false;status.textContent='Показано '+Math.min(rows.length,Number(size.value)||20)+' из '+rows.length+' тестовых ответов';
     }
     [search,filter,sort,size].forEach(el=>el.addEventListener(el===search?'input':'change',renderDemo));
+    document.querySelectorAll('[data-results-view]').forEach(el=>el.addEventListener('click',renderDemo));
+    document.querySelector('#hypothetical-question-select')?.addEventListener('change',renderDemo);
     renderDemo();
     return;
   }
