@@ -98,20 +98,34 @@
     </section>
     <section id="hypothetical-answers" class="public-answers-section hypothetical-answers-section" aria-labelledby="preference-results-title" hidden>
       <div class="section-heading"><div><p class="eyebrow" data-voice="eyebrow">ГИПОТЕТИЧЕСКИЕ ПРЕДПОЧТЕНИЯ</p><h2 id="preference-results-title" data-voice="resultsTitle">Чего люди хотели бы для собственной жизни?</h2><p class="section-intro" data-voice="resultsIntro">Отдельный поток личных предпочтений – не решений за чужую жизнь.</p></div></div>
+      <section class="statistics-section hypothetical-statistics-section" aria-labelledby="hypothetical-statistics-title">
+        <div class="results-stat-card stat-card"><span class="stat-label">Публичные ответы</span><strong id="hypothetical-total">0</strong><span class="stat-label">Личные предпочтения</span></div>
+        <div class="section-heading"><div><p class="eyebrow">ОБЩАЯ КАРТИНА</p><h3 id="hypothetical-statistics-title">Статистика личных предпочтений</h3></div><span class="status-chip">Ожидаем ответы</span></div>
+        <div id="hypothetical-results-content">
+          <section class="result-section" data-hypothetical-question="scope"><h3>1. Что бы ты позволил человечеству изменить в себе?</h3><p class="method-note">Распределение ответов появится после начала сбора данных.</p></section>
+          <section class="result-section" data-hypothetical-question="motivation"><h3>2. Что могло бы побудить тебя участвовать в этом эксперименте?</h3><p class="method-note">Здесь будет показано, какие причины выбирают участники. Можно выбрать несколько вариантов.</p></section>
+          <section class="result-section" data-hypothetical-question="comment"><h3>3. Что бы ты позволил человечеству сделать с твоей жизнью?</h3><p class="method-note">Свободные ответы будут показаны ниже в карточках участников, согласившихся на публикацию.</p></section>
+          <p class="method-note">Это добровольные ответы в интернете, а не репрезентативная выборка населения мира.</p>
+        </div>
+      </section>
+      <div class="results-question-picker hypothetical-question-picker" hidden>
+        <label for="hypothetical-question-select">Выберите вопрос</label>
+        <select id="hypothetical-question-select"><option value="scope">1. Границы изменений</option><option value="motivation">2. Мотивация участия</option><option value="comment">3. Свободный ответ</option></select>
+      </div>
       <div class="status-panel hypothetical-data-notice">
         Показываются только ответы, для которых участник отдельно разрешил публичное отображение. Этот поток не объединяется с коллективными ответами.
       </div>
       <div class="answer-tools hypothetical-answer-tools">
         <label class="search-field"><span class="sr-only">Поиск по личным ответам</span><input id="hypothetical-search" type="search" placeholder="Поиск по ответам…"></label>
-        <label><span class="sr-only">Вопрос</span><select id="hypothetical-question-filter"><option value="">Все вопросы</option><option value="priority">1. Главный приоритет</option><option value="preserve">2. Что важно сохранить</option><option value="wishes">3. Как учитывать желания</option><option value="body">4. Изменения тела</option></select></label>
+        <label><span class="sr-only">Вопрос</span><select id="hypothetical-question-filter"><option value="">Все вопросы</option><option value="scope">1. Границы изменений</option><option value="motivation">2. Мотивация участия</option><option value="comment">3. Свободный ответ</option></select></label>
         <label><span class="sr-only">Сортировка</span><select id="hypothetical-sort"><option value="latest" selected>Сначала новые</option><option value="oldest">Сначала старые</option></select></label>
         <label class="hypothetical-page-size">Ответов на странице <select id="hypothetical-page-size"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></label>
       </div>
-      <p id="hypothetical-stats" class="method-note" role="status" aria-live="polite">Загрузка статистики…</p><div id="hypothetical-status" class="status-panel" role="status" aria-live="polite" hidden></div><div class="answer-list hypothetical-answer-list">
+      <p id="hypothetical-stats" class="method-note" role="status" aria-live="polite">Сбор личных ответов пока не начался.</p><div id="hypothetical-status" class="status-panel" role="status" aria-live="polite" hidden></div><div class="answer-list hypothetical-answer-list">
         <div id="author-answer-hypothetical" hidden></div>
         <article class="status-panel hypothetical-empty-state">
           <h3 data-voice="emptyTitle">Личных ответов пока нет</h3>
-          <p data-voice="emptyText">Когда начнётся отдельный сбор ответов и появятся реальные данные, здесь будут карточки ответов, фильтры по пяти вопросам, сортировка и постраничная загрузка – по той же схеме, что и в коллективном потоке.</p>
+          <p data-voice="emptyText">Когда начнётся отдельный сбор ответов и появятся реальные данные, здесь будут карточки ответов, фильтры по трём вопросам, сортировка и постраничная загрузка – по той же схеме, что и в коллективном потоке.</p>
           <p data-voice="emptyNext">Этот прототип пока не собирает и не сохраняет ответы о личных предпочтениях.</p>
           <a class="subtle-button" href="/preferences.html" data-voice="answer">Посмотреть вопросы о собственной жизни ↗</a>
         </article>
@@ -156,6 +170,9 @@
     const stats = document.querySelector('#statistics-section');
     const collectiveAnswers = document.querySelector('.public-answers-section:not(.hypothetical-answers-section)');
     const hypothetical = document.querySelector('.hypothetical-answers-section');
+    const hypotheticalStats = document.querySelector('.hypothetical-statistics-section');
+    const hypotheticalPicker = document.querySelector('.hypothetical-question-picker');
+    const hypotheticalQuestionSelect = document.querySelector('#hypothetical-question-select');
     const ai = document.querySelector('.ai-analysis-section:not(.hypothetical-ai-analysis-section)');
     const hypotheticalAI = document.querySelector('.hypothetical-ai-analysis-section');
     const picker = document.querySelector('.results-question-picker');
@@ -208,6 +225,9 @@
       if (stats) stats.hidden = !collective || !(overview || question);
       if (collectiveAnswers) collectiveAnswers.hidden = !collective || !(overview || list || question);
       if (hypothetical) { hypothetical.hidden = collective; hypothetical.dataset.resultsView = view; }
+      if (hypotheticalStats) hypotheticalStats.hidden = collective || !(overview || question);
+      if (hypotheticalPicker) hypotheticalPicker.hidden = collective || !question;
+      document.querySelectorAll('[data-hypothetical-question]').forEach(card => { card.hidden = question && card.dataset.hypotheticalQuestion !== hypotheticalQuestionSelect?.value; });
       if (ai) ai.hidden = !collective || !overview;
       if (hypotheticalAI) hypotheticalAI.hidden = collective || !overview;
       if (picker) picker.hidden = !collective || !question;
@@ -317,6 +337,11 @@
       render();
     }));
     questionSelect?.addEventListener('change', render);
+    hypotheticalQuestionSelect?.addEventListener('change', () => {
+      const filter = document.querySelector('#hypothetical-question-filter');
+      if (filter) { filter.value = hypotheticalQuestionSelect.value; filter.dispatchEvent(new Event('change')); }
+      render();
+    });
     render();
   })();
   </script>
@@ -358,11 +383,17 @@
     header.append(node('strong',item.pseudonym || ui.anonymous));
     header.append(node('time',item.createdAt ? new Date(item.createdAt).toLocaleDateString(ui.dateLocale) : ''));
     article.append(header);
-    for(const key of ['priority','preserve','wishes','body']) {
+    const personalLabels = (document.documentElement.lang || 'en') === 'ru'
+      ? {scope:{none:'Ничего не менять',preapproved:'Только заранее одобренное',veto:'С правом отказа',trust_conditions:'Доверие с условиями',unlimited:'Без ограничений',other:'Другое'},motivation:{desires:'Узнать желания людей',reality:'Увидеть человечество как оно есть',hope:'Понять перспективы человечества',similarity:'Узнать, насколько люди похожи',understanding:'Проверить взаимопонимание',contribute:'Внести вклад',curiosity:'Любопытство',other:'Другое',none:'Ничто из перечисленного'}}
+      : {scope:{none:'No changes',preapproved:'Only changes approved in advance',veto:'With a right to refuse',trust_conditions:'Trust with conditions',unlimited:'Without limits',other:'Other'},motivation:{desires:'Learn what people want',reality:'See humanity as it is',hope:'Understand humanity’s prospects',similarity:'See how similar people are',understanding:'Explore mutual understanding',contribute:'Contribute to the research',curiosity:'Curiosity',other:'Other',none:'None of these'}};
+    const personalNames = (document.documentElement.lang || 'en') === 'ru'
+      ? {scope:'Границы изменений',motivation:'Мотивация участия'}
+      : {scope:'Allowed changes',motivation:'Motivation to participate'};
+    for(const key of ['scope','motivation']) {
       const raw=item.answers?.[key];
       if(raw===undefined) continue;
-      const vals=(Array.isArray(raw)?raw:[raw]).map(v=>ui.labels[key]?.[v] || String(v));
-      const p=node('p'); p.append(node('strong',ui.names[key]+': '),document.createTextNode(vals.join(', '))); article.append(p);
+      const vals=(Array.isArray(raw)?raw:[raw]).map(v=>personalLabels[key]?.[v] || String(v));
+      const p=node('p'); p.append(node('strong',personalNames[key]+': '),document.createTextNode(vals.join(', '))); article.append(p);
     }
     if(item.comment) { const p=node('p',item.comment); p.className='answer-comment'; article.append(p); }
     return article;
@@ -421,7 +452,10 @@
       const response=await fetch('/api/preferences/stats',{headers:{Accept:'application/json'}});
       const data=await response.json();
       if(!response.ok || !data.ok) throw new Error('unavailable');
-      stats.textContent=interpolate(apiUi().stats,{total:Number(data.stats.total||0)+1,participants:Number(data.stats.total||0)});
+      const count=Number(data.stats.total||0);
+      stats.textContent=interpolate(apiUi().stats,{total:count+1,participants:count});
+      const totalNode=section.querySelector('#hypothetical-total');
+      if(totalNode) totalNode.textContent=String(count);
     } catch { stats.textContent=apiUi().statsError; }
   }
   const more=node('button',apiUi().more,'show-more-button'); more.type='button'; more.id='hypothetical-load-more'; more.hidden=true; more.addEventListener('click',()=>load(false)); status.after(more);
