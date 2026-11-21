@@ -117,6 +117,8 @@
       </div>
       <div class="answer-tools hypothetical-answer-tools">
         <label class="search-field"><span class="sr-only">Поиск по личным ответам</span><input id="hypothetical-search" type="search" placeholder="Поиск по ответам…"></label>
+        <form id="hypothetical-jump" class="answer-number-jump"><label for="hypothetical-number">Перейти к ответу №</label><input id="hypothetical-number" type="number" min="1" step="1" required><button class="subtle-button">Перейти</button></form>
+        <button id="hypothetical-reset" class="subtle-button" type="button">Сбросить фильтры</button>
         <label><span class="sr-only">Вопрос</span><select id="hypothetical-question-filter"><option value="">Все вопросы</option><option value="scope">1. Границы изменений</option><option value="motivation">2. Мотивация участия</option><option value="comment">3. Свободный ответ</option></select></label>
         <label><span class="sr-only">Сортировка</span><select id="hypothetical-sort"><option value="latest" selected>Сначала новые</option><option value="oldest">Сначала старые</option></select></label>
         <label class="hypothetical-page-size">Ответов на странице <select id="hypothetical-page-size"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></label>
@@ -384,9 +386,18 @@
     const filter=section.querySelector('#hypothetical-question-filter');
     const sort=section.querySelector('#hypothetical-sort');
     const size=section.querySelector('#hypothetical-page-size');
+    const jump=section.querySelector('#hypothetical-jump');
+    const number=section.querySelector('#hypothetical-number');
+    const previous=document.createElement('button');
+    const next=document.createElement('button');
+    const controls=document.createElement('div');controls.className='answer-history-controls';
+    [previous,next].forEach(button=>{button.type='button';button.className='subtle-button';controls.append(button);});
+    previous.textContent='← Предыдущие';next.textContent='Следующие →';cards.after(controls);
+    let page=0;
     function renderDemo(){
       if (['popular','unusual'].includes(section.dataset.resultsView)) {
         cards.replaceChildren();
+        controls.hidden=true;
         status.hidden=false;
         status.textContent='Популярность и необычность тестовых ответов пока не определяются.';
         return;
@@ -395,18 +406,38 @@
       let rows=samples.filter(item=>[item.scope,...item.motives,item.comment].join(' ').toLowerCase().includes(term));
       if(sort.value==='latest')rows.reverse();
       cards.replaceChildren();
-      rows.slice(0,Number(size.value)||20).forEach(item=>{
-        const card=document.createElement('article');card.className='answer-card preview-sample-answer';
+      const limit=Number(size.value)||20;
+      const start=page*limit;
+      const visible=rows.slice(start,start+limit);
+      controls.hidden=false;previous.hidden=page===0;next.hidden=start+limit>=rows.length;
+      visible.forEach(item=>{
+        const card=document.createElement('article');card.className='answer-card preview-sample-answer';card.id='hypothetical-demo-'+item.n;card.tabIndex=-1;
         const heading=document.createElement('strong');heading.textContent='№ '+item.n+' · Участник '+item.n+' · DEMO-'+String(item.n).padStart(3,'0');card.append(heading);
         const parts={scope:'Границы изменений: '+item.scope,motivation:'Мотивация участия: '+item.motives.join(', '),comment:item.comment};
         Object.entries(parts).forEach(([key,value])=>{if(filter.value&&filter.value!==key)return;const p=document.createElement('p');p.textContent=value;card.append(p)});
         cards.append(card);
       });
-      status.hidden=false;status.textContent='Показано '+Math.min(rows.length,Number(size.value)||20)+' из '+rows.length+' тестовых ответов';
+      status.hidden=false;status.textContent='Показано '+visible.length+' из '+rows.length+' тестовых ответов';
     }
-    [search,filter,sort,size].forEach(el=>el.addEventListener(el===search?'input':'change',renderDemo));
-    document.querySelectorAll('[data-results-view]').forEach(el=>el.addEventListener('click',renderDemo));
-    document.querySelector('#hypothetical-question-select')?.addEventListener('change',renderDemo);
+    const resetPage=()=>{page=0;renderDemo();};
+    [search,filter,sort,size].forEach(el=>el.addEventListener(el===search?'input':'change',resetPage));
+    previous.addEventListener('click',()=>{page--;renderDemo();cards.scrollIntoView();});
+    next.addEventListener('click',()=>{page++;renderDemo();cards.scrollIntoView();});
+    section.querySelector('#hypothetical-reset').addEventListener('click',()=>{search.value='';filter.value='';sort.value='latest';number.value='';resetPage();});
+    jump.addEventListener('submit',event=>{
+      event.preventDefault();
+      const value=Number(number.value);
+      if(!samples.some(item=>item.n===value)){status.hidden=false;status.textContent='Ответ с таким номером не найден.';return;}
+      search.value='';filter.value='';
+      document.querySelector('[data-results-view="all"]').click();
+      const ordered=sort.value==='latest'?samples.slice().reverse():samples;
+      page=Math.floor(ordered.findIndex(item=>item.n===value)/(Number(size.value)||20));
+      renderDemo();
+      const card=document.getElementById('hypothetical-demo-'+value);
+      card?.focus();card?.scrollIntoView({block:'center'});
+    });
+    document.querySelectorAll('[data-results-view]').forEach(el=>el.addEventListener('click',resetPage));
+    document.querySelector('#hypothetical-question-select')?.addEventListener('change',resetPage);
     renderDemo();
     return;
   }
@@ -517,6 +548,30 @@
     } catch { stats.textContent=apiUi().statsError; }
   }
   const more=node('button',apiUi().more,'show-more-button'); more.type='button'; more.id='hypothetical-load-more'; more.hidden=true; more.addEventListener('click',()=>load(false)); status.after(more);
+  const jump=section.querySelector('#hypothetical-jump');
+  const number=section.querySelector('#hypothetical-number');
+  section.querySelector('#hypothetical-reset').addEventListener('click',()=>{search.value='';question.value='';sort.value='latest';number.value='';load(true);});
+  jump.addEventListener('submit',async event=>{
+    event.preventDefault();
+    const target=Number(number.value);
+    const button=jump.querySelector('button');
+    button.disabled=true;
+    try {
+      let found;
+      for(let start=0;!found;start+=50){
+        const response=await fetch('/api/preferences/public?sort=latest&limit=50&offset='+start);
+        const data=await response.json();
+        if(!response.ok||!data.ok)throw Error('unavailable');
+        found=data.answers.find(item=>item.answerNumber===target);
+        if(start+50>=data.total)break;
+      }
+      status.hidden=false;
+      if(!found){status.textContent='Ответ с таким номером не найден.';return;}
+      const card=renderAnswer(found);card.tabIndex=-1;
+      status.replaceChildren(card);card.focus();card.scrollIntoView({block:'center'});
+    } catch {status.hidden=false;status.textContent=apiUi().error;}
+    finally {button.disabled=false;}
+  });
   let debounce;
   search.addEventListener('input',()=>{clearTimeout(debounce);debounce=setTimeout(()=>load(true),250);});
   [question,sort,pageSize].forEach(el=>el.addEventListener('change',()=>load(true)));
