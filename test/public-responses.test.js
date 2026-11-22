@@ -56,10 +56,10 @@ function makeEnv({ seed = true, extraResponses = 0, specialAnswers = [] } = {}) 
     (public_id, free_answer, language, topic, created_at, q2, q3, q4, is_public)
     VALUES (?, ?, 'en', 'freedom', '2026-10-06T10:00:00.000Z', 1, 1, 1, 1)`);
   for (let index = 0; index < extraResponses; index++) {
-    insert.run(`extra-${index}`, `Additional respo  for (let index = 0; index < specialAnswers.length; index++) {
-    insert.run(`special-${index}`, specialAnswers[index]);
+    insert.run(`extra-${index}`, `Additional response ${index}`);
   }
-nse ${index}`);
+  for (let index = 0; index < specialAnswers.length; index++) {
+    insert.run(`special-${index}`, specialAnswers[index]);
   }
   const DB = {
     prepare(sql) {

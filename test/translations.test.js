@@ -67,11 +67,11 @@ test('English and Russian results search labels are translated', () => {
   assert.match(results, /ru:\{[^\n]*searchLabel:'Поиск по ответам'/);
 });
 
-
 test('changing results language rebuilds the translated question filter', () => {
   const results = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
-  assert.match(results, /applyLanguage\\(\\);populateQuestionFilter\\(\\);loadAnswers\\(true\\);/);
+  assert.match(results, /applyLanguage\(\);populateQuestionFilter\(\);loadAnswers\(true\);/);
 });
+
 
 test('language switching still applies translations when localStorage is unavailable', () => {
   const localized = readFileSync(new URL('../public/preferences-i18n.js', import.meta.url), 'utf8');
