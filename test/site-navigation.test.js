@@ -201,6 +201,7 @@ test('results page separates collective answers from hypothetical preference ans
   assert.match(html, /data-voice="emptyText"/);
   assert.match(html, /data-voice="emptyNext"/);
   assert.match(html, /const previewOnly = location\.hostname === 'experiment-hypothetical-preferences-protot-the-human-experiment\.cejbulovje\.workers\.dev'[\s\S]*?get\('demo'\) === '101'/, 'synthetic personal answers require the explicit demo mode');
+  assert.match(html, /const total=Number\\(data\\.stats\\.total\\|\\|0\\);\\s*const participants=Number\\(data\\.stats\\.participantTotal\\|\\|0\\);\\s*stats\\.textContent=interpolate\\(apiUi\\(\\)\\.stats,\\{total,participants\\}\\);[\\s\\S]*?if\\(totalNode\\) totalNode\\.textContent=String\\(participants\\)/, 'personal statistics keep participant and author totals separate');
   assert.doesNotMatch(html, /id="hypothetical-answer-list"/, 'no fake second feed is presented as live data');
   for (const locale of locales) {
     for (const key of ['resultsTitle','resultsIntro','resultsCount','emptyTitle','emptyText','emptyNext']) {
