@@ -200,6 +200,7 @@ test('results page separates collective answers from hypothetical preference ans
   assert.match(html, /class="status-panel hypothetical-empty-state"/);
   assert.match(html, /data-voice="emptyText"/);
   assert.match(html, /data-voice="emptyNext"/);
+  assert.match(html, /const previewOnly = location\.hostname === 'experiment-hypothetical-preferences-protot-the-human-experiment\.cejbulovje\.workers\.dev'[\s\S]*?get\('demo'\) === '101'/, 'synthetic personal answers require the explicit demo mode');
   assert.doesNotMatch(html, /id="hypothetical-answer-list"/, 'no fake second feed is presented as live data');
   for (const locale of locales) {
     for (const key of ['resultsTitle','resultsIntro','resultsCount','emptyTitle','emptyText','emptyNext']) {
