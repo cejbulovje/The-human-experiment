@@ -262,6 +262,8 @@
   up.addEventListener('click',()=>window.scrollTo({top:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}));
   window.addEventListener('scroll',updateUpVisibility,{passive:true});
   document.querySelectorAll('#language, #page-language').forEach(picker=>picker.addEventListener('change',updateUpLabel));
+  document.addEventListener('results-language-changed',updateUpLabel);
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',updateUpLabel,{once:true});
   document.body.append(up);
   updateUpLabel();
   updateUpVisibility();
