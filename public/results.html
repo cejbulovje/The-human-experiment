@@ -559,10 +559,11 @@
       const response=await fetch('/api/preferences/stats',{headers:{Accept:'application/json'}});
       const data=await response.json();
       if(!response.ok || !data.ok) throw new Error('unavailable');
-      const count=Number(data.stats.total||0);
-      stats.textContent=interpolate(apiUi().stats,{total:count+1,participants:count});
+      const total=Number(data.stats.total||0);
+      const participants=Number(data.stats.participantTotal||0);
+      stats.textContent=interpolate(apiUi().stats,{total,participants});
       const totalNode=section.querySelector('#hypothetical-total');
-      if(totalNode) totalNode.textContent=String(count);
+      if(totalNode) totalNode.textContent=String(participants);
     } catch { stats.textContent=apiUi().statsError; }
   }
   const more=node('button',apiUi().more,'show-more-button'); more.type='button'; more.id='hypothetical-load-more'; more.hidden=true; more.addEventListener('click',()=>load(false)); status.after(more);
