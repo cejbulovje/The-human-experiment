@@ -183,7 +183,7 @@ async function publicResponses(request,env){
   if(requestedId){if(/^legacy-\d+$/.test(requestedId)){clauses.push('(r.public_id=? OR (r.public_id IS NULL AND r.id=?))');const legacyId=Number(requestedId.slice(7));binds.push(requestedId,legacyId);}else{clauses.push('r.public_id=?');binds.push(requestedId);}}
   const participantParam=url.searchParams.get('participant');const requestedParticipant=(participantParam||'').trim();
   if(participantParam!==null){if(/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(requestedParticipant)){clauses.push('r.participant_id=?');binds.push(requestedParticipant.toLowerCase());}else{clauses.push('1=0');}}
-  if(search){clauses.push('r.free_answer LIKE ? ESCAPE char(92)');binds.push(`%${search.replace(/[\\%_]/g,match=>'\\'+match)}%`);}
+  if(search){clauses.push('instr(lower(r.free_answer),lower(?))>0');binds.push(search);}
   const allowedTopics=['character','appearance','freedom','life','relationships','other'];
   if(topic){if(allowedTopics.includes(topic)){clauses.push('r.topic=?');binds.push(topic);}else{clauses.push('1=0');}}
   if(choice){const match=/^(q2|q3|q4):(\d+)$/.exec(choice);const limits={q2:7,q3:5,q4:7};if(match&&Number(match[2])<limits[match[1]]){clauses.push('r.'+match[1]+'=?');binds.push(Number(match[2]));}else{clauses.push('1=0');}}
