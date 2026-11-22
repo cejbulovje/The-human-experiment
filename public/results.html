@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f6f4ef">
   <title>Results - THE HUMAN EXPERIMENT</title>
   <link rel="icon" type="image/png" href="/favicon.png"><link rel="shortcut icon" href="/favicon.ico">
-  <link rel="stylesheet" href="/styles.css"><script src="/nav.js" defer></script><script src="/results.js" defer></script><script src="/author-answers.js" defer></script>
+  <link rel="stylesheet" href="/styles.css"><script src="/nav.js" defer></script><script src="/results.js" defer></script><script src="/author-answers.js" defer></script><script src="/results-layout.js" defer></script>
   <script src="/author-answer-emojis.js" defer></script>
 </head>
 <body>
@@ -467,7 +467,7 @@
   const question = section.querySelector('#hypothetical-question-filter');
   const sort = section.querySelector('#hypothetical-sort');
   const pageSize = section.querySelector('#hypothetical-page-size');
-  let offset = 0, total = 0, busy = false, requestId = 0, pendingLoad = false, pendingReset = false;
+  let offset = 0, currentStart = 0, total = 0, busy = false, requestId = 0, pendingLoad = false, pendingReset = false;
   const personalApiUiByLanguage = {
     en:{labels:{priority:{autonomy:'Freedom and autonomy',wellbeing:'Well-being and safety',trust:'Trust and responsibility',context:'Depends on the circumstances'},preserve:{autonomy:'The right to make my own decisions',body:'Control over my own body',identity:'Personality and identity',safety:'Safety and physical well-being',voice:'The ability to be heard'},wishes:{ask:'Ask me first and listen to my answer',limits:'Act within boundaries agreed in advance',decide:'Leave the final decision to the person given authority',consent:'Obtain my consent for significant changes'},body:{consent:'Allow changes only with my consent',discuss:'Discuss consequences and alternatives first',unimportant:'Less important to me than other priorities',context:'Depends on the specific change and circumstances'}},names:{priority:'Main priority',preserve:'What matters to preserve',wishes:'How to take wishes into account',body:'Changes to the body'},anonymous:'Anonymous participant',rankingPopular:'Popularity cannot yet be determined because participant reactions have not been implemented.',rankingUnusual:'Unusual answers cannot yet be identified because the answer-comparison algorithm has not been implemented.',loading:'Loading real answers…',shown:'Showing {shown} of {total} public answers.',empty:'There are no public answers yet.',error:'Could not load answers. Please try again later.',stats:'Total answers in the personal stream: {total} (including the author’s example). Participant answers: {participants}. The author’s example is not assigned to questions.',statsError:'Personal preferences statistics are temporarily unavailable.',more:'Show more',dateLocale:'en'},
     ru:{labels:{priority:{autonomy:'Свобода и самостоятельность',wellbeing:'Благополучие и безопасность',trust:'Доверие и ответственность',context:'Зависит от обстоятельств'},preserve:{autonomy:'Право самостоятельно принимать решения',body:'Контроль над собственным телом',identity:'Личность и идентичность',safety:'Безопасность и физическое благополучие',voice:'Возможность быть услышанным'},wishes:{ask:'Сначала спросить меня и выслушать ответ',limits:'Действовать в заранее обозначенных пределах',decide:'Оставить окончательное решение тому, кто получил власть',consent:'Получать моё согласие на существенные изменения'},body:{consent:'Допускать изменения только с моего согласия',discuss:'Сначала обсуждать последствия и альтернативы',unimportant:'Это не главный вопрос по сравнению с другими приоритетами',context:'Зависит от конкретного изменения и обстоятельств'}},names:{priority:'Главный приоритет',preserve:'Что важно сохранить',wishes:'Как учитывать желания',body:'Изменения тела'},anonymous:'Анонимный участник',rankingPopular:'Популярность пока нельзя определить: реакции участников ещё не реализованы.',rankingUnusual:'Выделять необычные ответы пока нельзя: алгоритм сравнения ответов ещё не реализован.',loading:'Загружаем реальные ответы…',shown:'Показано {shown} из {total} публичных ответов.',empty:'Пока нет опубликованных ответов.',error:'Не удалось загрузить ответы. Попробуйте позже.',stats:'Всего ответов в личном потоке: {total} (включая авторский пример). Ответы участников: {participants}. Авторский пример не распределяется по вопросам.',statsError:'Статистика личных предпочтений временно недоступна.',more:'Показать ещё',dateLocale:'ru'},
@@ -508,7 +508,7 @@
   function rankingUnavailable() {
     return ['popular','unusual'].includes(section.dataset.resultsView);
   }
-  async function load(reset=true) {
+  async function load(reset=true, targetOffset=0) {
     if (rankingUnavailable()) {
       requestId++;
       offset=0;
@@ -520,12 +520,14 @@
         : apiUi().rankingUnusual;
       const moreButton=section.querySelector('#hypothetical-load-more');
       if(moreButton) moreButton.hidden=true;
+      const previousButton=section.querySelector('#hypothetical-previous');
+      if(previousButton) previousButton.hidden=true;
       return;
     }
     if(busy) { pendingLoad=true; pendingReset=pendingReset||reset; return; }
     const thisRequest = ++requestId;
     busy=true;
-    if(reset){offset=0; list.querySelectorAll('article:not(.hypothetical-empty-state):not(.author-answer-card)').forEach(el=>el.remove());}
+    if(reset){offset=Math.max(0,targetOffset); list.querySelectorAll('article:not(.hypothetical-empty-state):not(.author-answer-card)').forEach(el=>el.remove());}
     if(empty) empty.hidden=true;
     status.hidden=false; status.textContent=apiUi().loading;
     try {
@@ -537,11 +539,14 @@
       if (thisRequest !== requestId || rankingUnavailable()) return;
       if(!response.ok || !data.ok) throw new Error('unavailable');
       total=data.total;
+      currentStart=offset;
       data.answers.forEach(item=>list.append(renderAnswer(item)));
       offset+=data.answers.length;
       status.textContent=total ? interpolate(apiUi().shown,{shown:Math.min(offset,total),total}) : apiUi().empty;
       const more=section.querySelector('#hypothetical-load-more');
       if(more) more.hidden=offset>=total;
+      const previous=section.querySelector('#hypothetical-previous');
+      if(previous) previous.hidden=currentStart===0;
       if(!total && empty) empty.hidden=false;
     } catch {
       if (thisRequest === requestId && !rankingUnavailable()) status.textContent=apiUi().error;
@@ -597,7 +602,10 @@
       if(totalNode) totalNode.textContent=String(participants);
     } catch { stats.textContent=apiUi().statsError; }
   }
-  const more=node('button',apiUi().more,'show-more-button'); more.type='button'; more.id='hypothetical-load-more'; more.hidden=true; more.addEventListener('click',()=>load(false)); status.after(more);
+  const controls=node('div',undefined,'answer-history-controls');
+  const previous=node('button','← Предыдущие','subtle-button'); previous.type='button'; previous.id='hypothetical-previous'; previous.hidden=true; previous.addEventListener('click',()=>load(true,Math.max(0,currentStart-Number(pageSize.value))));
+  const more=node('button','Следующие →','subtle-button'); more.type='button'; more.id='hypothetical-load-more'; more.hidden=true; more.addEventListener('click',()=>load(true,offset));
+  controls.append(previous,more); list.after(controls);
   const jump=section.querySelector('#hypothetical-jump');
   const number=section.querySelector('#hypothetical-number');
   section.querySelector('#hypothetical-reset').addEventListener('click',()=>{search.value='';question.value='';sort.value='latest';number.value='';load(true);});

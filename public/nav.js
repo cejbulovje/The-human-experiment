@@ -251,4 +251,18 @@
   else document.addEventListener('DOMContentLoaded', applyLabels, { once: true });
   document.querySelectorAll('#language, #page-language').forEach(picker => picker.addEventListener('change', applyLabels));
   document.addEventListener('results-language-changed', applyLabels);
+  const upLabels = {en:'Back to top',ru:'Наверх',es:'Volver arriba',pt:'Voltar ao topo',zh:'返回顶部',de:'Nach oben',ja:'ページの先頭へ',fr:'Retour en haut',ar:'العودة إلى الأعلى'};
+  const up = document.createElement('button');
+  up.type = 'button';
+  up.className = 'back-to-top';
+  up.textContent = '↑';
+  up.hidden = true;
+  const updateUpLabel = () => { const label=upLabels[language()]||upLabels.en; up.setAttribute('aria-label',label); up.title=label; };
+  const updateUpVisibility = () => { up.hidden=window.scrollY<450; };
+  up.addEventListener('click',()=>window.scrollTo({top:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}));
+  window.addEventListener('scroll',updateUpVisibility,{passive:true});
+  document.querySelectorAll('#language, #page-language').forEach(picker=>picker.addEventListener('change',updateUpLabel));
+  document.body.append(up);
+  updateUpLabel();
+  updateUpVisibility();
 })();
