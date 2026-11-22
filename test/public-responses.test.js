@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
 import worker from '../src/index.js';
 
-function makeEnv({ seed = true, extraResponses = 0 } = {}) {
+function makeEnv({ seed = true, extraResponses = 0, specialAnswers = [] } = {}) {
   const db = new DatabaseSync(':memory:');
   db.exec(`
     CREATE TABLE responses (
@@ -56,7 +56,10 @@ function makeEnv({ seed = true, extraResponses = 0 } = {}) {
     (public_id, free_answer, language, topic, created_at, q2, q3, q4, is_public)
     VALUES (?, ?, 'en', 'freedom', '2026-10-06T10:00:00.000Z', 1, 1, 1, 1)`);
   for (let index = 0; index < extraResponses; index++) {
-    insert.run(`extra-${index}`, `Additional response ${index}`);
+    insert.run(`extra-${index}`, `Additional respo  for (let index = 0; index < specialAnswers.length; index++) {
+    insert.run(`special-${index}`, specialAnswers[index]);
+  }
+nse ${index}`);
   }
   const DB = {
     prepare(sql) {
@@ -86,6 +89,16 @@ test('public response search combines text, topic and date filters before pagina
     assert.equal(result.items[0].id, 'a-1');
     assert.equal(result.items[0].answerNumber, 2);
     assert.equal(result.hasMore, false);
+  } finally { close(); }
+});
+
+test('public response search handles multiword Russian phrases', async () => {
+  const answer = 'Коллективный выбор не должен превращаться в право распоряжаться жизнью человека.';
+  const { env, close } = makeEnv({ seed: false, specialAnswers: [answer] });
+  try {
+    const result = await get('/api/public-responses?q=%D0%9A%D0%BE%D0%BB%D0%BB%D0%B5%D0%BA%D1%82%D0%B8%D0%B2%D0%BD%D1%8B%D0%B9%20%D0%B2%D1%8B%D0%B1%D0%BE%D1%80%20%D0%BD%D0%B5%20%D0%B4%D0%BE%D0%BB%D0%B6%D0%B5%D0%BD', env);
+    assert.equal(result.total, 1);
+    assert.equal(result.items[0].answer, answer);
   } finally { close(); }
 });
 
