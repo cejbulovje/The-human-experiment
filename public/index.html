@@ -47,7 +47,7 @@
     <form id="survey-form" class="survey-card">
       <div class="form-heading"><span class="step-number">01</span><div><h2 data-i18n="q1">Tell us what you would do</h2><p data-i18n="q1help">Answer in your own words. There are no expected answers.</p></div></div>
       <label class="field-label" for="free-answer" data-i18n="answer-label">Your answer</label>
-      <textarea id="free-answer" name="freeAnswer" maxlength="10000" rows="5" required data-i18n-placeholder="answer-placeholder" placeholder="I would…"></textarea>
+      <textarea id="free-answer" name="freeAnswer" minlength="20" maxlength="10000" rows="5" required data-i18n-placeholder="answer-placeholder" placeholder="I would…"></textarea>
       <div class="field-meta"><span data-i18n="private-note">Your submitted answer will be public without an author signature and used for AI analysis. Do not include identifying information you do not want to make public.</span><span id="char-count">0 / 10000</span></div>
 
       <div class="question-block author-confirmation">
