@@ -52,7 +52,7 @@ export function parseOtherAnswers(body){
 async function submit(request,env){
   if(!env.DB||!env.TURNSTILE_SECRET_KEY||!env.RATE_LIMIT_SALT)return json({ok:false,error:'not_configured'},503);
   const parsed=await readJsonLimited(request,40000);if(parsed.error)return json({ok:false,error:parsed.error},parsed.error==='too_large'?413:400);const body=parsed.body;
-  if(!body||!['en','ru','es','pt','zh','de','ja','fr','ar'].includes(body.language)||!validText(body.freeAnswer,10000)||!validChoice(body.q2,OPTIONS.q2.en.length)||!validChoice(body.q3,OPTIONS.q3.en.length)||!validChoice(body.q4,OPTIONS.q4.en.length))return json({ok:false,error:'invalid_response'},400);
+  if(!body||!['en','ru','es','pt','zh','de','ja','fr','ar'].includes(body.language)||(!validText(body.freeAnswer,10000)||body.freeAnswer.trim().length<20)||!validChoice(body.q2,OPTIONS.q2.en.length)||!validChoice(body.q3,OPTIONS.q3.en.length)||!validChoice(body.q4,OPTIONS.q4.en.length))return json({ok:false,error:'invalid_response'},400);
   const otherAnswers=parseOtherAnswers(body);
   if(!otherAnswers)return json({ok:false,error:'invalid_other_answer'},400);
   const {q2Other,q3Other,q4Other}=otherAnswers;
@@ -352,7 +352,7 @@ async function submitPreferences(request,env){
     new Set(answers.motivation).size===answers.motivation.length&&
     !(answers.motivation.includes('none')&&answers.motivation.length>1);
   if(!body||(body.submissionKey!==undefined && (typeof body.submissionKey!=='string' || !/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(body.submissionKey)))||!languages.includes(body.language)||body.consentToStore!==true||typeof body.aggregateConsent!=='boolean'||body.publicConsent!==true||!validAnswers||
-    (body.comment!==undefined&&typeof body.comment!=='string')||
+    (typeof body.comment!=='string'||body.comment.trim().length<20)||
     String(body.comment||'').length>10000||
     typeof body.turnstileToken!=='string'||body.turnstileToken.length<1||body.turnstileToken.length>2048){
     return json({ok:false,error:'invalid_response'},400);
