@@ -992,14 +992,20 @@ function getParticipantId() {
   }
   return pageParticipantId;
 }
+function getTurnstileResponse() {
+  if (turnstileToken) return turnstileToken;
+  const responseField = form.querySelector('[name="cf-turnstile-response"]');
+  return typeof responseField?.value === 'string' ? responseField.value : '';
+}
 form.addEventListener('submit',async event=>{
   event.preventDefault(); if(submitButton.disabled)return; const lang=activeLanguage; const t=translations[lang];
   status.className='form-status'; status.textContent='';
   if(!form.reportValidity()){status.textContent=t.required;status.className='form-status error';return;}
-  if(!turnstileToken){status.textContent=t.captchaMissing;status.className='form-status error';return;}
+  const captchaResponse = getTurnstileResponse();
+  if(!captchaResponse){status.textContent=t.captchaMissing;status.className='form-status error';return;}
   const selected=name=>{const input=form.querySelector(`input[name="${name}"]:checked`);return input?Number(input.value):null;};
   if(!authorConfirmed.checked){status.textContent=t['author-required'];status.className='form-status error';return;}
-  const payload={language:lang,participantId:getParticipantId(),freeAnswer:answer.value.trim(),q2:selected('q2'),q3:selected('q3'),q4:selected('q4'),q2Other:form.querySelector('[name="q2Other"]')?.value.trim()||'',q3Other:form.querySelector('[name="q3Other"]')?.value.trim()||'',q4Other:form.querySelector('[name="q4Other"]')?.value.trim()||'',gender:selected('gender'),feedbackEmail:feedbackOptIn?.checked?feedbackEmailInput.value.trim():'',authorConfirmed:authorConfirmed.checked,turnstileToken};
+  const payload={language:lang,participantId:getParticipantId(),freeAnswer:answer.value.trim(),q2:selected('q2'),q3:selected('q3'),q4:selected('q4'),q2Other:form.querySelector('[name="q2Other"]')?.value.trim()||'',q3Other:form.querySelector('[name="q3Other"]')?.value.trim()||'',q4Other:form.querySelector('[name="q4Other"]')?.value.trim()||'',gender:selected('gender'),feedbackEmail:feedbackOptIn?.checked?feedbackEmailInput.value.trim():'',authorConfirmed:authorConfirmed.checked,turnstileToken:captchaResponse};
   submitButton.disabled=true; submitButton.textContent=t.sending;
   try{
     const response=await fetch('/api/submit',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
