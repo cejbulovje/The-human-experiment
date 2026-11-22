@@ -18,6 +18,12 @@ test('all public pages load the centered header and compact navigation', () => {
   }
 });
 
+test('main survey can read the Turnstile token from its hidden response field', () => {
+  const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
+  assert.match(app, /function getTurnstileResponse\\(\\)\\s*\\{\\s*if \\(turnstileToken\\) return turnstileToken;\\s*const responseField = form\\.querySelector\\('\[name="cf-turnstile-response"\\]'\\);/);
+  assert.match(app, /const captchaResponse = getTurnstileResponse\\(\\);[\\s\\S]*?if\\(!captchaResponse\\)[\\s\\S]*?turnstileToken:captchaResponse/);
+});
+
 test('homepage prioritizes the survey, then results, and keeps hypothetical preferences secondary', () => {
   const html = readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
   const prompt = html.indexOf('class="prompt"');
@@ -251,7 +257,7 @@ test('preview result samples use one real paginated renderer in both streams', (
   const results = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
   const personal = readFileSync(new URL('../public/preferences-results-preview.js', import.meta.url), 'utf8');
   assert.doesNotMatch(html, /demo-collective-load-more|demo-hypothetical-load-more/, 'legacy append-only demo controls are removed');
-  assert.match(results, /const DEMO_MODE=.*CREATOR_PREVIEW.*\['\/results','\/results\.html'\]/, 'collective preview uses its normal page navigation on the preview route');
+  assert.match(results, /const DEMO_MODE=new URL\\(location\\.href\\)\\.searchParams\\.get\\('demo'\\)==='101'/, 'demo results require an explicit demo query and preview uses live responses by default');
   assert.match(results, /all\.slice\(requestOffset,requestOffset\+pageSize\)/, 'collective cards are sliced to one page');
   assert.match(personal, /const query = \(document\.getElementById\('hypothetical-search'\)/, 'personal search filters sample cards');
   assert.match(personal, /const question = document\.getElementById\('hypothetical-question-filter'\)/, 'personal question filter is applied');
