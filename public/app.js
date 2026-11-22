@@ -14,7 +14,7 @@ const translations = {
     "preferences-link": "Explore hypothetical preferences",
     "q1": "Tell us what you would do",
     "q1help": "Answer in your own words. There are no expected answers.",
-    "answer-label": "Your answer",
+    "answer-label": "Your answer (at least 20 characters)",
     "answer-placeholder": "I would…",
     "private-note": "All submitted answers are public without an author signature and are used for AI analysis. Do not include identifying information you do not want to make public.",
     "single-choice": "Choose one answer.",
@@ -105,7 +105,7 @@ const translations = {
     "preferences-link": "Изучить гипотетические предпочтения",
     "q1": "Расскажи, что бы ты сделал",
     "q1help": "Ответь своими словами. Здесь нет ожидаемых ответов.",
-    "answer-label": "Твой ответ",
+    "answer-label": "Твой ответ (не менее 20 символов)",
     "answer-placeholder": "Я бы…",
     "private-note": "Все отправленные ответы публикуются на открытой странице результатов. Ответ будет анонимным, если ты не захочешь добавить своё имя или псевдоним.",
     "single-choice": "Выбери один вариант.",
@@ -196,7 +196,7 @@ const translations = {
     "preferences-link": "Explorar preferencias hipotéticas",
     "q1": "Cuéntanos qué harías",
     "q1help": "Responde con tus propias palabras. No hay respuestas esperadas.",
-    "answer-label": "Tu respuesta",
+    "answer-label": "Tu respuesta (al menos 20 caracteres)",
     "answer-placeholder": "Yo…",
     "private-note": "Todas las respuestas enviadas se publican en la página pública de resultados. Tu respuesta será anónima salvo que añadas un nombre o seudónimo en el campo de firma. No incluyas información sensible o que permita identificarte.",
     "single-choice": "Elige una respuesta.",
@@ -287,7 +287,7 @@ const translations = {
     "preferences-link": "Explorar preferências hipotéticas",
     "q1": "Conte-nos o que você faria",
     "q1help": "Responda com suas próprias palavras. Não há respostas esperadas.",
-    "answer-label": "Sua resposta",
+    "answer-label": "Sua resposta (pelo menos 20 caracteres)",
     "answer-placeholder": "Eu…",
     "private-note": "Todas as respostas enviadas são publicadas na página pública de resultados. Sua resposta será anônima, a menos que você adicione um nome ou pseudônimo no campo de assinatura. Não inclua informações sensíveis ou que possam identificar você.",
     "single-choice": "Escolha uma resposta.",
@@ -378,7 +378,7 @@ const translations = {
     "preferences-link": "探索假设性偏好",
     "q1": "说说你会怎么做",
     "q1help": "请用自己的话回答，没有标准答案。",
-    "answer-label": "你的回答",
+    "answer-label": "你的回答（至少 20 个字符）",
     "answer-placeholder": "我会……",
     "private-note": "所有提交的回答都会发布在公开结果页面。除非你在下方署名栏填写姓名或化名，否则回答将保持匿名。请勿填写敏感或可识别身份的信息。",
     "single-choice": "请选择一个答案。",
@@ -469,7 +469,7 @@ const translations = {
     "preferences-link": "Hypothetische Präferenzen erkunden",
     "q1": "Erzähl uns, was du tun würdest",
     "q1help": "Antworte in deinen eigenen Worten. Es gibt keine erwarteten Antworten.",
-    "answer-label": "Deine Antwort",
+    "answer-label": "Deine Antwort (mindestens 20 Zeichen)",
     "answer-placeholder": "Ich würde…",
     "private-note": "Alle eingereichten Antworten werden ohne Autorensignatur veröffentlicht und für KI-Analysen verwendet. Gib keine identifizierenden Informationen an, die du nicht öffentlich machen möchtest.",
     "single-choice": "Wähle eine Antwort.",
@@ -560,7 +560,7 @@ const translations = {
     "preferences-link": "仮定の希望を考える",
     "q1": "あなたならどうするか教えてください",
     "q1help": "自分の言葉で答えてください。正解はありません。",
-    "answer-label": "あなたの回答",
+    "answer-label": "あなたの回答（20文字以上）",
     "answer-placeholder": "私は…",
     "private-note": "送信された回答はすべて公開結果ページに掲載されます。下の署名欄に名前やペンネームを入力しない限り、回答は匿名です。機微な情報や個人を特定できる情報は入力しないでください。",
     "single-choice": "1つ選んでください。",
@@ -651,7 +651,7 @@ const translations = {
     "preferences-link": "Explorer les préférences hypothétiques",
     "q1": "Dites-nous ce que vous feriez",
     "q1help": "Répondez avec vos propres mots. Il n’y a pas de réponse attendue.",
-    "answer-label": "Votre réponse",
+    "answer-label": "Votre réponse (au moins 20 caractères)",
     "answer-placeholder": "Je…",
     "private-note": "Toutes les réponses envoyées sont publiées sans signature d’auteur et utilisées pour l’analyse par IA. N’incluez pas d’informations permettant de vous identifier si vous ne souhaitez pas les rendre publiques.",
     "single-choice": "Choisissez une réponse.",
@@ -742,7 +742,7 @@ const translations = {
     "preferences-link": "استكشف التفضيلات المفترضة",
     "q1": "أخبرنا ماذا ستفعل",
     "q1help": "أجب بكلماتك الخاصة. لا توجد إجابات متوقعة.",
-    "answer-label": "إجابتك",
+    "answer-label": "إجابتك (20 حرفًا على الأقل)",
     "answer-placeholder": "سأ…",
     "private-note": "تُنشر جميع الإجابات المُرسلة على صفحة النتائج العامة. ستظل إجابتك مجهولة ما لم تضف اسمًا أو اسمًا مستعارًا في حقل التوقيع أدناه. لا تُدرج معلومات حساسة أو تكشف هويتك.",
     "single-choice": "اختر إجابة واحدة.",
@@ -842,6 +842,7 @@ const supportThanks = {
 const form = document.querySelector('#survey-form');
 const languageSelect = document.querySelector('#language');
 const answer = document.querySelector('#free-answer');
+answer.addEventListener('input', () => answer.setCustomValidity(''));
 const feedbackOptIn = document.querySelector('#feedback-opt-in');
 const feedbackEmailField = document.querySelector('#feedback-email-field');
 const feedbackEmailInput = document.querySelector('#feedback-email');
@@ -1000,6 +1001,7 @@ function getTurnstileResponse() {
 form.addEventListener('submit',async event=>{
   event.preventDefault(); if(submitButton.disabled)return; const lang=activeLanguage; const t=translations[lang];
   status.className='form-status'; status.textContent='';
+  answer.setCustomValidity(answer.value.trim().length < 20 ? ({ru:'Введите не менее 20 символов без пробелов по краям.',en:'Enter at least 20 characters, excluding surrounding spaces.'}[lang] || 'Enter at least 20 characters.') : '');
   if(!form.reportValidity()){status.textContent=t.required;status.className='form-status error';return;}
   const captchaResponse = getTurnstileResponse();
   if(!captchaResponse){status.textContent=t.captchaMissing;status.className='form-status error';return;}
