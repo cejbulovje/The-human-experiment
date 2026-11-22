@@ -351,7 +351,8 @@
   const section = document.querySelector('.hypothetical-answers-section');
   if (!section) return;
   const previewOnly = location.hostname === 'experiment-hypothetical-preferences-protot-the-human-experiment.cejbulovje.workers.dev'
-    && ['/results', '/results.html'].includes(location.pathname);
+    && ['/results', '/results.html'].includes(location.pathname)
+    && new URLSearchParams(location.search).get('demo') === '101';
   if (previewOnly) {
     const scope=['Ничего не менять','Только заранее одобренное','С правом отказа','Доверие с условиями','Без ограничений','Другое'];
     const motives=['Узнать желания людей','Увидеть человечество как оно есть','Понять перспективы человечества','Узнать, насколько люди похожи','Проверить взаимопонимание','Внести вклад','Любопытство','Другое','Ничто из перечисленного'];
