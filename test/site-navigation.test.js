@@ -24,28 +24,20 @@ test('main survey can read the Turnstile token from its hidden response field', 
   assert.match(app, /const captchaResponse = getTurnstileResponse\(\);[\s\S]*?if\(!captchaResponse\)[\s\S]*?turnstileToken:captchaResponse/);
 });
 
-test('homepage prioritizes the survey, then results, and keeps hypothetical preferences secondary', () => {
+test('homepage offers both roles after the introduction and before results and the form', () => {
   const html = readFileSync(new URL('../public/index.html', import.meta.url), 'utf8');
-  const prompt = html.indexOf('class="prompt"');
-  const primary = html.indexOf('class="primary-survey-cta"');
+  const intro = html.indexOf('id="localized-intro-copy"');
+  const roles = html.indexOf('class="role-paths"');
   const results = html.indexOf('class="results-teaser"');
   const survey = html.indexOf('<form id="survey-form"');
-  const preferences = html.indexOf('class="preferences-cta"');
-  assert.ok(prompt >= 0 && prompt < primary && primary < results && results < survey && survey < preferences);
-  assert.match(html, /data-i18n="preferences-title">Imagine being the volunteer</);
-  assert.match(html, /This preview keeps your answers in the page and does not send or save them/);
-  assert.doesNotMatch(html, /class="goal-cta"/);
-  assert.doesNotMatch(html, /goal-cta-copy/);
-  for (const key of ['preferences-eyebrow', 'preferences-title', 'preferences-copy', 'preferences-link']) {
-    assert.match(html, new RegExp('data-i18n="' + key + '"'), 'missing localized preferences CTA key ' + key);
-  }
-});
+  assert.ok(intro >= 0 && intro < roles && roles < results && results < survey);
 
-test('hypothetical preferences CTA is translated in every supported language', () => {
-  const app = readFileSync(new URL('../public/app.js', import.meta.url), 'utf8');
-  for (const key of ['preferences-eyebrow', 'preferences-title', 'preferences-copy', 'preferences-link']) {
-    assert.equal((app.match(new RegExp('"' + key + '"\\s*:', 'g')) || []).length, locales.length, key + ' must exist in all supported locales');
-  }
+  const cards = html.slice(roles, results);
+  assert.equal((cards.match(/class="role-card"/g) || []).length, 2);
+  assert.match(cards, /class="role-action" href="#survey-form"/);
+  assert.match(cards, /class="role-action" href="\/preferences\.html" aria-describedby="preferences-preview"/);
+  assert.match(cards, /id="preferences-preview"[^>]*>This preview does not send or save your answers/);
+  assert.match(html, /<form id="survey-form"[^>]*tabindex="-1" aria-labelledby="survey-question"/);
 });
 
 test('mobile header reserves space for controls and exposes keyboard focus', () => {
@@ -144,7 +136,9 @@ test('public navigation does not recruit volunteers', () => {
   const files = ['index.html', 'preferences.html', 'results.html', 'volunteers-voice.html'];
   for (const name of files) {
     const html = readFileSync(new URL('../public/' + name, import.meta.url), 'utf8');
-    const controls = [...html.matchAll(/<(?:a|button)\b[^>]*>([\s\S]*?)<\/(?:a|button)>/g)].map(match => match[1]).join(' ');
+    const previewRoleLink = /<a class="role-action" href="\/preferences\.html" aria-describedby="preferences-preview" data-i18n="preferences-link">Imagine being the volunteer<\/a>/;
+    const navigation = name === 'index.html' ? html.replace(previewRoleLink, '') : html;
+    const controls = [...navigation.matchAll(/<(?:a|button)\b[^>]*>([\s\S]*?)<\/(?:a|button)>/g)].map(match => match[1]).join(' ');
     assert.doesNotMatch(controls, /добровол|volunteer|voluntário|voluntario|volontaire|freiwillig|ボランティア|志愿者|متطوع/i, name + ' contains recruitment terminology');
   }
   const nav = readFileSync(new URL('../public/nav.js', import.meta.url), 'utf8');

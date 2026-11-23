@@ -173,7 +173,7 @@ test('Arabic hypothetical-preferences labels do not say default preferences', ()
   for (const [name, source] of [['homepage', app], ['results', results], ['preferences page', preferences]]) {
     assert.doesNotMatch(source, /التفضيلات الافتراضية/, name + ' contains outdated Arabic wording');
   }
-  assert.match(app, /استكشف التفضيلات المفترضة/);
+  assert.match(app, /"preferences-link": "تخيّل أنك الشخص المتطوّع"/);
   assert.match(preferences, /title:'التفضيلات المفترضة - THE HUMAN EXPERIMENT'/);
   assert.match(preferences, /voiceCard:'التفضيلات المفترضة'/);
 });
@@ -211,5 +211,15 @@ test('the active personal-preferences questionnaire translates all existing answ
       assert.notEqual(entry.questions[0], questionnaire.en.questions[0], locale);
       assert.notEqual(entry.scope[0], questionnaire.en.scope[0], locale);
     }
+  }
+});
+
+test('both homepage role actions and the strengthened survey prompt are localized', () => {
+  const end = source.indexOf('\n};');
+  const localized = runInNewContext(source.slice(0, end + 3) + '\ntranslations');
+  for (const key of ['decision-role-title', 'prompt', 'start-survey', 'preferences-title', 'preferences-copy', 'preferences-preview', 'preferences-link', 'q1']) {
+    const values = locales.map(locale => localized[locale][key]);
+    assert.ok(values.every(value => typeof value === 'string' && value.trim()), key);
+    assert.equal(new Set(values).size, locales.length, key);
   }
 });
