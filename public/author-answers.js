@@ -469,11 +469,16 @@
         ['Если бы желания этого человека противоречили твоим, как бы ты поступил?', 'Всё равно поступил бы по-своему'],
         ['Как ты думаешь, чего захотело бы большинство людей в такой ситуации?', 'Затрудняюсь ответить'],
         ['Какой у тебя пол?', 'Другая идентичность']
-      ] : [
+      ] : locale === 'en' ? [
         ['If you could change this person, what would you change first?', 'Everything I considered necessary'],
         ["If this person's wishes conflicted with yours, what would you do?", 'I would do what I wanted anyway'],
         ['What do you think most people would want to do in this situation?', 'Not sure'],
         ['What is your gender?', 'Another identity']
+      ] : [
+        [RESULTS_VIEW_UI[locale].collectiveQ2, QUESTION_OPTIONS.q2[locale][3]],
+        [RESULTS_VIEW_UI[locale].collectiveQ3, QUESTION_OPTIONS.q3[locale][2]],
+        [RESULTS_VIEW_UI[locale].collectiveQ4, QUESTION_OPTIONS.q4[locale][5]],
+        [{es:'Género', pt:'Gênero', zh:'性别', de:'Geschlecht', ja:'性別', fr:'Genre', ar:'النوع الاجتماعي'}[locale], publicGender(2)]
       ];
       selected.forEach(([question, answer]) => {
         const row = document.createElement('p');
@@ -515,6 +520,16 @@
       const choicesTitle = document.createElement('strong');
       choicesTitle.textContent = words.volunteerChoices;
       choices.append(choicesTitle);
+      const questionnaire = preferenceQuestions[locale];
+      const otherMotivation = {
+        es:'Otro motivo: saber si las personas pueden encontrar intereses comunes en este experimento a partir de sus preferencias individuales, para que la humanidad vea su reflejo en una sola persona.',
+        pt:'Outro motivo: descobrir se as pessoas podem encontrar interesses comuns neste experimento a partir das preferências individuais, para que a humanidade veja seu reflexo em uma única pessoa.',
+        zh:'其他：我想知道，人们能否从各自的偏好出发，在这个实验中找到共同的兴趣，让人类在一个人身上看见自己的倒影。',
+        de:'Ein weiterer Grund: Ich möchte herausfinden, ob Menschen ausgehend von ihren persönlichen Vorlieben in diesem Experiment gemeinsame Interessen finden können, sodass die Menschheit sich in einem einzigen Menschen wiedererkennt.',
+        ja:'その他：一人ひとりの好みを出発点として、この実験で人々が共通の関心を見いだし、人類が一人の人間に自分たちの姿を映し出せるかを知りたい。',
+        fr:'Autre motivation : découvrir si, à partir de leurs préférences individuelles, les gens peuvent se réunir autour d’intérêts communs dans cette expérience, pour que l’humanité voie son reflet dans une seule personne.',
+        ar:'دافع آخر: أن أعرف هل يستطيع الناس، انطلاقًا من تفضيلاتهم الفردية، الالتقاء حول اهتمامات مشتركة في هذه التجربة، بحيث ترى البشرية انعكاسها في إنسان واحد.'
+      };
       const selected = locale === 'ru' ? [
         ['1. Что бы ты позволил человечеству изменить в себе?', 'Доверил бы человечеству самостоятельно решать, что менять, сохранив лишь несколько принципиальных условий.'],
         ['2. Что могло бы побудить тебя участвовать в эксперименте?', [
@@ -523,7 +538,7 @@
           'Желание внести собственный вклад в исследование человечества.',
           'Другое: желание узнать, смогут ли люди объединить общие интересы в таком эксперименте, исходя из личных предпочтений каждого, чтобы человечество увидело отражение себя в одном общем человеке.'
         ]]
-      ] : [
+      ] : locale === 'en' ? [
         ['1. What would you allow humanity to change about you?', 'I would trust humanity to decide for itself what to change, while preserving a few fundamental conditions.'],
         ['2. What might motivate you to take part in the experiment?', [
           'To see what humanity is really like beyond public images and statements.',
@@ -531,6 +546,9 @@
           'To contribute to the study of humanity.',
           'Other: to find out whether people can unite around shared interests in this experiment, based on each person’s individual preferences, so humanity can see its own reflection in one shared person.'
         ]]
+      ] : [
+        [questionnaire.questions[0], questionnaire.scope[3]],
+        [questionnaire.questions[1], [questionnaire.motivation[1], questionnaire.motivation[3], questionnaire.motivation[5], otherMotivation[locale]]]
       ];
       selected.forEach(([question, answer]) => {
         const row = document.createElement('div');

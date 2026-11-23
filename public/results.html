@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f6f4ef">
   <title>Results - THE HUMAN EXPERIMENT</title>
   <link rel="icon" type="image/png" href="/favicon.png"><link rel="shortcut icon" href="/favicon.ico">
-  <link rel="stylesheet" href="/styles.css"><script src="/nav.js" defer></script><script src="/results.js" defer></script><script src="/author-answers.js" defer></script><script src="/results-layout.js" defer></script>
+  <link rel="stylesheet" href="/styles.css"><script src="/nav.js" defer></script><script src="/preference-questions.js" defer></script><script src="/survey-options.js" defer></script><script src="/results.js" defer></script><script src="/author-answers.js" defer></script><script src="/results-layout.js" defer></script>
   <script src="/author-answer-emojis.js" defer></script>
 </head>
 <body>
@@ -99,12 +99,12 @@
     <section id="hypothetical-answers" class="public-answers-section hypothetical-answers-section" aria-labelledby="preference-results-title" hidden>
       <div class="section-heading"><div><p class="eyebrow" data-voice="eyebrow">ГИПОТЕТИЧЕСКИЕ ПРЕДПОЧТЕНИЯ</p><h2 id="preference-results-title" data-voice="resultsTitle">Что люди доверили бы человечеству?</h2><p class="section-intro" data-voice="resultsIntro">Этот раздел посвящён роли добровольца: какие решения о собственной жизни люди доверили бы другим. Текущая пробная форма не собирает новые ответы.</p></div></div>
       <section class="statistics-section hypothetical-statistics-section" aria-labelledby="hypothetical-statistics-title">
-        <div class="results-stat-card stat-card"><span class="stat-label">Публичные ответы</span><strong id="hypothetical-total">0</strong><span class="stat-label">Личные предпочтения</span></div>
-        <div class="section-heading"><div><p class="eyebrow">ОБЩАЯ КАРТИНА</p><h3 id="hypothetical-statistics-title">Статистика личных предпочтений</h3></div><span class="status-chip">Ожидаем ответы</span></div>
+        <div class="results-stat-card stat-card"><span class="stat-label" data-voice="resultsCount">Публичные ответы</span><strong id="hypothetical-total">0</strong><span class="stat-label" data-voice="eyebrow">Личные предпочтения</span></div>
+        <div class="section-heading"><div><p class="eyebrow" data-t="statsEyebrow">ОБЩАЯ КАРТИНА</p><h3 id="hypothetical-statistics-title" data-t="statsTitle">Статистика личных предпочтений</h3></div><span class="status-chip">Ожидаем ответы</span></div>
         <div id="hypothetical-results-content">
           <section class="result-section" data-hypothetical-question="scope"><h3>1. Что бы ты позволил человечеству изменить в себе?</h3><p class="method-note">Распределение ответов появится после начала сбора данных.</p></section>
           <section class="result-section" data-hypothetical-question="motivation"><h3>2. Что могло бы побудить тебя участвовать в этом эксперименте?</h3><p class="method-note">Здесь будет показано, какие причины выбирают участники. Можно выбрать несколько вариантов.</p></section>
-          <p class="method-note">Это добровольные ответы в интернете, а не репрезентативная выборка населения мира.</p>
+          <p class="method-note" data-open-data="caution">Это добровольные ответы в интернете, а не репрезентативная выборка населения мира.</p>
         </div>
       </section>
       <div class="results-question-picker hypothetical-question-picker" hidden>
@@ -116,8 +116,8 @@
       </div>
       <div class="answer-tools hypothetical-answer-tools">
         <label class="search-field"><span class="sr-only">Поиск по личным ответам</span><input id="hypothetical-search" type="search" placeholder="Поиск по ответам…"></label>
-        <form id="hypothetical-jump" class="answer-number-jump"><label for="hypothetical-number">Перейти к ответу №</label><input id="hypothetical-number" type="number" min="1" step="1" required><button class="subtle-button">Перейти</button></form>
-        <button id="hypothetical-reset" class="subtle-button" type="button">Сбросить фильтры</button>
+        <form id="hypothetical-jump" class="answer-number-jump"><label for="hypothetical-number" data-t="answerNumberLabel">Перейти к ответу №</label><input id="hypothetical-number" type="number" min="1" step="1" required><button class="subtle-button" data-t="goToAnswer">Перейти</button></form>
+        <button id="hypothetical-reset" data-t="resetFilters" class="subtle-button" type="button">Сбросить фильтры</button>
         <label><span class="sr-only">Вопрос</span><select id="hypothetical-question-filter"><option value="">Все вопросы</option><option value="scope">1. Границы изменений</option><option value="motivation">2. Мотивация участия</option><option value="comment">3. Свободный ответ</option></select></label>
         <label><span class="sr-only">Сортировка</span><select id="hypothetical-sort"><option value="latest" selected>Сначала новые</option><option value="oldest">Сначала старые</option></select></label>
         <label class="hypothetical-page-size">Ответов на странице <select id="hypothetical-page-size"><option>10</option><option selected>20</option><option>30</option><option>50</option></select></label>
@@ -145,7 +145,7 @@
         </div>
       </section>
     </section>
-    <p class="method-note"><a class="subtle-button" href="/methodology.html">О методике исследования ↗</a></p>
+    <p class="method-note"><a class="subtle-button" href="/methodology.html" data-voice="explore">О методике исследования ↗</a></p>
     <section class="ai-analysis-section" aria-labelledby="ai-analysis-title">
       <div class="section-heading"><div><p class="eyebrow" data-ai="eyebrow">AI INSIGHTS</p><h2 id="ai-analysis-title" data-ai="title">Explore the results with AI</h2><p class="section-intro" data-ai="description">AI can help identify patterns in participants’ answers from around the world. For now, AI analysis is limited while the project is in its early stages.</p></div></div>
       <div class="ai-analysis-card">
@@ -442,7 +442,7 @@
       event.preventDefault();
       const value=Number(number.value);
       const index=orderedRows().findIndex(item=>item.n===value);
-      if(index<0){status.hidden=false;status.textContent='Ответ с таким номером не найден.';return;}
+      if(index<0){status.hidden=false;status.textContent=$statusWords().notFound;return;}
       search.value='';filter.value='';
       document.querySelector('.results-view-tab[data-results-view="all"]').click();
       page=Math.floor(index/(Number(size.value)||20));
@@ -490,12 +490,9 @@
     header.append(node('strong',item.pseudonym || ui.anonymous));
     header.append(node('time',item.createdAt ? new Date(item.createdAt).toLocaleDateString(ui.dateLocale) : ''));
     article.append(header);
-    const personalLabels = (document.documentElement.lang || 'en') === 'ru'
-      ? {scope:{none:'Ничего не менять',preapproved:'Только заранее одобренное',veto:'С правом отказа',trust_conditions:'Доверие с условиями',unlimited:'Без ограничений',other:'Другое'},motivation:{desires:'Узнать желания людей',reality:'Увидеть человечество как оно есть',hope:'Понять перспективы человечества',similarity:'Узнать, насколько люди похожи',understanding:'Проверить взаимопонимание',contribute:'Внести вклад',curiosity:'Любопытство',other:'Другое',none:'Ничто из перечисленного'}}
-      : {scope:{none:'No changes',preapproved:'Only changes approved in advance',veto:'With a right to refuse',trust_conditions:'Trust with conditions',unlimited:'Without limits',other:'Other'},motivation:{desires:'Learn what people want',reality:'See humanity as it is',hope:'Understand humanity’s prospects',similarity:'See how similar people are',understanding:'Explore mutual understanding',contribute:'Contribute to the research',curiosity:'Curiosity',other:'Other',none:'None of these'}};
-    const personalNames = (document.documentElement.lang || 'en') === 'ru'
-      ? {scope:'Границы изменений',motivation:'Мотивация участия'}
-      : {scope:'Allowed changes',motivation:'Motivation to participate'};
+    const words = preferenceQuestions[document.documentElement.lang];
+    const personalLabels = personalChoiceLabels(words);
+    const personalNames = {scope:words.summaryLabels[0], motivation:words.summaryLabels[1]};
     for(const key of ['scope','motivation']) {
       const raw=item.answers?.[key];
       if(raw===undefined) continue;
@@ -559,18 +556,24 @@
       } else { pendingLoad=false; pendingReset=false; }
     }
   }
+  function personalChoiceLabels(words) {
+    const scope = ['none','preapproved','veto','trust_conditions','unlimited','other'];
+    const motivation = ['desires','reality','hope','similarity','understanding','contribute','curiosity','other','none'];
+    return {
+      scope:Object.fromEntries(scope.map((key,i) => [key,words.scope[i]])),
+      motivation:Object.fromEntries(motivation.map((key,i) => [key,words.motivation[i]]))
+    };
+  }
   function renderPersonalCharts(statsData) {
-    const isRu=(document.documentElement.lang||'en')==='ru';
-    const labels=isRu
-      ? {scope:{none:'Ничего не менять',preapproved:'Только заранее одобренное',veto:'С правом отказа',trust_conditions:'Доверие с условиями',unlimited:'Без ограничений',other:'Другое'},motivation:{desires:'Узнать желания людей',reality:'Увидеть человечество как оно есть',hope:'Понять перспективы человечества',similarity:'Узнать, насколько люди похожи',understanding:'Проверить взаимопонимание',contribute:'Внести вклад',curiosity:'Любопытство',other:'Другое',none:'Ничто из перечисленного'}}
-      : {scope:{none:'No changes',preapproved:'Only changes approved in advance',veto:'With a right to refuse',trust_conditions:'Trust with conditions',unlimited:'Without limits',other:'Other'},motivation:{desires:'Learn what people want',reality:'See humanity as it is',hope:'Understand humanity’s prospects',similarity:'See how similar people are',understanding:'Explore mutual understanding',contribute:'Contribute to the research',curiosity:'Curiosity',other:'Other',none:'None of these'}};
+    const words = preferenceQuestions[document.documentElement.lang];
+    const labels = personalChoiceLabels(words);
     const unlocked=statsData.unlocked===true;
     for (const key of ['scope','motivation']) {
       const card=section.querySelector('[data-hypothetical-question="'+key+'"]');
       const old=card.querySelector('.personal-chart');
       if(old) old.remove();
       const note=card.querySelector('.method-note');
-      if(note) note.textContent=unlocked?'':(isRu?'Статистика появится после 100 ответов.':'Statistics will appear after 100 responses.');
+      if(note) note.textContent=unlocked?'':t().locked(statsData.threshold || 100);
       const list=node('div',undefined,'bar-list personal-chart');
       const denominator=Number(statsData.total)||0;
       for(const [option,label] of Object.entries(labels[key])) {
@@ -600,6 +603,7 @@
       stats.textContent=interpolate(apiUi().stats,{total,participants});
       const totalNode=section.querySelector('#hypothetical-total');
       if(totalNode) totalNode.textContent=String(participants);
+      section.querySelector('.status-chip').textContent = data.stats.unlocked ? t().statsOpen : t().statsLocked;
     } catch { stats.textContent=apiUi().statsError; }
   }
   const controls=node('div',undefined,'answer-history-controls');
@@ -624,7 +628,7 @@
         if(start+50>=data.total)break;
       }
       status.hidden=false;
-      if(!found){status.textContent='Ответ с таким номером не найден.';return;}
+      if(!found){status.textContent=$statusWords().notFound;return;}
       const card=renderAnswer(found);card.tabIndex=-1;
       status.replaceChildren(card);card.focus();card.scrollIntoView({block:'center'});
     } catch {status.hidden=false;status.textContent=apiUi().error;}
@@ -635,6 +639,15 @@
   [question,sort,pageSize].forEach(el=>el.addEventListener('change',()=>load(true)));
   document.querySelectorAll('[data-results-stream="hypothetical"],.results-view-tab[data-results-view]').forEach(el=>el.addEventListener('click',()=>{if(section.hidden)return;load(true);loadStats();}));
   document.addEventListener('results-language-changed', () => {
+    const words = preferenceQuestions[document.documentElement.lang];
+    previous.textContent = RESULTS_VIEW_UI[document.documentElement.lang].previous;
+    more.textContent = t().showMore;
+    section.querySelector('[for="hypothetical-question-select"]').textContent = RESULTS_VIEW_UI[document.documentElement.lang].questionLabel;
+    for (const [i,key] of ['scope','motivation'].entries()) {
+      section.querySelector('[data-hypothetical-question="'+key+'"] h3').textContent = words.questions[i];
+      section.querySelector('#hypothetical-question-select').options[i].textContent = words.summaryLabels[i];
+    }
+    section.querySelector('#hypothetical-question-filter option[value="comment"]').textContent = words.summaryLabels[2];
     if (!section.hidden) { load(true); loadStats(); }
   });
   loadStats();

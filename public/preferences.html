@@ -8,7 +8,7 @@
   <title>Гипотетические предпочтения - THE HUMAN EXPERIMENT</title>
   <link rel="stylesheet" href="/styles.css">
   <script src="/nav.js" defer></script>
-  <script src="/preferences-i18n.js" defer></script>
+  <script src="/preference-questions.js" defer></script><script src="/preferences-i18n.js" defer></script>
   <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <style>
     .skip-link{position:absolute;top:8px;left:8px;z-index:1000;transform:translateY(-160%);padding:10px 14px;background:#fff;color:#20221f;border:2px solid #254c3b;border-radius:8px;font-weight:700}
@@ -104,8 +104,8 @@
         </div>
       </section>
       <section class="preference-question">
-        <h2 id="preference-question-3">3. Какие решения о своей жизни и будущем вы доверили бы человечеству?</h2><p>Расскажите, что вы позволили бы решать другим и какие решения, если такие есть, оставили бы за собой.</p>
-        <textarea name="comment" rows="5" required minlength="20" maxlength="10000" placeholder="Напишите свой ответ…"></textarea>
+        <h2 id="preference-question-3">3. Какие решения о своей жизни и будущем вы доверили бы человечеству?</h2><p id="comment-help">Расскажите, что вы позволили бы решать другим и какие решения, если такие есть, оставили бы за собой.</p>
+        <textarea aria-labelledby="preference-question-3" aria-describedby="comment-help comment-minimum" name="comment" rows="5" required minlength="20" maxlength="10000" placeholder="Напишите свой ответ…"></textarea>
         <p id="comment-minimum" class="privacy-hint"></p>
         <p id="comment-counter" class="privacy-hint" aria-live="polite">0 / 10000</p>
       </section>
@@ -227,8 +227,14 @@
     function updateCommentCounter() { commentCounter.textContent = commentField.value.length.toLocaleString() + ' / 10,000'; commentField.setCustomValidity(''); syncSubmitButton(); }
     const minMessages={ru:'Напишите не менее 20 символов.',en:'Write at least 20 characters.',es:'Escribe al menos 20 caracteres.',pt:'Escreva pelo menos 20 caracteres.',zh:'请至少输入 20 个字符。',de:'Schreibe mindestens 20 Zeichen.',ja:'20文字以上入力してください。',fr:'Écrivez au moins 20 caractères.',ar:'اكتب 20 حرفًا على الأقل.'};
     function minimumMessage(){return minMessages[document.documentElement.lang] || minMessages.en;}
-    function showMinimum(){document.getElementById('comment-minimum').textContent=minimumMessage();}
-    showMinimum(); document.getElementById('page-language').addEventListener('change',()=>setTimeout(showMinimum,0));
+    function showMinimum() {
+      document.getElementById('comment-minimum').textContent = minimumMessage();
+      if (commentField.validity.customError) commentField.setCustomValidity(minimumMessage());
+    }
+    document.addEventListener('preferences-language-changed', () => {
+      showMinimum();
+      if (!result.hidden) renderSummary();
+    });
     commentField.addEventListener('input', updateCommentCounter);
     const motivationInputs = [...form.querySelectorAll('input[name="motivation"]')];
     const noMotivation = motivationInputs.find(input => input.value === 'none');
@@ -241,6 +247,11 @@
       commentField.setCustomValidity(commentField.value.trim().length < 20 ? minimumMessage() : '');
       const firstInvalid = [...form.querySelectorAll('[required]')].find(field => !field.checkValidity());
       if (firstInvalid) { firstInvalid.reportValidity(); return; }
+      renderSummary();
+      result.hidden = false;
+      result.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+    function renderSummary() {
       const locale = window.preferenceLocale || {};
       const scopeIndex = {none:0,preapproved:1,veto:2,trust_conditions:3,unlimited:4,other:5}[selected('scope')[0]];
       const motivationIndexes = {desires:0,reality:1,hope:2,similarity:3,understanding:4,contribute:5,curiosity:6,other:7,none:8};
@@ -251,9 +262,7 @@
       const comment = commentField.value.trim();
       if (comment) lines.push('<strong>' + headings[2] + ':</strong> ' + comment.replace(/[&<>"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[char])));
       summary.innerHTML = lines.join('<br><br>');
-      result.hidden = false;
-      result.scrollIntoView({behavior:'smooth',block:'start'});
-    });
+    }
     document.getElementById('reset-form').addEventListener('click', () => {
       form.querySelectorAll('input').forEach(input => { input.checked = false; });
       commentField.value = '';

@@ -50,31 +50,6 @@ const translations = {
     "author-confirm": "I confirm that this answer expresses my own opinion and understand that it will be published publicly. I may discuss other people or imagine what they might want, but I will not present guesses about their wishes as their confirmed views.",
     "author-required": "Please confirm that your answer expresses your own opinion.",
     "privacy": "Your main survey answer is public and can be used for AI analysis. Leave out contact details, sensitive information and anything that could identify you or others.",
-    "q2Options": [
-      "Appearance or body",
-      "Character or personality",
-      "Lifestyle or habits",
-      "Everything I consider necessary",
-      "I would change nothing",
-      "I would let them decide what to change",
-      "Other"
-    ],
-    "q3Options": [
-      "Respect their wishes",
-      "Try to reach an agreement",
-      "Do what I wanted anyway",
-      "It would depend on the situation",
-      "Other"
-    ],
-    "q4Options": [
-      "Leave the person as they are",
-      "Help them and improve their life",
-      "Change them according to my own ideas",
-      "Use them for their own interests",
-      "Let the person decide their own fate",
-      "Not sure",
-      "Other"
-    ],
     "genderOptions": [
       "Man",
       "Woman",
@@ -142,31 +117,6 @@ const translations = {
     "author-confirm": "Подтверждаю, что ответ выражает моё собственное мнение и что я понимаю: он будет опубликован публично. Я могу рассуждать о других людях и представлять, чего они могли бы хотеть, но не буду выдавать предположения об их желаниях за подтверждённое мнение этих людей.",
     "author-required": "Подтверди, что ответ выражает твоё собственное мнение.",
     "privacy": "Ваш ответ в основном опросе будет общедоступным и может использоваться для ИИ-анализа. Не указывайте контакты, чувствительные сведения и данные, по которым можно узнать вас или других людей.",
-    "q2Options": [
-      "Внешность или тело",
-      "Характер или личность",
-      "Образ жизни или привычки",
-      "Всё, что посчитал бы нужным",
-      "Ничего не стал бы менять",
-      "Предоставил бы ему самому решать, что менять",
-      "Другое"
-    ],
-    "q3Options": [
-      "Уважал бы его желания",
-      "Попытался бы договориться",
-      "Всё равно поступил бы по-своему",
-      "Решение зависело бы от ситуации",
-      "Другое"
-    ],
-    "q4Options": [
-      "Оставить человека как есть",
-      "Помочь ему и улучшить его жизнь",
-      "Изменить его в соответствии со своими представлениями",
-      "Использовать его в собственных интересах",
-      "Предоставить ему возможность самому решать свою судьбу",
-      "Затрудняюсь ответить",
-      "Другое"
-    ],
     "genderOptions": [
       "Мужчина",
       "Женщина",
@@ -226,31 +176,6 @@ const translations = {
     "share-copied": "Enlace copiado. ¡Compártelo con otras personas!",
     "share-failed": "No se pudo compartir automáticamente. Copia la dirección del sitio.",
     "share-text": "THE HUMAN EXPERIMENT - Un experimento mental mundial abierto",
-    "q2Options": [
-      "Apariencia o cuerpo",
-      "Carácter o personalidad",
-      "Estilo de vida o hábitos",
-      "Todo lo que considere necesario",
-      "No cambiaría nada",
-      "Dejaría que decidiera qué cambiar",
-      "Otro"
-    ],
-    "q3Options": [
-      "Respetar sus deseos",
-      "Intentar llegar a un acuerdo",
-      "Haría lo que quisiera de todos modos",
-      "Dependería de la situación",
-      "Otro"
-    ],
-    "q4Options": [
-      "Dejar a la persona como está",
-      "Ayudarla y mejorar su vida",
-      "Cambiarla según mis ideas",
-      "Usarla para mis propios intereses",
-      "Dejar que decida su destino",
-      "No estoy seguro",
-      "Otro"
-    ],
     "genderOptions": [
       "Hombre",
       "Mujer",
@@ -318,31 +243,6 @@ const translations = {
     "share-copied": "Ligação copiada. Partilha-a com outras pessoas!",
     "share-failed": "Não foi possível partilhar automaticamente. Copia o endereço do site.",
     "share-text": "THE HUMAN EXPERIMENT - Uma experiência mental mundial aberta",
-    "q2Options": [
-      "Aparência ou corpo",
-      "Caráter ou personalidade",
-      "Estilo de vida ou hábitos",
-      "Tudo o que eu considerar necessário",
-      "Não mudaria nada",
-      "Deixaria a pessoa decidir o que mudar",
-      "Outro"
-    ],
-    "q3Options": [
-      "Respeitar os desejos dela",
-      "Tentar chegar a um acordo",
-      "Faria o que eu quisesse mesmo assim",
-      "Dependeria da situação",
-      "Outro"
-    ],
-    "q4Options": [
-      "Deixar a pessoa como está",
-      "Ajudá-la e melhorar sua vida",
-      "Mudá-la conforme minhas ideias",
-      "Usá-la em meu próprio interesse",
-      "Deixar a pessoa decidir seu destino",
-      "Não tenho certeza",
-      "Outro"
-    ],
     "genderOptions": [
       "Homem",
       "Mulher",
@@ -410,31 +310,6 @@ const translations = {
     "share-copied": "链接已复制。分享给其他人吧！",
     "share-failed": "无法自动分享，请手动复制网站地址。",
     "share-text": "THE HUMAN EXPERIMENT - 一项开放的全球思想实验",
-    "q2Options": [
-      "外貌或身体",
-      "性格或个性",
-      "生活方式或习惯",
-      "我认为有必要改变的一切",
-      "什么也不改变",
-      "让对方决定改变什么",
-      "其他"
-    ],
-    "q3Options": [
-      "尊重对方的意愿",
-      "尝试达成共识",
-      "仍然按自己的想法做",
-      "视情况而定",
-      "其他"
-    ],
-    "q4Options": [
-      "保持原样",
-      "帮助对方并改善其生活",
-      "按照自己的想法改变对方",
-      "为了自己的利益利用对方",
-      "让对方决定自己的命运",
-      "不确定",
-      "其他"
-    ],
     "genderOptions": [
       "男性",
       "女性",
@@ -502,31 +377,6 @@ const translations = {
     "share-copied": "Link kopiert. Teile ihn mit anderen!",
     "share-failed": "Automatisches Teilen nicht möglich. Bitte kopiere die Website-Adresse.",
     "share-text": "THE HUMAN EXPERIMENT - Ein offenes weltweites Gedankenexperiment",
-    "q2Options": [
-      "Aussehen oder Körper",
-      "Charakter oder Persönlichkeit",
-      "Lebensstil oder Gewohnheiten",
-      "Alles, was ich für nötig halte",
-      "Ich würde nichts ändern",
-      "Ich würde die Person selbst entscheiden lassen",
-      "Sonstiges"
-    ],
-    "q3Options": [
-      "Ihre Wünsche respektieren",
-      "Eine Einigung suchen",
-      "Trotzdem tun, was ich will",
-      "Es kommt auf die Situation an",
-      "Sonstiges"
-    ],
-    "q4Options": [
-      "Die Person so lassen, wie sie ist",
-      "Ihr helfen und ihr Leben verbessern",
-      "Sie nach meinen Vorstellungen ändern",
-      "Sie für eigene Interessen nutzen",
-      "Die Person über ihr Schicksal entscheiden lassen",
-      "Unsicher",
-      "Sonstiges"
-    ],
     "genderOptions": [
       "Mann",
       "Frau",
@@ -594,31 +444,6 @@ const translations = {
     "share-copied": "リンクをコピーしました。ぜひ共有してください！",
     "share-failed": "自動共有できませんでした。サイトのアドレスをコピーしてください。",
     "share-text": "THE HUMAN EXPERIMENT - 世界に開かれた思考実験",
-    "q2Options": [
-      "外見や身体",
-      "性格や人格",
-      "生活様式や習慣",
-      "必要だと思うすべて",
-      "何も変えない",
-      "何を変えるか本人に決めてもらう",
-      "その他"
-    ],
-    "q3Options": [
-      "本人の希望を尊重する",
-      "合意を目指す",
-      "それでも自分の望むとおりにする",
-      "状況による",
-      "その他"
-    ],
-    "q4Options": [
-      "そのままにする",
-      "助けて生活を改善する",
-      "自分の考えに合わせて変える",
-      "自分の利益のために利用する",
-      "本人に運命を決めてもらう",
-      "わからない",
-      "その他"
-    ],
     "genderOptions": [
       "男性",
       "女性",
@@ -686,31 +511,6 @@ const translations = {
     "share-copied": "Lien copié. Partagez-le avec d’autres personnes !",
     "share-failed": "Partage automatique impossible. Copiez l’adresse du site.",
     "share-text": "THE HUMAN EXPERIMENT - Une expérience de pensée mondiale ouverte",
-    "q2Options": [
-      "Apparence ou corps",
-      "Caractère ou personnalité",
-      "Mode de vie ou habitudes",
-      "Tout ce que je juge nécessaire",
-      "Je ne changerais rien",
-      "Je le laisserais décider quoi changer",
-      "Autre"
-    ],
-    "q3Options": [
-      "Respecter ses souhaits",
-      "Essayer de trouver un accord",
-      "Faire quand même ce que je veux",
-      "Cela dépendrait de la situation",
-      "Autre"
-    ],
-    "q4Options": [
-      "Laisser la personne telle quelle",
-      "L’aider et améliorer sa vie",
-      "La changer selon mes idées",
-      "L’utiliser à mes propres fins",
-      "La laisser décider de son destin",
-      "Je ne sais pas",
-      "Autre"
-    ],
     "genderOptions": [
       "Homme",
       "Femme",
@@ -778,31 +578,6 @@ const translations = {
     "share-copied": "تم نسخ الرابط. شاركه مع الآخرين!",
     "share-failed": "تعذّرت المشاركة تلقائيًا. يُرجى نسخ عنوان الموقع يدويًا.",
     "share-text": "THE HUMAN EXPERIMENT - تجربة فكرية عالمية مفتوحة",
-    "q2Options": [
-      "المظهر أو الجسد",
-      "الشخصية أو الطباع",
-      "نمط الحياة أو العادات",
-      "كل ما أراه ضروريًا",
-      "لن أغيّر شيئًا",
-      "أترك له قرار ما يريد تغييره",
-      "أخرى"
-    ],
-    "q3Options": [
-      "احترام رغباته",
-      "محاولة التوصل إلى اتفاق",
-      "فعل ما أريده على أي حال",
-      "يعتمد على الموقف",
-      "أخرى"
-    ],
-    "q4Options": [
-      "ترك الشخص كما هو",
-      "مساعدته وتحسين حياته",
-      "تغييره وفق أفكاري",
-      "استغلاله لمصالحي",
-      "ترك الشخص يقرر مصيره",
-      "لست متأكدًا",
-      "أخرى"
-    ],
     "genderOptions": [
       "رجل",
       "امرأة",
@@ -918,7 +693,7 @@ function renderLanguage(lang) {
   const wordmark=document.querySelector('.wordmark');
   if(wordmark) wordmark.setAttribute('aria-label', activeLanguage==='ar' ? 'الصفحة الرئيسية لتجربة الإنسان' : ({ru:'Главная - The Human Experiment',es:'Inicio - The Human Experiment',pt:'Início - The Human Experiment',zh:'The Human Experiment 首页',de:'The Human Experiment Startseite',ja:'The Human Experiment ホーム',fr:'Accueil - The Human Experiment'}[activeLanguage] || 'The Human Experiment home'));
   languageSelect.setAttribute('aria-label', ({ru:'Язык',es:'Idioma',pt:'Idioma',zh:'语言',de:'Sprache',ja:'言語',fr:'Langue',ar:'اللغة'}[activeLanguage] || 'Language'));
-  renderOptions('q2-options',t.q2Options,'q2'); renderOptions('q3-options',t.q3Options,'q3'); renderOptions('q4-options',t.q4Options,'q4');
+  renderOptions('q2-options',QUESTION_OPTIONS.q2[activeLanguage],'q2'); renderOptions('q3-options',QUESTION_OPTIONS.q3[activeLanguage],'q3'); renderOptions('q4-options',QUESTION_OPTIONS.q4[activeLanguage],'q4');
   renderOptions('gender-options',t.genderOptions,'gender',true);
   if(charCount) charCount.textContent=`${answer.value.length} / 10000`;
   languageSelect.value=activeLanguage;

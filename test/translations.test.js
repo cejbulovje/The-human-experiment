@@ -194,10 +194,8 @@ test('every homepage translation key and placeholder exists in all nine locales'
 });
 
 test('the active personal-preferences questionnaire translates all existing answer options', () => {
-  const script = readFileSync(new URL('../public/preferences-i18n.js', import.meta.url), 'utf8');
-  const start = script.indexOf('const questionnaire = {');
-  const end = script.indexOf('  function apply()', start);
-  const questionnaire = runInNewContext(script.slice(start, end) + '\nquestionnaire');
+  const script = readFileSync(new URL('../public/preference-questions.js', import.meta.url), 'utf8');
+  const questionnaire = runInNewContext(script + '\npreferenceQuestions');
 
   assert.deepEqual(Object.keys(questionnaire).sort(), [...locales].sort());
   for (const locale of locales) {
@@ -221,5 +219,27 @@ test('both homepage role actions and the strengthened survey prompt are localize
     const values = locales.map(locale => localized[locale][key]);
     assert.ok(values.every(value => typeof value === 'string' && value.trim()), key);
     assert.equal(new Set(values).size, locales.length, key);
+  }
+});
+
+
+test('published option labels map to the same survey choice in all nine languages', () => {
+  const server = readFileSync(new URL('../src/index.js', import.meta.url), 'utf8');
+  const stored = runInNewContext(server.match(/const OPTIONS = [\s\S]*?\n};/)[0] + '\nOPTIONS');
+  const options = readFileSync(new URL('../public/survey-options.js', import.meta.url), 'utf8');
+  const results = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
+  const translate = results.slice(results.indexOf('function translateOption('), results.indexOf('function makeBars('));
+  for (const lang of locales) {
+    const ui = runInNewContext(options + '\n' + translate + '\n({translateOption, QUESTION_OPTIONS})', {lang});
+    for (const question of ['q2','q3','q4']) {
+      const labels = ui.QUESTION_OPTIONS[question][lang];
+      assert.equal(labels.length,stored[question].en.length);
+      assert.equal(new Set(labels).size, labels.length);
+      stored[question].en.forEach((english,index) => {
+        const pair = english + ' / ' + stored[question].ru[index];
+        assert.equal(ui.translateOption(question,pair),labels[index]);
+        if (lang !== 'en') assert.notEqual(labels[index],english);
+      });
+    }
   }
 });
