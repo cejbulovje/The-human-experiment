@@ -33,22 +33,28 @@
   <main class="shell">
     <section class="intro">
       <p class="eyebrow" data-i18n="eyebrow">AN OPEN WORLDWIDE THOUGHT EXPERIMENT</p>
-      <h1 data-i18n="title">For the first time, we will decide one person’s fate together. What will happen?</h1>
-      <div id="localized-intro-copy"></div>
-      <p class="prompt" data-i18n="prompt">Your voice is part of this choice. What decision will you make?</p>
+      <h1 data-i18n="title">What would humanity decide about one person’s life?</h1>
+      <div id="localized-intro-copy">
+        <p class="lead" data-i18n="intro1">Imagine one person voluntarily giving humanity full authority over their life, body, identity and future. People around the world would propose what to do and try to reach a collective decision.</p>
+        <p data-i18n="intro2">You can explore two roles. In the main survey, imagine helping decide what happens to the volunteer. In the personal preferences preview, imagine being that volunteer and consider what you would entrust to others.</p>
+        <p data-i18n="intro3">There is no morally correct answer set in advance. You can propose a change, leave the decision to the person, or choose to leave their life entirely as it is.</p>
+        <p data-i18n="intro4">We want to learn what these choices reveal about humanity: our desires, values, contradictions, and how we think together about freedom and trust.</p>
+        <p data-i18n="intro5">The transfer of power exists only in the imagined scenario. The person keeps all their rights. Any practical stage would require separate informed consent, and the person could refuse any proposal or withdraw at any time.</p>
+      </div>
+      <p class="prompt" data-i18n="prompt">What would you propose if you had a say in this person’s future?</p>
       <a class="primary-survey-cta" href="#survey-form" data-i18n="start-survey">Take the survey</a>
 <section class="results-teaser">
-      <div><p class="eyebrow" data-i18n="results-eyebrow">THE COLLECTIVE PICTURE</p><h2 data-i18n="results-title">What will people choose?</h2><p data-i18n="results-copy">Individual answers are available from the start. Aggregate statistics will open after the first 100 valid responses.</p></div>
+      <div><p class="eyebrow" data-i18n="results-eyebrow">THE COLLECTIVE PICTURE</p><h2 data-i18n="results-title">How did people respond in the decision-maker role?</h2><p data-i18n="results-copy">Written responses are public. Aggregate statistics first appear at 100 valid responses, counting the project author’s example.</p></div>
       <a class="text-link" href="/results.html" data-i18n="view-results">View results <span aria-hidden="true">↗</span></a>
     </section>
 
     </section>
 
     <form id="survey-form" class="survey-card">
-      <div class="form-heading"><span class="step-number">01</span><div><h2 data-i18n="q1">Tell us what you would do</h2><p data-i18n="q1help">Answer in your own words. There are no expected answers.</p></div></div>
+      <div class="form-heading"><span class="step-number">01</span><div><h2 data-i18n="q1">What would you do if you had a say in this person’s future?</h2><p data-i18n="q1help">Answer in your own words. There are no expected answers.</p></div></div>
       <label class="field-label" for="free-answer" data-i18n="answer-label">Your answer</label>
       <textarea id="free-answer" name="freeAnswer" minlength="20" maxlength="10000" rows="5" required data-i18n-placeholder="answer-placeholder" placeholder="I would…"></textarea>
-      <div class="field-meta"><span data-i18n="private-note">Your submitted answer will be public without an author signature and used for AI analysis. Do not include identifying information you do not want to make public.</span><span id="char-count">0 / 10000</span></div>
+      <div class="field-meta"><span data-i18n="private-note">Your main survey answer is public and can be used for AI analysis. Leave out contact details, sensitive information and anything that could identify you or others.</span><span id="char-count">0 / 10000</span></div>
 
       <div class="question-block author-confirmation">
         <div class="form-heading"><span class="step-number">✓</span><div><h2 data-i18n="author-title">Before you submit</h2><p data-i18n="author-help">Your answer should express your own view.</p></div></div>
@@ -56,17 +62,17 @@
       </div>
 
       <div class="question-block">
-        <div class="form-heading"><span class="step-number">02</span><div><h2 data-i18n="q2">If you could change this person, what would you change first?</h2><p data-i18n="single-choice">Choose one answer.</p></div></div>
+        <div class="form-heading"><span class="step-number">02</span><div><h2 data-i18n="q2">If you could change something about this person, what, if anything, would you change first?</h2><p data-i18n="single-choice">Choose one answer.</p></div></div>
         <div class="options" id="q2-options"></div>
       </div>
 
       <div class="question-block">
-        <div class="form-heading"><span class="step-number">03</span><div><h2 data-i18n="q3">If this person's wishes conflicted with yours, what would you do?</h2><p data-i18n="single-choice">Choose one answer.</p></div></div>
+        <div class="form-heading"><span class="step-number">03</span><div><h2 data-i18n="q3">If the person’s wishes conflicted with your own, how would you respond?</h2><p data-i18n="single-choice">Choose one answer.</p></div></div>
         <div class="options" id="q3-options"></div>
       </div>
 
       <div class="question-block">
-        <div class="form-heading"><span class="step-number">04</span><div><h2 data-i18n="q4">What do you think most people would want to do in this situation?</h2><p data-i18n="single-choice">Choose one answer.</p></div></div>
+        <div class="form-heading"><span class="step-number">04</span><div><h2 data-i18n="q4">What do you think most people would choose to do in this scenario?</h2><p data-i18n="single-choice">Choose one answer.</p></div></div>
         <div class="options" id="q4-options"></div>
       </div>
 
@@ -97,13 +103,13 @@
       <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
       <button class="share-button post-submit-share" id="post-submit-share" type="button" data-i18n-share hidden>Share the experiment</button>
       <div class="post-submit-support" id="post-submit-support" hidden><p id="support-thanks-title">If you’d like to help the experiment grow</p><p id="support-thanks-copy">Support options are coming soon.</p><a href="mailto:mankindexperiment@gmail.com?subject=Support%20THE%20HUMAN%20EXPERIMENT" id="support-thanks-link">Support the project</a></div>
-      <p class="privacy-copy" data-i18n="privacy">Your answer will be published publicly without an author signature and used for AI analysis. Do not include contact details or identifying information you do not want to make public.</p>
+      <p class="privacy-copy" data-i18n="privacy">Your main survey answer is public and can be used for AI analysis. Leave out contact details, sensitive information and anything that could identify you or others.</p>
     </form>
 
     <section class="preferences-cta" aria-labelledby="preferences-cta-title">
       <p class="eyebrow" data-i18n="preferences-eyebrow">ANOTHER SIDE OF THE QUESTION</p>
-      <h2 id="preferences-cta-title" data-i18n="preferences-title">What if the decision were about you?</h2>
-      <p data-i18n="preferences-copy">Explore a separate, optional thought experiment about what you would want for your own life. This is a research prototype; no answers are sent or saved.</p>
+      <h2 id="preferences-cta-title" data-i18n="preferences-title">Imagine being the volunteer</h2>
+      <p data-i18n="preferences-copy">Explore what you would let humanity decide about your own life. This preview keeps your answers in the page and does not send or save them.</p>
       <a class="text-link" href="/preferences.html"><span data-i18n="preferences-link">Explore hypothetical preferences</span> <span aria-hidden="true">↗</span></a>
     </section>
 

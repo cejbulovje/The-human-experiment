@@ -192,3 +192,24 @@ test('every homepage translation key and placeholder exists in all nine locales'
       'homepage placeholder "' + key + '" must exist in every locale');
   }
 });
+
+test('the active personal-preferences questionnaire translates all existing answer options', () => {
+  const script = readFileSync(new URL('../public/preferences-i18n.js', import.meta.url), 'utf8');
+  const start = script.indexOf('const questionnaire = {');
+  const end = script.indexOf('  function apply()', start);
+  const questionnaire = runInNewContext(script.slice(start, end) + '\nquestionnaire');
+
+  assert.deepEqual(Object.keys(questionnaire).sort(), [...locales].sort());
+  for (const locale of locales) {
+    const entry = questionnaire[locale];
+    for (const [key, count] of Object.entries({ questions: 3, helpers: 3, scope: 6, motivation: 9, summaryLabels: 3 })) {
+      assert.equal(entry[key].length, count, `${locale}: ${key}`);
+      assert.ok(entry[key].every(value => typeof value === 'string' && value.trim()), `${locale}: ${key}`);
+    }
+    assert.ok(entry.free.trim() && entry.noSelection.trim(), locale);
+    if (locale !== 'en') {
+      assert.notEqual(entry.questions[0], questionnaire.en.questions[0], locale);
+      assert.notEqual(entry.scope[0], questionnaire.en.scope[0], locale);
+    }
+  }
+});

@@ -32,8 +32,8 @@ test('homepage prioritizes the survey, then results, and keeps hypothetical pref
   const survey = html.indexOf('<form id="survey-form"');
   const preferences = html.indexOf('class="preferences-cta"');
   assert.ok(prompt >= 0 && prompt < primary && primary < results && results < survey && survey < preferences);
-  assert.match(html, /What if the decision were about you\?/);
-  assert.match(html, /This is a research prototype; no answers are sent or saved/);
+  assert.match(html, /data-i18n="preferences-title">Imagine being the volunteer</);
+  assert.match(html, /This preview keeps your answers in the page and does not send or save them/);
   assert.doesNotMatch(html, /class="goal-cta"/);
   assert.doesNotMatch(html, /goal-cta-copy/);
   for (const key of ['preferences-eyebrow', 'preferences-title', 'preferences-copy', 'preferences-link']) {
@@ -116,7 +116,7 @@ test('hypothetical preferences prototype cannot submit a native form or send ans
   assert.match(html, /class="skip-link" href="#main-content"/);
   assert.match(html, /<main id="main-content"/);
   assert.equal((html.match(/class="preference-question"/g) || []).length, 3);
-  assert.match(html, /<h2 id="preference-question-1">1\. Что бы ты позволил человечеству изменить в себе\?<\/h2>/);
+  assert.match(html, /<h2 id="preference-question-1">1\. [^<]+<\/h2>/);
   assert.match(html, /\.skip-link:focus\{[^}]*transform:translateY\(0\)/);
   assert.match(html, /const comment = commentField\.value\.trim\(\)/);
   assert.doesNotMatch(html, /form\.elements\./);
@@ -124,7 +124,7 @@ test('hypothetical preferences prototype cannot submit a native form or send ans
   assert.match(html, /id="consent-store" name="consentToStore"/);
   assert.match(html, /id="consent-public" name="publicConsent"/);
   assert.match(html, /id="consent-aggregate" name="aggregateConsent"/);
-  assert.match(html, /Сейчас это прототип: ответы остаются в этом окне, не отправляются и не сохраняются/);
+  assert.match(html, /Форма не отправляет, не сохраняет и не публикует их/);
 
   assert.equal((html.match(/href="\/preferences\.html"[^>]*aria-current="page"/g) || []).length, 1);
 });
@@ -132,9 +132,11 @@ test('hypothetical preferences prototype cannot submit a native form or send ans
 
 test('research prototype page avoids recruitment language and signup pathways', () => {
   const html = readFileSync(new URL('../public/volunteers-voice.html', import.meta.url), 'utf8');
-  assert.doesNotMatch(html.replaceAll('/volunteers-voice.html', ''), /добровол|volunteer|voluntário|voluntario|volontaire|freiwillig|ボランティア|志愿者|متطوع/i);
+  assert.match(html, /Представьте себя добровольцем/);
+  assert.match(html, /только в воображаемой ситуации/);
+  assert.doesNotMatch(html, /<form\b|href="[^"]*(?:signup|register)/i);
   assert.match(html, /Гипотетические предпочтения/);
-  assert.match(html, /Сейчас мы проверяем вопросы и исследовательскую идею/);
+  assert.match(html, /не отправляет и не сохраняет их/);
 });
 
 

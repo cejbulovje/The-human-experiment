@@ -65,13 +65,13 @@
   <main id="main-content" class="shell">
     <section class="intro">
       <p class="eyebrow">ГОЛОС ЧЕЛОВЕКА</p>
-      <h1>Если бы решение принимали о вашей жизни - чего хотели бы вы?</h1>
-      <p class="lead">Это отдельный гипотетический ответ для исследования. Он помогает понять, чего люди хотели бы для себя, если бы кто-то другой получил власть принимать решения об их судьбе.</p>
-      <p class="prototype-tag">Тестовая версия · данные не отправляются</p>
+      <h1>Представьте себя добровольцем</h1>
+      <p class="lead">Представьте, что вы добровольно передаёте человечеству полную власть над своей жизнью, телом, личностью и будущим. Как бы вы хотели, чтобы люди воспользовались этой властью, и в чём попросили бы их воздержаться?</p>
+      <p class="prototype-tag">Пробная форма личных предпочтений</p>
     </section>
 
     <div id="preferences-form" class="preference-card">
-      <div class="status-note"><strong data-pref-i18n="noticeTitle">Перед началом:</strong> <span data-pref-i18n="notice">Сейчас это прототип: ответы остаются в этом окне, не отправляются и не сохраняются.</span></div>
+      <div class="status-note"><strong data-pref-i18n="noticeTitle">Перед началом:</strong> <span data-pref-i18n="notice">Передача власти происходит только в воображаемой ситуации. Человек сохраняет все свои права. Любой практический этап потребовал бы отдельного информированного согласия. Человек мог бы отклонить любое предложение или выйти из проекта в любой момент. Ответы в форме личных предпочтений остаются на открытой странице. Форма не отправляет, не сохраняет и не публикует их. При загрузке проверки на ботов Cloudflare может обрабатывать технические данные.</span></div>
       <div class="consent-group" hidden style="display:none">
         <label class="preference-option consent-option"><input type="checkbox" id="consent-store" name="consentToStore"><span><strong data-pref-i18n="consentStore"></strong></span></label>
         <label class="preference-option consent-option"><input type="checkbox" id="consent-public" name="publicConsent"><span><strong data-pref-i18n="consentPublic"></strong></span></label>
@@ -79,7 +79,7 @@
       </div>
 
       <section class="preference-question">
-        <h2 id="preference-question-1">1. Что бы ты позволил человечеству изменить в себе?</h2><p>Выбери один вариант.</p>
+        <h2 id="preference-question-1">1. Что, если вообще что-либо, вы позволили бы человечеству изменить в себе?</h2><p>Выберите один вариант.</p>
         <div class="preference-options" role="radiogroup" aria-labelledby="preference-question-1">
           <label class="preference-option"><input type="radio" name="scope" value="none" required><span>Ничего не позволил бы менять.</span></label>
           <label class="preference-option"><input type="radio" name="scope" value="preapproved"><span>Позволил бы менять только то, что сам заранее одобрил.</span></label>
@@ -90,7 +90,7 @@
         </div>
       </section>
       <section class="preference-question">
-        <h2 id="preference-question-2">2. Что могло бы побудить тебя участвовать в этом эксперименте?</h2><p>Можно выбрать несколько вариантов.</p>
+        <h2 id="preference-question-2">2. Что могло бы побудить вас стать добровольцем в этой воображаемой ситуации?</h2><p>Можно выбрать несколько вариантов.</p>
         <div class="preference-options" role="group" aria-labelledby="preference-question-2">
           <label class="preference-option"><input type="checkbox" name="motivation" value="desires"><span>Желание узнать, чего люди на самом деле хотят и о чём мечтают.</span></label>
           <label class="preference-option"><input type="checkbox" name="motivation" value="reality"><span>Желание увидеть, каким человечество является на самом деле, за пределами публичных образов и заявлений.</span></label>
@@ -104,8 +104,8 @@
         </div>
       </section>
       <section class="preference-question">
-        <h2 id="preference-question-3">3. Что бы ты позволил человечеству сделать с твоей жизнью, если бы доверил ему решать твою судьбу?</h2><p>Расскажи своими словами, на что ты был бы готов, а что для тебя было бы недопустимо.</p>
-        <textarea name="comment" rows="5" required minlength="20" maxlength="10000" placeholder="Напиши свой ответ…"></textarea>
+        <h2 id="preference-question-3">3. Какие решения о своей жизни и будущем вы доверили бы человечеству?</h2><p>Расскажите, что вы позволили бы решать другим и какие решения, если такие есть, оставили бы за собой.</p>
+        <textarea name="comment" rows="5" required minlength="20" maxlength="10000" placeholder="Напишите свой ответ…"></textarea>
         <p id="comment-minimum" class="privacy-hint"></p>
         <p id="comment-counter" class="privacy-hint" aria-live="polite">0 / 10000</p>
       </section>
@@ -225,7 +225,7 @@
       } finally { deleting = false; syncDeleteButton(); }
     });
     function updateCommentCounter() { commentCounter.textContent = commentField.value.length.toLocaleString() + ' / 10,000'; commentField.setCustomValidity(''); syncSubmitButton(); }
-    const minMessages={ru:'Напиши не менее 20 символов.',en:'Write at least 20 characters.',es:'Escribe al menos 20 caracteres.',pt:'Escreva pelo menos 20 caracteres.',zh:'请至少输入 20 个字符。',de:'Schreibe mindestens 20 Zeichen.',ja:'20文字以上入力してください。',fr:'Écrivez au moins 20 caractères.',ar:'اكتب 20 حرفًا على الأقل.'};
+    const minMessages={ru:'Напишите не менее 20 символов.',en:'Write at least 20 characters.',es:'Escribe al menos 20 caracteres.',pt:'Escreva pelo menos 20 caracteres.',zh:'请至少输入 20 个字符。',de:'Schreibe mindestens 20 Zeichen.',ja:'20文字以上入力してください。',fr:'Écrivez au moins 20 caractères.',ar:'اكتب 20 حرفًا على الأقل.'};
     function minimumMessage(){return minMessages[document.documentElement.lang] || minMessages.en;}
     function showMinimum(){document.getElementById('comment-minimum').textContent=minimumMessage();}
     showMinimum(); document.getElementById('page-language').addEventListener('change',()=>setTimeout(showMinimum,0));
