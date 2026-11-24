@@ -1,0 +1,44 @@
+name: Publish current site
+
+on:
+  push:
+    branches:
+      - experiment/hypothetical-preferences-prototype
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-current-site
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out the site
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install locked dependencies
+        run: npm ci
+      - name: Test the site
+        run: npm test
+      - name: Publish the latest commit
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_SITE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: b8976ae65aff527daafcfef0d6077c58
+        run: |
+          current_ref="$(git ls-remote --exit-code origin "$GITHUB_REF")"
+          current_sha="${current_ref%%$'\t'*}"
+          if [ "$current_sha" != "$GITHUB_SHA" ]; then
+            echo "A newer commit is ready for publication."
+            exit 0
+          fi
+          ./node_modules/.bin/wrangler preview --name experiment/hypothetical-preferences-prototype --message "$GITHUB_SHA"
