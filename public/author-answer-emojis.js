@@ -16,10 +16,17 @@
       const intro = document.createElement('p');
       intro.className = 'author-answer-intro';
       intro.textContent = introText[locale];
-      article.insertBefore(intro, article.querySelector('.author-answer-toggle'));
+      article.querySelector('.author-answer-body').prepend(intro);
+      const preview = article.querySelector('.author-answer-preview');
+      const text = intro.textContent + '\n\n' + preview.textContent;
+      const previewLimit = 1200;
+      const cut = text.lastIndexOf(' ', previewLimit);
+      preview.textContent = text.length > previewLimit
+        ? text.slice(0, cut > 900 ? cut : previewLimit).trimEnd() + '…'
+        : text;
     }
     const emojis = ['🤝','👁️','🛡️','🌐',null,'🪞','❤️','🌱',null,null,null,'🔄','💡','🌍','🎨','✨','🌟','🤝','🌍❤️'];
-    const paragraphs = article.querySelectorAll('.author-answer-body p');
+    const paragraphs = article.querySelectorAll('.author-answer-body p:not(.author-answer-intro)');
     paragraphs.forEach((p, i) => {
       const emoji = emojis[i];
       if (emoji && !p.textContent.endsWith(emoji)) p.textContent += ' ' + emoji;
