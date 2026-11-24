@@ -331,6 +331,10 @@ async function preferencesStats(env){
     for(const value of AUTHOR_PERSONAL_ANSWERS.motivation){totals.questions.motivation[value]=(totals.questions.motivation[value]||0)+1;}
     totals.unlocked=totals.total>=THRESHOLD;
     totals.remaining=Math.max(0,THRESHOLD-totals.total);
+    if(!totals.unlocked){
+      totals.languages={};
+      totals.questions={scope:{},motivation:{}};
+    }
     return json({ok:true,stats:totals});
   }catch{return json({error:'preferences_unavailable'},503);}
 }

@@ -2,12 +2,12 @@
   const translations = {
     en: { menu: "Menu", home: "THE HUMAN EXPERIMENT home", projectLinks: "Project links", language: "Language", preferences: "Hypothetical preferences", research: "Personal preferences", goal: "Goal of the experiment", privacy: "Privacy", results: "Results", share: "Share the experiment", survey: "Survey", contact: "Contact", support: "Support the project", shared: "Link copied", failed: "Could not share", emailCopied: "Email copied!", emailCopyFailed: "Could not copy. Select the email address and copy it.", copyEmail: "Copy email address " },
     ru: { menu: "Меню", home: "Главная - THE HUMAN EXPERIMENT", projectLinks: "Ссылки проекта", language: "Язык", preferences: "Гипотетические предпочтения", research: "Гипотетические предпочтения", goal: "Цель эксперимента", privacy: "Конфиденциальность", results: "Результаты", share: "Поделиться экспериментом", survey: "Опрос", contact: "Контакты", support: "Поддержать проект", shared: "Ссылка скопирована", failed: "Не удалось поделиться", emailCopied: "Адрес электронной почты скопирован!", emailCopyFailed: "Не удалось скопировать. Выдели адрес и скопируй его.", copyEmail: "Скопировать адрес электронной почты " },
-    es: { menu: "Menú", home: "Inicio – THE HUMAN EXPERIMENT", projectLinks: "Enlaces del proyecto", language: "Idioma", preferences: "Preferencias hipotéticas", research: "Preferencias hipotéticas", goal: "Objetivo del experimento", privacy: "Privacidad", results: "Resultados", share: "Compartir el experimento", survey: "Encuesta", contact: "Contacto", support: "Apoyar el proyecto", shared: "Enlace copiado", failed: "No se pudo compartir", emailCopied: "¡Correo copiado!", emailCopyFailed: "No se pudo copiar. Selecciona y copia la dirección.", copyEmail: "Copiar dirección de correo " },
-    pt: { menu: "Menu", home: "Início – THE HUMAN EXPERIMENT", projectLinks: "Links do projeto", language: "Idioma", preferences: "Preferências hipotéticas", research: "Preferências hipotéticas", goal: "Objetivo da experiência", privacy: "Privacidade", results: "Resultados", share: "Compartilhar a experiência", survey: "Questionário", contact: "Contato", support: "Apoiar o projeto", shared: "Link copiado", failed: "Não foi possível compartilhar", emailCopied: "E-mail copiado!", emailCopyFailed: "Não foi possível copiar. Selecione e copie o endereço.", copyEmail: "Copiar endereço de e-mail " },
+    es: { menu: "Menú", home: "Inicio - THE HUMAN EXPERIMENT", projectLinks: "Enlaces del proyecto", language: "Idioma", preferences: "Preferencias hipotéticas", research: "Preferencias hipotéticas", goal: "Objetivo del experimento", privacy: "Privacidad", results: "Resultados", share: "Compartir el experimento", survey: "Encuesta", contact: "Contacto", support: "Apoyar el proyecto", shared: "Enlace copiado", failed: "No se pudo compartir", emailCopied: "¡Correo copiado!", emailCopyFailed: "No se pudo copiar. Selecciona y copia la dirección.", copyEmail: "Copiar dirección de correo " },
+    pt: { menu: "Menu", home: "Início - THE HUMAN EXPERIMENT", projectLinks: "Links do projeto", language: "Idioma", preferences: "Preferências hipotéticas", research: "Preferências hipotéticas", goal: "Objetivo da experiência", privacy: "Privacidade", results: "Resultados", share: "Compartilhar a experiência", survey: "Questionário", contact: "Contato", support: "Apoiar o projeto", shared: "Link copiado", failed: "Não foi possível compartilhar", emailCopied: "E-mail copiado!", emailCopyFailed: "Não foi possível copiar. Selecione e copie o endereço.", copyEmail: "Copiar endereço de e-mail " },
     zh: { menu: "菜单", home: "THE HUMAN EXPERIMENT 首页", projectLinks: "项目链接", language: "语言", preferences: "假设性偏好", research: "假设性偏好", goal: "实验目标", privacy: "隐私政策", results: "结果", share: "分享实验", survey: "问卷", contact: "联系", support: "支持项目", shared: "链接已复制", failed: "无法分享", emailCopied: "邮箱已复制！", emailCopyFailed: "无法复制，请选中邮箱地址并手动复制。", copyEmail: "复制邮箱地址 " },
-    de: { menu: "Menü", home: "Startseite – THE HUMAN EXPERIMENT", projectLinks: "Projektlinks", language: "Sprache", preferences: "Hypothetische Präferenzen", research: "Hypothetische Präferenzen", goal: "Ziel des Experiments", privacy: "Datenschutz", results: "Ergebnisse", share: "Experiment teilen", survey: "Umfrage", contact: "Kontakt", support: "Projekt unterstützen", shared: "Link kopiert", failed: "Teilen nicht möglich", emailCopied: "E-Mail kopiert!", emailCopyFailed: "Kopieren fehlgeschlagen. Markiere die E-Mail-Adresse und kopiere sie.", copyEmail: "E-Mail-Adresse kopieren " },
+    de: { menu: "Menü", home: "Startseite - THE HUMAN EXPERIMENT", projectLinks: "Projektlinks", language: "Sprache", preferences: "Hypothetische Präferenzen", research: "Hypothetische Präferenzen", goal: "Ziel des Experiments", privacy: "Datenschutz", results: "Ergebnisse", share: "Experiment teilen", survey: "Umfrage", contact: "Kontakt", support: "Projekt unterstützen", shared: "Link kopiert", failed: "Teilen nicht möglich", emailCopied: "E-Mail kopiert!", emailCopyFailed: "Kopieren fehlgeschlagen. Markiere die E-Mail-Adresse und kopiere sie.", copyEmail: "E-Mail-Adresse kopieren " },
     ja: { menu: "メニュー", home: "THE HUMAN EXPERIMENT ホーム", projectLinks: "プロジェクトへのリンク", language: "言語", preferences: "仮定上の希望", research: "仮定上の希望", goal: "実験の目的", privacy: "プライバシー", results: "結果", share: "実験を共有", survey: "アンケート", contact: "お問い合わせ", support: "プロジェクトを支援", shared: "リンクをコピーしました", failed: "共有できませんでした", emailCopied: "メールアドレスをコピーしました！", emailCopyFailed: "コピーできませんでした。メールアドレスを選択してコピーしてください。", copyEmail: "メールアドレスをコピー " },
-    fr: { menu: "Menu", home: "Accueil – THE HUMAN EXPERIMENT", projectLinks: "Liens du projet", language: "Langue", preferences: "Préférences hypothétiques", research: "Préférences hypothétiques", goal: "Objectif de l’expérience", privacy: "Confidentialité", results: "Résultats", share: "Partager l’expérience", survey: "Questionnaire", contact: "Contact", support: "Soutenir le projet", shared: "Lien copié", failed: "Partage impossible", emailCopied: "Adresse e-mail copiée !", emailCopyFailed: "Copie impossible. Sélectionnez et copiez l’adresse e-mail.", copyEmail: "Copier l’adresse e-mail " },
+    fr: { menu: "Menu", home: "Accueil - THE HUMAN EXPERIMENT", projectLinks: "Liens du projet", language: "Langue", preferences: "Préférences hypothétiques", research: "Préférences hypothétiques", goal: "Objectif de l’expérience", privacy: "Confidentialité", results: "Résultats", share: "Partager l’expérience", survey: "Questionnaire", contact: "Contact", support: "Soutenir le projet", shared: "Lien copié", failed: "Partage impossible", emailCopied: "Adresse e-mail copiée !", emailCopyFailed: "Copie impossible. Sélectionnez et copiez l’adresse e-mail.", copyEmail: "Copier l’adresse e-mail " },
     ar: { menu: "القائمة", home: "الصفحة الرئيسية لتجربة الإنسان", projectLinks: "روابط المشروع", language: "اللغة", preferences: "التفضيلات المفترضة", research: "التفضيلات المفترضة", goal: "هدف التجربة", privacy: "الخصوصية", results: "النتائج", share: "مشاركة التجربة", survey: "الاستبيان", contact: "اتصل بنا", support: "ادعم المشروع", shared: "تم نسخ الرابط", failed: "تعذرت المشاركة", emailCopied: "تم نسخ البريد الإلكتروني!", emailCopyFailed: "تعذر النسخ. حدّد عنوان البريد الإلكتروني وانسخه.", copyEmail: "نسخ عنوان البريد الإلكتروني " },
   };
   const language = () => {
@@ -84,15 +84,15 @@
     });
   });
   const shareLabels = {
-    en: { title: "Share via", copy: "Copy link", email: "Email", close: "Close", copied: "Link copied", instagram: "Instagram", instagramHint: "Open Instagram and paste the invitation into your post or message." },
-    ru: { title: "Поделиться через", copy: "Скопировать ссылку", email: "Электронная почта", close: "Закрыть", copied: "Ссылка скопирована", instagram: "Instagram", instagramHint: "Открой Instagram и вставь приглашение в публикацию или сообщение." },
-    es: { title: "Compartir mediante", copy: "Copiar enlace", email: "Correo electrónico", close: "Cerrar", copied: "Enlace copiado", instagram: "Instagram", instagramHint: "Abre Instagram y pega la invitación en tu publicación o mensaje." },
-    pt: { title: "Partilhar através de", copy: "Copiar ligação", email: "E-mail", close: "Fechar", copied: "Ligação copiada", instagram: "Instagram", instagramHint: "Abra o Instagram e cole o convite na sua publicação ou mensagem." },
-    zh: { title: "分享方式", copy: "复制链接", email: "电子邮件", close: "关闭", copied: "链接已复制", instagram: "Instagram", instagramHint: "打开 Instagram，将邀请内容粘贴到帖子或消息中。" },
-    de: { title: "Teilen über", copy: "Link kopieren", email: "E-Mail", close: "Schließen", copied: "Link kopiert", instagram: "Instagram", instagramHint: "Öffne Instagram und füge die Einladung in deinen Beitrag oder deine Nachricht ein." },
-    ja: { title: "共有方法", copy: "リンクをコピー", email: "メール", close: "閉じる", copied: "リンクをコピーしました", instagram: "Instagram", instagramHint: "Instagramを開き、招待文を投稿またはメッセージに貼り付けてください。" },
-    fr: { title: "Partager via", copy: "Copier le lien", email: "E-mail", close: "Fermer", copied: "Lien copié", instagram: "Instagram", instagramHint: "Ouvrez Instagram et collez l’invitation dans votre publication ou votre message." },
-    ar: { title: "المشاركة عبر", copy: "نسخ الرابط", email: "البريد الإلكتروني", close: "إغلاق", copied: "تم نسخ الرابط", instagram: "Instagram", instagramHint: "افتح إنستغرام والصق الدعوة في منشورك أو رسالتك." },
+    en: { invitation: "One person gave humanity full power over their fate. What would you do with their life? And what if it were yours?", title: "Share via", copy: "Copy link", email: "Email", close: "Close", copied: "Link copied", instagram: "Instagram", instagramHint: "Open Instagram and paste the invitation into your post or message." },
+    ru: { invitation: "Один человек отдал человечеству полную власть над собой. Что вы с ним сделаете? А если этим человеком окажетесь вы?", title: "Поделиться через", copy: "Скопировать ссылку", email: "Электронная почта", close: "Закрыть", copied: "Ссылка скопирована", instagram: "Instagram", instagramHint: "Открой Instagram и вставь приглашение в публикацию или сообщение." },
+    es: { invitation: "Una persona entregó a la humanidad todo el poder sobre su destino. ¿Qué harías con su vida? ¿Y si fuera la tuya?", title: "Compartir mediante", copy: "Copiar enlace", email: "Correo electrónico", close: "Cerrar", copied: "Enlace copiado", instagram: "Instagram", instagramHint: "Abre Instagram y pega la invitación en tu publicación o mensaje." },
+    pt: { invitation: "Uma pessoa entregou à humanidade todo o poder sobre o próprio destino. O que você faria com a vida dela? E se fosse a sua?", title: "Partilhar através de", copy: "Copiar ligação", email: "E-mail", close: "Fechar", copied: "Ligação copiada", instagram: "Instagram", instagramHint: "Abra o Instagram e cole o convite na sua publicação ou mensagem." },
+    zh: { invitation: "有一个人把决定自己命运的全部权力交给了全人类。你会怎样安排这个人的人生？如果那个人是你呢？", title: "分享方式", copy: "复制链接", email: "电子邮件", close: "关闭", copied: "链接已复制", instagram: "Instagram", instagramHint: "打开 Instagram，将邀请内容粘贴到帖子或消息中。" },
+    de: { invitation: "Ein Mensch hat der Menschheit die volle Macht über sein Schicksal gegeben. Was würdest du mit seinem Leben tun? Und wenn es deines wäre?", title: "Teilen über", copy: "Link kopieren", email: "E-Mail", close: "Schließen", copied: "Link kopiert", instagram: "Instagram", instagramHint: "Öffne Instagram und füge die Einladung in deinen Beitrag oder deine Nachricht ein." },
+    ja: { invitation: "ある人が自分の運命を決めるすべての権限を人類に委ねました。あなたならどうしますか？ その人が自分だったら？", title: "共有方法", copy: "リンクをコピー", email: "メール", close: "閉じる", copied: "リンクをコピーしました", instagram: "Instagram", instagramHint: "Instagramを開き、招待文を投稿またはメッセージに貼り付けてください。" },
+    fr: { invitation: "Une personne a confié à l’humanité tout pouvoir sur son destin. Que ferais-tu de sa vie ? Et si c’était la tienne ?", title: "Partager via", copy: "Copier le lien", email: "E-mail", close: "Fermer", copied: "Lien copié", instagram: "Instagram", instagramHint: "Ouvrez Instagram et collez l’invitation dans votre publication ou votre message." },
+    ar: { invitation: "سلّم شخص للبشرية كامل السلطة على مصيره. ماذا ستفعل بحياته؟ وماذا لو كانت حياتك أنت؟", title: "المشاركة عبر", copy: "نسخ الرابط", email: "البريد الإلكتروني", close: "إغلاق", copied: "تم نسخ الرابط", instagram: "Instagram", instagramHint: "افتح إنستغرام والصق الدعوة في منشورك أو رسالتك." },
   };
   let shareDialog;
   const getShareDialog = () => {
@@ -121,8 +121,8 @@
     shareDialog.querySelector('.share-dialog-close').addEventListener('click', () => shareDialog.close());
     shareDialog.addEventListener('click', event => { if (event.target === shareDialog) shareDialog.close(); });
     shareDialog.querySelector('[data-share-service="instagram"]').addEventListener('click', async () => {
-      const t = translations[language()] || translations.en;
-      const invitation = t.share + ' – ' + location.origin + '/';
+      const labels = shareLabels[language()] || shareLabels.en;
+      const invitation = labels.invitation + '\n' + location.origin + '/';
       try {
         if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(invitation);
         else {
@@ -133,7 +133,7 @@
           const copied = document.execCommand('copy'); helper.remove();
           if (!copied) throw new Error('copy_failed');
         }
-        shareDialog.querySelector('.share-dialog-status').textContent = (shareLabels[language()] || shareLabels.en).copied + ' – ' + ((shareLabels[language()] || shareLabels.en).instagramHint || shareLabels.en.instagramHint);
+        shareDialog.querySelector('.share-dialog-status').textContent = (shareLabels[language()] || shareLabels.en).copied + ' - ' + ((shareLabels[language()] || shareLabels.en).instagramHint || shareLabels.en.instagramHint);
       } catch {
         shareDialog.querySelector('.share-dialog-status').textContent = (translations[language()] || translations.en).failed;
       }
@@ -158,11 +158,10 @@
     return shareDialog;
   };
   const openShareDialog = () => {
-    const t = translations[language()];
     const labels = shareLabels[language()] || shareLabels.en;
     const dialog = getShareDialog();
     const url = location.origin + '/';
-    const message = t.share + ' – ' + url;
+    const message = labels.invitation + '\n' + url;
     dialog.querySelector('#share-dialog-title').textContent = labels.title;
     dialog.querySelector('.share-dialog-close').setAttribute('aria-label', labels.close);
     dialog.querySelector('[data-share-service="email"]').textContent = labels.email;
@@ -170,13 +169,13 @@
     dialog.querySelector('[data-share-service="instagram"]').textContent = labels.instagram || shareLabels.en.instagram;
     dialog.querySelector('[data-share-service="copy"]').textContent = labels.copy;
     dialog.querySelector('[data-share-service="whatsapp"]').href = 'https://wa.me/?text=' + encodeURIComponent(message);
-    dialog.querySelector('[data-share-service="telegram"]').href = 'https://t.me/share/url?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(t.share);
+    dialog.querySelector('[data-share-service="telegram"]').href = 'https://t.me/share/url?url=' + encodeURIComponent(url) + '&text=' + encodeURIComponent(labels.invitation);
     dialog.querySelector('[data-share-service="facebook"]').href = 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url);
-    dialog.querySelector('[data-share-service="x"]').href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(t.share) + '&url=' + encodeURIComponent(url);
+    dialog.querySelector('[data-share-service="x"]').href = 'https://twitter.com/intent/tweet?text=' + encodeURIComponent(labels.invitation) + '&url=' + encodeURIComponent(url);
     dialog.querySelector('[data-share-service="viber"]').href = 'viber://forward?text=' + encodeURIComponent(message);
-    dialog.querySelector('[data-share-service="reddit"]').href = 'https://www.reddit.com/submit?url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(t.share);
+    dialog.querySelector('[data-share-service="reddit"]').href = 'https://www.reddit.com/submit?url=' + encodeURIComponent(url) + '&title=' + encodeURIComponent(labels.invitation);
     dialog.querySelector('[data-share-service="linkedin"]').href = 'https://www.linkedin.com/sharing/share-offsite/?url=' + encodeURIComponent(url);
-    dialog.querySelector('[data-share-service="pinterest"]').href = 'https://www.pinterest.com/pin/create/button/?url=' + encodeURIComponent(url) + '&description=' + encodeURIComponent(t.share);
+    dialog.querySelector('[data-share-service="pinterest"]').href = 'https://www.pinterest.com/pin/create/button/?url=' + encodeURIComponent(url) + '&description=' + encodeURIComponent(labels.invitation);
     dialog.querySelector('[data-share-service="threads"]').href = 'https://www.threads.net/';
     dialog.querySelector('[data-share-service="email"]').href = 'mailto:?subject=' + encodeURIComponent('THE HUMAN EXPERIMENT') + '&body=' + encodeURIComponent(message);
     dialog.querySelector('.share-dialog-status').textContent = '';
@@ -186,6 +185,13 @@
     button.addEventListener('click', openShareDialog);
   });
   document.querySelectorAll('.site-menu-details').forEach(details => {
+    const trigger = details.querySelector('summary');
+    details.addEventListener('keydown', event => {
+      if (event.key !== 'Escape' || !details.open) return;
+      event.preventDefault();
+      details.open = false;
+      trigger?.focus();
+    });
     document.addEventListener('click', event => { if (!details.contains(event.target)) details.open = false; });
     details.querySelectorAll('a').forEach(link => link.addEventListener('click', () => { details.open = false; }));
   });
@@ -220,7 +226,7 @@
         logo.setAttribute('aria-hidden', 'true');
         brand.append(logo, document.createTextNode('THE HUMAN EXPERIMENT'));
         const after = source.slice(match.index + match[0].length);
-        const dash = after.match(/^(\s*[-‐‑–—]\s*)/);
+        const dash = after.match(/^(\s*[-‐‑\u2013\u2014]\s*)/);
         if (dash) {
           brand.append(document.createTextNode(' -\u00a0'));
           cursor = match.index + match[0].length + dash[0].length;

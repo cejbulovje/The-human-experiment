@@ -478,7 +478,21 @@ test('publication and aggregate consent select independent sets of personal answ
     assert.equal(statsResponse.status, 200);
     const {stats} = await statsResponse.json();
     assert.equal(stats.participantTotal, 2);
-    assert.equal(stats.questions.scope.none, 2);
+    assert.equal(stats.unlocked, false);
+    assert.deepEqual(stats.languages, {});
+    assert.deepEqual(stats.questions, {scope:{},motivation:{}});
+
+    for (let id = 5; id <= 101; id++) {
+      insert.run(id, 'en', JSON.stringify({scope:'none',motivation:[]}), `answer-${id}`, '2026-10-01', 0, 1);
+    }
+    const unlockedResponse = await worker.fetch(new Request('https://example.test/api/preferences/stats'), env);
+    assert.equal(unlockedResponse.status, 200);
+    const {stats: unlocked} = await unlockedResponse.json();
+    assert.equal(unlocked.unlocked, true);
+    assert.equal(unlocked.total, 100);
+    assert.equal(unlocked.participantTotal, 99);
+    assert.equal(unlocked.questions.scope.none, 99);
+    assert.equal(unlocked.languages.en, 99);
     const aiResponse = await worker.fetch(new Request('https://example.test/api/ai-analysis', {method:'POST'}), {});
     assert.equal(aiResponse.status, 503);
     assert.deepEqual(await aiResponse.json(), {error:'ai_unavailable'});
@@ -557,7 +571,8 @@ test('personal preferences consent UI wires Turnstile, consent-gated save/delete
       assert.ok(line.includes(`${key}:`), `missing ${key} in ${lang}`);
     }
   }
-  assert.ok(page.includes('https://challenges.cloudflare.com/turnstile/v0/api.js'));
+  assert.doesNotMatch(page, /<script[^>]+src="https:\/\/challenges\.cloudflare\.com\/turnstile/);
+  assert.match(page, /if \(preferencesSavingEnabled\) \{[^}]*turnstileScript\.src = 'https:\/\/challenges\.cloudflare\.com\/turnstile\/v0\/api\.js';/);
   assert.ok(page.includes('data-sitekey="0x4AAAAAAFXnc77nuap7FdMr"'));
   assert.ok(page.includes("fetch('/api/preferences'"));
   assert.ok(page.includes("fetch('/api/preferences/delete'"));

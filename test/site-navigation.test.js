@@ -104,7 +104,7 @@ test('hypothetical preferences does not submit a native form and starts with sav
   assert.doesNotMatch(html, /<form\b/i);
   assert.doesNotMatch(html, /type="submit"/i);
   assert.match(html, /let preferencesSavingEnabled = false;/);
-  assert.match(html, /Ничего не отправлено и не сохранено/);
+  assert.match(html, /Сводка остаётся на открытой странице/);
   assert.match(html, /class="skip-link" href="#main-content"/);
   assert.match(html, /<main id="main-content"/);
   assert.equal((html.match(/class="preference-question"/g) || []).length, 3);
@@ -124,11 +124,12 @@ test('hypothetical preferences does not submit a native form and starts with sav
 
 test('research prototype page avoids recruitment language and signup pathways', () => {
   const html = readFileSync(new URL('../public/volunteers-voice.html', import.meta.url), 'utf8');
-  assert.match(html, /Представьте себя добровольцем/);
+  assert.match(html, /Теперь человек, которого они могут изменить, - вы/);
   assert.match(html, /только в воображаемой ситуации/);
   assert.doesNotMatch(html, /<form\b|href="[^"]*(?:signup|register)/i);
   assert.match(html, /Гипотетические предпочтения/);
-  assert.match(html, /не отправляет и не сохраняет их/);
+  assert.match(html, /Пробная форма\.|пробная форма\./);
+  assert.match(html, /Написанное останется на открытой странице/);
 });
 
 
@@ -136,7 +137,7 @@ test('public navigation does not recruit volunteers', () => {
   const files = ['index.html', 'preferences.html', 'results.html', 'volunteers-voice.html'];
   for (const name of files) {
     const html = readFileSync(new URL('../public/' + name, import.meta.url), 'utf8');
-    const previewRoleLink = /<a class="role-action" href="\/preferences\.html" aria-describedby="preferences-preview" data-i18n="preferences-link">Imagine being the volunteer<\/a>/;
+    const previewRoleLink = /<a class="role-action" href="\/preferences\.html" aria-describedby="preferences-preview" data-i18n="preferences-link">[^<]+<\/a>/;
     const navigation = name === 'index.html' ? html.replace(previewRoleLink, '') : html;
     const controls = [...navigation.matchAll(/<(?:a|button)\b[^>]*>([\s\S]*?)<\/(?:a|button)>/g)].map(match => match[1]).join(' ');
     assert.doesNotMatch(controls, /добровол|volunteer|voluntário|voluntario|volontaire|freiwillig|ボランティア|志愿者|متطوع/i, name + ' contains recruitment terminology');

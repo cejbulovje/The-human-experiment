@@ -173,7 +173,7 @@ test('Arabic hypothetical-preferences labels do not say default preferences', ()
   for (const [name, source] of [['homepage', app], ['results', results], ['preferences page', preferences]]) {
     assert.doesNotMatch(source, /التفضيلات الافتراضية/, name + ' contains outdated Arabic wording');
   }
-  assert.match(app, /"preferences-link": "تخيّل أنك الشخص المتطوّع"/);
+  assert.match(app, /"preferences-link": "أضع نفسي مكانه"/);
   assert.match(preferences, /title:'التفضيلات المفترضة - THE HUMAN EXPERIMENT'/);
   assert.match(preferences, /voiceCard:'التفضيلات المفترضة'/);
 });

@@ -9,10 +9,9 @@
   <link rel="stylesheet" href="/styles.css">
   <script src="/nav.js" defer></script>
   <script src="/preference-questions.js" defer></script><script src="/preferences-i18n.js" defer></script>
-  <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
   <style>
     .skip-link{position:absolute;top:8px;left:8px;z-index:1000;transform:translateY(-160%);padding:10px 14px;background:#fff;color:#20221f;border:2px solid #254c3b;border-radius:8px;font-weight:700}
-    .skip-link:focus{transform:translateY(0);outline:3px solid #92b9a1;outline-offset:2px}
+    .skip-link:focus{transform:translateY(0);outline:3px solid var(--accent);outline-offset:2px}
     .prototype-tag{display:inline-flex;align-items:center;gap:8px;padding:7px 11px;border:1px solid #c9cbc2;border-radius:999px;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
     .preference-card{max-width:850px;margin:28px auto;padding:clamp(20px,4vw,40px);background:#fff;border:1px solid var(--line,#deded6);border-radius:22px}
     .preference-question{padding:22px 0;border-bottom:1px solid #e7e6df}
@@ -62,8 +61,8 @@
   <main id="main-content" class="shell">
     <section class="intro">
       <p class="eyebrow">ГОЛОС ЧЕЛОВЕКА</p>
-      <h1>Представьте себя добровольцем</h1>
-      <p class="lead">Представьте, что вы добровольно передаёте человечеству полную власть над своей жизнью, телом, личностью и будущим. Как бы вы хотели, чтобы люди воспользовались этой властью, и в чём попросили бы их воздержаться?</p>
+      <h1>Что вы готовы отдать на волю других?</h1>
+      <p class="lead">Представьте, что люди уже собрались, чтобы обсудить ваше будущее. Вы можете доверить им один выбор, поставить свои условия, позволить решить всё или оставить все решения за собой.</p>
       <p class="prototype-tag">Пробная форма личных предпочтений</p>
     </section>
 
@@ -105,25 +104,25 @@
         </div>
       </section>
       <section class="preference-question">
-        <h2 id="preference-question-3">3. Какие решения о своей жизни и будущем вы доверили бы человечеству?</h2><p id="comment-help">Расскажите, что вы позволили бы решать другим и какие решения, если такие есть, оставили бы за собой.</p>
+        <h2 id="preference-question-3">3. Какие решения о своей жизни и будущем вы доверили бы человечеству?</h2><p id="comment-help">Расскажите, что вы доверили бы другим и какие решения оставили бы за собой. Здесь можно написать всё, для чего не нашлось готового варианта.</p>
         <textarea aria-labelledby="preference-question-3" aria-describedby="comment-help comment-minimum" name="comment" rows="5" required minlength="20" maxlength="10000" placeholder="Напишите свой ответ…"></textarea>
         <p id="comment-minimum" class="privacy-hint"></p>
         <p id="comment-counter" class="privacy-hint" aria-live="polite">0 / 10000</p>
       </section>
 
-      <div class="turnstile-wrap"><div class="cf-turnstile" id="preferences-turnstile" data-sitekey="0x4AAAAAAFXnc77nuap7FdMr" data-theme="light" data-callback="onPreferenceTurnstileSuccess" data-expired-callback="onPreferenceTurnstileExpired" data-error-callback="onPreferenceTurnstileExpired"></div></div>
-      <p class="privacy-hint" id="preferences-submit-status" role="status" aria-live="polite" data-pref-i18n="saveDisabled"></p>
+      <div class="turnstile-wrap" hidden><div class="cf-turnstile" id="preferences-turnstile" data-sitekey="0x4AAAAAAFXnc77nuap7FdMr" data-theme="light" data-callback="onPreferenceTurnstileSuccess" data-expired-callback="onPreferenceTurnstileExpired" data-error-callback="onPreferenceTurnstileExpired"></div></div>
+      <p class="privacy-hint" id="preferences-submit-status" hidden role="status" aria-live="polite" data-pref-i18n="saveDisabled"></p>
       <div class="action-row">
-        <button type="button" id="submit-preferences" disabled data-pref-i18n="saveButton">Сохранить мой ответ</button>
-        <button type="button" id="show-summary">Посмотреть сводку ответа</button>
+        <button type="button" id="submit-preferences" hidden disabled data-pref-i18n="saveButton">Сохранить мой ответ</button>
+        <button type="button" id="show-summary">Посмотреть мой ответ</button>
         <button type="button" class="secondary" id="reset-form">Очистить форму</button>
       </div>
 
       <section id="prototype-result" class="prototype-result" aria-live="polite" hidden>
-        <h2>Ваш гипотетический ответ</h2>
+        <h2>Вот что вы доверили бы другим</h2>
         <p id="result-summary"></p>
         <p><strong>Статус:</strong> гипотетический ответ для исследовательского прототипа.</p>
-        <p id="preferences-preview-summary">Ничего не отправлено и не сохранено. Сейчас мы только исследуем гипотезу и проверяем формат вопросов.</p>
+        <p id="preferences-preview-summary">Сводка остаётся на открытой странице.</p>
         <div class="action-row"><button type="button" class="secondary" id="edit-response">Вернуться к ответу</button><a class="text-link" href="/results.html">Перейти к результатам ↗</a></div>
       </section>
       <section id="preferences-saved-confirmation" class="prototype-result" aria-live="polite" hidden>
@@ -132,7 +131,7 @@
         <p><strong data-pref-i18n="deleteTokenLabel"></strong></p>
         <code id="deletion-token-display"></code>
       </section>
-      <section class="preference-question deletion-panel" aria-labelledby="delete-preferences-title">
+      <section class="preference-question deletion-panel" hidden aria-labelledby="delete-preferences-title">
         <h2 id="delete-preferences-title" data-pref-i18n="deleteTitle"></h2>
         <p data-pref-i18n="deleteBody"></p>
         <label class="preference-option deletion-token-field"><span data-pref-i18n="deleteTokenLabel"></span><input type="password" id="deletion-token" autocomplete="off" disabled></label>
@@ -179,6 +178,12 @@
       preferencesSavingEnabled = config?.canSave === true;
       preferencesDeletionEnabled = config?.canDelete === true;
       if (preferencesSavingEnabled) {
+        form.querySelector('.turnstile-wrap').hidden = false;
+        submitButton.hidden = false;
+        submitStatus.hidden = false;
+        const turnstileScript = document.createElement('script');
+        turnstileScript.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+        document.head.append(turnstileScript);
         form.querySelector('.consent-group').hidden = false;
         form.querySelector('[data-pref-i18n="previewNotice"]').hidden = true;
         document.getElementById('preferences-preview-summary').hidden = true;
@@ -186,6 +191,7 @@
         submitStatus.textContent = '';
       }
       if (preferencesDeletionEnabled) {
+        form.querySelector('.deletion-panel').hidden = false;
         deletionTokenField.disabled = false;
         form.querySelector('[data-pref-i18n="deleteDisabled"]').hidden = true;
         form.querySelector('[data-pref-i18n="deleteBody"]').hidden = true;
@@ -275,7 +281,7 @@
       const scopeLabel = (locale.scope || [])[scopeIndex] || selected('scope')[0];
       const motivations = selected('motivation').map(value => (locale.motivation || [])[motivationIndexes[value]] || value);
       const headings = locale.summaryLabels || ['Границы изменений','Мотивация','Ответ'];
-      const lines = ['<strong>' + headings[0] + ':</strong> ' + scopeLabel, '<strong>' + headings[1] + ':</strong> ' + (motivations.length ? motivations.join(', ') : (locale.noSelection || '–'))];
+      const lines = ['<strong>' + headings[0] + ':</strong> ' + scopeLabel, '<strong>' + headings[1] + ':</strong> ' + (motivations.length ? motivations.join(', ') : (locale.noSelection || '-'))];
       const comment = commentField.value.trim();
       if (comment) lines.push('<strong>' + headings[2] + ':</strong> ' + comment.replace(/[&<>"]/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[char])));
       summary.innerHTML = lines.join('<br><br>');
