@@ -102,11 +102,11 @@
     const preview = document.createElement('p');
     preview.className = 'sample-answer-preview';
     const fullText = String(kind === 'hypothetical' && !ru ? (item.textEn || item.text || '') : (item.text || ''));
-    const previewLimit = 650;
+    const previewLimit = 1200;
     let previewText = fullText;
     if (previewText.length > previewLimit) {
       const cut = previewText.lastIndexOf(' ', previewLimit);
-      previewText = previewText.slice(0, cut > 450 ? cut : previewLimit).trimEnd() + '…';
+      previewText = previewText.slice(0, cut > 900 ? cut : previewLimit).trimEnd() + '…';
     }
     preview.textContent = previewText;
 
@@ -145,7 +145,7 @@
 
     const choices = document.createElement('div');
     choices.className = 'answer-context author-questionnaire-choices';
-    choices.hidden = false;
+    choices.hidden = true;
     const choicesTitle = document.createElement('strong');
     choicesTitle.className = 'author-questionnaire-choices-title';
     choicesTitle.textContent = kind === 'hypothetical' ? ui.questionnaire : ui.additional;
@@ -206,7 +206,18 @@
     } else {
       card.append(top, preview, toggle, full, choices, actions);
     }
-    actions.append(reaction, share);
+    const choicesToggle = document.createElement('button');
+    choicesToggle.type = 'button';
+    choicesToggle.className = 'subtle-button';
+    choicesToggle.textContent = choicesTitle.textContent;
+    choices.id = card.id + '-choices';
+    choicesToggle.setAttribute('aria-controls', choices.id);
+    choicesToggle.setAttribute('aria-expanded', 'false');
+    choicesToggle.addEventListener('click', () => {
+      choices.hidden = !choices.hidden;
+      choicesToggle.setAttribute('aria-expanded', String(!choices.hidden));
+    });
+    actions.append(choicesToggle, reaction, share);
     return card;
   }
   function fillPersonalPage(page = 0) {

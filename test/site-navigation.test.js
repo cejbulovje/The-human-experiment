@@ -244,10 +244,10 @@ test('personal preview sample cards remain isolated to the personal results page
 });
 
 
-test('author collective answer shows a short intro before its expandable full text', () => {
+test('author answer shows a substantial preview before its expandable full text', () => {
   const answers = readFileSync(new URL('../public/author-answers.js', import.meta.url), 'utf8');
-  assert.match(answers, /const intro = String\(paragraphs\[0\] \|\| ''\)\.trim\(\)/);
-  assert.match(answers, /intro\.length > 220 \? intro\.slice\(0, 217\)\.trimEnd\(\) \+ '…' : intro/);
+  assert.match(answers, /const intro = paragraphs\.join\('\\n\\n'\)\.trim\(\)/);
+  assert.match(answers, /const previewLimit = 1200;/);
   assert.match(answers, /toggle\.addEventListener\('click'/);
 });
 

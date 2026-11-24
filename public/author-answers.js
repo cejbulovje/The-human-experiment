@@ -380,12 +380,13 @@
 
     const preview = document.createElement('p');
     preview.className = 'author-answer-preview';
-    if (kind === 'volunteer') {
-      preview.textContent = paragraphs[0] || '';
-    } else {
-      const intro = String(paragraphs[0] || '').trim();
-      preview.textContent = intro.length > 220 ? intro.slice(0, 217).trimEnd() + '…' : intro;
-    }
+    const intro = paragraphs.join('\n\n').trim();
+    const previewLimit = 1200;
+    const cut = intro.lastIndexOf(' ', previewLimit);
+    preview.textContent = intro.length > previewLimit
+      ? intro.slice(0, cut > 900 ? cut : previewLimit).trimEnd() + '…'
+      : intro;
+    toggle.hidden = intro.length <= previewLimit;
 
     const full = document.createElement('div');
     full.className = 'author-answer-full';
@@ -395,9 +396,9 @@
     heading.textContent = title;
     const body = document.createElement('div');
     body.className = 'author-answer-body';
-    const expandedParagraphs = kind === 'volunteer' ? paragraphs.slice(1) : paragraphs;
+    const expandedParagraphs = paragraphs;
     expandedParagraphs.forEach((paragraph, index) => {
-      const sourceIndex = kind === 'volunteer' ? index + 1 : index;
+      const sourceIndex = index;
       const p = document.createElement('p');
       p.textContent = kind === 'volunteer' && sourceIndex === 3 ? (volunteerParagraphTranslations[locale] || volunteerParagraphTranslations.en) : paragraph;
       body.append(p);
@@ -408,6 +409,7 @@
     full.append(heading, body, note);
     toggle.addEventListener('click', () => {
       const open = full.hidden;
+      preview.hidden = open;
       toggle.textContent = open ? words.hide : words.show;
       toggle.setAttribute('aria-expanded', String(open));
 
@@ -457,6 +459,22 @@
     });
     if (kind === 'volunteer') card.append(top, preview, toggle, full);
     else card.append(top, preview, toggle, full);
+
+    function attachChoices(choices, actions) {
+      choices.hidden = true;
+      choices.id = card.id + '-choices';
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'subtle-button';
+      button.textContent = choices.querySelector('strong').textContent;
+      button.setAttribute('aria-controls', choices.id);
+      button.setAttribute('aria-expanded', 'false');
+      button.addEventListener('click', () => {
+        choices.hidden = !choices.hidden;
+        button.setAttribute('aria-expanded', String(!choices.hidden));
+      });
+      actions.prepend(button);
+    }
 
     if (kind === 'collective') {
       const choices = document.createElement('div');
@@ -511,6 +529,7 @@
         }
       });
       actions.append(reaction, share);
+      attachChoices(choices, actions);
       card.append(choices, actions);
     }
 
@@ -594,6 +613,7 @@
         }
       });
 
+      attachChoices(choices, actions);
       card.append(choices, actions);
       actions.append(reaction, share);
     }
@@ -652,6 +672,7 @@
     root.hidden = false;
     answerCard.hidden = false;
     full.hidden = false;
+    answerCard.querySelector('.author-answer-preview').hidden = true;
     toggle.setAttribute('aria-expanded', 'true');
     const lang = document.getElementById('page-language')?.value || 'en';
     const words = labels[lang] || labels.en;
