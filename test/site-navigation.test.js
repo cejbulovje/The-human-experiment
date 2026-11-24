@@ -43,8 +43,8 @@ test('homepage offers both roles after the introduction and before results and t
 test('mobile header reserves space for controls and exposes keyboard focus', () => {
   const css = readFileSync(new URL('../public/styles.css', import.meta.url), 'utf8');
   assert.match(css, /\.site-menu-trigger:focus-visible\{[^}]*outline:3px solid/);
-  assert.match(css, /@media\(max-width:600px\)[\s\S]*?grid-template-columns:36px minmax\(0,1fr\) auto/);
-  assert.match(css, /@media\(max-width:370px\)[\s\S]*?grid-template-columns:34px minmax\(0,1fr\) 74px/);
+  assert.match(css, /@media\(max-width:760px\)\s*\{\s*\.topbar-centered\{[^}]*grid-template-columns:44px minmax\(0,1fr\) 44px/);
+  assert.match(css, /\.topbar-centered \.header-controls\{\s*grid-column:1 \/ -1;\s*grid-row:2;/);
 });
 
 test('shared navigation has labels for all supported locales and implements sharing', () => {
@@ -91,19 +91,19 @@ test('site menu controls meet minimum touch-target dimensions', () => {
 test('RTL layout uses direction-aware CSS for navigation and text alignment', () => {
   const css = readFileSync(new URL('../public/styles.css', import.meta.url), 'utf8');
   assert.match(css, /\.site-menu-panel\{position:absolute;inset-inline-start:0;/);
-  assert.match(css, /\.topbar-centered \.header-controls\{margin-inline-start:auto;/);
+  assert.match(css, /\.topbar-centered \.header-controls\{\s*margin-inline-start:auto;/);
   assert.match(css, /text-align:start/);
   assert.match(css, /padding-inline-start:22px/);
   assert.doesNotMatch(css, /text-align:left/);
 });
 
 
-test('hypothetical preferences prototype cannot submit a native form or send answers', () => {
+test('hypothetical preferences does not submit a native form and starts with saving disabled', () => {
   const html = readFileSync(new URL('../public/preferences.html', import.meta.url), 'utf8');
   assert.match(html, /<div id="preferences-form" class="preference-card">/);
   assert.doesNotMatch(html, /<form\b/i);
   assert.doesNotMatch(html, /type="submit"/i);
-  assert.match(html, /const preferencesSavingEnabled = false;/);
+  assert.match(html, /let preferencesSavingEnabled = false;/);
   assert.match(html, /Ничего не отправлено и не сохранено/);
   assert.match(html, /class="skip-link" href="#main-content"/);
   assert.match(html, /<main id="main-content"/);
@@ -116,7 +116,7 @@ test('hypothetical preferences prototype cannot submit a native form or send ans
   assert.match(html, /id="consent-store" name="consentToStore"/);
   assert.match(html, /id="consent-public" name="publicConsent"/);
   assert.match(html, /id="consent-aggregate" name="aggregateConsent"/);
-  assert.match(html, /Форма не отправляет, не сохраняет и не публикует их/);
+  assert.match(html, /id="preferences-preview-note"[^>]*>Эта пробная форма не отправляет и не сохраняет ответы\./);
 
   assert.equal((html.match(/href="\/preferences\.html"[^>]*aria-current="page"/g) || []).length, 1);
 });
@@ -166,11 +166,11 @@ test('both hypothetical preference pages provide all nine shared language choice
   assert.match(localized, /window\.preferenceLocale = q/);
 });
 
-test('hypothetical preference pages keep answers local and summary labels translatable', () => {
+test('hypothetical preferences keeps an unsent summary and requires server opt-in to save', () => {
   const html = readFileSync(new URL('../public/preferences.html', import.meta.url), 'utf8');
   assert.match(html, /const locale = window\.preferenceLocale/);
   assert.match(html, /locale\.summaryLabels/);
-  assert.match(html, /const preferencesSavingEnabled = false;/);
+  assert.match(html, /preferencesSavingEnabled = config\?\.canSave === true/);
   assert.match(html, /preferencesSavingEnabled && turnstileToken/);
 });
 

@@ -17,7 +17,8 @@ const translations = {
     "q1help": "Answer in your own words. There are no expected answers.",
     "answer-label": "Your answer (at least 20 characters)",
     "answer-placeholder": "I would…",
-    "private-note": "Your main survey answer is public and can be used for AI analysis. Leave out contact details, sensitive information and anything that could identify you or others.",
+    "private-note-title": "Before you answer",
+    "private-note": "Your written answer will be published and may be used for AI analysis. Do not include contact details, sensitive information, or anything that could identify you or someone else.",
     "single-choice": "Choose one answer.",
     "other-placeholder": "Please specify your answer…",
     "other-help": "Your own answer (up to 500 characters)",
@@ -49,7 +50,7 @@ const translations = {
     "author-help": "Your answer should express your own view.",
     "author-confirm": "I confirm that this answer expresses my own opinion and understand that it will be published publicly. I may discuss other people or imagine what they might want, but I will not present guesses about their wishes as their confirmed views.",
     "author-required": "Please confirm that your answer expresses your own opinion.",
-    "privacy": "Your main survey answer is public and can be used for AI analysis. Leave out contact details, sensitive information and anything that could identify you or others.",
+    "privacy": "Your written answer will appear on the public results page.",
     "genderOptions": [
       "Man",
       "Woman",
@@ -84,7 +85,8 @@ const translations = {
     "q1help": "Ответь своими словами. Здесь нет ожидаемых ответов.",
     "answer-label": "Твой ответ (не менее 20 символов)",
     "answer-placeholder": "Я бы…",
-    "private-note": "Ваш ответ в основном опросе будет общедоступным и может использоваться для ИИ-анализа. Не указывайте контакты, чувствительные сведения и данные, по которым можно узнать вас или других людей.",
+    "private-note-title": "Перед ответом",
+    "private-note": "Ваш письменный ответ будет опубликован и может использоваться для ИИ-анализа. Не указывайте контакты, чувствительные сведения и данные, по которым можно узнать вас или другого человека.",
     "single-choice": "Выбери один вариант.",
     "q2": "Если бы вы могли что-то изменить в этом человеке, что бы вы изменили в первую очередь, если вообще стали бы что-то менять?",
     "q3": "Если бы желания человека расходились с вашими, как бы вы поступили?",
@@ -116,7 +118,7 @@ const translations = {
     "author-help": "Ответ должен выражать твою собственную позицию.",
     "author-confirm": "Подтверждаю, что ответ выражает моё собственное мнение и что я понимаю: он будет опубликован публично. Я могу рассуждать о других людях и представлять, чего они могли бы хотеть, но не буду выдавать предположения об их желаниях за подтверждённое мнение этих людей.",
     "author-required": "Подтверди, что ответ выражает твоё собственное мнение.",
-    "privacy": "Ваш ответ в основном опросе будет общедоступным и может использоваться для ИИ-анализа. Не указывайте контакты, чувствительные сведения и данные, по которым можно узнать вас или других людей.",
+    "privacy": "Ваш письменный ответ появится на открытой странице результатов.",
     "genderOptions": [
       "Мужчина",
       "Женщина",
@@ -151,7 +153,8 @@ const translations = {
     "q1help": "Responde con tus propias palabras. No hay respuestas esperadas.",
     "answer-label": "Tu respuesta (al menos 20 caracteres)",
     "answer-placeholder": "Yo…",
-    "private-note": "Tu respuesta a la encuesta principal es pública y puede usarse para análisis con IA. Omite datos de contacto, información sensible y cualquier detalle que pueda identificarte a ti o a otras personas.",
+    "private-note-title": "Antes de responder",
+    "private-note": "Tu respuesta escrita se publicará y podrá usarse para análisis con IA. No incluyas datos de contacto, información sensible ni datos que permitan identificarte a ti o a otra persona.",
     "single-choice": "Elige una respuesta.",
     "q2": "Si pudieras cambiar algo de esta persona, ¿qué cambiarías primero, si es que cambiarías algo?",
     "q3": "Si sus deseos entraran en conflicto con los tuyos, ¿cómo actuarías?",
@@ -198,7 +201,7 @@ const translations = {
     "author-help": "Tu respuesta debe expresar tu propia opinión.",
     "author-confirm": "Confirmo que esta respuesta expresa mi propia opinión y entiendo que se publicará públicamente. Puedo hablar de otras personas o imaginar lo que podrían querer, pero no presentaré mis suposiciones sobre sus deseos como opiniones confirmadas por ellas.",
     "author-required": "Confirma que tu respuesta expresa tu propia opinión.",
-    "privacy": "Tu respuesta a la encuesta principal es pública y puede usarse para análisis con IA. Omite datos de contacto, información sensible y cualquier detalle que pueda identificarte a ti o a otras personas.",
+    "privacy": "Tu respuesta escrita aparecerá en la página pública de resultados.",
   },
   "pt": {
     "eyebrow": "UM EXPERIMENTO MENTAL INTERNACIONAL",
@@ -218,7 +221,8 @@ const translations = {
     "q1help": "Responda com suas próprias palavras. Não há respostas esperadas.",
     "answer-label": "Sua resposta (pelo menos 20 caracteres)",
     "answer-placeholder": "Eu…",
-    "private-note": "Sua resposta à pesquisa principal é pública e pode ser usada para análise por IA. Não inclua dados de contato, informações sensíveis ou detalhes que possam identificar você ou outras pessoas.",
+    "private-note-title": "Antes de responder",
+    "private-note": "Sua resposta escrita será publicada e poderá ser usada em análises por IA. Não inclua dados de contato, informações sensíveis ou dados que possam identificar você ou outra pessoa.",
     "single-choice": "Escolha uma resposta.",
     "q2": "Se pudesse mudar algo nessa pessoa, o que mudaria primeiro, se mudasse alguma coisa?",
     "q3": "Se os desejos dessa pessoa entrassem em conflito com os seus, como você agiria?",
@@ -265,7 +269,7 @@ const translations = {
     "author-help": "Sua resposta deve expressar sua própria opinião.",
     "author-confirm": "Confirmo que esta resposta expressa minha própria opinião e entendo que será publicada publicamente. Posso falar sobre outras pessoas ou imaginar o que elas poderiam querer, mas não apresentarei suposições sobre seus desejos como opiniões confirmadas por elas.",
     "author-required": "Confirme que sua resposta expressa sua própria opinião.",
-    "privacy": "Sua resposta à pesquisa principal é pública e pode ser usada para análise por IA. Não inclua dados de contato, informações sensíveis ou detalhes que possam identificar você ou outras pessoas.",
+    "privacy": "Sua resposta escrita aparecerá na página pública de resultados.",
   },
   "zh": {
     "eyebrow": "一项国际思想实验",
@@ -285,7 +289,8 @@ const translations = {
     "q1help": "请用自己的话回答，没有标准答案。",
     "answer-label": "你的回答（至少 20 个字符）",
     "answer-placeholder": "我会……",
-    "private-note": "你在主问卷提交的回答会公开，并可能用于人工智能分析。请勿填写联系方式、敏感信息或可识别你或他人的内容。",
+    "private-note-title": "回答前",
+    "private-note": "你的书面回答将公开发布，也可能用于人工智能分析。请勿填写联系方式、敏感信息或可识别你或他人身份的信息。",
     "single-choice": "请选择一个答案。",
     "q2": "如果你可以改变这个人的某些方面，你会先改变什么？也可以选择不改变。",
     "q3": "如果对方的愿望与你的不同，你会怎么做？",
@@ -332,7 +337,7 @@ const translations = {
     "author-help": "回答应表达你自己的观点。",
     "author-confirm": "我确认此回答表达我自己的观点，并理解它将被公开发布。我可以讨论他人或推测他们可能想要什么，但不会把对他们意愿的猜测说成他们已确认的观点。",
     "author-required": "请确认回答表达的是你自己的观点。",
-    "privacy": "你在主问卷提交的回答会公开，并可能用于人工智能分析。请勿填写联系方式、敏感信息或可识别你或他人的内容。",
+    "privacy": "你的书面回答将显示在公开的结果页面上。",
   },
   "de": {
     "eyebrow": "EIN INTERNATIONALES GEDANKENEXPERIMENT",
@@ -352,7 +357,8 @@ const translations = {
     "q1help": "Antworte in deinen eigenen Worten. Es gibt keine erwarteten Antworten.",
     "answer-label": "Deine Antwort (mindestens 20 Zeichen)",
     "answer-placeholder": "Ich würde…",
-    "private-note": "Deine Antwort in der Hauptumfrage ist öffentlich und kann für KI-Analysen verwendet werden. Verzichte auf Kontaktdaten, sensible Informationen und Angaben, an denen man dich oder andere Personen erkennen könnte.",
+    "private-note-title": "Bevor du antwortest",
+    "private-note": "Deine schriftliche Antwort wird veröffentlicht und kann für KI-Analysen verwendet werden. Gib keine Kontaktdaten, sensiblen Informationen oder Angaben an, anhand derer du oder andere Personen identifiziert werden können.",
     "single-choice": "Wähle eine Antwort.",
     "q2": "Wenn du etwas an dieser Person ändern könntest, was würdest du zuerst ändern, falls überhaupt etwas?",
     "q3": "Wie würdest du reagieren, wenn die Wünsche dieser Person deinen eigenen widersprächen?",
@@ -399,7 +405,7 @@ const translations = {
     "author-help": "Deine Antwort soll deine eigene Meinung ausdrücken.",
     "author-confirm": "Ich bestätige, dass diese Antwort meine eigene Meinung ausdrückt, und verstehe, dass sie öffentlich veröffentlicht wird. Ich darf über andere Menschen sprechen oder vermuten, was sie möchten könnten, werde solche Vermutungen aber nicht als bestätigte Ansichten dieser Personen darstellen.",
     "author-required": "Bestätige, dass deine Antwort deine eigene Meinung ausdrückt.",
-    "privacy": "Deine Antwort in der Hauptumfrage ist öffentlich und kann für KI-Analysen verwendet werden. Verzichte auf Kontaktdaten, sensible Informationen und Angaben, an denen man dich oder andere Personen erkennen könnte.",
+    "privacy": "Deine schriftliche Antwort erscheint auf der öffentlichen Ergebnisseite.",
   },
   "ja": {
     "eyebrow": "国際的な思考実験",
@@ -419,7 +425,8 @@ const translations = {
     "q1help": "自分の言葉で答えてください。正解はありません。",
     "answer-label": "あなたの回答（20文字以上）",
     "answer-placeholder": "私は…",
-    "private-note": "本アンケートへの回答は公開され、AIによる分析に使われる場合があります。連絡先、機微な情報、本人や他の人を特定できる情報は記入しないでください。",
+    "private-note-title": "回答する前に",
+    "private-note": "記述式の回答は公開され、AIによる分析に使われる場合があります。連絡先、機微な情報、あなたや他の人を特定できる情報は記入しないでください。",
     "single-choice": "1つ選んでください。",
     "q2": "この人について何か変えられるなら、最初に何を変えますか。何も変えないことも選べます。",
     "q3": "本人の希望と自分の考えが食い違ったら、どうしますか？",
@@ -466,7 +473,7 @@ const translations = {
     "author-help": "回答にはあなた自身の意見を記してください。",
     "author-confirm": "この回答が自分自身の意見を表していること、また公開されることを理解したうえで確認します。他人について述べたり、その人が何を望むか想像したりしても、その推測を本人が確認した意見として示しません。",
     "author-required": "回答があなた自身の意見であることを確認してください。",
-    "privacy": "本アンケートへの回答は公開され、AIによる分析に使われる場合があります。連絡先、機微な情報、本人や他の人を特定できる情報は記入しないでください。",
+    "privacy": "記述式の回答は公開結果ページに掲載されます。",
   },
   "fr": {
     "eyebrow": "UNE EXPÉRIENCE DE PENSÉE INTERNATIONALE",
@@ -486,7 +493,8 @@ const translations = {
     "q1help": "Répondez avec vos propres mots. Il n’y a pas de réponse attendue.",
     "answer-label": "Votre réponse (au moins 20 caractères)",
     "answer-placeholder": "Je…",
-    "private-note": "Ta réponse au questionnaire principal est publique et peut être analysée par une IA. N’indique ni coordonnées, ni informations sensibles, ni détails qui permettraient de t’identifier ou d’identifier une autre personne.",
+    "private-note-title": "Avant de répondre",
+    "private-note": "Votre réponse écrite sera publiée et pourra être utilisée pour une analyse par IA. N’indiquez ni coordonnées, ni informations sensibles, ni données permettant de vous identifier ou d’identifier une autre personne.",
     "single-choice": "Choisissez une réponse.",
     "q2": "Si tu pouvais changer quelque chose chez cette personne, que changerais-tu en premier, si tu choisissais de changer quelque chose ?",
     "q3": "Si ses souhaits étaient en désaccord avec les tiens, comment réagirais-tu ?",
@@ -533,7 +541,7 @@ const translations = {
     "author-help": "Votre réponse doit exprimer votre propre opinion.",
     "author-confirm": "Je confirme que cette réponse exprime ma propre opinion et je comprends qu’elle sera publiée publiquement. Je peux parler d’autres personnes ou imaginer ce qu’elles pourraient souhaiter, mais je ne présenterai pas mes suppositions comme leurs opinions confirmées.",
     "author-required": "Veuillez confirmer que votre réponse exprime votre propre opinion.",
-    "privacy": "Ta réponse au questionnaire principal est publique et peut être analysée par une IA. N’indique ni coordonnées, ni informations sensibles, ni détails qui permettraient de t’identifier ou d’identifier une autre personne.",
+    "privacy": "Votre réponse écrite apparaîtra sur la page publique des résultats.",
   },
   "ar": {
     "eyebrow": "تجربة فكرية دولية",
@@ -553,7 +561,8 @@ const translations = {
     "q1help": "أجب بكلماتك الخاصة. لا توجد إجابات متوقعة.",
     "answer-label": "إجابتك (20 حرفًا على الأقل)",
     "answer-placeholder": "سأ…",
-    "private-note": "إجابتك في الاستبيان الأساسي علنية وقد تُستخدم في تحليل بالذكاء الاصطناعي. لا تذكر بيانات الاتصال أو المعلومات الحساسة أو ما قد يكشف هويتك أو هوية الآخرين.",
+    "private-note-title": "قبل الإجابة",
+    "private-note": "ستُنشر إجابتك المكتوبة وقد تُستخدم في التحليل بالذكاء الاصطناعي. لا تُدرج معلومات الاتصال أو معلومات حساسة أو أي بيانات قد تكشف هويتك أو هوية شخص آخر.",
     "single-choice": "اختر إجابة واحدة.",
     "q2": "لو أمكنك تغيير شيء في هذا الشخص، فما أول ما ستغيّره إن اخترت تغيير أي شيء؟",
     "q3": "كيف ستتصرف إذا تعارضت رغبات هذا الشخص مع رغباتك؟",
@@ -600,7 +609,7 @@ const translations = {
     "author-help": "ينبغي أن تعبّر إجابتك عن رأيك الشخصي.",
     "author-confirm": "أؤكد أن هذه الإجابة تعبّر عن رأيي الشخصي وأفهم أنها ستُنشر علنًا. يمكنني مناقشة أشخاص آخرين أو تخيّل ما قد يرغبون فيه، لكنني لن أقدّم تخميناتي بشأن رغباتهم على أنها آراء مؤكدة منهم.",
     "author-required": "يرجى تأكيد أن إجابتك تعبّر عن رأيك الشخصي.",
-    "privacy": "إجابتك في الاستبيان الأساسي علنية وقد تُستخدم في تحليل بالذكاء الاصطناعي. لا تذكر بيانات الاتصال أو المعلومات الحساسة أو ما قد يكشف هويتك أو هوية الآخرين.",
+    "privacy": "ستظهر إجابتك المكتوبة في صفحة النتائج العامة.",
   }
 };
 for (const language of Object.values(translations)) {
@@ -613,15 +622,15 @@ let turnstileToken = '';
 window.onTurnstileSuccess = token => { turnstileToken = token; };
 window.onTurnstileExpired = () => { turnstileToken = ''; };
 const supportThanks = {
-  en: ["If you’d like to help the experiment grow", "Support options are coming soon.", "Support the project"],
-  ru: ["Хочешь помочь развитию эксперимента?", "Варианты поддержки появятся скоро.", "Поддержать проект"],
-  es: ["¿Quieres ayudar a que el experimento crezca?", "Pronto habrá opciones para apoyar el proyecto.", "Apoyar el proyecto"],
-  pt: ["Quer ajudar o experimento a crescer?", "Em breve haverá opções para apoiar o projeto.", "Apoiar o projeto"],
-  zh: ["想帮助这个实验继续发展吗？", "支持方式即将推出。", "支持项目"],
-  de: ["Möchtest du das Experiment unterstützen?", "Unterstützungsmöglichkeiten folgen in Kürze.", "Projekt unterstützen"],
-  ja: ["この実験の発展を応援しませんか？", "支援方法は近日公開予定です。", "プロジェクトを支援"],
-  fr: ["Envie d’aider l’expérience à se développer ?", "Les options de soutien arrivent bientôt.", "Soutenir le projet"],
-  ar: ["هل ترغب في المساعدة على تطوير التجربة؟", "ستتوفر خيارات الدعم قريبًا."]
+  en: ["If you’d like to help the experiment grow", "Support the project"],
+  ru: ["Хочешь помочь развитию эксперимента?", "Поддержать проект"],
+  es: ["¿Quieres ayudar a que el experimento crezca?", "Apoyar el proyecto"],
+  pt: ["Quer ajudar o experimento a crescer?", "Apoiar o projeto"],
+  zh: ["想帮助这个实验继续发展吗？", "支持项目"],
+  de: ["Möchtest du das Experiment unterstützen?", "Projekt unterstützen"],
+  ja: ["この実験の発展を応援しませんか？", "プロジェクトを支援"],
+  fr: ["Envie d’aider l’expérience à se développer ?", "Soutenir le projet"],
+  ar: ["هل ترغب في المساعدة على تطوير التجربة؟", "ادعم المشروع"]
 };
 const form = document.querySelector('#survey-form');
 const languageSelect = document.querySelector('#language');
@@ -677,11 +686,9 @@ function renderLanguage(lang) {
   document.body.classList.toggle('rtl-language', activeLanguage === 'ar');
   const supportText = supportThanks[activeLanguage] || supportThanks.en;
   const supportTitle = document.querySelector('#support-thanks-title');
-  const supportCopy = document.querySelector('#support-thanks-copy');
   const supportLink = document.querySelector('#support-thanks-link');
   if (supportTitle) supportTitle.textContent = supportText[0];
-  if (supportCopy) supportCopy.textContent = supportText[1];
-  if (supportLink) supportLink.textContent = supportText[2] || supportThanks.en[2];
+  if (supportLink) supportLink.textContent = supportText[1];
   document.querySelectorAll('[data-i18n]').forEach(el => {
     const key=el.dataset.i18n;
     if (Object.prototype.hasOwnProperty.call(t,key)) el.textContent=t[key];

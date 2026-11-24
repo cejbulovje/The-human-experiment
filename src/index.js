@@ -334,10 +334,14 @@ async function preferencesStats(env){
     return json({ok:true,stats:totals});
   }catch{return json({error:'preferences_unavailable'},503);}
 }
+function preferenceCapabilities(env){
+  const canDelete=env.PREFERENCES_ENABLED==='true'&&Boolean(env.DB&&env.RATE_LIMIT_SALT);
+  return {canSave:canDelete&&Boolean(env.TURNSTILE_SECRET_KEY),canDelete};
+}
 async function submitPreferences(request,env){
   // This endpoint is deliberately disabled unless explicitly enabled in the environment.
   if(env.PREFERENCES_ENABLED!=='true')return json({ok:false,error:'preferences_disabled'},503);
-  if(!env.DB||!env.TURNSTILE_SECRET_KEY||!env.RATE_LIMIT_SALT)return json({ok:false,error:'not_configured'},503);
+  if(!preferenceCapabilities(env).canSave)return json({ok:false,error:'not_configured'},503);
   const parsed=await readJsonLimited(request,70000);
   if(parsed.error)return json({ok:false,error:parsed.error},parsed.error==='too_large'?413:400);
   const body=parsed.body;
@@ -385,7 +389,7 @@ async function submitPreferences(request,env){
 }
 async function deletePreferences(request,env){
   if(env.PREFERENCES_ENABLED!=='true')return json({ok:false,error:'preferences_disabled'},503);
-  if(!env.DB||!env.RATE_LIMIT_SALT)return json({ok:false,error:'not_configured'},503);
+  if(!preferenceCapabilities(env).canDelete)return json({ok:false,error:'not_configured'},503);
   const parsed=await readJsonLimited(request,1024);
   if(parsed.error)return json({ok:false,error:parsed.error},parsed.error==='too_large'?413:400);
   const token=parsed.body?.deletionToken;
@@ -497,6 +501,7 @@ export default {
     const url=new URL(request.url);
     if(url.pathname==='/api/submit'&&request.method==='POST')return submit(request,env);
     if(url.pathname==='/api/preferences'&&request.method==='POST')return submitPreferences(request,env);
+    if(url.pathname==='/api/preferences/config'&&request.method==='GET')return json(preferenceCapabilities(env));
     if(url.pathname==='/api/preferences/public'&&request.method==='GET')return publicPreferences(request,env);
     if(url.pathname==='/api/preferences/stats'&&request.method==='GET')return preferencesStats(env);
     if(url.pathname==='/api/preferences/delete'&&request.method==='POST')return deletePreferences(request,env);

@@ -23,7 +23,7 @@ test('all supported locales have a single, complete set of public-disclosure tra
     assert.deepEqual([...new Set(duplicates)], [], `${locale} contains duplicate translation keys`);
 
     for (const key of [
-      'private-note', 'author-title', 'author-help', 'author-confirm', 'author-required', 'privacy',
+      'private-note-title', 'private-note', 'author-title', 'author-help', 'author-confirm', 'author-required', 'privacy',
       'feedback-title', 'feedback-help', 'feedback-opt-in-label',
       'feedback-email-label', 'feedback-email-placeholder', 'feedback-email-note',
       'other-placeholder', 'other-help', 'already-submitted'
@@ -136,7 +136,7 @@ test('hypothetical-preferences page defines all translation fields for every loc
   assert.equal(starts.length, locales.length, 'preferences page must define all nine locales');
   const requiredKeys = [
     'name', 'dir', 'title', 'skip', 'resultLink', 'eyebrow', 'heading', 'lead', 'tag',
-    'noticeTitle', 'notice', 'consent', 'questions', 'helpers', 'priority', 'preserve',
+    'noticeTitle', 'notice', 'previewNotice', 'consent', 'questions', 'helpers', 'priority', 'preserve',
     'wishes', 'body', 'placeholder', 'privacy', 'show', 'reset', 'summaryTitle', 'status',
     'statusText', 'notSaved', 'edit', 'results', 'summaryLabels', 'voiceEyebrow',
     'voiceHeading', 'voiceLead', 'banner', 'voiceCard', 'voiceText', 'voiceText2',

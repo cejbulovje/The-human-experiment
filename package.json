@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "wrangler dev",
     "deploy": "wrangler deploy",
+    "publish:site": "npm test && wrangler preview --name experiment/hypothetical-preferences-prototype",
     "db:init:local": "wrangler d1 execute the-human-experiment --local --file=./db/schema.sql",
     "db:init:remote": "wrangler d1 execute the-human-experiment --remote --file=./db/schema.sql",
     "db:migrate:local": "wrangler d1 execute the-human-experiment --local --file=./db/migrations/0002_public_responses.sql",

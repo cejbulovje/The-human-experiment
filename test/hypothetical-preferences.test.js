@@ -185,6 +185,17 @@ test('deletion token removes the matching preference and unknown token returns s
   assert.equal(db.records.size,0);
 });
 
+test('the form can discover saving and deletion only when configured', async () => {
+  const configuration = env => worker.fetch(new Request('https://example.test/api/preferences/config'),env);
+  const ready = {DB:createPreferencesDb(),RATE_LIMIT_SALT:'test-salt',TURNSTILE_SECRET_KEY:'test-secret'};
+  const disabled = await configuration(ready);
+  assert.equal(disabled.headers.get('cache-control'),'no-store');
+  assert.deepEqual(await disabled.json(),{canSave:false,canDelete:false});
+  assert.deepEqual(await (await configuration({PREFERENCES_ENABLED:'true'})).json(),{canSave:false,canDelete:false});
+  assert.deepEqual(await (await configuration({...ready,PREFERENCES_ENABLED:'true',TURNSTILE_SECRET_KEY:undefined})).json(),{canSave:false,canDelete:true});
+  assert.deepEqual(await (await configuration({...ready,PREFERENCES_ENABLED:'true'})).json(),{canSave:true,canDelete:true});
+});
+
 test('preference submission enforces the three-request rate limit per IP', async t => {
   const db = createPreferencesDb();
   t.mock.method(globalThis, 'fetch', async () => new Response(JSON.stringify({success:true}), {status:200,headers:{'content-type':'application/json'}}));
@@ -551,7 +562,9 @@ test('personal preferences consent UI wires Turnstile, consent-gated save/delete
   assert.ok(page.includes("fetch('/api/preferences'"));
   assert.ok(page.includes("fetch('/api/preferences/delete'"));
   assert.ok(page.includes('window.onPreferenceTurnstileSuccess'));
-  assert.ok(page.includes('const preferencesSavingEnabled = false;'));
+  assert.ok(page.includes('let preferencesSavingEnabled = false;'));
+  assert.ok(page.includes('let preferencesDeletionEnabled = false;'));
+  assert.ok(page.includes("fetch('/api/preferences/config')"));
   assert.ok(page.includes('preferencesSavingEnabled && turnstileToken && storeConsent.checked && publicConsent.checked'));
   assert.ok(index.includes("if(env.PREFERENCES_ENABLED!=='true')return json({ok:false,error:'preferences_disabled'},503)"));
   assert.equal(/maxlength="10000"/.test(page.match(/<textarea[^>]*name="comment"[^>]*>/)[0]),true);

@@ -24,7 +24,7 @@
           <a href="/privacy.html" data-menu="privacy">Privacy</a>
           <button type="button" data-site-share data-menu="share">Share the experiment</button>
           <button type="button" class="footer-contact-copy" data-contact-copy data-menu="contact">Contact</button>
-          <a href="mailto:mankindexperiment@gmail.com?subject=Support%20THE%20HUMAN%20EXPERIMENT" data-menu="support">Support the project</a>
+          <a href="/support.html" data-menu="support">Support the project</a>
         </div>
       </details>
     </nav><a class="brand-lockup header-brand-centered" href="/" aria-label="THE HUMAN EXPERIMENT home"><img src="/logo-human-crowd.webp" alt="" class="brand-mark"><span class="wordmark">THE HUMAN EXPERIMENT</span></a><div class="header-controls"><select id="language" aria-label="Language">
@@ -64,9 +64,13 @@
 
     <form id="survey-form" class="survey-card" tabindex="-1" aria-labelledby="survey-question">
       <div class="form-heading"><span class="step-number">01</span><div><h2 id="survey-question" data-i18n="q1">Imagine that humanity hypothetically gained full authority over one person’s fate. What decision would you propose?</h2><p data-i18n="q1help">Answer in your own words. There are no expected answers.</p></div></div>
+      <div class="participation-note">
+        <strong data-i18n="private-note-title">Before you answer</strong>
+        <p id="answer-publication-note" data-i18n="private-note">Your written answer will be published and may be used for AI analysis. Do not include contact details, sensitive information, or anything that could identify you or someone else.</p>
+      </div>
       <label class="field-label" for="free-answer" data-i18n="answer-label">Your answer</label>
-      <textarea id="free-answer" name="freeAnswer" minlength="20" maxlength="10000" rows="5" required data-i18n-placeholder="answer-placeholder" placeholder="I would…"></textarea>
-      <div class="field-meta"><span data-i18n="private-note">Your main survey answer is public and can be used for AI analysis. Leave out contact details, sensitive information and anything that could identify you or others.</span><span id="char-count">0 / 10000</span></div>
+      <textarea id="free-answer" name="freeAnswer" minlength="20" maxlength="10000" rows="5" required aria-describedby="answer-publication-note" data-i18n-placeholder="answer-placeholder" placeholder="I would…"></textarea>
+      <div class="field-meta"><span id="char-count">0 / 10000</span></div>
 
       <div class="question-block author-confirmation">
         <div class="form-heading"><span class="step-number">✓</span><div><h2 data-i18n="author-title">Before you submit</h2><p data-i18n="author-help">Your answer should express your own view.</p></div></div>
@@ -101,7 +105,7 @@
         <label class="option"><input id="feedback-opt-in" type="checkbox" name="feedbackOptIn"><span data-i18n="feedback-opt-in-label">I’d like to receive the final results and a thank-you email.</span></label>
         <div id="feedback-email-field" hidden>
           <label class="field-label" for="feedback-email" data-i18n="feedback-email-label">Email address</label>
-          <input id="feedback-email" name="feedbackEmail" type="email" maxlength="254" autocomplete="email" data-i18n-placeholder="feedback-email-placeholder" placeholder="you@example.com" style="display:block;width:100%;padding:13px 15px;border:1px solid #c9cbc2;border-radius:12px;background:#fff;color:var(--ink);font:inherit">
+          <input id="feedback-email" name="feedbackEmail" type="email" maxlength="254" autocomplete="email" data-i18n-placeholder="feedback-email-placeholder" placeholder="you@example.com">
           <p class="privacy-copy" data-i18n="feedback-email-note">Stored separately from your public answer. It will be used only for the final results and thank-you message.</p>
         </div>
       </div>
@@ -114,11 +118,11 @@
       <button class="submit-button" id="submit-button" type="submit" data-i18n="submit">Submit my answer</button>
       <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
       <button class="share-button post-submit-share" id="post-submit-share" type="button" data-i18n-share hidden>Share the experiment</button>
-      <div class="post-submit-support" id="post-submit-support" hidden><p id="support-thanks-title">If you’d like to help the experiment grow</p><p id="support-thanks-copy">Support options are coming soon.</p><a href="mailto:mankindexperiment@gmail.com?subject=Support%20THE%20HUMAN%20EXPERIMENT" id="support-thanks-link">Support the project</a></div>
-      <p class="privacy-copy" data-i18n="privacy">Your main survey answer is public and can be used for AI analysis. Leave out contact details, sensitive information and anything that could identify you or others.</p>
+      <div class="post-submit-support" id="post-submit-support" hidden><p id="support-thanks-title">If you’d like to help the experiment grow</p><a href="/support.html" id="support-thanks-link">Support the project</a></div>
+      <p class="privacy-copy" data-i18n="privacy">Your written answer will appear on the public results page.</p>
     </form>
 
   </main>
-  <footer class="footer"><a class="brand-lockup footer-brand" href="/" aria-label="THE HUMAN EXPERIMENT home"><img src="/logo-human-crowd.webp" alt="" class="brand-mark"><span class="wordmark">THE HUMAN EXPERIMENT</span></a><nav class="footer-links" aria-label="Project links"><a href="/goal.html" data-menu="goal">Goal of the experiment</a><a href="/privacy.html" data-menu="privacy">Privacy</a><a href="/results.html" data-menu="results">Results</a><a href="/preferences.html" data-menu="preferences">Hypothetical preferences</a><button class="footer-share share-button" id="footer-share" type="button" data-i18n-share data-menu="share">Share the experiment</button><a href="mailto:mankindexperiment@gmail.com?subject=Support%20THE%20HUMAN%20EXPERIMENT" data-menu="support">Support the project</a><span id="share-feedback" class="share-feedback" role="status" aria-live="polite"></span><button type="button" class="footer-contact-copy" data-contact-copy><span data-menu="contact">Contact</span>:&nbsp;<span>mankindexperiment@gmail.com</span></button></nav></footer>
+  <footer class="footer"><a class="brand-lockup footer-brand" href="/" aria-label="THE HUMAN EXPERIMENT home"><img src="/logo-human-crowd.webp" alt="" class="brand-mark"><span class="wordmark">THE HUMAN EXPERIMENT</span></a><nav class="footer-links" aria-label="Project links"><a href="/goal.html" data-menu="goal">Goal of the experiment</a><a href="/privacy.html" data-menu="privacy">Privacy</a><a href="/results.html" data-menu="results">Results</a><a href="/preferences.html" data-menu="preferences">Hypothetical preferences</a><button class="footer-share share-button" id="footer-share" type="button" data-i18n-share data-menu="share">Share the experiment</button><a href="/support.html" data-menu="support">Support the project</a><span id="share-feedback" class="share-feedback" role="status" aria-live="polite"></span><button type="button" class="footer-contact-copy" data-contact-copy><span data-menu="contact">Contact</span>:&nbsp;<span>mankindexperiment@gmail.com</span></button></nav></footer>
 </body>
 </html>
