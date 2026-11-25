@@ -27,8 +27,6 @@
     .prototype-result{margin-top:22px;padding:20px;border:1px solid #c9cbc2;border-radius:16px;background:#f6f4ef}
     .prototype-result[hidden]{display:none}
     .action-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
-    .consent-group{display:grid;gap:10px;margin:18px 0 24px}
-    .consent-group[hidden]{display:none}
     .preference-card button:disabled,.preference-card input:disabled{opacity:.55;cursor:not-allowed}
     .deletion-token-field{display:grid;grid-template-columns:1fr;cursor:default}
     .turnstile-wrap{margin:18px 0;min-height:65px}
@@ -73,11 +71,6 @@
         <p data-pref-i18n="notice">Передача власти происходит только в воображаемой ситуации. Человек сохраняет все свои права. Любой практический этап потребовал бы отдельного информированного согласия. Человек мог бы отклонить любое предложение или выйти из проекта в любой момент.</p>
         <p data-pref-i18n="liveNotice" hidden></p>
       </div>
-      <div class="consent-group" hidden>
-        <label class="preference-option consent-option"><input type="checkbox" id="consent-store" name="consentToStore"><span><strong data-pref-i18n="consentStore"></strong></span></label>
-        <label class="preference-option consent-option"><input type="checkbox" id="consent-public" name="publicConsent"><span><strong data-pref-i18n="consentPublic"></strong></span></label>
-        <label class="preference-option consent-option"><input type="checkbox" id="consent-aggregate" name="aggregateConsent"><span><strong data-pref-i18n="consentAggregate"></strong></span></label>
-      </div>
 
       <section class="preference-question">
         <h2 id="preference-question-1">1. Что, если вообще что-либо, вы позволили бы человечеству изменить в себе?</h2><p>Выберите один вариант.</p>
@@ -112,9 +105,10 @@
       </section>
 
       <div class="turnstile-wrap" hidden><div class="cf-turnstile" id="preferences-turnstile" data-sitekey="0x4AAAAAAFXnc77nuap7FdMr" data-theme="light" data-callback="onPreferenceTurnstileSuccess" data-expired-callback="onPreferenceTurnstileExpired" data-error-callback="onPreferenceTurnstileExpired"></div></div>
+      <p class="privacy-copy" id="preferences-submission-notice" data-pref-i18n="submissionNotice" hidden></p>
       <p class="privacy-hint" id="preferences-submit-status" hidden role="status" aria-live="polite" data-pref-i18n="saveDisabled"></p>
       <div class="action-row">
-        <button type="button" id="submit-preferences" hidden disabled data-pref-i18n="saveButton">Сохранить мой ответ</button>
+        <button type="button" id="submit-preferences" aria-describedby="preferences-submission-notice" hidden disabled data-pref-i18n="saveButton">Сохранить мой ответ</button>
         <button type="button" id="show-summary">Посмотреть мой ответ</button>
         <button type="button" class="secondary" id="reset-form">Очистить форму</button>
       </div>
@@ -152,9 +146,6 @@
     const commentCounter = document.getElementById('comment-counter');
     const submitButton = document.getElementById('submit-preferences');
     const submitStatus = document.getElementById('preferences-submit-status');
-    const storeConsent = document.getElementById('consent-store');
-    const publicConsent = document.getElementById('consent-public');
-    const aggregateConsent = document.getElementById('consent-aggregate');
     const deletionTokenField = document.getElementById('deletion-token');
     const deleteButton = document.getElementById('delete-preferences');
     const savedConfirmation = document.getElementById('preferences-saved-confirmation');
@@ -180,14 +171,14 @@
       preferencesDeletionEnabled = config?.canDelete === true;
       if (preferencesSavingEnabled) {
         form.querySelector('.turnstile-wrap').hidden = false;
+        document.getElementById('preferences-submission-notice').hidden = false;
+        form.querySelector('[data-pref-i18n="liveNotice"]').hidden = false;
         submitButton.hidden = false;
         submitStatus.hidden = false;
         const turnstileScript = document.createElement('script');
         turnstileScript.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
         document.head.append(turnstileScript);
-        form.querySelector('.consent-group').hidden = false;
         form.querySelector('[data-pref-i18n="previewNotice"]').hidden = true;
-        form.querySelector('[data-pref-i18n="liveNotice"]').hidden = false;
         document.querySelector('.prototype-tag')?.remove();
         document.getElementById('preferences-preview-summary').hidden = true;
         submitStatus.removeAttribute('data-pref-i18n');
@@ -203,16 +194,16 @@
       syncDeleteButton();
     }
     function saveText(key, fallback) { return window.preferenceI18n?.locales?.[document.documentElement.lang]?.[key] || fallback; }
-    function syncSubmitButton() { submitButton.disabled = saving || !(preferencesSavingEnabled && turnstileToken && storeConsent.checked && publicConsent.checked && selected('scope').length === 1 && commentField.value.trim().length >= 20 && savedConfirmation.hidden); }
+    function syncSubmitButton() { submitButton.disabled = saving || !(preferencesSavingEnabled && turnstileToken && selected('scope').length === 1 && commentField.value.trim().length >= 20 && savedConfirmation.hidden); }
     window.onPreferenceTurnstileSuccess = token => { turnstileToken = token; if (preferencesSavingEnabled) submitStatus.textContent = ''; syncSubmitButton(); };
     window.onPreferenceTurnstileExpired = () => { turnstileToken = ''; if (preferencesSavingEnabled) submitStatus.textContent = saveText('saveError','Security check expired. Please try again.'); syncSubmitButton(); };
-    [storeConsent, publicConsent, aggregateConsent, ...form.querySelectorAll('input[name="scope"]')].forEach(input => input.addEventListener('change', syncSubmitButton));
+    form.querySelectorAll('input[name="scope"]').forEach(input => input.addEventListener('change', syncSubmitButton));
     submitButton.addEventListener('click', async () => {
       syncSubmitButton(); if (submitButton.disabled) return;
       submissionKey ??= crypto.randomUUID();
       try { sessionStorage.setItem(pendingKey, submissionKey); } catch {}
       saving = true; submitButton.disabled = true; submitStatus.textContent = '';
-      const payload = {exportNoticeVersion:1,submissionKey,language:document.documentElement.lang,answers:{scope:selected('scope')[0],motivation:selected('motivation')},comment:commentField.value.trim(),consentToStore:storeConsent.checked,publicConsent:publicConsent.checked,aggregateConsent:aggregateConsent.checked,turnstileToken};
+      const payload = {exportNoticeVersion:1,submissionKey,language:document.documentElement.lang,answers:{scope:selected('scope')[0],motivation:selected('motivation')},comment:commentField.value.trim(),consentToStore:true,publicConsent:true,aggregateConsent:true,aiTextConsent:true,turnstileToken};
       try {
         const response = await fetch('/api/preferences',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
         const data = await response.json();

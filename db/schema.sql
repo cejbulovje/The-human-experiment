@@ -16,7 +16,8 @@ CREATE TABLE IF NOT EXISTS responses (
   participant_id TEXT,
   is_public INTEGER NOT NULL DEFAULT 0,
   topic TEXT NOT NULL DEFAULT 'other',
-  answer_number INTEGER
+  answer_number INTEGER,
+  ai_text_consent INTEGER NOT NULL DEFAULT 0 CHECK (ai_text_consent IN (0,1))
 );
 CREATE INDEX IF NOT EXISTS idx_responses_created_at ON responses(created_at);
 CREATE INDEX IF NOT EXISTS idx_responses_language ON responses(language);
@@ -94,7 +95,8 @@ CREATE TABLE IF NOT EXISTS hypothetical_preferences (
   created_at TEXT NOT NULL,
   comment TEXT,
   public_consent INTEGER NOT NULL DEFAULT 1 CHECK (public_consent IN (0,1)),
-  pseudonym TEXT CHECK (pseudonym IS NULL OR length(pseudonym) <= 60)
+  pseudonym TEXT CHECK (pseudonym IS NULL OR length(pseudonym) <= 60),
+  ai_text_consent INTEGER NOT NULL DEFAULT 0 CHECK (ai_text_consent IN (0,1))
 );
 CREATE INDEX IF NOT EXISTS idx_hypothetical_preferences_created_at
   ON hypothetical_preferences(created_at);

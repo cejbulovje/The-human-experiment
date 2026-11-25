@@ -113,9 +113,9 @@ test('hypothetical preferences does not submit a native form and starts with sav
   assert.match(html, /const comment = commentField\.value\.trim\(\)/);
   assert.doesNotMatch(html, /form\.elements\./);
   assert.doesNotMatch(html, /preference-question-6|name="use"/);
-  assert.match(html, /id="consent-store" name="consentToStore"/);
-  assert.match(html, /id="consent-public" name="publicConsent"/);
-  assert.match(html, /id="consent-aggregate" name="aggregateConsent"/);
+  assert.doesNotMatch(html, /id="consent-(?:store|public|ai-text)"/);
+  assert.match(html, /aria-describedby="preferences-submission-notice"/);
+  assert.match(html, /consentToStore:true,publicConsent:true,aggregateConsent:true,aiTextConsent:true/);
   assert.match(html, /id="preferences-preview-note"[^>]*>Эта пробная форма не отправляет и не сохраняет ответы\./);
 
   assert.equal((html.match(/href="\/preferences\.html"[^>]*aria-current="page"/g) || []).length, 1);

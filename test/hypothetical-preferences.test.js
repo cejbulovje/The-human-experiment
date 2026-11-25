@@ -431,10 +431,7 @@ test('personal preference reads and AI analysis enforce separate publication and
   const source = readFileSync(new URL('../src/index.js', import.meta.url), 'utf8');
   assert.match(source, /FROM hypothetical_preferences WHERE public_consent=1 ORDER BY created_at/);
   assert.match(source, /SELECT answers_json,language FROM hypothetical_preferences WHERE aggregate_consent=1/);
-  assert.match(source, /COUNT\(\*\) AS total FROM hypothetical_preferences WHERE aggregate_consent=1 AND json_type/);
-  assert.match(source, /SELECT id,answers_json,language FROM hypothetical_preferences WHERE aggregate_consent=1 AND json_type/);
-  assert.match(source, /ai_hypothetical_analysis_memory_consent_v2/);
-  assert.match(source, /body\.aggregateConsent\?1:0/);
+  assert.match(source, /FROM hypothetical_preferences WHERE ai_text_consent=1 AND public_consent=1/);
   assert.match(source, /body\.publicConsent!==true/);
   assert.match(source, /const questionKeys=\['scope','motivation','comment'\]/);
   assert.match(source, /questions:\{scope:\{\},motivation:\{\}\}/);
@@ -555,11 +552,11 @@ test('preferences and AI endpoint routes are inside fetch and AI dispatch preced
   assert.equal((index.match(/url\.pathname==='\/api\/ai-analysis'/g) || []).length, 1);
 });
 
-test('personal preferences consent UI wires Turnstile, consent-gated save/delete, and stays disabled by default', () => {
+test('personal preferences consent UI wires Turnstile, save/delete after disclosure, and stays disabled by default', () => {
   const page = readFileSync(new URL('../public/preferences.html', import.meta.url), 'utf8');
   const translations = readFileSync(new URL('../public/preferences-i18n.js', import.meta.url), 'utf8');
   const index = readFileSync(new URL('../src/index.js', import.meta.url), 'utf8');
-  for (const id of ['consent-store', 'consent-public', 'consent-aggregate']) assert.ok(page.includes(`id="${id}"`));
+  assert.match(page, /id="preferences-submission-notice" data-pref-i18n="submissionNotice" hidden/);
   assert.match(page, /id="preferences-saved-confirmation"[^>]*hidden/);
   assert.match(page, /id="deletion-token"[^>]*disabled/);
   assert.match(page, /id="delete-preferences"[^>]*disabled/);
@@ -567,7 +564,7 @@ test('personal preferences consent UI wires Turnstile, consent-gated save/delete
   for (const lang of ['ru','en','es','pt','de','fr','ja','zh','ar']) {
     const line = translations.split(String.fromCharCode(10)).find(value => value.startsWith(`    ${lang}: {`));
     assert.ok(line, `missing locale ${lang}`);
-    for (const key of ['consentStore','consentPublic','consentAggregate','deleteTitle','deleteDisabled','savedTitle','saveButton','savePrompt','saveError','deleteSuccess']) {
+    for (const key of ['submissionNotice','deleteTitle','deleteDisabled','savedTitle','saveButton','saveError','deleteSuccess']) {
       assert.ok(line.includes(`${key}:`), `missing ${key} in ${lang}`);
     }
   }
@@ -580,7 +577,7 @@ test('personal preferences consent UI wires Turnstile, consent-gated save/delete
   assert.ok(page.includes('let preferencesSavingEnabled = false;'));
   assert.ok(page.includes('let preferencesDeletionEnabled = false;'));
   assert.ok(page.includes("fetch('/api/preferences/config')"));
-  assert.ok(page.includes('preferencesSavingEnabled && turnstileToken && storeConsent.checked && publicConsent.checked'));
+  assert.ok(page.includes('preferencesSavingEnabled && turnstileToken && selected(\'scope\').length === 1'));
   assert.ok(index.includes("if(env.PREFERENCES_ENABLED!=='true')return json({ok:false,error:'preferences_disabled'},503)"));
   assert.equal(/maxlength="10000"/.test(page.match(/<textarea[^>]*name="comment"[^>]*>/)[0]),true);
 });
