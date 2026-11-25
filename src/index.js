@@ -1,3 +1,4 @@
+import {answerExportReady,answerReleaseParts,exportParticipantAnswers} from './public-answer-exports.js';
 import {releaseState,aggregateCounts,listReleases,exportAggregate} from './milestone-releases.js';
 const CORS_HEADERS = { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff', 'x-frame-options': 'DENY', 'referrer-policy': 'strict-origin-when-cross-origin', 'permissions-policy': 'camera=(), microphone=(), geolocation=()' };
 const THRESHOLD = 100;
@@ -82,7 +83,9 @@ async function submit(request,env){
     const topic=classifyTopic(body.freeAnswer);
     let saved;
     try{
-      const responseInsert=env.DB.prepare('INSERT INTO responses (language, free_answer, q2, q3, q4, q2_other, q3_other, q4_other, gender, created_at, public_id, is_public, topic, signature, participant_id) SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ? WHERE ? IS NULL OR NOT EXISTS (SELECT 1 FROM responses WHERE participant_id = ?)').bind(body.language,body.freeAnswer.trim(),body.q2,body.q3,body.q4,q2Other,q3Other,q4Other,body.gender??null,new Date().toISOString(),publicId,topic,signature||null,participantId,participantId,participantId);
+      const exportVersion=body.exportNoticeVersion===1&&await answerExportReady(env.DB,'collective')?1:0;
+      const originalInsert="INSERT INTO responses (language, free_answer, q2, q3, q4, q2_other, q3_other, q4_other, gender, created_at, public_id, is_public, topic, signature, participant_id) SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?, ? WHERE ? IS NULL OR NOT EXISTS (SELECT 1 FROM responses WHERE participant_id = ?)";
+      const responseInsert=env.DB.prepare(exportVersion?originalInsert.replace('participant_id) SELECT','participant_id, export_notice_version) SELECT').replace('?, ?, ? WHERE ? IS NULL','?, ?, ?, 1 WHERE ? IS NULL'):originalInsert).bind(body.language,body.freeAnswer.trim(),body.q2,body.q3,body.q4,q2Other,q3Other,q4Other,body.gender??null,new Date().toISOString(),publicId,topic,signature||null,participantId,participantId,participantId);
       if (feedbackEmail) {
         const contactInsert=env.DB.prepare('INSERT INTO feedback_contacts (public_id,email,created_at) SELECT ?,?,? WHERE EXISTS (SELECT 1 FROM responses WHERE public_id=?)').bind(publicId,feedbackEmail,new Date().toISOString(),publicId);
         [saved]=await env.DB.batch([responseInsert,contactInsert]);
@@ -144,7 +147,7 @@ async function releaseStoreReady(db){
 async function publishedResults(env,stream){
   const state=await releaseState(env.DB,stream);
   const {release,...summary}=state;
-  const releases=await listReleases(env.DB,stream);
+  const releases=await answerReleaseParts(env.DB,stream,await listReleases(env.DB,stream));
   const counts=release?aggregateCounts(stream,release):null;
   if(stream==='collective'){
     if(!state.unlocked)return json({...summary,releases,teaser:true});
@@ -162,9 +165,13 @@ async function downloadResults(request,env){
   const stream=url.searchParams.get('stream'),raw=url.searchParams.get('threshold')||'';
   if(!['collective','hypothetical'].includes(stream)||!/^\d{1,16}$/.test(raw)||!Number.isSafeInteger(Number(raw)))return json({error:'invalid_release'},400);
   if(!await releaseStoreReady(env.DB))return json({error:'not_configured'},503);
-  const csv=await exportAggregate(env.DB,stream,Number(raw));
+  const kind=url.searchParams.get('kind')||'aggregate';
+  if(!['aggregate','answers'].includes(kind))return json({error:'invalid_release'},400);
+  const part=url.searchParams.get('part')||'1';
+  if(kind==='answers'&&(!/^\d{1,12}$/.test(part)||!Number.isSafeInteger(Number(part))||Number(part)<1))return json({error:'invalid_release'},400);
+  const csv=kind==='answers'?await exportParticipantAnswers(env.DB,stream,Number(raw),Number(part)):await exportAggregate(env.DB,stream,Number(raw));
   if(csv===null)return json({error:'release_not_found'},404);
-  return new Response(csv,{headers:{...CORS_HEADERS,'content-type':'text/csv; charset=utf-8','content-disposition':'attachment; filename="the-human-experiment-'+stream+'-'+Number(raw)+'.csv"'}});
+  return new Response(csv,{headers:{...CORS_HEADERS,'content-type':'text/csv; charset=utf-8','content-disposition':'attachment; filename="the-human-experiment-'+stream+'-'+Number(raw)+(kind==='answers'?'-answers-part-'+Number(part):'')+'.csv"'}});
 }
 async function results(env){
   if(await releaseStoreReady(env.DB))return publishedResults(env,'collective');
@@ -411,9 +418,10 @@ async function submitPreferences(request,env){
       ? await sha256(JSON.stringify(['preferences-retry-v1', env.RATE_LIMIT_SALT, body.submissionKey]))
       : crypto.randomUUID()+crypto.randomUUID();
     const deletionTokenHash=await sha256(deletionToken);
+    const exportVersion=body.exportNoticeVersion===1&&await answerExportReady(env.DB,'hypothetical')?1:0;
     const inserted = await env.DB.prepare(`INSERT INTO hypothetical_preferences
-      (language,answers_json,aggregate_consent,delete_token_hash,created_at,comment,public_consent)
-      VALUES (?,?,?,?,?,?,?) ON CONFLICT(delete_token_hash) DO NOTHING`).bind(body.language,JSON.stringify(body.answers),body.aggregateConsent?1:0,deletionTokenHash,new Date().toISOString(),String(body.comment||'').trim()||null,1).run();
+      (language,answers_json,aggregate_consent,delete_token_hash,created_at,comment,public_consent${exportVersion?",export_notice_version":""})
+      VALUES (?,?,?,?,?,?,?${exportVersion?",1":""}) ON CONFLICT(delete_token_hash) DO NOTHING`).bind(body.language,JSON.stringify(body.answers),body.aggregateConsent?1:0,deletionTokenHash,new Date().toISOString(),String(body.comment||'').trim()||null,1).run();
     if (body.submissionKey && inserted.meta?.changes === 0) {
       const previous = await env.DB.prepare('SELECT language, answers_json, comment, aggregate_consent FROM hypothetical_preferences WHERE delete_token_hash=?').bind(deletionTokenHash).first();
       if (!previous || previous.language !== body.language || previous.answers_json !== JSON.stringify(body.answers) ||

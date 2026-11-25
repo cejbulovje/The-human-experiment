@@ -1,3 +1,4 @@
+import {answerExportReady,answerReleaseParts,exportParticipantAnswers} from '../src/public-answer-exports.js';
 import worker from '../src/index.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -63,4 +64,24 @@ test('worker exposes frozen releases in both results APIs and only aggregate CSV
    r=await request('/api/results/export?stream='+stream+'&threshold=100');assert.equal(r.status,200);assert.match(r.headers.get('content-type'),/text\/csv/);assert.doesNotMatch(await r.text(),/PRIVATE_UUID|SECRET_TOKEN|free_answer|comment/);
  }
  r=await request('/api/results/export?stream=invalid&threshold=100');assert.equal(r.status,400);
+});
+
+test('participant CSV requires a recorded notice and respects release boundaries and deletion',async()=>{
+ const {raw,db,add,personal}=fixture();
+ raw.exec(readFileSync(new URL('../db/migrations/0017_public_answer_export_notice.sql',import.meta.url),'utf8'));
+ assert.equal(await answerExportReady(db,'collective'),true);
+ add(98); add(1);
+ raw.exec("UPDATE responses SET export_notice_version=1,free_answer='PUBLIC SAMPLE' WHERE id=99");
+ const first=await releaseState(db,'collective');assert.equal(first.total,100);
+ const list=await answerReleaseParts(db,'collective',await listReleases(db,'collective'));assert.equal(list[0].firstAnswerPart,1);
+ add(1);raw.exec("UPDATE responses SET export_notice_version=1,free_answer='AFTER RELEASE' WHERE id=100");
+ let csv=await exportParticipantAnswers(db,'collective',100,1);
+ assert.match(csv,/PUBLIC SAMPLE/);assert.doesNotMatch(csv,/AFTER RELEASE|PRIVATE_UUID|PRIVATE_SIGNATURE|text,/);
+ assert.equal(await exportParticipantAnswers(db,'collective',100,2),null);
+ raw.exec("UPDATE responses SET is_public=0 WHERE id=99");
+ csv=await exportParticipantAnswers(db,'collective',100,1);assert.doesNotMatch(csv,/PUBLIC SAMPLE/);
+ personal(99);personal(1,0,1);personal(1,0,0);
+ raw.exec("UPDATE hypothetical_preferences SET export_notice_version=1,comment='PUBLIC PERSONAL' WHERE id=100; UPDATE hypothetical_preferences SET export_notice_version=1,comment='PRIVATE PERSONAL' WHERE id=101");
+ await releaseState(db,'hypothetical');
+ csv=await exportParticipantAnswers(db,'hypothetical',100,1);assert.match(csv,/PUBLIC PERSONAL/);assert.doesNotMatch(csv,/PRIVATE PERSONAL|SECRET_TOKEN|delete_token_hash|personal 0|answers_json/);
 });

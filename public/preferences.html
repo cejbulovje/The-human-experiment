@@ -209,7 +209,7 @@
       submissionKey ??= crypto.randomUUID();
       try { sessionStorage.setItem(pendingKey, submissionKey); } catch {}
       saving = true; submitButton.disabled = true; submitStatus.textContent = '';
-      const payload = {submissionKey,language:document.documentElement.lang,answers:{scope:selected('scope')[0],motivation:selected('motivation')},comment:commentField.value.trim(),consentToStore:storeConsent.checked,publicConsent:publicConsent.checked,aggregateConsent:aggregateConsent.checked,turnstileToken};
+      const payload = {exportNoticeVersion:1,submissionKey,language:document.documentElement.lang,answers:{scope:selected('scope')[0],motivation:selected('motivation')},comment:commentField.value.trim(),consentToStore:storeConsent.checked,publicConsent:publicConsent.checked,aggregateConsent:aggregateConsent.checked,turnstileToken};
       try {
         const response = await fetch('/api/preferences',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});
         const data = await response.json();

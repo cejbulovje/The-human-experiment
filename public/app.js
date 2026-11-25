@@ -18,7 +18,7 @@ const translations = {
     "answer-label": "Your answer (at least 20 characters)",
     "answer-placeholder": "I would…",
     "private-note-title": "Before you answer",
-    "private-note": "Your answer will be public and may be used for AI analysis. Leave out names, contact information and details that could identify real people.",
+    "private-note": "Your answer will be public and may be used for AI analysis. Leave out names, contact information and details that could identify real people. Anyone may download, copy and independently analyse your public answer. Copies already obtained by others cannot be recalled.",
     "single-choice": "Choose one answer.",
     "other-placeholder": "Please specify your answer…",
     "other-help": "Your own answer (up to 500 characters)",
@@ -86,7 +86,7 @@ const translations = {
     "answer-label": "Твой ответ (не менее 20 символов)",
     "answer-placeholder": "Я бы…",
     "private-note-title": "Перед ответом",
-    "private-note": "Ваш ответ станет публичным и может использоваться для ИИ-анализа. Оставьте за пределами текста имена, контакты и подробности, по которым можно узнать реальных людей.",
+    "private-note": "Ваш ответ станет публичным и может использоваться для ИИ-анализа. Оставьте за пределами текста имена, контакты и подробности, по которым можно узнать реальных людей. Любой человек сможет скачать, скопировать и самостоятельно проанализировать ваш публичный ответ. Уже полученные другими людьми копии невозможно отозвать.",
     "single-choice": "Выбери один вариант.",
     "q2": "Если бы вы могли что-то изменить в этом человеке, что бы вы изменили в первую очередь, если вообще стали бы что-то менять?",
     "q3": "Если бы желания человека расходились с вашими, как бы вы поступили?",
@@ -154,7 +154,7 @@ const translations = {
     "answer-label": "Tu respuesta (al menos 20 caracteres)",
     "answer-placeholder": "Yo…",
     "private-note-title": "Antes de responder",
-    "private-note": "Tu respuesta se publicará y puede usarse para análisis con IA. Omite nombres, datos de contacto y detalles que permitan identificar a personas reales.",
+    "private-note": "Tu respuesta se publicará y puede usarse para análisis con IA. Omite nombres, datos de contacto y detalles que permitan identificar a personas reales. Cualquiera podrá descargar, copiar y analizar de forma independiente tu respuesta pública. Las copias ya obtenidas por otras personas no se pueden recuperar.",
     "single-choice": "Elige una respuesta.",
     "q2": "Si pudieras cambiar algo de esta persona, ¿qué cambiarías primero, si es que cambiarías algo?",
     "q3": "Si sus deseos entraran en conflicto con los tuyos, ¿cómo actuarías?",
@@ -222,7 +222,7 @@ const translations = {
     "answer-label": "Sua resposta (pelo menos 20 caracteres)",
     "answer-placeholder": "Eu…",
     "private-note-title": "Antes de responder",
-    "private-note": "Sua resposta será pública e poderá ser analisada por IA. Deixe de fora nomes, contatos e detalhes que possam identificar pessoas reais.",
+    "private-note": "Sua resposta será pública e poderá ser analisada por IA. Deixe de fora nomes, contatos e detalhes que possam identificar pessoas reais. Qualquer pessoa poderá descarregar, copiar e analisar independentemente a sua resposta pública. As cópias já obtidas por outras pessoas não podem ser recolhidas.",
     "single-choice": "Escolha uma resposta.",
     "q2": "Se pudesse mudar algo nessa pessoa, o que mudaria primeiro, se mudasse alguma coisa?",
     "q3": "Se os desejos dessa pessoa entrassem em conflito com os seus, como você agiria?",
@@ -290,7 +290,7 @@ const translations = {
     "answer-label": "你的回答（至少 20 个字符）",
     "answer-placeholder": "我会……",
     "private-note-title": "回答前",
-    "private-note": "你的回答将公开，也可能用于人工智能分析。请省略姓名、联系方式及可识别现实人物的细节。",
+    "private-note": "你的回答将公开，也可能用于人工智能分析。请省略姓名、联系方式及可识别现实人物的细节。 任何人均可下载、复制和独立分析你的公开回答。其他人已经取得的副本无法撤回。",
     "single-choice": "请选择一个答案。",
     "q2": "如果你可以改变这个人的某些方面，你会先改变什么？也可以选择不改变。",
     "q3": "如果对方的愿望与你的不同，你会怎么做？",
@@ -358,7 +358,7 @@ const translations = {
     "answer-label": "Deine Antwort (mindestens 20 Zeichen)",
     "answer-placeholder": "Ich würde…",
     "private-note-title": "Bevor du antwortest",
-    "private-note": "Deine Antwort wird öffentlich und kann für KI-Analysen verwendet werden. Lass Namen, Kontaktdaten und Details weg, an denen man reale Personen erkennen könnte.",
+    "private-note": "Deine Antwort wird öffentlich und kann für KI-Analysen verwendet werden. Lass Namen, Kontaktdaten und Details weg, an denen man reale Personen erkennen könnte. Alle können deine öffentliche Antwort herunterladen, kopieren und unabhängig analysieren. Bereits von anderen erhaltene Kopien können nicht zurückgerufen werden.",
     "single-choice": "Wähle eine Antwort.",
     "q2": "Wenn du etwas an dieser Person ändern könntest, was würdest du zuerst ändern, falls überhaupt etwas?",
     "q3": "Wie würdest du reagieren, wenn die Wünsche dieser Person deinen eigenen widersprächen?",
@@ -426,7 +426,7 @@ const translations = {
     "answer-label": "あなたの回答（20文字以上）",
     "answer-placeholder": "私は…",
     "private-note-title": "回答する前に",
-    "private-note": "回答は公開され、AIによる分析に使われる場合があります。実在する人の名前、連絡先、個人を特定できる情報は省いてください。",
+    "private-note": "回答は公開され、AIによる分析に使われる場合があります。実在する人の名前、連絡先、個人を特定できる情報は省いてください。 公開回答は誰でもダウンロード、複製、独自に分析できます。他の人がすでに取得したコピーは取り消せません。",
     "single-choice": "1つ選んでください。",
     "q2": "この人について何か変えられるなら、最初に何を変えますか。何も変えないことも選べます。",
     "q3": "本人の希望と自分の考えが食い違ったら、どうしますか？",
@@ -494,7 +494,7 @@ const translations = {
     "answer-label": "Votre réponse (au moins 20 caractères)",
     "answer-placeholder": "Je…",
     "private-note-title": "Avant de répondre",
-    "private-note": "Ta réponse sera publique et pourra être analysée par une IA. Oublie les noms, les coordonnées et les détails qui permettraient d’identifier des personnes réelles.",
+    "private-note": "Ta réponse sera publique et pourra être analysée par une IA. Oublie les noms, les coordonnées et les détails qui permettraient d’identifier des personnes réelles. Tout le monde pourra télécharger, copier et analyser indépendamment ta réponse publique. Les copies déjà obtenues par d’autres ne peuvent pas être rappelées.",
     "single-choice": "Choisissez une réponse.",
     "q2": "Si tu pouvais changer quelque chose chez cette personne, que changerais-tu en premier, si tu choisissais de changer quelque chose ?",
     "q3": "Si ses souhaits étaient en désaccord avec les tiens, comment réagirais-tu ?",
@@ -562,7 +562,7 @@ const translations = {
     "answer-label": "إجابتك (20 حرفًا على الأقل)",
     "answer-placeholder": "سأ…",
     "private-note-title": "قبل الإجابة",
-    "private-note": "ستُنشر إجابتك وقد تُستخدم في تحليل بالذكاء الاصطناعي. استبعد الأسماء وبيانات الاتصال والتفاصيل التي تكشف هوية أشخاص حقيقيين.",
+    "private-note": "ستُنشر إجابتك وقد تُستخدم في تحليل بالذكاء الاصطناعي. استبعد الأسماء وبيانات الاتصال والتفاصيل التي تكشف هوية أشخاص حقيقيين. يمكن لأي شخص تنزيل إجابتك العامة ونسخها وتحليلها بصورة مستقلة. لا يمكن استرداد النسخ التي حصل عليها الآخرون بالفعل.",
     "single-choice": "اختر إجابة واحدة.",
     "q2": "لو أمكنك تغيير شيء في هذا الشخص، فما أول ما ستغيّره إن اخترت تغيير أي شيء؟",
     "q3": "كيف ستتصرف إذا تعارضت رغبات هذا الشخص مع رغباتك؟",
@@ -784,7 +784,7 @@ form.addEventListener('submit',async event=>{
   if(!captchaResponse){status.textContent=t.captchaMissing;status.className='form-status error';return;}
   const selected=name=>{const input=form.querySelector(`input[name="${name}"]:checked`);return input?Number(input.value):null;};
   if(!authorConfirmed.checked){status.textContent=t['author-required'];status.className='form-status error';return;}
-  const payload={language:lang,participantId:getParticipantId(),freeAnswer:answer.value.trim(),q2:selected('q2'),q3:selected('q3'),q4:selected('q4'),q2Other:form.querySelector('[name="q2Other"]')?.value.trim()||'',q3Other:form.querySelector('[name="q3Other"]')?.value.trim()||'',q4Other:form.querySelector('[name="q4Other"]')?.value.trim()||'',gender:selected('gender'),feedbackEmail:feedbackOptIn?.checked?feedbackEmailInput.value.trim():'',authorConfirmed:authorConfirmed.checked,turnstileToken:captchaResponse};
+  const payload={exportNoticeVersion:1,language:lang,participantId:getParticipantId(),freeAnswer:answer.value.trim(),q2:selected('q2'),q3:selected('q3'),q4:selected('q4'),q2Other:form.querySelector('[name="q2Other"]')?.value.trim()||'',q3Other:form.querySelector('[name="q3Other"]')?.value.trim()||'',q4Other:form.querySelector('[name="q4Other"]')?.value.trim()||'',gender:selected('gender'),feedbackEmail:feedbackOptIn?.checked?feedbackEmailInput.value.trim():'',authorConfirmed:authorConfirmed.checked,turnstileToken:captchaResponse};
   submitButton.disabled=true; submitButton.textContent=t.sending;
   try{
     const response=await fetch('/api/submit',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(payload)});

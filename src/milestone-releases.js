@@ -39,7 +39,7 @@ export async function releaseState(db,stream) {
   const target=highestMilestone(liveTotal);
   if(target>Number(release?.threshold||0)){
     // A single SQL statement takes a consistent snapshot; unique key and guard prevent races.
-    await db.prepare(`WITH eligible AS (SELECT * FROM ${c.table} WHERE ${c.eligible}), summary AS (SELECT COUNT(*)+1 AS total,COALESCE(MAX(id),0) AS upper_id FROM eligible)
+    await db.prepare(`WITH eligible AS (SELECT * FROM ${c.table} WHERE ${c.eligible}), summary AS (SELECT COUNT(*)+1 AS total,${stream==='hypothetical'?"(SELECT COALESCE(MAX(id),0) FROM hypothetical_preferences WHERE public_consent=1)":"COALESCE(MAX(id),0)"} AS upper_id FROM eligible)
       INSERT OR IGNORE INTO results_releases(stream,threshold,total,upper_id,published_at,counts_json)
       SELECT ?,?,total,upper_id,strftime('%Y-%m-%dT%H:%M:%fZ','now'),json_object(${c.aggregate}) FROM summary
       WHERE total>=? AND NOT EXISTS (SELECT 1 FROM results_releases WHERE stream=? AND threshold>=?)`).bind(stream,target,target,stream,target).run();
