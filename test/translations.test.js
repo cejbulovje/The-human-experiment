@@ -136,7 +136,7 @@ test('hypothetical-preferences page defines all translation fields for every loc
   assert.equal(starts.length, locales.length, 'preferences page must define all nine locales');
   const requiredKeys = [
     'name', 'dir', 'title', 'skip', 'resultLink', 'eyebrow', 'heading', 'lead', 'tag',
-    'noticeTitle', 'notice', 'previewNotice', 'consent', 'questions', 'helpers', 'priority', 'preserve',
+    'noticeTitle', 'notice', 'previewNotice', 'liveNotice', 'consent', 'questions', 'helpers', 'priority', 'preserve',
     'wishes', 'body', 'placeholder', 'privacy', 'show', 'reset', 'summaryTitle', 'status',
     'statusText', 'notSaved', 'edit', 'results', 'summaryLabels', 'voiceEyebrow',
     'voiceHeading', 'voiceLead', 'banner', 'voiceCard', 'voiceText', 'voiceText2',

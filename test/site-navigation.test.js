@@ -36,7 +36,7 @@ test('homepage offers both roles after the introduction and before results and t
   assert.equal((cards.match(/class="role-card"/g) || []).length, 2);
   assert.match(cards, /class="role-action" href="#survey-form"/);
   assert.match(cards, /class="role-action" href="\/preferences\.html" aria-describedby="preferences-preview"/);
-  assert.match(cards, /id="preferences-preview"[^>]*>This preview does not send or save your answers/);
+  assert.match(cards, /id="preferences-preview"[^>]*>Your answers can be saved and published only with your consent/);
   assert.match(html, /<form id="survey-form"[^>]*tabindex="-1" aria-labelledby="survey-question"/);
 });
 

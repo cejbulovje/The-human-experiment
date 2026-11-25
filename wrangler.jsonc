@@ -15,6 +15,7 @@
     }
   ],
   "previews": {
+    "vars": { "PREFERENCES_ENABLED": "true" },
     "d1_databases": [
       {
         "binding": "DB",
