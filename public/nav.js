@@ -12,7 +12,7 @@
   };
   const footerCopy = {
     en: { methodology: "Research methodology", supportInviteHeading: "Support the author and project", supportInviteBody: "If this idea resonates with you, you can voluntarily support its creator and the continued development of the experiment." },
-    ru: { methodology: "Методология исследования", supportInviteHeading: "Поддержать автора и проект", supportInviteBody: "Если вам близка идея эксперимента, вы можете добровольно поддержать её автора и дальнейшее развитие исследования." },
+    ru: { methodology: "Методология исследования", supportInviteHeading: "Поддержать автора и проект", supportInviteBody: "Если вам близка идея эксперимента, вы можете поддержать её автора и развитие проекта." },
     es: { methodology: "Metodología de investigación", supportInviteHeading: "Apoyar al autor y al proyecto", supportInviteBody: "Si esta idea te inspira, puedes apoyar voluntariamente a su creador y el desarrollo continuo del experimento." },
     pt: { methodology: "Metodologia de pesquisa", supportInviteHeading: "Apoiar o autor e o projeto", supportInviteBody: "Se esta ideia faz sentido para você, pode apoiar voluntariamente seu criador e o desenvolvimento contínuo do experimento." },
     zh: { methodology: "研究方法", supportInviteHeading: "支持作者与项目", supportInviteBody: "如果你认同这个想法，可以自愿支持创作者及实验的持续发展。" },
@@ -58,6 +58,19 @@
       caption.textContent = 'Contact';
       contact.append(caption, document.createTextNode(': mankindexperiment@gmail.com'));
       links.append(contact);
+    }
+    // Reuse the existing support link in a quiet final footer line.
+    const footer = links.closest('footer');
+    if (footer && !footer.querySelector('.footer-support-note')) {
+      const note = document.createElement('p');
+      note.className = 'footer-support-note';
+      const explanation = document.createElement('span');
+      explanation.dataset.menu = 'supportInviteBody';
+      explanation.textContent = footerCopy.en.supportInviteBody;
+      note.append(explanation, document.createTextNode(' '));
+      const supportLink = links.querySelector('a[href="/support.html"]');
+      if (supportLink) note.append(supportLink);
+      footer.append(note);
     }
   });
 
