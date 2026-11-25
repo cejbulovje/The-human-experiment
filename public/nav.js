@@ -34,7 +34,7 @@
     ['/support.html', 'support', 'Support the project'],
   ];
   document.querySelectorAll('footer .footer-links').forEach(links => {
-    const share = links.querySelector('[data-site-share]');
+    const share = links.querySelector('[data-site-share], [data-i18n-share]');
     footerPages.forEach(([href, key, fallback]) => {
       let anchor = [...links.querySelectorAll('a[href]')].find(a => a.getAttribute('href') === href);
       if (!anchor) {
