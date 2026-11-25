@@ -70,7 +70,7 @@ const answerWords={"en":["Download participant answers","Part","Downloaded copie
 window.renderResultsReleaseNotice=function(section,stream,data){
  if(!section)return;
  let panel=section.querySelector('[data-release-panel]');
- if(new URLSearchParams(location.search).get('demo')==='101'||!data||typeof data.unlocked!=='boolean'||(stream==='hypothetical'&&!Array.isArray(data.releases))){if(panel)panel.hidden=true;return;}
+ if((['localhost','127.0.0.1','[::1]'].includes(location.hostname)&&new URLSearchParams(location.search).get('demo')==='101')||!data||typeof data.unlocked!=='boolean'||(stream==='hypothetical'&&!Array.isArray(data.releases))){if(panel)panel.hidden=true;return;}
  const live=Number(data.liveTotal??data.total),next=Number(data.nextThreshold??data.threshold);
  if(!Number.isSafeInteger(live)||live<0||!Number.isSafeInteger(next)||next<100){if(panel)panel.hidden=true;return;}
  if(!panel){panel=document.createElement('div');panel.dataset.releasePanel=stream;panel.className='status-panel';const anchor=section.querySelector('.results-stat-card')||section.querySelector('#hypothetical-stats');if(anchor)anchor.after(panel);else section.prepend(panel);}

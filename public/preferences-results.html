@@ -753,7 +753,7 @@
     root.append(note);root.hidden=false;
   }
   async function loadStats() {
-    const previewDemoMode = location.hostname === 'experiment-hypothetical-preferences-protot-the-human-experiment.cejbulovje.workers.dev'
+    const previewDemoMode = ['localhost','127.0.0.1','[::1]'].includes(location.hostname)
       && new URLSearchParams(location.search).get('demo') === '101';
     if (previewDemoMode) {
       const summary = {

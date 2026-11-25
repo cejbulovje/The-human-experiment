@@ -1,8 +1,6 @@
 /* Preview-only sample responses: no API calls, DB writes, stats, or AI-analysis input. */
 (() => {
-  const previewHost = 'experiment-hypothetical-preferences-protot-the-human-experiment.cejbulovje.workers.dev';
-  const isResultsDemo = location.pathname === '/results.html' && new URL(location.href).searchParams.get('demo') === '101';
-  if (location.hostname !== previewHost || (location.pathname === '/results.html' && !isResultsDemo)) return;
+  if (!(['localhost','127.0.0.1','[::1]'].includes(location.hostname) && new URL(location.href).searchParams.get('demo') === '101')) return;
   const samples = {
     collective: [
       {text:'Я бы помог человеку получить образование и найти дело, которое ему действительно интересно. Но сначала спросил бы, чего хочет он сам.', choices:[['Что изменить первым','Образ жизни или привычки'],['Если желания расходятся','Попробовать договориться'],['Что выберет большинство','Помочь человеку и улучшить его жизнь']]},

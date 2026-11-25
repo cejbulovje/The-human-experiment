@@ -350,7 +350,7 @@
 (() => {
   const section = document.querySelector('.hypothetical-answers-section');
   if (!section) return;
-  const previewOnly = location.hostname === 'experiment-hypothetical-preferences-protot-the-human-experiment.cejbulovje.workers.dev'
+  const previewOnly = ['localhost','127.0.0.1','[::1]'].includes(location.hostname)
     && ['/results', '/results.html'].includes(location.pathname)
     && new URLSearchParams(location.search).get('demo') === '101';
   if (previewOnly) {

@@ -197,7 +197,7 @@ test('results page separates collective answers from hypothetical preference ans
   assert.match(html, /class="status-panel hypothetical-empty-state"/);
   assert.match(html, /data-voice="emptyText"/);
   assert.match(html, /data-voice="emptyNext"/);
-  assert.match(html, /const previewOnly = location\.hostname === 'experiment-hypothetical-preferences-protot-the-human-experiment\.cejbulovje\.workers\.dev'[\s\S]*?get\('demo'\) === '101'/, 'synthetic personal answers require the explicit demo mode');
+  assert.match(html, /const previewOnly = \['localhost','127\.0\.0\.1','\[::1\]'\]\.includes\(location\.hostname\)[\s\S]*?get\('demo'\) === '101'/, 'synthetic personal answers require local explicit demo mode');
   assert.match(html, /const total=Number\(data\.stats\.total\|\|0\);\s*const participants=Number\(data\.stats\.participantTotal\|\|0\);\s*stats\.textContent=interpolate\(apiUi\(\)\.stats,\{total,participants\}\);[\s\S]*?if\(totalNode\) totalNode\.textContent=String\(participants\)/, 'personal statistics keep participant and author totals separate');
   assert.doesNotMatch(html, /id="hypothetical-answer-list"/, 'no fake second feed is presented as live data');
   for (const locale of locales) {
@@ -256,7 +256,7 @@ test('preview result samples use one real paginated renderer in both streams', (
   const results = readFileSync(new URL('../public/results.js', import.meta.url), 'utf8');
   const personal = readFileSync(new URL('../public/preferences-results-preview.js', import.meta.url), 'utf8');
   assert.doesNotMatch(html, /demo-collective-load-more|demo-hypothetical-load-more/, 'legacy append-only demo controls are removed');
-  assert.match(results, /const DEMO_MODE=new URL\(location\.href\)\.searchParams\.get\('demo'\)==='101'/, 'demo results require an explicit demo query and the preview uses live responses by default');
+  assert.match(results, /const DEMO_MODE=\['localhost','127\.0\.0\.1','\[::1\]'\]\.includes\(location\.hostname\)&&new URL\(location\.href\)\.searchParams\.get\('demo'\)==='101'/, 'demo answers require a local host and explicit demo query');
   assert.match(results, /all\.slice\(requestOffset,requestOffset\+pageSize\)/, 'collective cards are sliced to one page');
   assert.match(personal, /const query = \(document\.getElementById\('hypothetical-search'\)/, 'personal search filters sample cards');
   assert.match(personal, /const question = document\.getElementById\('hypothetical-question-filter'\)/, 'personal question filter is applied');
@@ -301,4 +301,12 @@ test('personal results page shares the top-level stream switcher and does not st
   assert.match(results, /const PERSONAL_RESULTS_PAGE=\/\^\\\/preferences-results/);
   assert.match(results, /if\(!PERSONAL_RESULTS_PAGE\)\{loadStats\(\);/);
   assert.match(personal, /#results-status, #statistics-section/);
+});
+
+test('all public result paths reject demo data even with the demo query', () => {
+  const gate = "['localhost','127.0.0.1','[::1]'].includes(location.hostname)";
+  for (const file of ['results.js','results.html','preferences-results.html','preferences-results-preview.js','results-releases.js']) {
+    const source = readFileSync(new URL('../public/' + file, import.meta.url), 'utf8');
+    assert.ok(source.includes(gate), file + ' must restrict demos to local hosts');
+  }
 });
