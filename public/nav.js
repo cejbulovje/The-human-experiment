@@ -16,7 +16,7 @@
     es: { methodology: "Metodología de investigación", supportInviteHeading: "Apoyar al autor y al proyecto", supportInviteBody: "Si esta idea te inspira, puedes apoyar voluntariamente a su creador y el desarrollo continuo del experimento." },
     pt: { methodology: "Metodologia de pesquisa", supportInviteHeading: "Apoiar o autor e o projeto", supportInviteBody: "Se esta ideia faz sentido para você, pode apoiar voluntariamente seu criador e o desenvolvimento contínuo do experimento." },
     zh: { methodology: "研究方法", supportInviteHeading: "支持作者与项目", supportInviteBody: "如果你认同这个想法，可以自愿支持创作者及实验的持续发展。" },
-    de: { methodology: "Forschungsmethodik", supportInviteHeading: "Autor und Projekt unterstützen", supportInviteBody: "Wenn dich diese Idee anspricht, kannst du ihren Urheber und die weitere Entwicklung des Experiments freiwillig unterstützen." },
+    de: { methodology: "Forschungsmethodik", supportInviteHeading: "Autor und Projekt unterstützen", supportInviteBody: "Wenn dich diese Idee anspricht, kannst du ihren Urheber und die weitere Entwicklung des Experiments unterstützen." },
     ja: { methodology: "研究方法", supportInviteHeading: "作者とプロジェクトを支援", supportInviteBody: "このアイデアに共感したら、作者と実験の今後の発展を任意で支援できます。" },
     fr: { methodology: "Méthodologie de recherche", supportInviteHeading: "Soutenir l'auteur et le projet", supportInviteBody: "Si cette idée vous parle, vous pouvez soutenir librement son auteur et la poursuite du développement de l'expérience." },
     ar: { methodology: "منهجية البحث", supportInviteHeading: "دعم صاحب الفكرة والمشروع", supportInviteBody: "إذا لاقت هذه الفكرة صدى لديك، يمكنك دعم صاحبها طوعا والمساهمة في استمرار تطوير التجربة." },
