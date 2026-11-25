@@ -70,7 +70,7 @@
       note.append(explanation, document.createTextNode(' '));
       const supportLink = links.querySelector('a[href="/support.html"]');
       if (supportLink) note.append(supportLink);
-      footer.append(note);
+      links.insertBefore(note, links.querySelector('[data-contact-copy]'));
     }
   });
 
