@@ -4,14 +4,14 @@ const STREAMS = {
     table: 'responses',
     eligible: "is_public=1 AND (public_id IS NULL OR public_id <> 'author-answer-1')",
     public: "is_public=1 AND (public_id IS NULL OR public_id <> 'author-answer-1')",
-    aggregate: ['q2','q3','q4'].map(k=>`'${k}',(SELECT json_group_object(choice,n) FROM (SELECT ${k} AS choice,COUNT(*) AS n FROM eligible WHERE ${k} IS NOT NULL GROUP BY ${k}))`).join(','),
+    aggregate: ['q2','q3','q4'].map(k=>`'${k}',json((SELECT json_group_object(choice,n) FROM (SELECT ${k} AS choice,COUNT(*) AS n FROM eligible WHERE ${k} IS NOT NULL GROUP BY ${k})))`).join(','),
     fields: ['language','free_answer','q2','q3','q4','q2_other','q3_other','q4_other'],
   },
   hypothetical: {
     table: 'hypothetical_preferences',
     eligible: "aggregate_consent=1 AND json_type(answers_json,'$.scope')='text' AND json_type(answers_json,'$.motivation')='array'",
     public: "public_consent=1 AND aggregate_consent=1 AND json_type(answers_json,'$.scope')='text' AND json_type(answers_json,'$.motivation')='array'",
-    aggregate: ` 'scope',(SELECT json_group_object(choice,n) FROM (SELECT json_extract(answers_json,'$.scope') AS choice,COUNT(*) AS n FROM eligible GROUP BY choice)), 'motivation',(SELECT json_group_object(choice,n) FROM (SELECT j.value AS choice,COUNT(*) AS n FROM eligible,json_each(eligible.answers_json,'$.motivation') j WHERE j.type='text' GROUP BY j.value)), 'languages',(SELECT json_group_object(language,n) FROM (SELECT language,COUNT(*) AS n FROM eligible GROUP BY language))`,
+    aggregate: ` 'scope',json((SELECT json_group_object(choice,n) FROM (SELECT json_extract(answers_json,'$.scope') AS choice,COUNT(*) AS n FROM eligible GROUP BY choice))), 'motivation',json((SELECT json_group_object(choice,n) FROM (SELECT j.value AS choice,COUNT(*) AS n FROM eligible,json_each(eligible.answers_json,'$.motivation') j WHERE j.type='text' GROUP BY j.value))), 'languages',json((SELECT json_group_object(language,n) FROM (SELECT language,COUNT(*) AS n FROM eligible GROUP BY language)))`,
     fields: ['language','answers_json','comment'],
   },
 };
