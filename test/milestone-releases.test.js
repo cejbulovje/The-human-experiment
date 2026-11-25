@@ -1,3 +1,4 @@
+import worker from '../src/index.js';
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
@@ -48,4 +49,18 @@ test('safe CSV quoting and unpublished threshold',async()=>{
   const {db,add}=fixture();add(999);await releaseState(db,'collective');
   assert.equal(await exportAggregate(db,'collective',2000),null);
   assert.equal(csvCell(' =1+2'),'"\' =1+2"');assert.equal(csvCell('a,"b"'),'"a,""b"""');assert.equal(csvCell('\tfoo'),'"\'\tfoo"');
+});
+
+test('worker exposes frozen releases in both results APIs and only aggregate CSV',async()=>{
+ const {db,add,personal}=fixture();
+ const request=path=>worker.fetch(new Request('https://example.test'+path),{DB:db});
+ let r=await request('/api/results');let data=await r.json();assert.equal(data.unlocked,false);assert.deepEqual(data.releases,[]);
+ r=await request('/api/results/export?stream=collective&threshold=100');assert.equal(r.status,404);
+ add(99);personal(99);r=await request('/api/results');data=await r.json();assert.equal(data.total,100);assert.equal(data.q2.find(x=>x.count===100).count,100);
+ r=await request('/api/preferences/stats');data=(await r.json()).stats;assert.equal(data.total,100);assert.equal(data.questions.scope.none,99);
+ add();personal();r=await request('/api/preferences/stats');data=(await r.json()).stats;assert.equal(data.total,100);assert.equal(data.liveTotal,101);assert.equal(data.nextThreshold,200);
+ for(const stream of ['collective','hypothetical']){
+   r=await request('/api/results/export?stream='+stream+'&threshold=100');assert.equal(r.status,200);assert.match(r.headers.get('content-type'),/text\/csv/);assert.doesNotMatch(await r.text(),/PRIVATE_UUID|SECRET_TOKEN|free_answer|comment/);
+ }
+ r=await request('/api/results/export?stream=invalid&threshold=100');assert.equal(r.status,400);
 });

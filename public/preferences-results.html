@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f6f4ef">
   <title>Personal preference results - THE HUMAN EXPERIMENT</title>
   <link rel="icon" type="image/png" href="/favicon.png"><link rel="shortcut icon" href="/favicon.ico">
-  <link rel="stylesheet" href="/styles.css"><script src="/nav.js" defer></script><script src="/preference-questions.js" defer></script><script src="/survey-options.js" defer></script><script src="/results.js" defer></script><script src="/author-answers.js" defer></script>
+  <link rel="stylesheet" href="/styles.css"><script src="/nav.js" defer></script><script src="/preference-questions.js" defer></script><script src="/survey-options.js" defer></script><script src="/results-releases.js"></script><script src="/results.js" defer></script><script src="/author-answers.js" defer></script>
   <script src="/author-answer-emojis.js" defer></script>
 <style>
 /* Dedicated personal-preferences results page: keep shared scripts/data logic, show only this stream. */
@@ -776,6 +776,7 @@
       const data=await response.json();
       if(!response.ok || !data.ok) throw new Error('unavailable');
       const summary=data.stats;
+      window.renderResultsReleaseNotice(section,'hypothetical',summary);
       const total=Number(summary.total||0);
       const participants=Number(summary.participantTotal||0);
       const threshold=Number(summary.threshold||100);
@@ -786,7 +787,7 @@
         ? messages.statsLocked(total.toLocaleString(locale),threshold.toLocaleString(locale),remaining.toLocaleString(locale),participants.toLocaleString(locale))
         : messages.statsOpen(total.toLocaleString(locale),participants.toLocaleString(locale));
       renderPersonalStatistics(summary);
-    } catch { stats.textContent=personalMessages().statsUnavailable; }
+    } catch { window.renderResultsReleaseNotice(section,'hypothetical',null); stats.textContent=personalMessages().statsUnavailable; }
   }
   const historyLabels = {
     en:['← Previous','Next →'],ru:['← Предыдущие','Следующие →'],es:['← Anteriores','Siguientes →'],pt:['← Anteriores','Próximas →'],zh:['← 上一页','下一页 →'],de:['← Zurück','Weiter →'],ja:['← 前へ','次へ →'],fr:['← Précédentes','Suivantes →'],ar:['← السابق','التالي →']

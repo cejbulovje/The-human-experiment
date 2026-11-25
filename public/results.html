@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#f6f4ef">
   <title>Results - THE HUMAN EXPERIMENT</title>
   <link rel="icon" type="image/png" href="/favicon.png"><link rel="shortcut icon" href="/favicon.ico">
-  <link rel="stylesheet" href="/styles.css"><script src="/nav.js" defer></script><script src="/preference-questions.js" defer></script><script src="/survey-options.js" defer></script><script src="/results.js" defer></script><script src="/author-answers.js" defer></script><script src="/results-layout.js" defer></script>
+  <link rel="stylesheet" href="/styles.css"><script src="/nav.js" defer></script><script src="/preference-questions.js" defer></script><script src="/survey-options.js" defer></script><script src="/results-releases.js"></script><script src="/results.js" defer></script><script src="/author-answers.js" defer></script><script src="/results-layout.js" defer></script>
   <script src="/author-answer-emojis.js" defer></script>
 </head>
 <body>
@@ -597,6 +597,7 @@
       const data=await response.json();
       if(!response.ok || !data.ok) throw new Error('unavailable');
       lastPersonalStats=data.stats;
+      window.renderResultsReleaseNotice(section.querySelector('.hypothetical-statistics-section'),'hypothetical',data.stats);
       renderPersonalCharts(data.stats);
       const total=Number(data.stats.total||0);
       const participants=Number(data.stats.participantTotal||0);
@@ -604,7 +605,7 @@
       const totalNode=section.querySelector('#hypothetical-total');
       if(totalNode) totalNode.textContent=String(participants);
       section.querySelector('.status-chip').textContent = data.stats.unlocked ? t().statsOpen : t().statsLocked;
-    } catch { stats.textContent=apiUi().statsError; }
+    } catch { window.renderResultsReleaseNotice(section.querySelector('.hypothetical-statistics-section'),'hypothetical',null); stats.textContent=apiUi().statsError; }
   }
   const controls=node('div',undefined,'answer-history-controls');
   const previous=node('button','← Предыдущие','subtle-button'); previous.type='button'; previous.id='hypothetical-previous'; previous.hidden=true; previous.addEventListener('click',()=>load(true,Math.max(0,currentStart-Number(pageSize.value))));

@@ -1,3 +1,4 @@
+import {releaseState,aggregateCounts,listReleases,exportAggregate} from './milestone-releases.js';
 const CORS_HEADERS = { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', 'x-content-type-options': 'nosniff', 'x-frame-options': 'DENY', 'referrer-policy': 'strict-origin-when-cross-origin', 'permissions-policy': 'camera=(), microphone=(), geolocation=()' };
 const THRESHOLD = 100;
 const AUTHOR_COLLECTIVE_PUBLIC_ID = 'author-answer-1';
@@ -135,7 +136,38 @@ function snapshotHasValidQuestionLabels(snapshot){
     return true;
   }catch{return false;}
 }
+// Only activate the new release store where its migration has been applied.
+async function releaseStoreReady(db){
+  if(!db)return false;
+  try{return Boolean(await db.prepare("SELECT name FROM sqlite_master WHERE type='table' AND name='results_releases'").first());}catch{return false;}
+}
+async function publishedResults(env,stream){
+  const state=await releaseState(env.DB,stream);
+  const {release,...summary}=state;
+  const releases=await listReleases(env.DB,stream);
+  const counts=release?aggregateCounts(stream,release):null;
+  if(stream==='collective'){
+    if(!state.unlocked)return json({...summary,releases,teaser:true});
+    const charts={answered:{}};
+    for(const question of ['q2','q3','q4']){
+      charts[question]=OPTIONS[question].en.map((label,index)=>({label:label+' / '+OPTIONS[question].ru[index],count:counts[question][index]})).filter(item=>item.count>0);
+      charts.answered[question]=charts[question].reduce((sum,item)=>sum+item.count,0);
+    }
+    return json({...summary,...charts,releases});
+  }
+  return json({ok:true,stats:{...summary,releases,participantTotal:summary.total-1,authorIncluded:true,languages:counts?.languages||{},questions:{scope:counts?.scope||{},motivation:counts?.motivation||{}}}});
+}
+async function downloadResults(request,env){
+  const url=new URL(request.url);
+  const stream=url.searchParams.get('stream'),raw=url.searchParams.get('threshold')||'';
+  if(!['collective','hypothetical'].includes(stream)||!/^\d{1,16}$/.test(raw)||!Number.isSafeInteger(Number(raw)))return json({error:'invalid_release'},400);
+  if(!await releaseStoreReady(env.DB))return json({error:'not_configured'},503);
+  const csv=await exportAggregate(env.DB,stream,Number(raw));
+  if(csv===null)return json({error:'release_not_found'},404);
+  return new Response(csv,{headers:{...CORS_HEADERS,'content-type':'text/csv; charset=utf-8','content-disposition':'attachment; filename="the-human-experiment-'+stream+'-'+Number(raw)+'.csv"'}});
+}
 async function results(env){
+  if(await releaseStoreReady(env.DB))return publishedResults(env,'collective');
   if(!env.DB)return json({error:'not_configured'},503);
   const totalRow=await env.DB.prepare("SELECT COUNT(*) AS total FROM responses WHERE is_public=1 AND (public_id IS NULL OR public_id <> 'author-answer-1')").first();
   const participantTotal=Number(totalRow?.total||0);
@@ -310,6 +342,7 @@ async function publicPreferences(request,env){
   }catch{return json({error:'preferences_unavailable'},503);}
 }
 async function preferencesStats(env){
+  if(await releaseStoreReady(env.DB)){try{return await publishedResults(env,'hypothetical');}catch{return json({error:'preferences_unavailable'},503);}}
   if(!env.DB)return json({error:'not_configured'},503);
   try{
     const rows=await env.DB.prepare('SELECT answers_json,language FROM hypothetical_preferences WHERE aggregate_consent=1').all();
@@ -388,6 +421,7 @@ async function submitPreferences(request,env){
         return json({ok:false,error:'submission_changed',deletionToken},409);
       }
     }
+    try{if(await releaseStoreReady(env.DB))await releaseState(env.DB,'hypothetical');}catch{}
     return json({ok:true,deletionToken});
   }catch{return json({ok:false,error:'save_failed'},500);}
 }
@@ -509,6 +543,9 @@ export default {
     if(url.pathname==='/api/preferences/public'&&request.method==='GET')return publicPreferences(request,env);
     if(url.pathname==='/api/preferences/stats'&&request.method==='GET')return preferencesStats(env);
     if(url.pathname==='/api/preferences/delete'&&request.method==='POST')return deletePreferences(request,env);
+    if(url.pathname==='/api/results/export'&&request.method==='GET'){
+      try{return await downloadResults(request,env);}catch{return json({error:'results_unavailable'},503);}
+    }
     if(url.pathname==='/api/results'&&request.method==='GET'){
       try{return await results(env);}catch{return json({error:'results_unavailable'},503);}
     }

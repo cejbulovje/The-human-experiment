@@ -129,88 +129,8 @@ const resultsBreakdownLabels = {
   fr: "Réponses des participants : {participants} · Exemple de l’auteur : {author}",
   ar: "إجابات المشاركين: {participants} · مثال صاحب الفكرة: {author}",
 };
-const milestoneNoticeWords = {
-  "en": [
-    "When are results published?",
-    "Statistics open and update at these milestones, continuing in the same pattern.",
-    "Valid responses now",
-    "Next milestone",
-    "Remaining"
-  ],
-  "ru": [
-    "Когда публикуются результаты?",
-    "Статистика открывается и обновляется при достижении этих порогов, далее — по тому же принципу.",
-    "Действительных ответов сейчас",
-    "Следующий порог",
-    "Осталось"
-  ],
-  "es": [
-    "¿Cuándo se publican los resultados?",
-    "Las estadísticas se abren y actualizan al alcanzar estos umbrales; el patrón continúa.",
-    "Respuestas válidas actuales",
-    "Próximo umbral",
-    "Faltan"
-  ],
-  "pt": [
-    "Quando os resultados são publicados?",
-    "As estatísticas são liberadas e atualizadas nestes marcos; o padrão continua.",
-    "Respostas válidas atuais",
-    "Próximo marco",
-    "Faltam"
-  ],
-  "zh": [
-    "何时公布结果？",
-    "统计结果在达到以下里程碑时公开和更新，之后按相同规律继续。",
-    "当前有效回答",
-    "下一个里程碑",
-    "还差"
-  ],
-  "de": [
-    "Wann werden Ergebnisse veröffentlicht?",
-    "Die Statistik wird bei diesen Schwellenwerten freigeschaltet und aktualisiert; das Muster setzt sich fort.",
-    "Aktuelle gültige Antworten",
-    "Nächster Schwellenwert",
-    "Noch erforderlich"
-  ],
-  "ja": [
-    "結果はいつ公開されますか？",
-    "統計は次の基準に達すると公開・更新され、その後も同じ規則が続きます。",
-    "現在の有効回答数",
-    "次の基準",
-    "残り"
-  ],
-  "fr": [
-    "Quand les résultats sont-ils publiés ?",
-    "Les statistiques sont ouvertes et mises à jour à ces seuils, puis selon le même schéma.",
-    "Réponses valides actuelles",
-    "Prochain seuil",
-    "Restantes"
-  ],
-  "ar": [
-    "متى تُنشر النتائج؟",
-    "تُتاح الإحصاءات وتُحدَّث عند بلوغ هذه الحدود، ثم يستمر النمط نفسه.",
-    "الإجابات الصالحة حاليًا",
-    "الحد التالي",
-    "المتبقي"
-  ]
-};
 function renderMilestoneNotice(data) {
- const section = $('#statistics-section');
- if (!section) return;
- let panel = $('#collective-milestone-notice');
- if (DEMO_MODE || !data || typeof data.unlocked !== 'boolean') { if(panel) panel.hidden=true; return; }
- const live = Number(data.liveTotal ?? data.total), next = Number(data.nextThreshold ?? data.threshold);
- if (!Number.isSafeInteger(live) || live < 0 || !Number.isSafeInteger(next) || next < 100) { if(panel) panel.hidden=true; return; }
- if (!panel) {
-  panel=document.createElement('div');panel.id='collective-milestone-notice';panel.className='status-panel';
-  section.querySelector('.results-stat-card').after(panel);
- }
- const w=milestoneNoticeWords[lang]||milestoneNoticeWords.en, f=n=>n.toLocaleString(lang);
- const heading=document.createElement('strong');heading.textContent=w[0];
- const description=document.createElement('p');description.textContent=w[1];
- const scale=document.createElement('p');scale.dir='ltr';scale.textContent=[100,200,500,1000,2000,5000,10000].map(f).join(' → ')+' → …';
- const progress=document.createElement('p');progress.setAttribute('role','status');progress.textContent=w[2]+': '+f(live)+' · '+w[3]+': '+f(next)+' · '+w[4]+': '+f(Math.max(0,next-live));
- panel.replaceChildren(heading,description,scale,progress);panel.hidden=false;
+ window.renderResultsReleaseNotice(document.querySelector('#statistics-section'),'collective',data);
 }
 function renderStats(data) {
  renderMilestoneNotice(data);
