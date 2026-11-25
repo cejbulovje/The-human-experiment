@@ -10,6 +10,57 @@
     fr: { menu: "Menu", home: "Accueil - THE HUMAN EXPERIMENT", projectLinks: "Liens du projet", language: "Langue", preferences: "Préférences hypothétiques", research: "Préférences hypothétiques", goal: "Objectif de l’expérience", privacy: "Confidentialité", results: "Résultats", share: "Partager l’expérience", survey: "Questionnaire", contact: "Contact", support: "Soutenir le projet", shared: "Lien copié", failed: "Partage impossible", emailCopied: "Adresse e-mail copiée !", emailCopyFailed: "Copie impossible. Sélectionnez et copiez l’adresse e-mail.", copyEmail: "Copier l’adresse e-mail " },
     ar: { menu: "القائمة", home: "الصفحة الرئيسية لتجربة الإنسان", projectLinks: "روابط المشروع", language: "اللغة", preferences: "التفضيلات المفترضة", research: "التفضيلات المفترضة", goal: "هدف التجربة", privacy: "الخصوصية", results: "النتائج", share: "مشاركة التجربة", survey: "الاستبيان", contact: "اتصل بنا", support: "ادعم المشروع", shared: "تم نسخ الرابط", failed: "تعذرت المشاركة", emailCopied: "تم نسخ البريد الإلكتروني!", emailCopyFailed: "تعذر النسخ. حدّد عنوان البريد الإلكتروني وانسخه.", copyEmail: "نسخ عنوان البريد الإلكتروني " },
   };
+  const footerCopy = {
+    en: { methodology: "Research methodology", supportInviteHeading: "Support the author and project", supportInviteBody: "If this idea resonates with you, you can voluntarily support its creator and the continued development of the experiment." },
+    ru: { methodology: "Методология исследования", supportInviteHeading: "Поддержать автора и проект", supportInviteBody: "Если вам близка идея эксперимента, вы можете добровольно поддержать её автора и дальнейшее развитие исследования." },
+    es: { methodology: "Metodología de investigación", supportInviteHeading: "Apoyar al autor y al proyecto", supportInviteBody: "Si esta idea te inspira, puedes apoyar voluntariamente a su creador y el desarrollo continuo del experimento." },
+    pt: { methodology: "Metodologia de pesquisa", supportInviteHeading: "Apoiar o autor e o projeto", supportInviteBody: "Se esta ideia faz sentido para você, pode apoiar voluntariamente seu criador e o desenvolvimento contínuo do experimento." },
+    zh: { methodology: "研究方法", supportInviteHeading: "支持作者与项目", supportInviteBody: "如果你认同这个想法，可以自愿支持创作者及实验的持续发展。" },
+    de: { methodology: "Forschungsmethodik", supportInviteHeading: "Autor und Projekt unterstützen", supportInviteBody: "Wenn dich diese Idee anspricht, kannst du ihren Urheber und die weitere Entwicklung des Experiments freiwillig unterstützen." },
+    ja: { methodology: "研究方法", supportInviteHeading: "作者とプロジェクトを支援", supportInviteBody: "このアイデアに共感したら、作者と実験の今後の発展を任意で支援できます。" },
+    fr: { methodology: "Méthodologie de recherche", supportInviteHeading: "Soutenir l'auteur et le projet", supportInviteBody: "Si cette idée vous parle, vous pouvez soutenir librement son auteur et la poursuite du développement de l'expérience." },
+    ar: { methodology: "منهجية البحث", supportInviteHeading: "دعم صاحب الفكرة والمشروع", supportInviteBody: "إذا لاقت هذه الفكرة صدى لديك، يمكنك دعم صاحبها طوعا والمساهمة في استمرار تطوير التجربة." },
+  };
+  for (const code of Object.keys(footerCopy)) Object.assign(translations[code], footerCopy[code]);
+
+  // Keep the same page links and actions at the bottom of every page.
+  const footerPages = [
+    ['/', 'survey', 'Survey'],
+    ['/goal.html', 'goal', 'Goal of the experiment'],
+    ['/privacy.html', 'privacy', 'Privacy'],
+    ['/results.html', 'results', 'Results'],
+    ['/preferences.html', 'preferences', 'Hypothetical preferences'],
+    ['/methodology.html', 'methodology', 'Research methodology'],
+    ['/support.html', 'support', 'Support the project'],
+  ];
+  document.querySelectorAll('footer .footer-links').forEach(links => {
+    const share = links.querySelector('[data-site-share]');
+    footerPages.forEach(([href, key, fallback]) => {
+      let anchor = [...links.querySelectorAll('a[href]')].find(a => a.getAttribute('href') === href);
+      if (!anchor) {
+        anchor = document.createElement('a');
+        anchor.href = href;
+        anchor.textContent = fallback;
+      }
+      anchor.dataset.menu = key;
+      if (location.pathname === href || (href === '/' && location.pathname === '/index.html')) {
+        anchor.setAttribute('aria-current', 'page');
+      }
+      links.insertBefore(anchor, share);
+    });
+    if (!links.querySelector('[data-contact-copy]')) {
+      const contact = document.createElement('button');
+      contact.type = 'button';
+      contact.className = 'footer-contact-copy';
+      contact.setAttribute('data-contact-copy', '');
+      const caption = document.createElement('span');
+      caption.dataset.menu = 'contact';
+      caption.textContent = 'Contact';
+      contact.append(caption, document.createTextNode(': mankindexperiment@gmail.com'));
+      links.append(contact);
+    }
+  });
+
   const language = () => {
     const picker = document.querySelector('#language, #page-language');
     const code = picker?.value || document.documentElement.lang || 'en';
