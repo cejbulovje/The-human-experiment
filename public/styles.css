@@ -155,7 +155,27 @@
 .topbar-centered .header-controls .text-link{white-space:normal;overflow-wrap:anywhere}
 .site-menu{position:relative;z-index:20;flex:0 0 auto}
 .site-menu-details{position:relative}
-.site-menu-trigger{list-style:none;cursor:pointer;display:grid;place-items:center;width:max-content;padding-inline:10px;white-space:nowrap;height:40px;border:1px solid var(--line);border-radius:12px;background:var(--card);font-size:1.05rem;color:var(--ink)}
+.site-menu-trigger {
+  list-style:none; cursor:pointer; display:inline-flex; align-items:center; gap:9px;
+  width:max-content; min-height:44px; padding:0 15px; white-space:nowrap;
+  border:1px solid #b8c9bd; border-radius:999px; background:#e8efe9;
+  color:var(--accent); font-family:inherit;
+  font-size:.9rem; font-weight:600; line-height:1.2;
+}
+.site-menu-trigger::before {
+  content:""; width:15px; height:12px; box-sizing:border-box;
+  border-block:2px solid currentColor;
+  background:linear-gradient(currentColor,currentColor) left center / 11px 2px no-repeat;
+}
+.site-menu-trigger:hover { background:#dae6dd; border-color:#94ac9b; }
+.site-menu-details[open] > .site-menu-trigger {
+  background:var(--accent); border-color:var(--accent); color:white;
+}
+.site-menu-details[open] > .site-menu-trigger::before {
+  border:0; background:linear-gradient(45deg,transparent 44%,currentColor 45% 55%,transparent 56%),
+    linear-gradient(-45deg,transparent 44%,currentColor 45% 55%,transparent 56%);
+  width:15px; height:15px;
+}
 .site-menu-trigger::-webkit-details-marker{display:none}
 .site-menu-panel{position:absolute;inset-inline-start:0;top:calc(100% + 9px);width:min(250px,calc(100vw - 36px));padding:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 32px #20221f18;display:grid;gap:2px}
 .site-menu-panel a,.site-menu-panel button{display:block;width:100%;padding:10px 12px;border:0;border-radius:8px;background:transparent;color:var(--ink);font:inherit;font-size:.9rem;text-align:start;text-decoration:none;cursor:pointer}
