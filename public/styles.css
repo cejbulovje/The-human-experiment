@@ -155,7 +155,7 @@
 .topbar-centered .header-controls .text-link{white-space:normal;overflow-wrap:anywhere}
 .site-menu{position:relative;z-index:20;flex:0 0 auto}
 .site-menu-details{position:relative}
-.site-menu-trigger{list-style:none;cursor:pointer;display:grid;place-items:center;width:40px;height:40px;border:1px solid var(--line);border-radius:12px;background:var(--card);font-size:1.05rem;color:var(--ink)}
+.site-menu-trigger{list-style:none;cursor:pointer;display:grid;place-items:center;width:max-content;padding-inline:10px;white-space:nowrap;height:40px;border:1px solid var(--line);border-radius:12px;background:var(--card);font-size:1.05rem;color:var(--ink)}
 .site-menu-trigger::-webkit-details-marker{display:none}
 .site-menu-panel{position:absolute;inset-inline-start:0;top:calc(100% + 9px);width:min(250px,calc(100vw - 36px));padding:8px;background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:0 12px 32px #20221f18;display:grid;gap:2px}
 .site-menu-panel a,.site-menu-panel button{display:block;width:100%;padding:10px 12px;border:0;border-radius:8px;background:transparent;color:var(--ink);font:inherit;font-size:.9rem;text-align:start;text-decoration:none;cursor:pointer}
@@ -374,7 +374,7 @@
 .site-menu-trigger:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
 @media(max-width:760px){
   .topbar-centered{
-    grid-template-columns:44px minmax(0,1fr) 44px;
+    grid-template-columns:max-content minmax(0,1fr) auto;
     gap:8px;
     padding:10px 16px;
   }
