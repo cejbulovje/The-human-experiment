@@ -186,7 +186,7 @@
     shareDialog.addEventListener('click', event => { if (event.target === shareDialog) shareDialog.close(); });
     shareDialog.querySelector('[data-share-service="instagram"]').addEventListener('click', async () => {
       const labels = shareLabels[language()] || shareLabels.en;
-      const invitation = labels.invitation + '\n' + location.origin + '/';
+      const invitation = labels.invitation + '\n' + location.origin + '/share/' + language();
       try {
         if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(invitation);
         else {
@@ -203,7 +203,7 @@
       }
     });
     shareDialog.querySelector('[data-share-service="copy"]').addEventListener('click', async () => {
-      const url = location.origin + '/';
+      const url = location.origin + '/share/' + language();
       try {
         if (navigator.clipboard?.writeText) await navigator.clipboard.writeText(url);
         else {
@@ -224,7 +224,7 @@
   const openShareDialog = () => {
     const labels = shareLabels[language()] || shareLabels.en;
     const dialog = getShareDialog();
-    const url = location.origin + '/';
+    const url = location.origin + '/share/' + language();
     const message = labels.invitation + '\n' + url;
     dialog.querySelector('#share-dialog-title').textContent = labels.title;
     dialog.querySelector('.share-dialog-close').setAttribute('aria-label', labels.close);

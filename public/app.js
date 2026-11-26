@@ -718,7 +718,7 @@ function renderLanguage(lang) {
 }
 async function shareExperiment() {
   const t = translations[activeLanguage] || translations.en;
-  const url = `${window.location.origin}/`;
+  const url = `${window.location.origin}/share/${activeLanguage}`;
   const shareData = { title: 'THE HUMAN EXPERIMENT', text: t['share-text'], url };
   if (navigator.share) {
     try {
@@ -757,6 +757,10 @@ syncFeedbackEmailField();
 answer.addEventListener('input',()=>{charCount.textContent=`${answer.value.length} / 10000`;});
 let savedLanguage='';
 try { savedLanguage=localStorage.getItem('human-experiment-language') || ''; } catch {}
+if (!translations[savedLanguage]) {
+  const shareLanguage = window.location.pathname.match(/^\/share\/(en|ru|es|pt|fr|de|zh|ja|ar)$/)?.[1];
+  if (shareLanguage) savedLanguage = shareLanguage;
+}
 if (!translations[savedLanguage]) {
   const browserLanguages = (navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || 'en']);
   const detected = browserLanguages.map(value => String(value).toLowerCase().split('-')[0]).find(value => translations[value]);

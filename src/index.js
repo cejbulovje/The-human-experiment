@@ -555,9 +555,36 @@ async function aiAnalysis(request,env){
   }
 }
 
+const shareHeadlines = {
+  en: 'You have complete power over another person. Where do you draw the line?',
+  ru: 'У вас полная власть над другим человеком. Где вы остановитесь?',
+  es: 'Tienes poder absoluto sobre otra persona. ¿Dónde pondrías el límite?',
+  pt: 'Você tem poder absoluto sobre outra pessoa. Onde colocaria o limite?',
+  fr: 'Vous avez tout pouvoir sur une autre personne. Où fixerez-vous la limite ?',
+  de: 'Du hast die volle Macht über einen anderen Menschen. Wo ziehst du die Grenze?',
+  zh: '你拥有掌控另一个人的全部权力。你的底线在哪里？',
+  ja: 'あなたは他の人を完全に支配できます。どこで一線を引きますか？',
+  ar: 'لديك سلطة كاملة على شخص آخر. أين تضع الحدود؟',
+};
+
 export default {
   async fetch(request,env){
     const url=new URL(request.url);
+    const shareMatch = url.pathname.match(/^\/share\/(en|ru|es|pt|fr|de|zh|ja|ar)$/);
+    if (shareMatch && (request.method === 'GET' || request.method === 'HEAD')) {
+      const language = shareMatch[1];
+      const homepageUrl = new URL('/', url.origin);
+      const response = await env.ASSETS.fetch(new Request(homepageUrl, {method: 'GET'}));
+      if (!response.ok) return response;
+      const title = shareHeadlines[language];
+      const image = new URL(`/share-images/${language}.png`, url.origin).href;
+      const metadata = `<meta property="og:type" content="website"><meta property="og:title" content="${title}"><meta property="og:description" content="THE HUMAN EXPERIMENT"><meta property="og:url" content="${url.origin}${url.pathname}"><meta property="og:image" content="${image}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${title}"><meta name="twitter:description" content="THE HUMAN EXPERIMENT"><meta name="twitter:image" content="${image}"><link rel="canonical" href="${homepageUrl.href}">`;
+      const html = (await response.text()).replace(/<!-- social-preview-start -->[\s\S]*?<!-- social-preview-end -->/, metadata);
+      const headers = new Headers(response.headers);
+      headers.delete('content-length');
+      headers.delete('etag');
+      return new Response(request.method === 'HEAD' ? null : html, {status: response.status, headers});
+    }
     if(url.pathname==='/api/submit'&&request.method==='POST')return submit(request,env);
     if(url.pathname==='/api/preferences'&&request.method==='POST')return submitPreferences(request,env);
     if(url.pathname==='/api/preferences/config'&&request.method==='GET')return json(preferenceCapabilities(env));
