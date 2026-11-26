@@ -381,7 +381,13 @@
 
 .role-paths{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 .intro-action{display:flex;margin:22px 0;width:fit-content;min-width:220px}
-@media(max-width:600px){.intro-action{width:100%}}
+@media(max-width:600px){
+  .shell:has(> .intro){padding-top:16px}
+  .intro h1{margin-bottom:14px}
+  .intro .lead{line-height:1.55;margin:0 0 12px}
+  .intro .intro-action{width:100%;min-height:52px;margin:0 0 12px}
+  .intro-action + p{margin-top:0}
+}
 .role-card{display:flex;flex-direction:column;gap:12px;min-width:0;padding:clamp(18px,4vw,24px);border:1px solid var(--line);border-radius:var(--radius);background:var(--card);overflow-wrap:anywhere}
 .role-card h2{margin:0;font-size:1.35rem;line-height:1.3}
 .role-card p{margin:0}
