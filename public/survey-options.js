@@ -23,7 +23,7 @@ const QUESTION_OPTIONS = {
     ar: ["احترام رغباته", "محاولة التوصل إلى اتفاق", "فعل ما أريده على أي حال", "يعتمد على الموقف", "أخرى"]
   },
   q4: {
-    en: ["Leave the person as they are", "Help them and improve their life", "Change them according to my own ideas", "Use them for their own interests", "Let the person decide their own fate", "Not sure", "Other"],
+    en: ["Leave the person as they are", "Help them and improve their life", "Change them according to my own ideas", "Use the person for personal gain", "Let the person decide their own fate", "Not sure", "Other"],
     ru: ["Оставить человека как есть", "Помочь ему и улучшить его жизнь", "Изменить его в соответствии со своими представлениями", "Использовать его в собственных интересах", "Предоставить ему возможность самому решать свою судьбу", "Затрудняюсь ответить", "Другое"],
     es: ["Dejar a la persona como está", "Ayudarla y mejorar su vida", "Cambiarla según mis ideas", "Usarla para mis propios intereses", "Dejar que decida su destino", "No estoy seguro", "Otro"],
     pt: ["Deixar a pessoa como está", "Ajudá-la e melhorar sua vida", "Mudá-la conforme minhas ideias", "Usá-la em meu próprio interesse", "Deixar a pessoa decidir seu destino", "Não tenho certeza", "Outro"],
