@@ -41,11 +41,12 @@
       setText(document.querySelector('.prototype-tag'), t.tag);
       document.querySelectorAll('[data-pref-i18n]').forEach(node => setText(node, t[node.dataset.prefI18n]));
       const q = preferenceQuestions[lang] || preferenceQuestions.en;
-      const sections = [...document.querySelectorAll('.preference-question')];
+      const sections = [...document.querySelectorAll('.preference-question[data-question-key]')];
       sections.forEach((section, i) => {
-        setText(section.querySelector('h2'), q.questions[i]);
+        const sourceIndex={scope:0,motivation:1,comment:2}[section.dataset.questionKey];
+        setText(section.querySelector('h2'), (i+1)+'. '+q.questions[sourceIndex].replace(/^\d+\.\s*/,''));
         const helper = section.querySelector('p:not(#comment-counter)');
-        if (helper) setText(helper, q.helpers[i]);
+        if (helper) setText(helper, q.helpers[sourceIndex]);
       });
       [['scope',q.scope],['motivation',q.motivation]].forEach(([name, values]) => {
         [...document.querySelectorAll('input[name="' + name + '"]')].forEach((input,i) => {

@@ -457,7 +457,11 @@
         full.addEventListener('transitionend', finishClosing);
       }
     });
-    if (kind === 'volunteer') card.append(top, preview, toggle, full);
+    if (kind === 'volunteer') {
+      const question=document.createElement('strong');question.className='personal-answer-question';
+      question.textContent='1. '+preferenceQuestions[locale].questions[2].replace(/^\d+\.\s*/,'');
+      card.append(top,question,preview,toggle,full);
+    }
     else card.append(top, preview, toggle, full);
 
     function attachChoices(choices, actions) {
@@ -573,7 +577,7 @@
         const row = document.createElement('div');
         row.className = 'author-questionnaire-answer';
         const label = document.createElement('strong');
-        label.textContent = question;
+        label.textContent = String(choices.childElementCount+1)+'. '+question.replace(/^\d+\.\s*/,'');
         row.append(label);
         if (Array.isArray(answer)) {
           const list = document.createElement('ul');

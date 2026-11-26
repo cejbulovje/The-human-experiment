@@ -18,6 +18,13 @@
 .results-stream-links:not(.preference-page-switcher), #results-status, #statistics-section, .public-answers-section:not(.hypothetical-answers-section), .ai-analysis-section:not(.hypothetical-ai-analysis-section) { display:none !important; }
 .preference-page-switcher { margin-top:20px; }
 .hypothetical-answer-tools { margin-top:20px; }
+.hypothetical-answer-list .personal-answer-question { display:block; margin:14px 0 8px; line-height:1.55; }
+.hypothetical-answer-list .answer-text { white-space:pre-wrap; }
+.hypothetical-answer-list > .answer-card .author-questionnaire-section { margin: 14px 0; line-height: 1.55; }
+.hypothetical-answer-list > .answer-card .author-questionnaire-question { display:block; margin-bottom:8px; }
+.hypothetical-answer-list > .answer-card .author-questionnaire-answer-text { margin:0; }
+.hypothetical-answer-list > .answer-card .author-questionnaire-answer-list { display:grid; gap:8px; padding-left:1.35rem; }
+.hypothetical-answer-list > .answer-card .answer-comment { white-space:pre-wrap; line-height:1.65; }
 .author-questionnaire-answer { margin:10px 0 0; font-size:.92rem; line-height:1.55; }
 .author-motives-list { display:grid; gap:8px; margin:9px 0 2px; padding-left:1.35rem; }
 .author-motives-list li { padding-left:3px; line-height:1.55; }
@@ -247,19 +254,20 @@
       if (hypotheticalNotice) hypotheticalNotice.hidden = view !== 'overview';
       if (hypotheticalEmpty) {
         hypotheticalEmpty.hidden = view === 'overview';
+        if(document.querySelector('.hypothetical-answer-list .answer-card, .hypothetical-answer-list .author-answer-card')) hypotheticalEmpty.hidden=true;
         const title = hypotheticalEmpty.querySelector('[data-voice="emptyTitle"]');
         const text = hypotheticalEmpty.querySelector('[data-voice="emptyText"]');
         const language = document.documentElement.lang || 'en';
         const controlsByLanguage = {
-          en: {views:['Overview','All answers','By question','Latest','Popular','Unusual'],switcher:["Main survey","What participants would propose for another person’s life",'Personal preferences','What people would want for their own lives'],searchLabel:'Search personal answers',searchPlaceholder:'Search answers…',questionLabel:'Question',questions:['All questions','1. What I would allow to change','2. Why I would take part'],sortLabel:'Sort',sortLatest:'Latest first',sortOldest:'Oldest first',pageSize:"Answers per page",notice:'Only answers that participants have separately agreed to make public are shown. This stream is kept separate from collective answers.'},
-          ru: {views:['Обзор','Все ответы','По вопросам','Новые','Популярные','Необычные'],switcher:["Основной опрос","Что участники предложили бы для жизни другого человека",'Личные предпочтения','Чего люди хотели бы для собственной жизни'],searchLabel:'Поиск по личным ответам',searchPlaceholder:'Поиск по ответам…',questionLabel:'Вопрос',questions:['Все вопросы','1. Что я позволю менять','2. Почему я участвую'],sortLabel:'Сортировка',sortLatest:'Сначала новые',sortOldest:'Сначала старые',pageSize:"Ответов на странице",notice:'Показываются только ответы, для которых участник отдельно разрешил публичное отображение. Этот поток не объединяется с коллективными ответами.'},
-          es: {views:['Resumen','Todas las respuestas','Por pregunta','Recientes','Populares','Inusuales'],switcher:["Encuesta principal","Qué propondrían los participantes para la vida de otra persona",'Preferencias personales','Qué querría la gente para su propia vida'],searchLabel:'Buscar respuestas personales',searchPlaceholder:'Buscar respuestas…',questionLabel:'Pregunta',questions:['Todas las preguntas','1. Qué permitiría cambiar','2. Por qué participaría'],sortLabel:'Ordenar',sortLatest:'Más recientes primero',sortOldest:'Más antiguas primero',pageSize:"Respuestas por página",notice:'Solo se muestran respuestas que los participantes han autorizado por separado para su publicación. Este flujo se mantiene separado de las respuestas colectivas.'},
-          pt: {views:['Visão geral','Todas as respostas','Por pergunta','Recentes','Populares','Incomuns'],switcher:["Pesquisa principal","O que os participantes proporiam para a vida de outra pessoa",'Preferências pessoais','O que as pessoas desejariam para a própria vida'],searchLabel:'Pesquisar respostas pessoais',searchPlaceholder:'Pesquisar respostas…',questionLabel:'Pergunta',questions:['Todas as perguntas','1. O que eu permitiria mudar','2. Por que eu participaria'],sortLabel:'Ordenar',sortLatest:'Mais recentes primeiro',sortOldest:'Mais antigas primeiro',pageSize:"Respostas por página",notice:'São mostradas apenas respostas que os participantes autorizaram separadamente para publicação. Este fluxo permanece separado das respostas coletivas.'},
-          zh: {views:['概览','全部回答','按问题','最新','热门','特别'],switcher:["主问卷","参与者会为另一个人的人生提出什么建议",'个人偏好','人们希望自己的生活是什么样'],searchLabel:'搜索个人回答',searchPlaceholder:'搜索回答…',questionLabel:'问题',questions:['所有问题','1. 我允许改变什么','2. 我为什么参与'],sortLabel:'排序',sortLatest:'最新优先',sortOldest:'最早优先',pageSize:"每页回答数",notice:'这里只显示参与者单独同意公开的回答。本列表与集体回答分开。'},
-          de: {views:['Übersicht','Alle Antworten','Nach Frage','Neueste','Beliebt','Ungewöhnlich'],switcher:["Hauptumfrage","Was Teilnehmende für das Leben einer anderen Person vorschlagen würden",'Persönliche Präferenzen','Was Menschen sich für ihr eigenes Leben wünschen'],searchLabel:'Persönliche Antworten suchen',searchPlaceholder:'Antworten suchen…',questionLabel:'Frage',questions:['Alle Fragen','1. Was ich ändern lassen würde','2. Warum ich teilnehmen würde'],sortLabel:'Sortieren',sortLatest:'Neueste zuerst',sortOldest:'Älteste zuerst',pageSize:"Antworten pro Seite",notice:'Angezeigt werden nur Antworten, deren Veröffentlichung Teilnehmende gesondert erlaubt haben. Dieser Bereich bleibt von kollektiven Antworten getrennt.'},
-          ja: {views:['概要','すべての回答','質問別','最新','人気','特徴的'],switcher:["本アンケート","他の人の人生について参加者がどんな提案をするか",'個人の好み','自分の人生について人々が望むこと'],searchLabel:'個人の回答を検索',searchPlaceholder:'回答を検索…',questionLabel:'質問',questions:['すべての質問','1. 何を変えることを認めるか','2. 参加する理由'],sortLabel:'並べ替え',sortLatest:'新しい順',sortOldest:'古い順',pageSize:"1ページあたりの回答数",notice:'ここには、公開に個別に同意した回答のみを表示します。この一覧は集団の回答とは分けて扱います。'},
-          fr: {views:['Aperçu','Toutes les réponses','Par question','Récentes','Populaires','Inhabituelles'],switcher:["Questionnaire principal","Ce que les participants proposeraient pour la vie d’une autre personne",'Préférences personnelles','Ce que les gens souhaiteraient pour leur propre vie'],searchLabel:'Rechercher des réponses personnelles',searchPlaceholder:'Rechercher des réponses…',questionLabel:'Question',questions:['Toutes les questions','1. Ce que je laisserais changer','2. Pourquoi je participerais'],sortLabel:'Trier',sortLatest:'Les plus récentes d’abord',sortOldest:'Les plus anciennes d’abord',pageSize:"Réponses par page",notice:'Seules les réponses dont les participants ont autorisé séparément la publication sont affichées. Ce flux reste distinct des réponses collectives.'},
-          ar: {views:['نظرة عامة','جميع الإجابات','حسب السؤال','الأحدث','الأكثر شيوعًا','غير المألوفة'],switcher:["الاستبيان الأساسي","ما الذي قد يقترحه المشاركون بشأن حياة شخص آخر",'التفضيلات الشخصية','ما يريده الناس لحياتهم'],searchLabel:'البحث في الإجابات الشخصية',searchPlaceholder:'البحث في الإجابات…',questionLabel:'السؤال',questions:['جميع الأسئلة','1. ما الذي أسمح بتغييره','2. لماذا أشارك'],sortLabel:'ترتيب',sortLatest:'الأحدث أولًا',sortOldest:'الأقدم أولًا',pageSize:"الإجابات في كل صفحة",notice:'تُعرض فقط الإجابات التي وافق أصحابها بشكل منفصل على نشرها. هذا المسار منفصل عن الإجابات الجماعية.'}
+          en: {views:['Overview','All answers','By question','Latest','Popular','Unusual'],switcher:["Main survey","What participants would propose for another person’s life",'Personal preferences','What people would want for their own lives'],searchLabel:'Search personal answers',searchPlaceholder:'Search answers…',questionLabel:'Question',questions:['All questions','2. What I would allow to change','2. Why I would take part'],sortLabel:'Sort',sortLatest:'Latest first',sortOldest:'Oldest first',pageSize:"Answers per page",notice:'Only answers that participants have separately agreed to make public are shown. This stream is kept separate from collective answers.'},
+          ru: {views:['Обзор','Все ответы','По вопросам','Новые','Популярные','Необычные'],switcher:["Основной опрос","Что участники предложили бы для жизни другого человека",'Личные предпочтения','Чего люди хотели бы для собственной жизни'],searchLabel:'Поиск по личным ответам',searchPlaceholder:'Поиск по ответам…',questionLabel:'Вопрос',questions:['Все вопросы','2. Что я позволю менять','2. Почему я участвую'],sortLabel:'Сортировка',sortLatest:'Сначала новые',sortOldest:'Сначала старые',pageSize:"Ответов на странице",notice:'Показываются только ответы, для которых участник отдельно разрешил публичное отображение. Этот поток не объединяется с коллективными ответами.'},
+          es: {views:['Resumen','Todas las respuestas','Por pregunta','Recientes','Populares','Inusuales'],switcher:["Encuesta principal","Qué propondrían los participantes para la vida de otra persona",'Preferencias personales','Qué querría la gente para su propia vida'],searchLabel:'Buscar respuestas personales',searchPlaceholder:'Buscar respuestas…',questionLabel:'Pregunta',questions:['Todas las preguntas','2. Qué permitiría cambiar','2. Por qué participaría'],sortLabel:'Ordenar',sortLatest:'Más recientes primero',sortOldest:'Más antiguas primero',pageSize:"Respuestas por página",notice:'Solo se muestran respuestas que los participantes han autorizado por separado para su publicación. Este flujo se mantiene separado de las respuestas colectivas.'},
+          pt: {views:['Visão geral','Todas as respostas','Por pergunta','Recentes','Populares','Incomuns'],switcher:["Pesquisa principal","O que os participantes proporiam para a vida de outra pessoa",'Preferências pessoais','O que as pessoas desejariam para a própria vida'],searchLabel:'Pesquisar respostas pessoais',searchPlaceholder:'Pesquisar respostas…',questionLabel:'Pergunta',questions:['Todas as perguntas','2. O que eu permitiria mudar','2. Por que eu participaria'],sortLabel:'Ordenar',sortLatest:'Mais recentes primeiro',sortOldest:'Mais antigas primeiro',pageSize:"Respostas por página",notice:'São mostradas apenas respostas que os participantes autorizaram separadamente para publicação. Este fluxo permanece separado das respostas coletivas.'},
+          zh: {views:['概览','全部回答','按问题','最新','热门','特别'],switcher:["主问卷","参与者会为另一个人的人生提出什么建议",'个人偏好','人们希望自己的生活是什么样'],searchLabel:'搜索个人回答',searchPlaceholder:'搜索回答…',questionLabel:'问题',questions:['所有问题','2. 我允许改变什么','2. 我为什么参与'],sortLabel:'排序',sortLatest:'最新优先',sortOldest:'最早优先',pageSize:"每页回答数",notice:'这里只显示参与者单独同意公开的回答。本列表与集体回答分开。'},
+          de: {views:['Übersicht','Alle Antworten','Nach Frage','Neueste','Beliebt','Ungewöhnlich'],switcher:["Hauptumfrage","Was Teilnehmende für das Leben einer anderen Person vorschlagen würden",'Persönliche Präferenzen','Was Menschen sich für ihr eigenes Leben wünschen'],searchLabel:'Persönliche Antworten suchen',searchPlaceholder:'Antworten suchen…',questionLabel:'Frage',questions:['Alle Fragen','2. Was ich ändern lassen würde','2. Warum ich teilnehmen würde'],sortLabel:'Sortieren',sortLatest:'Neueste zuerst',sortOldest:'Älteste zuerst',pageSize:"Antworten pro Seite",notice:'Angezeigt werden nur Antworten, deren Veröffentlichung Teilnehmende gesondert erlaubt haben. Dieser Bereich bleibt von kollektiven Antworten getrennt.'},
+          ja: {views:['概要','すべての回答','質問別','最新','人気','特徴的'],switcher:["本アンケート","他の人の人生について参加者がどんな提案をするか",'個人の好み','自分の人生について人々が望むこと'],searchLabel:'個人の回答を検索',searchPlaceholder:'回答を検索…',questionLabel:'質問',questions:['すべての質問','2. 何を変えることを認めるか','2. 参加する理由'],sortLabel:'並べ替え',sortLatest:'新しい順',sortOldest:'古い順',pageSize:"1ページあたりの回答数",notice:'ここには、公開に個別に同意した回答のみを表示します。この一覧は集団の回答とは分けて扱います。'},
+          fr: {views:['Aperçu','Toutes les réponses','Par question','Récentes','Populaires','Inhabituelles'],switcher:["Questionnaire principal","Ce que les participants proposeraient pour la vie d’une autre personne",'Préférences personnelles','Ce que les gens souhaiteraient pour leur propre vie'],searchLabel:'Rechercher des réponses personnelles',searchPlaceholder:'Rechercher des réponses…',questionLabel:'Question',questions:['Toutes les questions','2. Ce que je laisserais changer','2. Pourquoi je participerais'],sortLabel:'Trier',sortLatest:'Les plus récentes d’abord',sortOldest:'Les plus anciennes d’abord',pageSize:"Réponses par page",notice:'Seules les réponses dont les participants ont autorisé séparément la publication sont affichées. Ce flux reste distinct des réponses collectives.'},
+          ar: {views:['نظرة عامة','جميع الإجابات','حسب السؤال','الأحدث','الأكثر شيوعًا','غير المألوفة'],switcher:["الاستبيان الأساسي","ما الذي قد يقترحه المشاركون بشأن حياة شخص آخر",'التفضيلات الشخصية','ما يريده الناس لحياتهم'],searchLabel:'البحث في الإجابات الشخصية',searchPlaceholder:'البحث في الإجابات…',questionLabel:'السؤال',questions:['جميع الأسئلة','2. ما الذي أسمح بتغييره','2. لماذا أشارك'],sortLabel:'ترتيب',sortLatest:'الأحدث أولًا',sortOldest:'الأقدم أولًا',pageSize:"الإجابات في كل صفحة",notice:'تُعرض فقط الإجابات التي وافق أصحابها بشكل منفصل على نشرها. هذا المسار منفصل عن الإجابات الجماعية.'}
         };
         const controls = controlsByLanguage[language] || controlsByLanguage.en;
         const accessibilityByLanguage = {
@@ -620,13 +628,43 @@
     if(item.createdAt) date.dateTime=item.createdAt;
     top.append(code,date);
     article.append(top);
+    if(item.comment) {
+      const block=node('section',undefined,'author-questionnaire-section'); const questionnaire=preferenceQuestions[locale]||preferenceQuestions.en;
+      block.append(node('strong','1. '+questionnaire.questions[2].replace(/^\d+\.\s*/,''),'author-questionnaire-question'));
+      const text=String(item.comment);
+      let preview=text; if(text.length>1200){const cut=text.lastIndexOf(' ',1200);preview=text.slice(0,cut>900?cut:1200).trimEnd()+'…';}
+      const short=node('p',preview,'answer-text answer-preview');
+      const full=node('p',text,'answer-text answer-full-text');full.hidden=true;
+      block.append(short,full);
+      if(preview!==text){const words={ru:['Читать полный ответ','Свернуть ответ'],en:['Read the full answer','Collapse answer'],es:['Leer la respuesta completa','Contraer respuesta'],pt:['Ler a resposta completa','Recolher resposta'],zh:['阅读完整回答','收起回答'],de:['Vollständige Antwort lesen','Antwort einklappen'],ja:['回答全文を読む','回答を閉じる'],fr:['Lire la réponse complète','Réduire la réponse'],ar:['قراءة الإجابة كاملة','طي الإجابة']};const labels=words[locale]||words.en;const toggle=node('button',labels[0],'author-answer-toggle');toggle.type='button';toggle.setAttribute('aria-expanded','false');toggle.addEventListener('click',()=>{full.hidden=!full.hidden;short.hidden=!full.hidden;toggle.textContent=labels[full.hidden?0:1];toggle.setAttribute('aria-expanded',String(!full.hidden));});block.append(toggle);}
+      article.append(block);
+    }
+    const choices=node('div',undefined,'answer-context author-questionnaire-choices');
+    choices.hidden=true;
+    choices.id=article.id+'-choices';
     answerKeys.forEach((key,index)=>{
       const raw=item.answers?.[key];
       if(raw == null || raw === '' || (Array.isArray(raw) && raw.length === 0)) return;
       const vals=(Array.isArray(raw)?raw:[raw]).map(v=>translatedLabels[key]?.[v] || String(v));
-      const p=node('p'); p.append(node('strong',translatedNames[index]+': '),document.createTextNode(vals.join(', '))); article.append(p);
+      const block=node('section',undefined,'author-questionnaire-section');
+      block.append(node('strong',index<2?String(index+2)+'. '+(preferenceQuestions[locale]||preferenceQuestions.en).questions[index].replace(/^\d+\.\s*/,''):translatedNames[index],'author-questionnaire-question'));
+      if(vals.length>1){const list=node('ul',undefined,'author-questionnaire-answer-list'); vals.forEach(value=>list.append(node('li',value))); block.append(list);} else block.append(node('p',vals[0],'author-questionnaire-answer-text'));
+      choices.append(block);
     });
-    if(item.comment) { const p=node('p',item.comment); p.className='answer-comment'; article.append(p); }
+    if(choices.childElementCount){
+      const labels={ru:['Мои дополнительные ответы','Скрыть дополнительные ответы'],en:['Questionnaire answers','Hide questionnaire answers'],es:['Respuestas al cuestionario','Ocultar respuestas'],pt:['Respostas ao questionário','Ocultar respostas'],zh:['问卷回答','隐藏问卷回答'],de:['Antworten auf den Fragebogen','Antworten ausblenden'],ja:['アンケートの回答','回答を隠す'],fr:['Réponses au questionnaire','Masquer les réponses'],ar:['إجابات الاستبيان','إخفاء الإجابات']};
+      const words=labels[locale]||labels.en;
+      const actions=node('div',undefined,'answer-actions');
+      const button=node('button',words[0],'subtle-button'); button.type='button';
+      button.setAttribute('aria-controls',choices.id); button.setAttribute('aria-expanded','false');
+      button.addEventListener('click',()=>{choices.hidden=!choices.hidden; button.setAttribute('aria-expanded',String(!choices.hidden)); button.textContent=words[choices.hidden?0:1];});
+      const extra={ru:['♡ Интересная мысль · -','Реакции пока недоступны','Поделиться ответом','Ссылка скопирована'],en:['♡ Interesting thought · -','Reactions are not available yet','Share answer','Link copied'],es:['♡ Idea interesante · -','Reacciones aún no disponibles','Compartir respuesta','Enlace copiado'],pt:['♡ Ideia interessante · -','Reações ainda indisponíveis','Compartilhar resposta','Link copiado'],zh:['♡ 有意思的想法 · -','暂不支持回应','分享回答','链接已复制'],de:['♡ Interessanter Gedanke · -','Reaktionen sind noch nicht verfügbar','Antwort teilen','Link kopiert'],ja:['♡ 興味深い考え · -','リアクションはまだ利用できません','回答を共有','リンクをコピーしました'],fr:['♡ Idée intéressante · -','Réactions indisponibles pour le moment','Partager la réponse','Lien copié'],ar:['♡ فكرة مثيرة للاهتمام · -','التفاعلات غير متاحة بعد','مشاركة الإجابة','تم نسخ الرابط']};
+      const actionLabels=extra[locale]||extra.en;
+      const reaction=node('button',actionLabels[0],'reaction-button'); reaction.type='button'; reaction.disabled=true; reaction.title=actionLabels[1];
+      const share=node('button',actionLabels[2],'subtle-button'); share.type='button';
+      share.addEventListener('click',async()=>{const url=new URL(location.href); url.search=''; url.hash=article.id; try{await navigator.clipboard.writeText(url.toString());share.textContent=actionLabels[3];}catch{location.hash=article.id;}});
+      actions.append(button,reaction,share); article.append(actions,choices);
+    }
     return article;
   }
   function rankingUnavailable() {
@@ -805,7 +843,23 @@
   document.querySelectorAll('[data-results-stream="hypothetical"],button[data-results-view]').forEach(el=>el.addEventListener('click',()=>{if(section.hidden)return;load(true);loadStats();}));
   stats.textContent = personalMessages().statsLoading;
   loadStats();
-  load(true);
+  async function loadSharedAnswer(){
+    const match=location.hash.match(/^#personal-answer-(\d+)$/);
+    if(!match){await load(true);return;}
+    try{
+      let page=0, target=null;
+      do {
+        const response=await fetch('/api/preferences/public?sort=oldest&limit=50&offset='+page);
+        const data=await response.json(); if(!response.ok||!data.ok)throw Error();
+        target=data.answers.find(item=>String(item.id)===match[1]);
+        if(target || page+data.answers.length>=data.total || !data.answers.length) break;
+        page+=data.answers.length;
+      } while(true);
+      if(target){sort.value='oldest';const index=target.answerNumber-2;const size=Number(pageSize.value)||20;await load(true,Math.floor(index/size)*size);document.getElementById('personal-answer-'+match[1])?.scrollIntoView({block:'center'});return;}
+    }catch{}
+    await load(true);
+  }
+  loadSharedAnswer();
   document.addEventListener('results-language-changed', () => {
     stats.textContent = personalMessages().statsLoading;
     loadStats();
