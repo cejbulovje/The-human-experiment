@@ -99,7 +99,7 @@
     <section id="hypothetical-answers" class="public-answers-section hypothetical-answers-section" aria-labelledby="preference-results-title" hidden>
       <div class="section-heading"><div><p class="eyebrow" data-voice="eyebrow">ГИПОТЕТИЧЕСКИЕ ПРЕДПОЧТЕНИЯ</p><h2 id="preference-results-title" data-voice="resultsTitle">What would the person agree to themselves?</h2><p class="section-intro" data-voice="resultsIntro">Even if everyone agrees on what should happen to you, only you can say whether you want it. The author’s answer offers one person’s perspective on that question.</p></div></div>
       <section class="statistics-section hypothetical-statistics-section" aria-labelledby="hypothetical-statistics-title">
-        <div class="results-stat-card stat-card"><span class="stat-label" data-voice="resultsCount">Публичные ответы</span><strong id="hypothetical-total">0</strong><span class="stat-label" data-voice="eyebrow">Личные предпочтения</span></div>
+        <div class="results-stat-card stat-card"><span class="stat-label" data-voice="resultsCount">Всего ответов</span><strong id="hypothetical-total">1</strong><span class="stat-label" data-voice="eyebrow">Личные предпочтения</span></div>
         <div class="section-heading"><div><p class="eyebrow" data-t="statsEyebrow">ОБЩАЯ КАРТИНА</p><h3 id="hypothetical-statistics-title" data-t="statsTitle">Статистика личных предпочтений</h3></div><span class="status-chip">Ожидаем ответы</span></div>
         <div id="hypothetical-results-content">
           <section class="result-section" data-hypothetical-question="scope"><h3>1. Что бы ты позволил человечеству изменить в себе?</h3><p class="method-note">Распределение ответов появится после начала сбора данных.</p></section>
@@ -603,7 +603,7 @@
       const participants=Number(data.stats.participantTotal||0);
       stats.textContent=interpolate(apiUi().stats,{total,participants});
       const totalNode=section.querySelector('#hypothetical-total');
-      if(totalNode) totalNode.textContent=String(participants);
+      if(totalNode) totalNode.textContent=String(total);
       section.querySelector('.status-chip').textContent = data.stats.unlocked ? t().statsOpen : t().statsLocked;
     } catch { window.renderResultsReleaseNotice(section.querySelector('.hypothetical-statistics-section'),'hypothetical',null); stats.textContent=apiUi().statsError; }
   }
